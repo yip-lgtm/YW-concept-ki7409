@@ -11,7 +11,7 @@
 - [04 - 兩陽夾一陰](docs/04-Two-Yang-One-Yin.md)（15min + 統計勝率分析）
 - [08 - RSI Divergence](docs/08-RSI-Divergence.md)（1/3/5min）
 - [09 - 輔助技巧](docs/09-Auxiliary-Tips.md)（ES 對照、慢牛快熊）
-- [11 - 50/20（20EMA / 50SMA 刮均線）](docs/11-50-20.md) ← **含 60 日回測**
+- [11 - 50/20（20EMA / 50SMA 刮均線）](docs/11-50-20.md) ← 含 60 日回測
 
 ### 圖示與實戰
 - [05 - 圖示描述與視覺參考](docs/05-Image-Descriptions.md)
@@ -20,6 +20,9 @@
 ### 種田流
 - [07 - 種田流完整整理](docs/07-Zhongtian-Notes.md)
 - [10 - 種田策略實務 Setup](docs/10-Zhongtian-Practical-Setup.md)
+
+### MT5 程式
+- [mt5/YW_50_20_Pullback.mq5](mt5/YW_50_20_Pullback.mq5) — 50/20 + 回踩 + RR 1:1.5 Expert Advisor
 
 ### 報告與圖表
 - `華爾街農夫_種田流交易秘笈.pdf` / `.docx`
