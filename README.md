@@ -11,7 +11,7 @@
 - [04 - 兩陽夾一陰](docs/04-Two-Yang-One-Yin.md)（15min + 統計勝率分析）
 - [08 - RSI Divergence](docs/08-RSI-Divergence.md)（1/3/5min）
 - [09 - 輔助技巧](docs/09-Auxiliary-Tips.md)（ES 對照、慢牛快熊）
-- [11 - 50/20（20EMA / 50SMA 刮均線）](docs/11-50-20.md)
+- [11 - 50/20（20EMA / 50SMA 刮均線）](docs/11-50-20.md) ← **含 60 日回測**
 
 ### 圖示與實戰
 - [05 - 圖示描述與視覺參考](docs/05-Image-Descriptions.md)
@@ -21,10 +21,18 @@
 - [07 - 種田流完整整理](docs/07-Zhongtian-Notes.md)
 - [10 - 種田策略實務 Setup](docs/10-Zhongtian-Practical-Setup.md)
 
-### 報告交付檔
-本地已產出（因體積較大，建議手動上傳）：
-- `華爾街農夫_種田流交易秘笈.pdf`（8 頁）
-- `華爾街農夫_種田流交易秘笈.docx`
+### 報告與圖表
+- `華爾街農夫_種田流交易秘笈.pdf` / `.docx`
+- 本地 PNL 圖：`PNL_MGC_50_20_pullback.png`、`PNL_MNQ_50_20_pullback.png`
+
+## 50/20 回測摘要（近 60 日 5min）
+
+| 標的 | 勝率 | 總 PNL | 均每筆 |
+|------|------|--------|--------|
+| MGC（SL $10 / TP $15） | 43.0% | +$2,004 | +$6.7 |
+| MNQ（SL 50點 / TP 75點） | 42.7% | +$1,850 | +$6.6 |
+
+詳見 [docs/11-50-20.md](docs/11-50-20.md)
 
 ## 來源說明
 
