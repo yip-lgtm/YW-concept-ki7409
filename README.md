@@ -12,7 +12,7 @@
 - [08 - RSI Divergence](docs/08-RSI-Divergence.md)（1/3/5min）
 - [09 - 輔助技巧](docs/09-Auxiliary-Tips.md)（ES 對照、慢牛快熊）
 - [11 - 50/20（20EMA / 50SMA 刮均線）](docs/11-50-20.md) ← 含 60 日回測
-- [12 - Stair Pattern](docs/12-Stair-Pattern.md)（H Pattern 變體，5min/15min/1hr）
+- [12 - Stair Pattern](docs/12-Stair-Pattern.md)（H 變體 + MNQ/MGC 回測 + 50EMA 過濾）
 
 ### 圖示與實戰
 - [05 - 圖示描述與視覺參考](docs/05-Image-Descriptions.md)
@@ -29,14 +29,21 @@
 - `華爾街農夫_種田流交易秘笈.pdf` / `.docx`
 - 本地 PNL 圖：`PNL_MGC_50_20_pullback.png`、`PNL_MNQ_50_20_pullback.png`
 
-## 50/20 回測摘要（近 60 日 5min）
+## 回測摘要（近 60 日 5min，Risk $100）
 
-| 標的 | 勝率 | 總 PNL | 均每筆 |
-|------|------|--------|--------|
-| MGC（SL $10 / TP $15） | 43.0% | +$2,004 | +$6.7 |
-| MNQ（SL 50點 / TP 75點） | 42.7% | +$1,850 | +$6.6 |
+### 50/20 + 回踩 RR 1:1.5
+| 標的 | 勝率 | 總 PNL |
+|------|------|--------|
+| MGC | 43.0% | +$2,004 |
+| MNQ | 42.7% | +$1,850 |
 
-詳見 [docs/11-50-20.md](docs/11-50-20.md)
+### Stair Pattern + 50EMA 過濾（MNQ 較佳）
+| 標的 | 勝率 | 總 PNL | MaxDD |
+|------|------|--------|-------|
+| MNQ | 49.6% | +$4,512 | -$900 |
+| MGC | 40.8% | ~$0 | -$1,411 |
+
+詳見各 docs。
 
 ## 來源說明
 
