@@ -12,6 +12,7 @@
 - [08 - RSI Divergence](docs/08-RSI-Divergence.md)（1/3/5min）
 - [09 - 輔助技巧](docs/09-Auxiliary-Tips.md)（ES 對照、慢牛快熊）
 - [11 - 50/20（20EMA / 50SMA 刮均線）](docs/11-50-20.md) ← 含 60 日回測
+- [12 - Stair Pattern](docs/12-Stair-Pattern.md)（H Pattern 變體，5min/15min/1hr）
 
 ### 圖示與實戰
 - [05 - 圖示描述與視覺參考](docs/05-Image-Descriptions.md)
@@ -43,4 +44,4 @@
 
 僅供學習研究，不構成任何投資建議。交易有風險。
 
-最後更新：2026-08-07
+最後更新：2026-08-08
