@@ -13,6 +13,7 @@
 - [09 - 輔助技巧](docs/09-Auxiliary-Tips.md)（ES 對照、慢牛快熊）
 - [11 - 50/20（20EMA / 50SMA 刮均線）](docs/11-50-20.md) ← 含 60 日回測
 - [12 - Stair Pattern](docs/12-Stair-Pattern.md)（H 變體 + MNQ/MGC 回測 + 50EMA 過濾）
+- [13 - TTFM Fractal Model](docs/13-TTFM-Fractal-Model.md)（指標說明 + MNQ 5min Template 清單）
 
 ### 圖示與實戰
 - [05 - 圖示描述與視覺參考](docs/05-Image-Descriptions.md)
@@ -47,8 +48,8 @@
 
 ## 來源說明
 
-全部核心定義直接來自 YW 於 2026 年 4 月起在 Discord 的原始訊息與圖示，種田部分整理自「种田.pdf」。
+全部核心定義直接來自 YW 於 2026 年 4 月起在 Discord 的原始訊息與圖示，種田部分整理自「种田.pdf」。TTFM 章節整理自官方 Full Guide 與實盤設定。
 
 僅供學習研究，不構成任何投資建議。交易有風險。
 
-最後更新：2026-08-08
+最後更新：2026-08-12
