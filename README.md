@@ -1,6 +1,6 @@
 # YW Concept Trading Research
 
-本倉庫整理 **YW Trader HK** 在 Discord `#📖｜ywconcept百科全書` 頻道分享的原始概念、圖示與實戰心得，並延伸 TTFM、CRT 等合流研究。
+本倉庫整理 **YW Trader HK** 在 Discord `#📖｜ywconcept百科全書` 頻道分享的原始概念、圖示與實戰心得，並延伸 TTFM、CRT、Kell Cycle 等合流研究。
 
 ## 文件目錄
 
@@ -15,6 +15,7 @@
 - [12 - Stair Pattern](docs/12-Stair-Pattern.md)（H 變體 + MNQ/MGC 回測 + 50EMA 過濾）
 - [13 - TTFM Fractal Model](docs/13-TTFM-Fractal-Model.md)（指標說明 + C3/C4 代理回測）
 - [14 - CRT Candle Range Theory](docs/14-CRT-Candle-Range-Theory.md)（4H Range + NY Session 回測）
+- [15 - Oliver Kell Cycle of Price Action](docs/15-Oliver-Kell-Cycle.md)（Reversal Extension / Wedge Pop / EMA Crossback / Base n' Break）
 
 ### 圖示與實戰
 - [05 - 圖示描述與視覺參考](docs/05-Image-Descriptions.md)
@@ -63,8 +64,8 @@
 
 ## 來源說明
 
-全部核心定義直接來自 YW 於 2026 年 4 月起在 Discord 的原始訊息與圖示，種田部分整理自「种田.pdf」。TTFM／CRT 章節整理自公開教學與代理回測。
+全部核心定義直接來自 YW 於 2026 年 4 月起在 Discord 的原始訊息與圖示，種田部分整理自「种田.pdf」。TTFM／CRT／Kell 章節整理自公開教學與研究摘要。
 
 僅供學習研究，不構成任何投資建議。交易有風險。
 
-最後更新：2026-08-17
+最後更新：2026-08-19
