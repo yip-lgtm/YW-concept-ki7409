@@ -54,6 +54,14 @@ jobs:
           echo
           # Run the act script (TG alert + AI-Trader publish + log)
           .venv/bin/python scripts/ocs_act.py
+      - name: Run position tracker
+        id: tracker
+        working-directory: automation
+        env:
+          YF_CACHE: /tmp/yf_cache
+        run: |
+          # Walk forward open positions, check SL/TP hits, log P&L
+          .venv/bin/python scripts/ocs_position_tracker.py 2>&1 | tee /tmp/tracker_log.txt
       - name: Commit signal log
         if: always()
         run: |
