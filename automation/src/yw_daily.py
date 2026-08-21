@@ -163,6 +163,32 @@ def build_reminder(
     return msg
 
 
+def send_escalation_alert(candidates: list[dict]) -> int:
+    """Send a TG alert when any candidate has score > 80.
+
+    Returns HTTP code (0 if not sent).
+    """
+    hot = [c for c in candidates if c.get("priority_score", 0) > 80 and c.get("actionable")]
+    if not hot:
+        return 0
+
+    print(f"[yw_daily] 🔥 ESCALATION: {len(hot)} hot candidate(s) score > 80")
+
+    lines = [f"🔥 *Hot Setup Alert — {len(hot)} candidate(s) score > 80*\n"]
+    for i, c in enumerate(hot[:5], 1):
+        emoji = {"A": "🟢", "B": "🟡", "C": "🔴"}.get(c["grade"], "❓")
+        size = "1.0µ" if c["grade"] == "A" else "0.5µ"
+        lines.append(
+            f"{i}. {emoji} {c['strategy']} on *{c['ticker']}*\n"
+            f"   Grade: *{c['grade']}* | Score: *{c['priority_score']:.1f}* | Size: {size}\n"
+            f"   💡 {c['reason'][:100]}"
+        )
+    lines.append("\n📊 Full reminder follows below")
+
+    msg = "\n".join(lines)
+    return send_telegram_text(msg)
+
+
 def main() -> int:
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("FATAL: TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID not set", file=sys.stderr)
@@ -254,9 +280,47 @@ def main() -> int:
     code = send_telegram_text(msg)
     print(f"[yw_daily] HTTP {code}")
 
+    # Step 6.4: Generate 4-Chart Standard charts (D / H4 / H1 / 5m) per ticker
+    print("[yw_daily] Generating 4-Chart Standard charts...")
+    try:
+        from chart_gen import generate_for_ticker
+        chart_dir = Path("/tmp/yw-charts")
+        chart_dir.mkdir(parents=True, exist_ok=True)
+        chart_paths = []
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            futs = {
+                pool.submit(generate_for_ticker, tk, name, chart_dir): tk
+                for tk, name in [("MNQ=F", "Micro Nasdaq"), ("MES=F", "Micro S&P"), ("M2K=F", "Micro Russell")]
+            }
+            for fut in as_completed(futs):
+                tk = futs[fut]
+                p, _ = fut.result()
+                if p:
+                    chart_paths.append(p)
+                    print(f"  ✓ {tk:6s} → {p.name}")
+    except Exception as e:
+        print(f"[yw_daily] ⚠️  Chart gen failed: {e}")
+        chart_paths = []
+
+    # Step 6.5: Escalation alert (if any candidate score > 80)
+    print("[yw_daily] Checking escalation threshold (score > 80)...")
+    esc_code = send_escalation_alert(candidates)
+    if esc_code:
+        print(f"[yw_daily] 🔥 Escalation HTTP {esc_code}")
+    else:
+        print(f"[yw_daily] No hot setups today (no candidate > 80)")
+
     # Step 7: Git push
     print("[yw_daily] Committing + pushing...")
     try:
+        # Copy charts to tracked dir
+        if chart_paths:
+            for cp in chart_paths:
+                try:
+                    shutil.copy2(cp, out_dir / cp.name)
+                except Exception as e:
+                    print(f"[yw_daily] ⚠️  copy {cp.name} failed: {e}")
+
         # Set up git remote with PAT if available
         pat = os.environ.get("GITHUB_PAT", "") or os.environ.get("GITHUB_TOKEN", "")
         if pat:
@@ -284,8 +348,11 @@ def main() -> int:
         )
         # Add + commit + push
         rel_paths = [
-            str(p.relative_to(REPO_DIR))
-            for p in [out_dir / f"reminder-{today_str}.md", out_dir / f"grades-{today_str}.json"]
+            str((out_dir / f"reminder-{today_str}.md").relative_to(REPO_DIR)),
+            str((out_dir / f"grades-{today_str}.json").relative_to(REPO_DIR)),
+        ] + [
+            str((out_dir / cp.name).relative_to(REPO_DIR))
+            for cp in chart_paths
         ]
         subprocess.run(
             ["git", "-C", str(REPO_DIR), "add"] + rel_paths,

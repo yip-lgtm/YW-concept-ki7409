@@ -41,6 +41,7 @@ STRATEGIES = {
         "doc": "docs/02-H-Pattern.md",
         "data_granularity": "5m",
         "data_period": "5d",
+        "weight": 1.2,
     },
     "3-Pushes": {
         "name": "3 Pushes",
@@ -49,6 +50,7 @@ STRATEGIES = {
         "doc": "docs/03-Three-Pushes.md",
         "data_granularity": "15m",
         "data_period": "10d",
+        "weight": 1.0,
     },
     "Two-Yang-One-Yin": {
         "name": "兩陽夾一陰",
@@ -57,6 +59,25 @@ STRATEGIES = {
         "doc": "docs/04-Two-Yang-One-Yin.md",
         "data_granularity": "15m",
         "data_period": "10d",
+        "weight": 0.8,
+    },
+    "RSI-Divergence": {
+        "name": "RSI Divergence",
+        "timeframe": "1min/3min/5min",
+        "desc": "價格 Lower Low + RSI Higher Low (看漲背離) / 價格 Higher High + RSI Lower High (看跌背離)",
+        "doc": "docs/08-RSI-Divergence.md",
+        "data_granularity": "5m",
+        "data_period": "5d",
+        "weight": 1.1,
+    },
+    "50-20-Pullback": {
+        "name": "50/20 Pullback",
+        "timeframe": "5min/15min/60min",
+        "desc": "20 EMA / 50 SMA 黃金交叉 + 價格回踩 EMA20 + 順勢上車 (1-1.5 RR, SL $100)",
+        "doc": "docs/11-50-20.md",
+        "data_granularity": "5m",
+        "data_period": "5d",
+        "weight": 1.0,
     },
 }
 
@@ -81,6 +102,11 @@ def fetch_data(ticker: str, period: str, interval: str) -> pd.DataFrame:
 
 def compute_summary(df: pd.DataFrame, ticker: str) -> dict:
     """Build compact summary for LLM prompt."""
+    from yw_indicators import (
+        compute_rsi, compute_ma,
+        detect_rsi_divergence, detect_5020_pullback,
+        detect_h_pattern, detect_3_pushes,
+    )
     if df.empty or len(df) < 5:
         return {"ticker": ticker, "error": "insufficient data"}
     last = df.iloc[-1]
@@ -99,6 +125,22 @@ def compute_summary(df: pd.DataFrame, ticker: str) -> dict:
     last5 = df.tail(5)
     avg_wick_pct = ((last5["High"] - last5["Low"]) - abs(last5["Close"] - last5["Open"])) / (last5["High"] - last5["Low"] + 1e-9) * 100
 
+    # Pre-computed technical indicators (for LLM context)
+    rsi_series = compute_rsi(df["Close"])
+    rsi_last = float(rsi_series.iloc[-1]) if not rsi_series.empty else None
+    rsi_prev = float(rsi_series.iloc[-2]) if len(rsi_series) > 1 else None
+
+    ema20 = compute_ma(df["Close"], 20, "ema")
+    sma50 = compute_ma(df["Close"], 50, "sma")
+    ema20_last = float(ema20.iloc[-1]) if not ema20.empty else None
+    sma50_last = float(sma50.iloc[-1]) if not sma50.empty else None
+
+    # Pre-detected signals
+    rsi_div = detect_rsi_divergence(df)
+    pb_5020 = detect_5020_pullback(df)
+    h_pat = detect_h_pattern(df)
+    pushes = detect_3_pushes(df)
+
     return {
         "ticker": ticker,
         "last": float(last["Close"]),
@@ -109,6 +151,14 @@ def compute_summary(df: pd.DataFrame, ticker: str) -> dict:
         "recent_candles": recent.to_dict("index"),
         "avg_wick_pct": float(avg_wick_pct.mean()),
         "range_pct": float((last5["High"].max() - last5["Low"].min()) / last5["Close"].mean() * 100),
+        "rsi_last": rsi_last,
+        "rsi_prev": rsi_prev,
+        "ema20_last": ema20_last,
+        "sma50_last": sma50_last,
+        "rsi_div": rsi_div,
+        "pb_5020": pb_5020,
+        "h_pat": h_pat,
+        "pushes": pushes,
     }
 
 
@@ -123,6 +173,19 @@ def build_strategy_prompt(strategy_key: str, summary: dict) -> str:
         pma_str = 'BELOW'
     else:
         pma_str = 'N/A'
+
+    # RSI + EMA data (used by RSI-Divergence, 50-20-Pullback, H-Pattern, 3-Pushes)
+    rsi = summary.get('rsi_last', 0) or 0
+    rsi_prev = summary.get('rsi_prev', 0) or 0
+    ema20_v = summary.get('ema20_last', 0) or 0
+    sma50_v = summary.get('sma50_last', 0) or 0
+
+    # Pre-detected signals
+    rsi_div = summary.get('rsi_div', {})
+    pb_5020 = summary.get('pb_5020', {})
+    h_pat = summary.get('h_pat', {})
+    pushes = summary.get('pushes', {})
+
     return f"""你是 YW Concept 交易員，請評估以下 {summary['ticker']} ({strat['timeframe']}) 數據，
 判斷今日是否有「{strat['name']}」Setup。
 
@@ -134,8 +197,16 @@ def build_strategy_prompt(strategy_key: str, summary: dict) -> str:
 - Last: {summary['last']:.2f} ({summary['pct']:+.2f}%)
 - 20-period MA: {ma20_str}
 - Price vs MA20: {pma_str}
+- EMA20: {ema20_v:.2f} | SMA50: {sma50_v:.2f}
+- RSI(14): {rsi:.1f} (prev {rsi_prev:.1f})
 - Avg wick % (5 bars): {summary.get('avg_wick_pct', 0):.1f}%
 - Range % (5 bars): {summary.get('range_pct', 0):.2f}%
+
+## 預先偵測信號 (indicators)
+- H-Pattern detector: {h_pat}
+- 3-Pushes detector: {pushes}
+- RSI Divergence: {rsi_div}
+- 50/20 Pullback: {pb_5020}
 
 ## 最近 8 根 K 線
 {json.dumps(summary.get('recent_candles', {}), indent=2, default=str)[:1500]}
@@ -264,11 +335,17 @@ def grade_strategy(strategy_key: str, ticker: str) -> dict:
 
 # --- Ranking ---
 
-# Per-strategy priority weight
+# Per-strategy priority weight (from STRATEGIES dict)
+def get_strategy_weight(strategy_key: str) -> float:
+    return STRATEGIES.get(strategy_key, {}).get("weight", 1.0)
+
+# Backward-compat: static mapping
 STRATEGY_WEIGHT = {
-    "H-Pattern": 1.2,    # 較精確觸發
-    "3-Pushes": 1.0,     # 中頻結構
-    "Two-Yang-One-Yin": 0.8,  # confluence 之一
+    "H-Pattern": 1.2,
+    "3-Pushes": 1.0,
+    "Two-Yang-One-Yin": 0.8,
+    "RSI-Divergence": 1.1,
+    "50-20-Pullback": 1.0,
 }
 
 GRADE_WEIGHT = {"A": 100, "B": 60, "C": 20, "?": 0}
@@ -277,13 +354,14 @@ GRADE_WEIGHT = {"A": 100, "B": 60, "C": 20, "?": 0}
 def rank_candidates(grades: list[dict]) -> list[dict]:
     """Compute priority score for each grade + sort by priority desc.
 
-    priority_score = (grade_weight + confidence) * strategy_weight
+    priority_score = (grade_weight + confidence) × strategy_weight
     """
     out = []
     for g in grades:
         gw = GRADE_WEIGHT.get(g["grade"], 0)
         conf = g.get("confidence", 0)
-        sw = STRATEGY_WEIGHT.get(g["strategy"], 1.0)
+        # Prefer per-strategy weight from STRATEGIES dict
+        sw = STRATEGIES.get(g["strategy"], {}).get("weight") or STRATEGY_WEIGHT.get(g["strategy"], 1.0)
         score = (gw + conf) * sw
         out.append({
             **g,
