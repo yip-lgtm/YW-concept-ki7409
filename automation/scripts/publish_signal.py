@@ -30,7 +30,13 @@ def load_credentials() -> dict:
 
 def find_latest_grades(yw_repo_dir: str, date: str | None = None) -> Path | None:
     """Find the latest grades-{date}.json."""
-    base = Path(yw_repo_dir) / "automation" / "reports" / "daily"
+    repo = Path(yw_repo_dir).resolve()
+    # If yw-repo is the automation/ dir, look for reports/ directly
+    # If it's the repo root, look for automation/reports/
+    if (repo / "reports" / "daily").exists():
+        base = repo / "reports" / "daily"
+    else:
+        base = repo / "automation" / "reports" / "daily"
     if date:
         f = base / date / f"grades-{date}.json"
         return f if f.exists() else None
@@ -97,8 +103,8 @@ def publish_signal(token: str, payload: dict) -> dict:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--date", help="Specific date YYYY-MM-DD")
-    parser.add_argument("--yw-repo", default="/workspace/YW-concept-ki7409",
-                        help="Path to YW repo")
+    parser.add_argument("--yw-repo", default=".",
+                        help="Path to YW repo (default: current dir)")
     parser.add_argument("--dry-run", action="store_true", help="Don't actually publish")
     args = parser.parse_args()
 
