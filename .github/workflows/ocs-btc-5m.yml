@@ -62,6 +62,13 @@ jobs:
         run: |
           # Walk forward open positions, check SL/TP hits, log P&L
           .venv/bin/python scripts/ocs_position_tracker.py 2>&1 | tee /tmp/tracker_log.txt
+      - name: Generate daily report
+        id: daily
+        working-directory: automation
+        if: always()
+        run: |
+          # Daily P&L report (chart + markdown)
+          .venv/bin/python scripts/ocs_daily_report.py 2>&1 || true
       - name: Commit signal log
         if: always()
         run: |
