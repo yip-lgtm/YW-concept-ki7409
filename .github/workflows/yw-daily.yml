@@ -6,7 +6,11 @@ name: 'YW Concept Daily Reminder (21:00 HKT / 13:00 UTC)'
 
 on:
   schedule:
-    - cron: '0 13 * * 1-5'
+    # 13:00 UTC = 21:00 HKT
+    # Mon-Fri: full daily reminder (24 grades + charts)
+    # Sat-Sun: weekend recap (markets closed, weekly summary)
+    - cron: '0 13 * * 1-5'  # weekday
+    - cron: '0 13 * * 6,0'  # weekend
   workflow_dispatch:
 
 permissions:

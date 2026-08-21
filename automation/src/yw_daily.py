@@ -165,6 +165,63 @@ def build_reminder(
     return msg
 
 
+def build_weekend_recap(today_str: str, weekday: str, artifacts_dir: Path) -> str:
+    """Build a brief weekend recap message."""
+    from datetime import datetime, timedelta
+    today = datetime.strptime(today_str, "%Y-%m-%d")
+    week_dates = [(today - timedelta(days=i)).strftime("%Y-%m-%d") for i in range(7)]
+
+    total_grades = 0
+    actionable_count = 0
+    best_candidate = None
+    best_score = 0
+    strategy_count = {}
+    for d in week_dates:
+        f = artifacts_dir / d / f"grades-{d}.json"
+        if not f.exists():
+            continue
+        try:
+            data = json.loads(f.read_text())
+            for g in data.get("grades", []):
+                total_grades += 1
+                strategy_count[g.get("strategy", "?")] = strategy_count.get(g.get("strategy", "?"), 0) + 1
+            for c in data.get("candidates", []):
+                if c.get("actionable"):
+                    actionable_count += 1
+                if c.get("priority_score", 0) > best_score:
+                    best_score = c["priority_score"]
+                    best_candidate = c
+        except Exception:
+            pass
+
+    lines = [
+        f"📅 **A 皮盤房 YW Weekly Recap** — {today_str} ({weekday})",
+        f"⏰ 21:00 HKT | Markets closed (Sat/Sun)",
+        "",
+        f"📊 *本週 ({len(week_dates)} 日) 統計*",
+        f"  • 總 grades: {total_grades}",
+        f"  • Actionable candidates: {actionable_count}",
+    ]
+    if best_candidate:
+        emoji = {"A": "🟢", "B": "🟡", "C": "🔴"}.get(best_candidate["grade"], "❓")
+        lines.extend([
+            f"  • Best: {emoji} {best_candidate['strategy']} on {best_candidate['ticker']}",
+            f"    Grade {best_candidate['grade']} | Score {best_candidate['priority_score']:.1f}",
+        ])
+    if strategy_count:
+        sorted_strats = sorted(strategy_count.items(), key=lambda x: -x[1])
+        lines.append("")
+        lines.append("📋 *Strategy activity:*")
+        for s, c in sorted_strats[:8]:
+            lines.append(f"  • {s}: {c}")
+    lines.extend([
+        "",
+        "💤 *下個交易日*: Monday 21:00 HKT",
+        "🔗 https://github.com/yip-lgtm/YW-concept-ki7409",
+    ])
+    return "\n".join(lines)
+
+
 def send_escalation_alert(candidates: list[dict]) -> int:
     """Send a TG alert when any candidate has score > 80.
 
@@ -173,9 +230,7 @@ def send_escalation_alert(candidates: list[dict]) -> int:
     hot = [c for c in candidates if c.get("priority_score", 0) > 80 and c.get("actionable")]
     if not hot:
         return 0
-
     print(f"[yw_daily] 🔥 ESCALATION: {len(hot)} hot candidate(s) score > 80")
-
     lines = [f"🔥 *Hot Setup Alert — {len(hot)} candidate(s) score > 80*\n"]
     for i, c in enumerate(hot[:5], 1):
         emoji = {"A": "🟢", "B": "🟡", "C": "🔴"}.get(c["grade"], "❓")
@@ -186,29 +241,17 @@ def send_escalation_alert(candidates: list[dict]) -> int:
             f"   💡 {c['reason'][:100]}"
         )
     lines.append("\n📊 Full reminder follows below")
-
     msg = "\n".join(lines)
     return send_telegram_text(msg)
-
-
-def main() -> int:
-    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-        print("FATAL: TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID not set", file=sys.stderr)
-        return 1
-
-    now_hkt = datetime.now(HKT)
-    today_str = now_hkt.strftime("%Y-%m-%d")
-    weekday = now_hkt.strftime("%a")
-
-    if weekday in ("Sat", "Sun"):
-        print(f"[yw_daily] {weekday} - skipping (weekend)")
-        return 0
 
     print(f"[yw_daily] Generating reminder for {today_str} ({weekday})")
 
     # Step 1: Snapshot
     print("[yw_daily] Pulling watchlist snapshot...")
     import yfinance as yf
+
+    # Pre-step: send weekend recap if today is Sat/Sun
+    # (handled at line ~177 earlier)
     snapshot = []
     for tk, name in [("MNQ=F", "Micro Nasdaq"), ("MES=F", "Micro S&P"), ("M2K=F", "Micro Russell")]:
         try:
