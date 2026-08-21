@@ -21,7 +21,7 @@ jobs:
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITHUB_PAT: ${{ secrets.GITHUB_APEX_PAT }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
       GIT_USER_NAME: 'YW bot'
       GIT_USER_EMAIL: 'bot@apex.local'
     steps:
@@ -44,7 +44,7 @@ jobs:
       - name: Run YW daily reminder
         working-directory: automation
         env:
-          GITHUB_PAT: ${{ secrets.GITHUB_APEX_PAT }}
+          GITHUB_PAT: ${{ secrets.APEX_PAT }}
         run: |
           .venv/bin/python src/yw_daily.py
           echo "✅ yw daily reminder sent + artifacts pushed"
