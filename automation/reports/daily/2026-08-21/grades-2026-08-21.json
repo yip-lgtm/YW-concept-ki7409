@@ -1,152 +1,152 @@
 {
   "date": "2026-08-21",
   "weekday": "Fri",
-  "generated_hkt": "2026-08-21T18:41:05.094055+08:00",
+  "generated_hkt": "2026-08-21T21:36:59.702682+08:00",
   "grades": [
     {
-      "strategy": "H-Pattern",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 20,
-      "reason": "8 根 K 線全部細身無明顯長直 K 棒，無 top wick 賣壓訊號，pullback 結構模糊，形態完全不成立。"
-    },
-    {
-      "strategy": "H-Pattern",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "K線細碎無長直K線、無明確H-Pattern結構、range僅0.05%動能不足、confluence全缺，skip。"
-    },
-    {
-      "strategy": "H-Pattern",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "價格區間極窄（Range 0.06%）、無長直K線、無頂部賣壓wick、H-Pattern四大要件全部欠奉，純粹盤整雜訊，skip。"
-    },
-    {
       "strategy": "3-Pushes",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 18,
-      "reason": "價格區間橫盤 7682-7692，無清晰三推向某方向結構，高低點無等高/等低形成，最後一根 06:30 為極小 doji (range 0.75)，屬 consolidation 非 breakout 準備，confluence 不足 (r"
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 20,
-      "reason": "三推高點持續擴張（3017.8→3018.6→3020.4）非等高，違反等高突破條件；末段成交量極低（最後K線僅1張），缺乏突破動能，跳過。"
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "MNQ=F",
-      "grade": "B",
-      "confidence": 50,
-      "reason": "三推可視（05:30→05:45→06:00 高點遞增 29483→29492→29515），末段收窄且 29491.5/29493.5 形成等高待突破，但 06:30 量縮至 501 屬會前低量時段，信號可信度受限。"
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
-      "ticker": "M2K=F",
-      "grade": "B",
-      "confidence": 55,
-      "reason": "形態部分成立——05:00 陽線 body 頂 3017.70 未能完全覆蓋陰線 body 頂 3017.80，但價格站穩 MA20 上方且處於低波動盤整，confluence 中性偏多，需觀察下一根 K 確認突破方向。"
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
       "ticker": "MES=F",
       "grade": "C",
       "confidence": 25,
-      "reason": "價格於7685-7689狹幅盤整，wick比例64.5%過高顯示chop，無清晰兩陽夾一陰形態（候選bars 5-6-7之中陰實體7686.75低點未完全被兩陽實體包覆），且目前時段為亞洲早盤非高勝率窗口，skip。"
+      "reason": "上升只見兩推（08:15、08:30）後反轉，下跌亦僅兩推（09:00、09:15），未達三推結構，且無明顯等高低可突破，價格雖在 MA20 下方略偏空，但形態不符 YW 3 Pushes 定義，skip。"
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "價格已連續下行破底多根 K 線，無清晰 <50% pullback 結構，且首根長直 K (08:50) top wick 極短 (0.5 pt)，未見 H-Pattern 賣壓特徵，屬趨勢延伸非反轉 setup。"
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "缺乏明確 H-Pattern 結構，09:10 陰線開盤即在高點無顯著 top wick 賣壓訊號，且 pullback 結構混亂，雖跌破前低但形態要件未齊，逆大方向 bias 不足，skip。"
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "8根K線皆為緩慢下移嘅陰線，無明顯長直K+top wick+淺回+穿底嘅H-Pattern結構，range僅0.18%缺乏動能，confluence不足。"
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "最近8根K線無「兩陽夾一陰」形態，最近3根連陰創低，價格跌破MA20呈下降趨勢，逆大方向skip。"
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "8根K線高低交錯無明確方向，無三推結構亦無等高/等低可突破，價格貼近MA20呈盤整，wick過高顯示多空分歧，不符合3 Pushes形態。"
     },
     {
       "strategy": "Two-Yang-One-Yin",
       "ticker": "MNQ=F",
-      "grade": "B",
-      "confidence": 45,
-      "reason": "形態部分成立（05:45陽、06:00陰、06:15陽三K陰實體被夾於兩陽範圍內），但陰K僅2點極小、兩陽實體與陰體重疊嚴重，加上wick% 68.6%顯示猶豫、06:30仍處美股盤前session時段不佳，confluence不足。"
+      "grade": "C",
+      "confidence": 15,
+      "reason": "最近三根連陰下跌放量無反轉結構，價格跌破 MA20 且無 Bull-Bear-Bull 夾擊形態，逆大方向 skip。"
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "結構混亂無清晰三推形態，中段 08:15-08:45 反彈破前高破壞下行結構，最近三跌最後一推最大而非收窄，缺等低可突破位，不符合 3 Pushes 條件。"
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "形態未成立——首根陽線實體僅0.1點(近乎十字星)，且其body頂(3023.40)未夾住中間陰線body頂(3023.50)，嚴格定義不符；加上價格已跌破MA20(3020.11)且近三根連陰走低，confluence完全逆勢，skip。"
     }
   ],
   "candidates": [
     {
-      "strategy": "3-Pushes",
-      "ticker": "MNQ=F",
-      "grade": "B",
-      "confidence": 50,
-      "reason": "三推可視（05:30→05:45→06:00 高點遞增 29483→29492→29515），末段收窄且 29491.5/29493.5 形成等高待突破，但 06:30 量縮至 501 屬會前低量時段，信號可信度受限。",
-      "priority_score": 110.0,
-      "actionable": true
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
-      "ticker": "M2K=F",
-      "grade": "B",
-      "confidence": 55,
-      "reason": "形態部分成立——05:00 陽線 body 頂 3017.70 未能完全覆蓋陰線 body 頂 3017.80，但價格站穩 MA20 上方且處於低波動盤整，confluence 中性偏多，需觀察下一根 K 確認突破方向。",
-      "priority_score": 92.0,
-      "actionable": true
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
-      "ticker": "MNQ=F",
-      "grade": "B",
-      "confidence": 45,
-      "reason": "形態部分成立（05:45陽、06:00陰、06:15陽三K陰實體被夾於兩陽範圍內），但陰K僅2點極小、兩陽實體與陰體重疊嚴重，加上wick% 68.6%顯示猶豫、06:30仍處美股盤前session時段不佳，confluence不足。",
-      "priority_score": 84.0,
-      "actionable": true
-    },
-    {
       "strategy": "H-Pattern",
       "ticker": "MNQ=F",
       "grade": "C",
-      "confidence": 20,
-      "reason": "8 根 K 線全部細身無明顯長直 K 棒，無 top wick 賣壓訊號，pullback 結構模糊，形態完全不成立。",
-      "priority_score": 48.0,
+      "confidence": 25,
+      "reason": "價格已連續下行破底多根 K 線，無清晰 <50% pullback 結構，且首根長直 K (08:50) top wick 極短 (0.5 pt)，未見 H-Pattern 賣壓特徵，屬趨勢延伸非反轉 setup。",
+      "priority_score": 54.0,
       "actionable": false
     },
     {
       "strategy": "H-Pattern",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "K線細碎無長直K線、無明確H-Pattern結構、range僅0.05%動能不足、confluence全缺，skip。",
-      "priority_score": 42.0,
-      "actionable": false
-    },
-    {
-      "strategy": "H-Pattern",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "價格區間極窄（Range 0.06%）、無長直K線、無頂部賣壓wick、H-Pattern四大要件全部欠奉，純粹盤整雜訊，skip。",
-      "priority_score": 42.0,
-      "actionable": false
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 20,
-      "reason": "三推高點持續擴張（3017.8→3018.6→3020.4）非等高，違反等高突破條件；末段成交量極低（最後K線僅1張），缺乏突破動能，跳過。",
-      "priority_score": 40.0,
-      "actionable": false
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 18,
-      "reason": "價格區間橫盤 7682-7692，無清晰三推向某方向結構，高低點無等高/等低形成，最後一根 06:30 為極小 doji (range 0.75)，屬 consolidation 非 breakout 準備，confluence 不足 (r",
-      "priority_score": 38.0,
-      "actionable": false
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
       "ticker": "MES=F",
       "grade": "C",
       "confidence": 25,
-      "reason": "價格於7685-7689狹幅盤整，wick比例64.5%過高顯示chop，無清晰兩陽夾一陰形態（候選bars 5-6-7之中陰實體7686.75低點未完全被兩陽實體包覆），且目前時段為亞洲早盤非高勝率窗口，skip。",
+      "reason": "缺乏明確 H-Pattern 結構，09:10 陰線開盤即在高點無顯著 top wick 賣壓訊號，且 pullback 結構混亂，雖跌破前低但形態要件未齊，逆大方向 bias 不足，skip。",
+      "priority_score": 54.0,
+      "actionable": false
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "8根K線皆為緩慢下移嘅陰線，無明顯長直K+top wick+淺回+穿底嘅H-Pattern結構，range僅0.18%缺乏動能，confluence不足。",
+      "priority_score": 54.0,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "上升只見兩推（08:15、08:30）後反轉，下跌亦僅兩推（09:00、09:15），未達三推結構，且無明顯等高低可突破，價格雖在 MA20 下方略偏空，但形態不符 YW 3 Pushes 定義，skip。",
+      "priority_score": 45.0,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "8根K線高低交錯無明確方向，無三推結構亦無等高/等低可突破，價格貼近MA20呈盤整，wick過高顯示多空分歧，不符合3 Pushes形態。",
+      "priority_score": 45.0,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "結構混亂無清晰三推形態，中段 08:15-08:45 反彈破前高破壞下行結構，最近三跌最後一推最大而非收窄，缺等低可突破位，不符合 3 Pushes 條件。",
+      "priority_score": 45.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "形態未成立——首根陽線實體僅0.1點(近乎十字星)，且其body頂(3023.40)未夾住中間陰線body頂(3023.50)，嚴格定義不符；加上價格已跌破MA20(3020.11)且近三根連陰走低，confluence完全逆勢，skip。",
       "priority_score": 36.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "最近8根K線無「兩陽夾一陰」形態，最近3根連陰創低，價格跌破MA20呈下降趨勢，逆大方向skip。",
+      "priority_score": 28.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "最近三根連陰下跌放量無反轉結構，價格跌破 MA20 且無 Bull-Bear-Bull 夾擊形態，逆大方向 skip。",
+      "priority_score": 28.0,
       "actionable": false
     }
   ],
@@ -154,23 +154,23 @@
     {
       "tk": "MNQ=F",
       "name": "Micro Nasdaq",
-      "last": 29491.75,
-      "chg": 191.25,
-      "pct": 0.6527192368730909
+      "last": 29421.25,
+      "chg": 120.75,
+      "pct": 0.41210900837869663
     },
     {
       "tk": "MES=F",
       "name": "Micro S&P",
-      "last": 7688.75,
-      "chg": 26.25,
-      "pct": 0.3425774877650897
+      "last": 7687.0,
+      "chg": 24.5,
+      "pct": 0.3197389885807504
     },
     {
       "tk": "M2K=F",
       "name": "Micro Russell",
-      "last": 3019.0,
-      "chg": 19.800048828125,
-      "pct": 0.6601776857321081
+      "last": 3020.199951171875,
+      "chg": 21.0,
+      "pct": 0.7001867278570303
     }
   ]
 }
