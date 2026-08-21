@@ -1,331 +1,211 @@
 {
   "date": "2026-08-21",
   "weekday": "Fri",
-<<<<<<< Updated upstream
-  "generated_hkt": "2026-08-21T21:36:59.702682+08:00",
-  "grades": [
-    {
-      "strategy": "3-Pushes",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "上升只見兩推（08:15、08:30）後反轉，下跌亦僅兩推（09:00、09:15），未達三推結構，且無明顯等高低可突破，價格雖在 MA20 下方略偏空，但形態不符 YW 3 Pushes 定義，skip。"
-    },
-    {
-      "strategy": "H-Pattern",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "價格已連續下行破底多根 K 線，無清晰 <50% pullback 結構，且首根長直 K (08:50) top wick 極短 (0.5 pt)，未見 H-Pattern 賣壓特徵，屬趨勢延伸非反轉 setup。"
-    },
-    {
-      "strategy": "H-Pattern",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "缺乏明確 H-Pattern 結構，09:10 陰線開盤即在高點無顯著 top wick 賣壓訊號，且 pullback 結構混亂，雖跌破前低但形態要件未齊，逆大方向 bias 不足，skip。"
-=======
-  "generated_hkt": "2026-08-21T23:26:09.225735+08:00",
+  "generated_hkt": "2026-08-21T23:27:31.821358+08:00",
   "grades": [
     {
       "strategy": "H-Pattern",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 20,
-      "reason": "H-Pattern 偵測器確認未成形（broke_low=False、pullback 負值、無顯著頂wick賣壓），價格位於 EMA20/SMA50 之上但趨勢 sideways，confluence 不足，跳過。"
-    },
-    {
-      "strategy": "H-Pattern",
-      "ticker": "MNQ=F",
+      "ticker": "M2K=F",
       "grade": "C",
       "confidence": 18,
-      "reason": "H-Pattern 偵測器顯示未成立（broke_low=False、body_size 僅 17.25 偏短），且 pullback 為負值代表長陽燈非空方 H 結構；EMA20 仍向下、價格剛觸 EMA20，趨勢偏弱但形態缺失，無交易依"
->>>>>>> Stashed changes
+      "reason": "偵測器明確顯示無 H-Pattern 型態，近 8 根 K 線皆為小實體震盪（range 0.21%、wick 57.5%），無長直 K 配頂 wick 賣壓結構，雖 trend 偏空但形態條件完全不成立，跳過。"
     },
     {
       "strategy": "H-Pattern",
-      "ticker": "M2K=F",
-      "grade": "C",
-<<<<<<< Updated upstream
-      "confidence": 25,
-      "reason": "8根K線皆為緩慢下移嘅陰線，無明顯長直K+top wick+淺回+穿底嘅H-Pattern結構，range僅0.18%缺乏動能，confluence不足。"
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "最近8根K線無「兩陽夾一陰」形態，最近3根連陰創低，價格跌破MA20呈下降趨勢，逆大方向skip。"
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "8根K線高低交錯無明確方向，無三推結構亦無等高/等低可突破，價格貼近MA20呈盤整，wick過高顯示多空分歧，不符合3 Pushes形態。"
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
       "ticker": "MNQ=F",
       "grade": "C",
       "confidence": 15,
-      "reason": "最近三根連陰下跌放量無反轉結構，價格跌破 MA20 且無 Bull-Bear-Bull 夾擊形態，逆大方向 skip。"
-=======
-      "confidence": 15,
-      "reason": "H-Pattern 偵測器未觸發，近期 K 線皆小實體無長直 K 線，價格於 EMA20 下方弱勢整理且大周期 dead cross 19 根，唔符合形態定義。"
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "三推向下一推未成形（僅見兩推後盤整，無三推結構），且最後一根放量向上突破前高，bias 翻多與 3-Pushes 形態不吻合，detector 亦判定 present=False，skip。"
->>>>>>> Stashed changes
+      "reason": "H-Pattern 偵測器明確標示 present=False，pullback_pct 為負值且未穿底，形態未成立；雖有 3-Pushes 收窄信號，但 HTF bias 偏空（死亡交叉 + 價格低於 SMA50），逆大方向操作風險高，建"
     },
     {
       "strategy": "3-Pushes",
       "ticker": "MNQ=F",
       "grade": "C",
       "confidence": 25,
-<<<<<<< Updated upstream
-      "reason": "結構混亂無清晰三推形態，中段 08:15-08:45 反彈破前高破壞下行結構，最近三跌最後一推最大而非收窄，缺等低可突破位，不符合 3 Pushes 條件。"
-=======
-      "reason": "早盤09:30-10:00確有三波下行且末段收窄，但三推低點遞減無等低結構，缺突破位；現價已從低點反彈逾百點，形態消耗殆盡，且11:00/11:15雖現等高29367附近卻無對應三推上行確認，skip。"
+      "reason": "三推向下結構已於10:00完成（low 29248），現價反彈至29351.25，無新3 Pushes形成，等高/等低突破條件不成立，skip。"
     },
     {
-      "strategy": "Two-Yang-One-Yin",
+      "strategy": "3-Pushes",
       "ticker": "MES=F",
       "grade": "C",
-      "confidence": 25,
-      "reason": "左陽線 body 僅 1.75pt、太弱夾唔實，中間陰線 body 細到無意義，加上 wick% 高達 74% 屬典型噪音盤整，趨勢 sideways 缺方向性，唔符合「盤整尾段」條件，skip。"
+      "confidence": 15,
+      "reason": "3-Pushes 偵測器明確 False，價格區間橫盤 7677-7699 缺乏三推結構，末段 11:00-11:15 為十字星/小實體無收窄跡象，RSI 中性 54.8 無方向，配合 75.7% 高 wick 比率顯示多空拉扯，形態不存在"
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 18,
+      "reason": "H-Pattern 未成形——pullback 已達 -64.5% 超出 50% 門檻、broke_low 為 False，且 50/20 早前出現 death cross 殘留偏空壓力，形態與 confluence 皆不成立。"
     },
     {
       "strategy": "3-Pushes",
       "ticker": "M2K=F",
       "grade": "C",
-      "confidence": 25,
-      "reason": "三推下降結構已成形但延伸至3004新低，第三推並未明顯收窄且無等低可承接，現價處反彈中段非Setup啟動點，趨勢sideways、價格在EMA20下方，confluence不足，不符合3 Pushes入場條件。"
-    },
-    {
-      "strategy": "RSI-Divergence",
-      "ticker": "MES=F",
-      "grade": "C",
       "confidence": 15,
-      "reason": "預偵測無 RSI 背離訊號，價格處於橫盤區間且 RSI 持平於 55.3，缺乏明確 Higher High/Lower High 結構，形態不成立。"
->>>>>>> Stashed changes
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-<<<<<<< Updated upstream
-      "reason": "形態未成立——首根陽線實體僅0.1點(近乎十字星)，且其body頂(3023.40)未夾住中間陰線body頂(3023.50)，嚴格定義不符；加上價格已跌破MA20(3020.11)且近三根連陰走低，confluence完全逆勢，skip。"
-=======
-      "reason": "10:15-10:45 三K中陰線實體(3006.5-3011.1)過大，兩側陽線實體完全無法包夾，形態不成立；價格位於EMA20與SMA50下方，逆偏空結構，skip。"
+      "reason": "偵測器確認無3 Pushes形態（narrowing=False），價格處於EMA20下方呈sideways，RSI中性偏弱且wick%偏高顯示猶豫，唔符合任何方向入場條件，skip。"
     },
     {
       "strategy": "Two-Yang-One-Yin",
       "ticker": "MNQ=F",
       "grade": "C",
-      "confidence": 20,
-      "reason": "未見標準「兩陽夾一陰」，近期排列為陽陽陰而非陰線被前後陽線夾住，且價格低於EMA20與SMA50、RSI偏弱，HTF資料未提供且下行 confluence 不足。"
-    },
-    {
-      "strategy": "RSI-Divergence",
-      "ticker": "M2K=F",
-      "grade": "C",
       "confidence": 15,
-      "reason": "無 RSI 背離形態（價格呈 Higher Low 非 Lower Low，且無 HH/LH 結構），50/20 死亡交叉 + 價格跌破 EMA20 與 SMA50，順大方向偏空，無 setup 可入場。"
-    },
-    {
-      "strategy": "50-20-Pullback",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "死亡交叉（19 bars 前）非黃金交叉，價格位於 SMA50 下方且趨勢向下，與 50/20 Pullback 多頭定義完全相反，應 skip。"
+      "reason": "無兩陽夾一陰形態，近期K線為連三陽後轉弱，且EMA20死亡交叉趨勢向下，價格跌破EMA20與SMA50，逆大方向應skip。"
     },
     {
       "strategy": "RSI-Divergence",
       "ticker": "MNQ=F",
       "grade": "C",
       "confidence": 15,
-      "reason": "價格近 8 根 K 線低點持續抬升（29258→29289→29289→29287→29326→29343→29344→29346），RSI 維持 50.8 持平，無 Lower Low / Higher Low 背離結構，預偵測確認 ty"
+      "reason": "RSI Divergence 形態未成立（價格與 RSI 同向，無背離訊號），3-Pushes 向下且 EMA20/SMA50 死亡交叉順勢向下，缺乏 confluence，skip。"
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "近8根K線無「陽-陰-陽」序列，最近三根為陽後接兩陰，形態不成立，雖然盤整但無夾陰結構，skip。"
     },
     {
       "strategy": "50-20-Pullback",
       "ticker": "MNQ=F",
       "grade": "C",
       "confidence": 15,
-      "reason": "死亡交叉非黃金交叉，價格在 SMA50 下方且趨勢向下，與 50/20 Pullback 多頭順勢定義完全相反，形態不成立應 skip。"
+      "reason": "死亡交叉非黃金交叉，EMA20(29336)在SMA50(29415)下方且趨勢向下，唔符合50/20 Pullback做多條件。"
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "預偵測無 RSI 背離訊號，最近 8 根低點持續抬高（3004→3010.6），未形成 Lower Low 結構；高點亦無明確 Higher High 序列，形態完全缺席，加上 50/20 死亡交叉後趨勢向下、價格在 EMA20 下方，逆大"
     },
     {
       "strategy": "50-20-Pullback",
       "ticker": "MES=F",
       "grade": "C",
-      "confidence": 25,
-      "reason": "死亡交叉（EMA20 7688.72 < SMA50 7691.72）非黃金交叉，且 trend 為 sideways，價格勉強站上 SMA50，形態與順勢條件不符，skip。"
->>>>>>> Stashed changes
+      "confidence": 15,
+      "reason": "死亡交叉（EMA20 7688.70 < SMA50 7691.71），不符黃金交叉條件；價格雖回踩 EMA20 但 50/20 多頭排列未成立，趨勢 sideways 無方向，skip。"
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "死亡交叉非黃金交叉、趨勢向下且價格已跌破 SMA50，RSI 中性無動能，19 根前交叉信號過舊、range 僅 0.21% 缺乏波動，不符合 50/20 順勢 pullback 條件，skip。"
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "10:15-10:45 三線中陰線實體高點 3011.1 超出首根陽線 body 上緣 3010.9，未被完整夾住；且價格跌破 EMA20 處於下行趨勢，逆大方向 skip。"
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "預偵測 RSI Divergence type=none，價格結構無明確 LL/HH 對應，RSI 54.6 持平無背離訊號；50/20 死亡交叉後呈盤整，缺乏方向性 confluence，跳過。"
     }
   ],
   "candidates": [
     {
-<<<<<<< Updated upstream
-      "strategy": "H-Pattern",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "價格已連續下行破底多根 K 線，無清晰 <50% pullback 結構，且首根長直 K (08:50) top wick 極短 (0.5 pt)，未見 H-Pattern 賣壓特徵，屬趨勢延伸非反轉 setup。",
-      "priority_score": 54.0,
-      "actionable": false
-    },
-    {
-      "strategy": "H-Pattern",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "缺乏明確 H-Pattern 結構，09:10 陰線開盤即在高點無顯著 top wick 賣壓訊號，且 pullback 結構混亂，雖跌破前低但形態要件未齊，逆大方向 bias 不足，skip。",
-      "priority_score": 54.0,
-      "actionable": false
-    },
-    {
       "strategy": "H-Pattern",
       "ticker": "M2K=F",
       "grade": "C",
-      "confidence": 25,
-      "reason": "8根K線皆為緩慢下移嘅陰線，無明顯長直K+top wick+淺回+穿底嘅H-Pattern結構，range僅0.18%缺乏動能，confluence不足。",
-      "priority_score": 54.0,
-=======
-      "strategy": "H-Pattern",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 20,
-      "reason": "H-Pattern 偵測器確認未成形（broke_low=False、pullback 負值、無顯著頂wick賣壓），價格位於 EMA20/SMA50 之上但趨勢 sideways，confluence 不足，跳過。",
-      "priority_score": 48.0,
->>>>>>> Stashed changes
+      "confidence": 18,
+      "reason": "偵測器明確顯示無 H-Pattern 型態，近 8 根 K 線皆為小實體震盪（range 0.21%、wick 57.5%），無長直 K 配頂 wick 賣壓結構，雖 trend 偏空但形態條件完全不成立，跳過。",
+      "priority_score": 45.6,
       "actionable": false
     },
     {
       "strategy": "H-Pattern",
-      "ticker": "MNQ=F",
+      "ticker": "MES=F",
       "grade": "C",
       "confidence": 18,
-      "reason": "H-Pattern 偵測器顯示未成立（broke_low=False、body_size 僅 17.25 偏短），且 pullback 為負值代表長陽燈非空方 H 結構；EMA20 仍向下、價格剛觸 EMA20，趨勢偏弱但形態缺失，無交易依",
+      "reason": "H-Pattern 未成形——pullback 已達 -64.5% 超出 50% 門檻、broke_low 為 False，且 50/20 早前出現 death cross 殘留偏空壓力，形態與 confluence 皆不成立。",
       "priority_score": 45.6,
       "actionable": false
     },
     {
       "strategy": "3-Pushes",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-<<<<<<< Updated upstream
-      "reason": "上升只見兩推（08:15、08:30）後反轉，下跌亦僅兩推（09:00、09:15），未達三推結構，且無明顯等高低可突破，價格雖在 MA20 下方略偏空，但形態不符 YW 3 Pushes 定義，skip。",
-=======
-      "reason": "早盤09:30-10:00確有三波下行且末段收窄，但三推低點遞減無等低結構，缺突破位；現價已從低點反彈逾百點，形態消耗殆盡，且11:00/11:15雖現等高29367附近卻無對應三推上行確認，skip。",
-      "priority_score": 45.0,
-      "actionable": false
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "三推下降結構已成形但延伸至3004新低，第三推並未明顯收窄且無等低可承接，現價處反彈中段非Setup啟動點，趨勢sideways、價格在EMA20下方，confluence不足，不符合3 Pushes入場條件。",
-      "priority_score": 45.0,
-      "actionable": false
-    },
-    {
-      "strategy": "50-20-Pullback",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "死亡交叉（EMA20 7688.72 < SMA50 7691.72）非黃金交叉，且 trend 為 sideways，價格勉強站上 SMA50，形態與順勢條件不符，skip。",
->>>>>>> Stashed changes
-      "priority_score": 45.0,
-      "actionable": false
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "M2K=F",
-      "grade": "C",
-<<<<<<< Updated upstream
-      "confidence": 25,
-      "reason": "8根K線高低交錯無明確方向，無三推結構亦無等高/等低可突破，價格貼近MA20呈盤整，wick過高顯示多空分歧，不符合3 Pushes形態。",
-      "priority_score": 45.0,
-      "actionable": false
-    },
-    {
-      "strategy": "3-Pushes",
       "ticker": "MNQ=F",
       "grade": "C",
       "confidence": 25,
-      "reason": "結構混亂無清晰三推形態，中段 08:15-08:45 反彈破前高破壞下行結構，最近三跌最後一推最大而非收窄，缺等低可突破位，不符合 3 Pushes 條件。",
+      "reason": "三推向下結構已於10:00完成（low 29248），現價反彈至29351.25，無新3 Pushes形成，等高/等低突破條件不成立，skip。",
       "priority_score": 45.0,
-=======
+      "actionable": false
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "MNQ=F",
+      "grade": "C",
       "confidence": 15,
-      "reason": "H-Pattern 偵測器未觸發，近期 K 線皆小實體無長直 K 線，價格於 EMA20 下方弱勢整理且大周期 dead cross 19 根，唔符合形態定義。",
+      "reason": "H-Pattern 偵測器明確標示 present=False，pullback_pct 為負值且未穿底，形態未成立；雖有 3-Pushes 收窄信號，但 HTF bias 偏空（死亡交叉 + 價格低於 SMA50），逆大方向操作風險高，建",
       "priority_score": 42.0,
       "actionable": false
     },
     {
       "strategy": "RSI-Divergence",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "預偵測無 RSI 背離訊號，價格處於橫盤區間且 RSI 持平於 55.3，缺乏明確 Higher High/Lower High 結構，形態不成立。",
-      "priority_score": 38.5,
-      "actionable": false
-    },
-    {
-      "strategy": "RSI-Divergence",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "無 RSI 背離形態（價格呈 Higher Low 非 Lower Low，且無 HH/LH 結構），50/20 死亡交叉 + 價格跌破 EMA20 與 SMA50，順大方向偏空，無 setup 可入場。",
-      "priority_score": 38.5,
->>>>>>> Stashed changes
-      "actionable": false
-    },
-    {
-      "strategy": "RSI-Divergence",
       "ticker": "MNQ=F",
       "grade": "C",
       "confidence": 15,
-      "reason": "價格近 8 根 K 線低點持續抬升（29258→29289→29289→29287→29326→29343→29344→29346），RSI 維持 50.8 持平，無 Lower Low / Higher Low 背離結構，預偵測確認 ty",
+      "reason": "RSI Divergence 形態未成立（價格與 RSI 同向，無背離訊號），3-Pushes 向下且 EMA20/SMA50 死亡交叉順勢向下，缺乏 confluence，skip。",
       "priority_score": 38.5,
       "actionable": false
     },
     {
-      "strategy": "Two-Yang-One-Yin",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "左陽線 body 僅 1.75pt、太弱夾唔實，中間陰線 body 細到無意義，加上 wick% 高達 74% 屬典型噪音盤整，趨勢 sideways 缺方向性，唔符合「盤整尾段」條件，skip。",
-      "priority_score": 36.0,
-      "actionable": false
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
+      "strategy": "RSI-Divergence",
       "ticker": "M2K=F",
       "grade": "C",
-      "confidence": 25,
-<<<<<<< Updated upstream
-      "reason": "形態未成立——首根陽線實體僅0.1點(近乎十字星)，且其body頂(3023.40)未夾住中間陰線body頂(3023.50)，嚴格定義不符；加上價格已跌破MA20(3020.11)且近三根連陰走低，confluence完全逆勢，skip。",
-=======
-      "reason": "10:15-10:45 三K中陰線實體(3006.5-3011.1)過大，兩側陽線實體完全無法包夾，形態不成立；價格位於EMA20與SMA50下方，逆偏空結構，skip。",
->>>>>>> Stashed changes
-      "priority_score": 36.0,
+      "confidence": 15,
+      "reason": "預偵測無 RSI 背離訊號，最近 8 根低點持續抬高（3004→3010.6），未形成 Lower Low 結構；高點亦無明確 Higher High 序列，形態完全缺席，加上 50/20 死亡交叉後趨勢向下、價格在 EMA20 下方，逆大",
+      "priority_score": 38.5,
       "actionable": false
     },
     {
-<<<<<<< Updated upstream
-=======
+      "strategy": "RSI-Divergence",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "預偵測 RSI Divergence type=none，價格結構無明確 LL/HH 對應，RSI 54.6 持平無背離訊號；50/20 死亡交叉後呈盤整，缺乏方向性 confluence，跳過。",
+      "priority_score": 38.5,
+      "actionable": false
+    },
+    {
       "strategy": "3-Pushes",
       "ticker": "MES=F",
       "grade": "C",
       "confidence": 15,
-      "reason": "三推向下一推未成形（僅見兩推後盤整，無三推結構），且最後一根放量向上突破前高，bias 翻多與 3-Pushes 形態不吻合，detector 亦判定 present=False，skip。",
+      "reason": "3-Pushes 偵測器明確 False，價格區間橫盤 7677-7699 缺乏三推結構，末段 11:00-11:15 為十字星/小實體無收窄跡象，RSI 中性 54.8 無方向，配合 75.7% 高 wick 比率顯示多空拉扯，形態不存在",
+      "priority_score": 35.0,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "偵測器確認無3 Pushes形態（narrowing=False），價格處於EMA20下方呈sideways，RSI中性偏弱且wick%偏高顯示猶豫，唔符合任何方向入場條件，skip。",
+      "priority_score": 35.0,
+      "actionable": false
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "死亡交叉非黃金交叉，EMA20(29336)在SMA50(29415)下方且趨勢向下，唔符合50/20 Pullback做多條件。",
+      "priority_score": 35.0,
+      "actionable": false
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "死亡交叉（EMA20 7688.70 < SMA50 7691.71），不符黃金交叉條件；價格雖回踩 EMA20 但 50/20 多頭排列未成立，趨勢 sideways 無方向，skip。",
       "priority_score": 35.0,
       "actionable": false
     },
@@ -334,42 +214,35 @@
       "ticker": "M2K=F",
       "grade": "C",
       "confidence": 15,
-      "reason": "死亡交叉（19 bars 前）非黃金交叉，價格位於 SMA50 下方且趨勢向下，與 50/20 Pullback 多頭定義完全相反，應 skip。",
+      "reason": "死亡交叉非黃金交叉、趨勢向下且價格已跌破 SMA50，RSI 中性無動能，19 根前交叉信號過舊、range 僅 0.21% 缺乏波動，不符合 50/20 順勢 pullback 條件，skip。",
       "priority_score": 35.0,
       "actionable": false
     },
     {
-      "strategy": "50-20-Pullback",
+      "strategy": "Two-Yang-One-Yin",
       "ticker": "MNQ=F",
       "grade": "C",
       "confidence": 15,
-      "reason": "死亡交叉非黃金交叉，價格在 SMA50 下方且趨勢向下，與 50/20 Pullback 多頭順勢定義完全相反，形態不成立應 skip。",
-      "priority_score": 35.0,
+      "reason": "無兩陽夾一陰形態，近期K線為連三陽後轉弱，且EMA20死亡交叉趨勢向下，價格跌破EMA20與SMA50，逆大方向應skip。",
+      "priority_score": 28.0,
       "actionable": false
     },
     {
->>>>>>> Stashed changes
       "strategy": "Two-Yang-One-Yin",
       "ticker": "MES=F",
       "grade": "C",
-<<<<<<< Updated upstream
       "confidence": 15,
-      "reason": "最近8根K線無「兩陽夾一陰」形態，最近3根連陰創低，價格跌破MA20呈下降趨勢，逆大方向skip。",
+      "reason": "近8根K線無「陽-陰-陽」序列，最近三根為陽後接兩陰，形態不成立，雖然盤整但無夾陰結構，skip。",
       "priority_score": 28.0,
       "actionable": false
     },
     {
       "strategy": "Two-Yang-One-Yin",
-      "ticker": "MNQ=F",
+      "ticker": "M2K=F",
       "grade": "C",
       "confidence": 15,
-      "reason": "最近三根連陰下跌放量無反轉結構，價格跌破 MA20 且無 Bull-Bear-Bull 夾擊形態，逆大方向 skip。",
+      "reason": "10:15-10:45 三線中陰線實體高點 3011.1 超出首根陽線 body 上緣 3010.9，未被完整夾住；且價格跌破 EMA20 處於下行趨勢，逆大方向 skip。",
       "priority_score": 28.0,
-=======
-      "confidence": 20,
-      "reason": "未見標準「兩陽夾一陰」，近期排列為陽陽陰而非陰線被前後陽線夾住，且價格低於EMA20與SMA50、RSI偏弱，HTF資料未提供且下行 confluence 不足。",
-      "priority_score": 32.0,
->>>>>>> Stashed changes
       "actionable": false
     }
   ],
@@ -377,41 +250,23 @@
     {
       "tk": "MNQ=F",
       "name": "Micro Nasdaq",
-<<<<<<< Updated upstream
-      "last": 29421.25,
-      "chg": 120.75,
-      "pct": 0.41210900837869663
-=======
-      "last": 29349.75,
-      "chg": 49.25,
-      "pct": 0.16808586884182863
->>>>>>> Stashed changes
+      "last": 29351.25,
+      "chg": 50.75,
+      "pct": 0.17320523540553914
     },
     {
       "tk": "MES=F",
       "name": "Micro S&P",
-<<<<<<< Updated upstream
-      "last": 7687.0,
-      "chg": 24.5,
-      "pct": 0.3197389885807504
-=======
       "last": 7692.5,
       "chg": 30.0,
       "pct": 0.3915171288743882
->>>>>>> Stashed changes
     },
     {
       "tk": "M2K=F",
       "name": "Micro Russell",
-<<<<<<< Updated upstream
-      "last": 3020.199951171875,
-      "chg": 21.0,
-      "pct": 0.7001867278570303
-=======
-      "last": 3011.39990234375,
-      "chg": 12.199951171875,
-      "pct": 0.40677351862146177
->>>>>>> Stashed changes
+      "last": 3011.300048828125,
+      "chg": 12.10009765625,
+      "pct": 0.40344418022286704
     }
   ]
 }
