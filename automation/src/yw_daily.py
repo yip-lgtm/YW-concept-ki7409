@@ -69,6 +69,8 @@ def build_reminder(
     snapshot: list[dict],
     grades: list[dict],
     candidates: list[dict],
+    n_strategies: int = 3,
+    n_tickers: int = 3,
 ) -> str:
     """Build the 4-section TG message."""
 
@@ -89,7 +91,7 @@ def build_reminder(
     snap_text = "\n".join(snap_lines)
 
     # Section 2: LLM grades per (strategy × ticker)
-    grade_lines = ["🎯 **LLM 評級 (3 strategies × 3 tickers)**", "```"]
+    grade_lines = [f"🎯 **LLM 評級 ({n_strategies} strategies × {n_tickers} tickers)**", "```"]
     grade_lines.append(f"{'Strategy':<18} {'Ticker':<7} {'Gr':<3} {'Conf':<5} Reason")
     grade_lines.append("-" * 80)
     for g in grades:
@@ -149,7 +151,7 @@ def build_reminder(
 {snap_text}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-## 2️⃣ 評級 (3 strategies × 3 tickers)
+## 2️⃣ 評級 ({n_strategies} strategies × {n_tickers} tickers)
 {grade_text}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -257,7 +259,8 @@ def main() -> int:
             print(f"  #{i} {c['strategy']:<18} {c['ticker']:<7} [{c['grade']}] skip")
 
     # Step 4: Build message
-    msg = build_reminder(today_str, weekday, snapshot, grades, candidates)
+    msg = build_reminder(today_str, weekday, snapshot, grades, candidates,
+                         n_strategies=len(STRATEGIES), n_tickers=len(WATCHLIST))
 
     # Step 5: Save artifacts
     print("[yw_daily] Saving artifacts...")
