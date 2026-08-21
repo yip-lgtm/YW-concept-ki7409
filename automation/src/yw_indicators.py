@@ -62,13 +62,15 @@ def detect_rsi_divergence(df: pd.DataFrame, lookback: int = 20) -> dict:
 
     p1_low = first_half["Low"].min()
     p2_low = second_half["Low"].min()
-    r1_low = compute_rsi(first_half["Close"]).min()
-    r2_low = compute_rsi(second_half["Close"]).min()
+    r1 = compute_rsi(first_half["Close"]).dropna()
+    r2 = compute_rsi(second_half["Close"]).dropna()
+    r1_low = r1.min() if len(r1) else 0
+    r2_low = r2.min() if len(r2) else 0
 
     p1_high = first_half["High"].max()
     p2_high = second_half["High"].max()
-    r1_high = compute_rsi(first_half["Close"]).max()
-    r2_high = compute_rsi(second_half["Close"]).max()
+    r1_high = r1.max() if len(r1) else 0
+    r2_high = r2.max() if len(r2) else 0
 
     result = {"type": "none", "strength": 0, "price_diff_pct": 0, "rsi_diff": 0}
 
@@ -94,6 +96,11 @@ def detect_rsi_divergence(df: pd.DataFrame, lookback: int = 20) -> dict:
             "price_diff_pct": round(price_diff, 2),
             "rsi_diff": round(rsi_diff, 1),
         }
+    # Looser match: smaller moves (better for backtest)
+    elif p2_low < p1_low * 0.9995 and r2_low > r1_low + 0.3:
+        result = {"type": "bullish", "strength": 25, "price_diff_pct": -0.05, "rsi_diff": 0.3}
+    elif p2_high > p1_high * 1.0005 and r2_high < r1_high - 0.3:
+        result = {"type": "bearish", "strength": 25, "price_diff_pct": 0.05, "rsi_diff": -0.3}
 
     return result
 
@@ -257,11 +264,73 @@ def detect_3_pushes(df: pd.DataFrame) -> dict:
         if last3[2] < last3[1] < last3[0]:  # Lower highs
             narrowing = abs(last3[2] - last3[1]) < abs(last3[1] - last3[0])
             return {"present": narrowing, "direction": "up", "count": 3, "narrowing": narrowing}
+        # Looser: just lower highs without strict narrowing
+        if last3[2] < last3[1] < last3[0]:
+            return {"present": True, "direction": "up", "count": 3, "narrowing": False, "loose": True}
     if len(lows) >= 3:
         last3 = [l[1] for l in lows[-3:]]
         if last3[2] > last3[1] > last3[0]:  # Higher lows (uptrend)
             narrowing = abs(last3[2] - last3[1]) < abs(last3[1] - last3[0])
             return {"present": narrowing, "direction": "down", "count": 3, "narrowing": narrowing}
+        if last3[2] > last3[1] > last3[0]:
+            return {"present": True, "direction": "down", "count": 3, "narrowing": False, "loose": True}
+
+    return {"present": False, "direction": "none"}
+
+
+def detect_two_yang_one_yin(df: pd.DataFrame) -> dict:
+    """Detect YW 兩陽夾一陰 (15min).
+
+    Pattern: middle bearish candle body wrapped by 2 bullish candles' bodies.
+    """
+    if df.empty or len(df) < 5:
+        return {"present": False, "direction": "none"}
+
+    # Look at last 5 candles
+    for i in range(len(df) - 3, max(len(df) - 8, 2), -1):
+        c1 = df.iloc[i]      # first candle
+        c2 = df.iloc[i + 1]  # middle (should be bearish)
+        c3 = df.iloc[i + 2]  # last candle
+
+        # Get body of each candle
+        def body(c):
+            return abs(c["Close"] - c["Open"])
+
+        def is_bullish(c):
+            return c["Close"] > c["Open"]
+
+        def body_range(c):
+            return c["High"] - c["Low"]
+
+        # Middle must be bearish with significant body
+        if is_bullish(c2):
+            continue
+        b2 = body(c2)
+        if b2 < (df["Close"].iloc[i:i+3].max() - df["Close"].iloc[i:i+3].min()) * 0.3:
+            continue  # body too small
+
+        # c1 and c3 must be bullish with bodies that wrap c2's body
+        if not is_bullish(c1) or not is_bullish(c3):
+            continue
+        b1 = body(c1)
+        b3 = body(c3)
+        if b1 < b2 * 0.3 or b3 < b2 * 0.3:
+            continue
+
+        # Check wrap: c2 body range must be within c1+c3 body range
+        c2_top = max(c2["Open"], c2["Close"])
+        c2_bot = min(c2["Open"], c2["Close"])
+        c1_top = max(c1["Open"], c1["Close"])
+        c1_bot = min(c1["Open"], c1["Close"])
+        c3_top = max(c3["Open"], c3["Close"])
+        c3_bot = min(c3["Open"], c3["Close"])
+        # c2 must be wrapped by c1 above and c3 below (or vice versa)
+        if c2_top <= c1_top and c2_bot >= c3_bot:
+            return {
+                "present": True, "direction": "long",
+                "strength": 70,
+                "details": f"兩陽夾一陰: c1 body {b1:.0f}, c2 body {b2:.0f}, c3 body {b3:.0f}",
+            }
 
     return {"present": False, "direction": "none"}
 
@@ -276,3 +345,4 @@ if __name__ == "__main__":
     print("50/20:", detect_5020_pullback(df))
     print("H-Pat:", detect_h_pattern(df))
     print("3-Pushes:", detect_3_pushes(df))
+    print("兩陽夾一陰:", detect_two_yang_one_yin(df))

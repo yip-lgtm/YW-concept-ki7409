@@ -79,6 +79,33 @@ STRATEGIES = {
         "data_period": "5d",
         "weight": 1.0,
     },
+    "Stair-Pattern": {
+        "name": "Stair Pattern",
+        "timeframe": "5min/15min/1hr",
+        "desc": "大陰啟動 (收下半部 + 上影細) → ≥2 根上影階梯 → 收破 20EMA 確認空方延續 (H Pattern 變體)",
+        "doc": "docs/12-Stair-Pattern.md",
+        "data_granularity": "5m",
+        "data_period": "5d",
+        "weight": 0.9,
+    },
+    "CRT": {
+        "name": "CRT (Candle Range Theory)",
+        "timeframe": "4H range / 5min execution",
+        "desc": "4H K 做 CRT range，5min 掃 CRT-L/H 收返 + MSS 確認 → 跑向另一邊",
+        "doc": "docs/14-CRT-Candle-Range-Theory.md",
+        "data_granularity": "5m",
+        "data_period": "5d",
+        "weight": 1.1,
+    },
+    "Kell-Cycle": {
+        "name": "Kell Cycle 5 Setups",
+        "timeframe": "5min/15min/1H/Daily",
+        "desc": "5 個 Oliver Kell Setups: Reversal Extension + Wedge Pop/Drop + EMA Crossback + Base n' Break + Exhaustion",
+        "doc": "docs/15-Oliver-Kell-Cycle.md",
+        "data_granularity": "5m",
+        "data_period": "5d",
+        "weight": 0.9,
+    },
 }
 
 # Per-ticker watchlist (YW trader focus)
@@ -141,6 +168,30 @@ def compute_summary(df: pd.DataFrame, ticker: str) -> dict:
     h_pat = detect_h_pattern(df)
     pushes = detect_3_pushes(df)
 
+    # Extended detectors (Stair, CRT, Kell)
+    stair = {}
+    kell = {}
+    crt = {}
+    try:
+        from yw_indicators_extra import detect_stair_pattern, detect_kell_setups, detect_crt
+        stair = detect_stair_pattern(df)
+        kell = detect_kell_setups(df)
+        # CRT needs 4h data
+        if strat.get("needs_4h") or strategy_key == "CRT":
+            import yfinance as yf
+            df_4h_raw = yf.download(ticker, period="1mo", interval="1h", progress=False, auto_adjust=True)
+            if isinstance(df_4h_raw.columns, __import__("pandas").MultiIndex):
+                df_4h_raw.columns = df_4h_raw.columns.get_level_values(0)
+            df_4h = df_4h_raw.resample("4h").agg({
+                "Open": "first", "High": "max", "Low": "min",
+                "Close": "last", "Volume": "sum"
+            }).dropna()
+            crt = detect_crt(df_4h, df)
+    except Exception as e:
+        stair = {"present": False, "err": str(e)[:60]}
+        kell = {"present": False, "err": str(e)[:60]}
+        crt = {"present": False, "err": str(e)[:60]}
+
     return {
         "ticker": ticker,
         "last": float(last["Close"]),
@@ -159,6 +210,9 @@ def compute_summary(df: pd.DataFrame, ticker: str) -> dict:
         "pb_5020": pb_5020,
         "h_pat": h_pat,
         "pushes": pushes,
+        "stair": stair,
+        "kell": kell,
+        "crt": crt,
     }
 
 
@@ -185,6 +239,9 @@ def build_strategy_prompt(strategy_key: str, summary: dict) -> str:
     pb_5020 = summary.get('pb_5020', {})
     h_pat = summary.get('h_pat', {})
     pushes = summary.get('pushes', {})
+    stair = summary.get('stair', {})
+    kell = summary.get('kell', {})
+    crt = summary.get('crt', {})
 
     return f"""你是 YW Concept 交易員，請評估以下 {summary['ticker']} ({strat['timeframe']}) 數據，
 判斷今日是否有「{strat['name']}」Setup。
@@ -207,6 +264,9 @@ def build_strategy_prompt(strategy_key: str, summary: dict) -> str:
 - 3-Pushes detector: {pushes}
 - RSI Divergence: {rsi_div}
 - 50/20 Pullback: {pb_5020}
+- Stair Pattern: {stair}
+- Kell Cycle 5 Setups: {kell}
+- CRT (4H range): {crt}
 
 ## 最近 8 根 K 線
 {json.dumps(summary.get('recent_candles', {}), indent=2, default=str)[:1500]}
@@ -346,6 +406,9 @@ STRATEGY_WEIGHT = {
     "Two-Yang-One-Yin": 0.8,
     "RSI-Divergence": 1.1,
     "50-20-Pullback": 1.0,
+    "Stair-Pattern": 0.9,
+    "CRT": 1.1,
+    "Kell-Cycle": 0.9,
 }
 
 GRADE_WEIGHT = {"A": 100, "B": 60, "C": 20, "?": 0}
