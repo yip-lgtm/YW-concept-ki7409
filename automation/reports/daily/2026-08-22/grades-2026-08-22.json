@@ -1,383 +1,320 @@
 {
   "date": "2026-08-22",
   "weekday": "Sat",
-  "generated_hkt": "2026-08-22T01:36:11.914239+08:00",
+  "generated_hkt": "2026-08-22T02:00:41.913958+08:00",
   "grades": [
     {
       "strategy": "H-Pattern",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "K線細碎橫盤 3017-3019 區間，缺乏長直 K 與頂 wick 賣壓結構，H-Pattern detector 亦確認 false，無形態可交易。"
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     },
     {
       "strategy": "H-Pattern",
       "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "H-Pattern 偵測器明確 False，近期 K 線全屬小實體震盪無長直 K 線結構，缺 top wick 賣壓訊號，pullback 已穿 EMA20 但無明確 breakdown 確認形態，confluence 不足，skip。"
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "三推向形態未成形，價格�行於 EMA20 附近無明確方向，detector 已判定 present=False，且無等高/等低突破條件。"
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "三推偵測雖亮燈但高點非等高（29471/29488/29454 屬下降高低），且 EMA20 死叉、HTF 偏空、價格跌破 EMA20 與結構低點，逆大方向且セットアップ已瓦解，跳過。"
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     },
     {
       "strategy": "H-Pattern",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "H-Pattern 偵測器明確 False，pullback 達 65.6% 超過 <50% 門檻，上影線僅 7% 賣壓不足，雖 3-Pushes narrowing + RSI 偏空提供弱逆勢訊號，但形態未成形且無 HTF bias 共振"
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     },
     {
-      "strategy": "RSI-Divergence",
+      "strategy": "3-Pushes",
       "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "無 RSI 背離形態（價格 LL 但 RSI 同步走低非 HL），且 H-Pattern 已破低、3-Pushes 上行收窄暗示動能耗盡，價格跌破 EMA20 短期偏空，僅 SMA50 之上提供微薄 HTF 支�，confluence 不足"
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     },
     {
-      "strategy": "Two-Yang-One-Yin",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 18,
-      "reason": "最近8根K線無連續陽陰陽序列（最新三根皆陰），形態不存在；且50/20死亡交叉、價格低於EMA20與SMA50、趨勢向下，confluence完全逆轉，skip。"
+      "strategy": "3-Pushes",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     },
     {
       "strategy": "3-Pushes",
       "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "偵測器雖標記3推向下且收窄，但價格站穩EMA20/SMA50之上，趨勢sideways無明確方向，加上中午lunch session成交量萎縮（295-665），3推結構唔乾淨且缺HTF confluence支持，skip為佳。"
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     },
     {
       "strategy": "Two-Yang-One-Yin",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "最近三根K線為「陰-陰-陽」，並非「陽-陰-陽」結構，兩陽夾一陰形態未成立，雖價格站上EMA20/50且3-Pushes向下narrowing偏多，但形態缺失不應進場。"
-    },
-    {
-      "strategy": "RSI-Divergence",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "RSI 偵測器顯示 type=none，價格窄幅震盪無明確 Lower Low/Higher High 結構，形態唔成立，雖然 50/20 golden cross 偏多但缺乏 divergence 訊號，skip。"
-    },
-    {
-      "strategy": "50-20-Pullback",
       "ticker": "MNQ=F",
-      "grade": "B",
-      "confidence": 55,
-      "reason": "黃金交叉後回踩 EMA20 結構存在但價格已下穿 EMA20 約 19 點，且 H-Pattern 偵測 broke_low、低高低低遞減，動能偏弱，需等 SMA50 (29366) 附近止跌訊號或重新站回 EMA20 才確認 Setup。"
-    },
-    {
-      "strategy": "50-20-Pullback",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "黃金交叉已過22根K線（過期），價格跌穿SMA50（7692.25 < 7693.02）違反多頭結構，趨勢判定sideways非trending，RSI 43.3持續下行，最近3根K線呈lower low結構，形態結構性失效應skip。"
-    },
-    {
-      "strategy": "50-20-Pullback",
-      "ticker": "M2K=F",
-      "grade": "B",
-      "confidence": 58,
-      "reason": "50/20黃金交叉12bars前形成且價格精準回踩EMA20（距離僅0.032%），形態符合定義；但5K range僅0.09%過窄難以達成1-1.5RR，wick ratio 80.2%顯示chop偏高，RSI自56.8回落至55.1動能"
-    },
-    {
-      "strategy": "RSI-Divergence",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "預偵測無 RSI 背離訊號；價格從 7700.75 跌至 7692.75 同 RSI 由高位回落至 44，屬同步下跌非背離；EMA20/SMA50 走平，趨勢盤整，形態與 confluence 皆未成立，建議 skip。"
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "CRT偵測失效無形態，5min結構混亂無清晰sweep+reclaim MSS，僅見3-pushes up exhaustion偏弱訊號，skip觀望。"
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     },
     {
       "strategy": "Two-Yang-One-Yin",
       "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "12:15-12:30-12:45 出現 陽-陰-陽 雛形，但第二陽線實體 (7698.75→7699.25) 未能完全包夾中間陰線實體頂端 7700.25，形態不成立；加上趨勢 sideways、價格已跌破 EMA20、後續 13:00 "
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     },
     {
       "strategy": "Stair-Pattern",
       "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "大陰啟動欠奉（最近陰燭細），上影階梯唔明顯，且大方向仍為上升趨勢（Golden Cross + 3-Pushes Up），逆 HTF Bias 做空風險高，skip 較穩陣。"
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     },
     {
-      "strategy": "CRT",
+      "strategy": "50-20-Pullback",
       "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "CRT偵測報錯且5分鐘K線處於極窄幅壓縮區間(0.09%)，未見4H高低點掃蕩結構及MSS確認，僅3-pushes up但無narrowing，形態不成立。"
-    },
-    {
-      "strategy": "Stair-Pattern",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "冇大陰啟動結構，價格站於 EMA20 之上 (3018.70 > 3017.73)，50/20 黃金交叉 12 bars 前確立上升趨勢，完全逆空方 Stair Pattern 條件，skip。"
-    },
-    {
-      "strategy": "Kell-Cycle",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "EMA20 crossback 雖觸及但趨勢 sideways 且價格在 SMA50 之下，H-Pattern/3-Pushes/Divergence 全部缺席，8 根 K 線為高低點收斂震盪（wick 50%、range 0.11%），無"
-    },
-    {
-      "strategy": "Kell-Cycle",
-      "ticker": "MNQ=F",
-      "grade": "B",
-      "confidence": 58,
-      "reason": "3-Pushes Exhaustion(上推3次narrowing) + EMA Crossback拉回EMA20已浮現，但價格跌破EMA20(-0.054%)且HTF仍golden cross偏多，方向衝突需等確認；H-Pattern b"
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "CRT 偵測失效無 4H range 數據，5min 雖見低點掃盤（7692.25）但未見 MSS 確認收返，價格處 EMA20 下方且趨勢 sideways，形態不成立應 skip。"
-    },
-    {
-      "strategy": "Kell-Cycle",
-      "ticker": "M2K=F",
-      "grade": "B",
-      "confidence": 55,
-      "reason": "價格緊貼 EMA20 形成窄幅 Base n' Break 雛形，50/20 黃金交叉向上未破，但 RSI 中性無方向、缺乏突破觸發，confluence 不足確認。"
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     },
     {
       "strategy": "Stair-Pattern",
       "ticker": "MES=F",
       "grade": "?",
       "confidence": 0,
-      "reason": "api error: HTTPSConnectionPool(host='api.minimax.io', port=443): Read t"
+      "reason": "http 429"
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429"
     }
   ],
   "candidates": [
     {
-      "strategy": "50-20-Pullback",
-      "ticker": "M2K=F",
-      "grade": "B",
-      "confidence": 58,
-      "reason": "50/20黃金交叉12bars前形成且價格精準回踩EMA20（距離僅0.032%），形態符合定義；但5K range僅0.09%過窄難以達成1-1.5RR，wick ratio 80.2%顯示chop偏高，RSI自56.8回落至55.1動能",
-      "priority_score": 118.0,
-      "actionable": true
-    },
-    {
-      "strategy": "50-20-Pullback",
-      "ticker": "MNQ=F",
-      "grade": "B",
-      "confidence": 55,
-      "reason": "黃金交叉後回踩 EMA20 結構存在但價格已下穿 EMA20 約 19 點，且 H-Pattern 偵測 broke_low、低高低低遞減，動能偏弱，需等 SMA50 (29366) 附近止跌訊號或重新站回 EMA20 才確認 Setup。",
-      "priority_score": 115.0,
-      "actionable": true
-    },
-    {
-      "strategy": "Kell-Cycle",
-      "ticker": "MNQ=F",
-      "grade": "B",
-      "confidence": 58,
-      "reason": "3-Pushes Exhaustion(上推3次narrowing) + EMA Crossback拉回EMA20已浮現，但價格跌破EMA20(-0.054%)且HTF仍golden cross偏多，方向衝突需等確認；H-Pattern b",
-      "priority_score": 106.2,
-      "actionable": true
-    },
-    {
-      "strategy": "Kell-Cycle",
-      "ticker": "M2K=F",
-      "grade": "B",
-      "confidence": 55,
-      "reason": "價格緊貼 EMA20 形成窄幅 Base n' Break 雛形，50/20 黃金交叉向上未破，但 RSI 中性無方向、缺乏突破觸發，confluence 不足確認。",
-      "priority_score": 103.5,
-      "actionable": true
-    },
-    {
       "strategy": "H-Pattern",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "K線細碎橫盤 3017-3019 區間，缺乏長直 K 與頂 wick 賣壓結構，H-Pattern detector 亦確認 false，無形態可交易。",
-      "priority_score": 54.0,
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
       "actionable": false
     },
     {
       "strategy": "H-Pattern",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
       "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "H-Pattern 偵測器明確 False，pullback 達 65.6% 超過 <50% 門檻，上影線僅 7% 賣壓不足，雖 3-Pushes narrowing + RSI 偏空提供弱逆勢訊號，但形態未成形且無 HTF bias 共振",
-      "priority_score": 54.0,
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
       "actionable": false
     },
     {
       "strategy": "RSI-Divergence",
       "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "RSI 偵測器顯示 type=none，價格窄幅震盪無明確 Lower Low/Higher High 結構，形態唔成立，雖然 50/20 golden cross 偏多但缺乏 divergence 訊號，skip。",
-      "priority_score": 49.5,
-      "actionable": false
-    },
-    {
-      "strategy": "RSI-Divergence",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "預偵測無 RSI 背離訊號；價格從 7700.75 跌至 7692.75 同 RSI 由高位回落至 44，屬同步下跌非背離；EMA20/SMA50 走平，趨勢盤整，形態與 confluence 皆未成立，建議 skip。",
-      "priority_score": 49.5,
-      "actionable": false
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "CRT偵測失效無形態，5min結構混亂無清晰sweep+reclaim MSS，僅見3-pushes up exhaustion偏弱訊號，skip觀望。",
-      "priority_score": 49.5,
-      "actionable": false
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "CRT偵測報錯且5分鐘K線處於極窄幅壓縮區間(0.09%)，未見4H高低點掃蕩結構及MSS確認，僅3-pushes up但無narrowing，形態不成立。",
-      "priority_score": 49.5,
-      "actionable": false
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "CRT 偵測失效無 4H range 數據，5min 雖見低點掃盤（7692.25）但未見 MSS 確認收返，價格處 EMA20 下方且趨勢 sideways，形態不成立應 skip。",
-      "priority_score": 49.5,
-      "actionable": false
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "三推向形態未成形，價格�行於 EMA20 附近無明確方向，detector 已判定 present=False，且無等高/等低突破條件。",
-      "priority_score": 45.0,
-      "actionable": false
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "三推偵測雖亮燈但高點非等高（29471/29488/29454 屬下降高低），且 EMA20 死叉、HTF 偏空、價格跌破 EMA20 與結構低點，逆大方向且セットアップ已瓦解，跳過。",
-      "priority_score": 45.0,
-      "actionable": false
-    },
-    {
-      "strategy": "3-Pushes",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "偵測器雖標記3推向下且收窄，但價格站穩EMA20/SMA50之上，趨勢sideways無明確方向，加上中午lunch session成交量萎縮（295-665），3推結構唔乾淨且缺HTF confluence支持，skip為佳。",
-      "priority_score": 45.0,
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
       "actionable": false
     },
     {
       "strategy": "50-20-Pullback",
       "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "黃金交叉已過22根K線（過期），價格跌穿SMA50（7692.25 < 7693.02）違反多頭結構，趨勢判定sideways非trending，RSI 43.3持續下行，最近3根K線呈lower low結構，形態結構性失效應skip。",
-      "priority_score": 45.0,
-      "actionable": false
-    },
-    {
-      "strategy": "H-Pattern",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "H-Pattern 偵測器明確 False，近期 K 線全屬小實體震盪無長直 K 線結構，缺 top wick 賣壓訊號，pullback 已穿 EMA20 但無明確 breakdown 確認形態，confluence 不足，skip。",
-      "priority_score": 42.0,
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
       "actionable": false
     },
     {
       "strategy": "Stair-Pattern",
       "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "大陰啟動欠奉（最近陰燭細），上影階梯唔明顯，且大方向仍為上升趨勢（Golden Cross + 3-Pushes Up），逆 HTF Bias 做空風險高，skip 較穩陣。",
-      "priority_score": 40.5,
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
       "actionable": false
     },
     {
-      "strategy": "Kell-Cycle",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "EMA20 crossback 雖觸及但趨勢 sideways 且價格在 SMA50 之下，H-Pattern/3-Pushes/Divergence 全部缺席，8 根 K 線為高低點收斂震盪（wick 50%、range 0.11%），無",
-      "priority_score": 40.5,
-      "actionable": false
-    },
-    {
-      "strategy": "RSI-Divergence",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "無 RSI 背離形態（價格 LL 但 RSI 同步走低非 HL），且 H-Pattern 已破低、3-Pushes 上行收窄暗示動能耗盡，價格跌破 EMA20 短期偏空，僅 SMA50 之上提供微薄 HTF 支�，confluence 不足",
-      "priority_score": 38.5,
-      "actionable": false
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
+      "strategy": "50-20-Pullback",
       "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "最近三根K線為「陰-陰-陽」，並非「陽-陰-陽」結構，兩陽夾一陰形態未成立，雖價格站上EMA20/50且3-Pushes向下narrowing偏多，但形態缺失不應進場。",
-      "priority_score": 36.0,
-      "actionable": false
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
-      "ticker": "MES=F",
-      "grade": "C",
-      "confidence": 25,
-      "reason": "12:15-12:30-12:45 出現 陽-陰-陽 雛形，但第二陽線實體 (7698.75→7699.25) 未能完全包夾中間陰線實體頂端 7700.25，形態不成立；加上趨勢 sideways、價格已跌破 EMA20、後續 13:00 ",
-      "priority_score": 36.0,
-      "actionable": false
-    },
-    {
-      "strategy": "Stair-Pattern",
-      "ticker": "M2K=F",
-      "grade": "C",
-      "confidence": 15,
-      "reason": "冇大陰啟動結構，價格站於 EMA20 之上 (3018.70 > 3017.73)，50/20 黃金交叉 12 bars 前確立上升趨勢，完全逆空方 Stair Pattern 條件，skip。",
-      "priority_score": 31.5,
-      "actionable": false
-    },
-    {
-      "strategy": "Two-Yang-One-Yin",
-      "ticker": "MNQ=F",
-      "grade": "C",
-      "confidence": 18,
-      "reason": "最近8根K線無連續陽陰陽序列（最新三根皆陰），形態不存在；且50/20死亡交叉、價格低於EMA20與SMA50、趨勢向下，confluence完全逆轉，skip。",
-      "priority_score": 30.4,
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
       "actionable": false
     },
     {
@@ -385,7 +322,70 @@
       "ticker": "MES=F",
       "grade": "?",
       "confidence": 0,
-      "reason": "api error: HTTPSConnectionPool(host='api.minimax.io', port=443): Read t",
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "MNQ=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "MES=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "http 429",
       "priority_score": 0.0,
       "actionable": false
     }
@@ -394,23 +394,23 @@
     {
       "tk": "MNQ=F",
       "name": "Micro Nasdaq",
-      "last": 29387.25,
-      "chg": 86.75,
-      "pct": 0.29607003293459155
+      "last": 29396.75,
+      "chg": 96.25,
+      "pct": 0.3284926878380915
     },
     {
       "tk": "MES=F",
       "name": "Micro S&P",
-      "last": 7694.25,
-      "chg": 31.75,
-      "pct": 0.4143556280587275
+      "last": 7691.75,
+      "chg": 29.25,
+      "pct": 0.3817292006525285
     },
     {
       "tk": "M2K=F",
       "name": "Micro Russell",
-      "last": 3019.699951171875,
-      "chg": 20.5,
-      "pct": 0.6835156152890056
+      "last": 3020.5,
+      "chg": 21.300048828125,
+      "pct": 0.7101910234361817
     }
   ]
 }
