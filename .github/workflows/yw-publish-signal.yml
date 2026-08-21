@@ -1,0 +1,58 @@
+name: 'YW Concept — Publish Top Signal to AI-Trader'
+
+# After YW daily reminder runs (21:00 HKT), publish the top actionable
+# candidate to ai4trade.ai as a strategy signal.
+# Connects apex-bootcamp YW strategy → AI-Trader marketplace.
+# Earns reputation points; followers can copy the trade.
+
+on:
+  schedule:
+    # 13:30 UTC = 21:30 HKT = 30 min after YW daily reminder
+    - cron: '30 13 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish-signal:
+    name: Publish top YW signal to AI-Trader
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install requests
+        run: pip install --quiet requests
+
+      - name: Publish top signal
+        working-directory: automation
+        env:
+          AI_TRADER_TOKEN: ${{ secrets.AI_TRADER_TOKEN }}
+        run: |
+          # Save token to a file (publish_signal.py expects CREDENTIALS.json)
+          mkdir -p /tmp/aitrader
+          cat > /tmp/aitrader/CREDENTIALS.json << EOF
+          {
+            "agent_id": 23452,
+            "name": "Mavis-Apex-YW-Bot",
+            "token": "${AI_TRADER_TOKEN}",
+            "base_url": "https://ai4trade.ai/api"
+          }
+          EOF
+          AI_TRADER_CRED=/tmp/aitrader/CREDENTIALS.json \
+            python3 scripts/publish_signal.py --yw-repo .
+
+      - name: Commit publish log
+        run: |
+          git config --global user.name "Mavis bot"
+          git config --global user.email "mavis@MiniMax"
+          git add automation/reports/daily/ || true
+          git commit -m "auto(yw): published signal $(date -u +%Y-%m-%d)" --allow-empty || true
+          git push origin main || true
