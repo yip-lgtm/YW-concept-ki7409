@@ -1,0 +1,50 @@
+name: 'YW Concept Daily Reminder (21:00 HKT / 13:00 UTC)'
+
+# Daily LLM grading + priority ranking for YW strategies
+# Runs ONCE per day at 21:00 HKT = 13:00 UTC = 09:00 EDT
+# Mon-Fri (markets closed weekends)
+
+on:
+  schedule:
+    - cron: '0 13 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  yw-daily:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_APEX_PAT }}
+      GIT_USER_NAME: 'YW bot'
+      GIT_USER_EMAIL: 'bot@apex.local'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+
+      - name: Install deps
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+
+      - name: Run YW daily reminder
+        working-directory: automation
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_APEX_PAT }}
+        run: |
+          .venv/bin/python src/yw_daily.py
+          echo "✅ yw daily reminder sent + artifacts pushed"
