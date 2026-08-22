@@ -20,10 +20,15 @@ import time
 import logging
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
+import time as _time
 from typing import Optional
 
 import requests
 import pandas as pd
+
+# Simple in-memory cache (5 min TTL) to avoid Polygon 5 calls/min rate limit
+_CACHE = {}
+_CACHE_TTL = 300  # seconds
 
 # Data providers (Polygon rebranded to Massive; both APIs work in parallel)
 MASSIVE_BASE = "https://api.massive.com"
@@ -111,6 +116,9 @@ def fetch_polygon(symbol: str, days: int = 5, interval_min: int = 5,
         raise RuntimeError("Both massive.com and polygon.io failed")
 
     status = data.get("status", "")
+    if status == "NOT_AUTHORIZED":
+        # Plan doesn't include this timeframe (e.g., 5m crypto requires Currencies Basic)
+        raise RuntimeError(f"Plan upgrade required: {data.get('message', 'NOT_AUTHORIZED')}")
     if status not in ("OK", "DELAYED"):
         raise RuntimeError(f"Polygon error: {status} {data.get('error')}")
     if status == "DELAYED":
@@ -145,17 +153,29 @@ def fetch_yfinance(symbol: str, period: str = "5d", interval: str = "5m") -> pd.
 
 
 def fetch_bars(symbol: str = "BTC-USD", days: int = 5, interval_min: int = 5,
-               use_polygon: bool = True) -> pd.DataFrame:
+               use_polygon: bool = True, use_cache: bool = True) -> pd.DataFrame:
     """Main entry point: fetch OHLCV bars.
 
     Prefers Polygon (POLYGON_API_KEY required). Falls back to yfinance.
+    Caches results in memory for 5 min to avoid rate limits.
     """
+    cache_key = f"{symbol}_{days}_{interval_min}_{use_polygon}"
+    if use_cache and cache_key in _CACHE:
+        df_cached, ts = _CACHE[cache_key]
+        if _time.time() - ts < _CACHE_TTL:
+            log.info(f"[data_source] Cache hit ({cache_key}, age={int(_time.time()-ts)}s)")
+            return df_cached
+
     if use_polygon and os.environ.get("POLYGON_API_KEY"):
         try:
-            return fetch_polygon(symbol, days=days, interval_min=interval_min)
+            df = fetch_polygon(symbol, days=days, interval_min=interval_min)
+            _CACHE[cache_key] = (df, _time.time())
+            return df
         except Exception as e:
             log.warning(f"[data_source] Polygon failed: {e}, falling back to yfinance")
-    return fetch_yfinance(symbol, period="5d", interval=f"{interval_min}m")
+    df = fetch_yfinance(symbol, period="5d", interval=f"{interval_min}m")
+    _CACHE[cache_key] = (df, _time.time())
+    return df
 
 
 def fetch_bars_since(symbol: str, start_iso: str, interval_min: int = 5,
