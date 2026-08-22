@@ -94,8 +94,11 @@ def fetch_polygon(symbol: str, days: int = 5, interval_min: int = 5,
     r.raise_for_status()
     data = r.json()
 
-    if data.get("status") != "OK":
-        raise RuntimeError(f"Polygon error: {data.get('status')} {data.get('error')}")
+    status = data.get("status", "")
+    if status not in ("OK", "DELAYED"):
+        raise RuntimeError(f"Polygon error: {status} {data.get('error')}")
+    if status == "DELAYED":
+        log.info("[polygon] Status DELAYED (free tier) - using 15-min delayed data")
 
     results = data.get("results", [])
     if not results:
