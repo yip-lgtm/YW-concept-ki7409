@@ -133,23 +133,40 @@ def fetch_polygon(symbol: str, days: int = 5, interval_min: int = 5,
     return df
 
 
-def fetch_yfinance(symbol: str, period: str = "5d", interval: str = "5m") -> pd.DataFrame:
+def fetch_yfinance(symbol: str, period: str = "5d", interval: str = "5m",
+                  max_retries: int = 3) -> pd.DataFrame:
     """Fetch OHLCV from yfinance (fallback).
 
     Note: yfinance 5m data is limited to last 60 days and is unreliable.
+    Retries with exponential backoff + tries alternate tickers if first fails.
     """
     import yfinance as yf
-    log.info(f"[yfinance] {symbol} {period} {interval}")
-    df = yf.download(symbol, period=period, interval=interval,
-                     progress=False, auto_adjust=True)
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = df.columns.get_level_values(0)
-    if df.empty:
-        return df
-    # Ensure UTC index
-    if df.index.tzinfo is None:
-        df.index = df.index.tz_localize("UTC")
-    return df
+    # yfinance sometimes returns "possibly delisted" — try alternate symbols
+    alt_symbols = {
+        "BTC-USD": ["BTC-USD", "BTC=F", "BTCUSD=X"],
+        "ETH-USD": ["ETH-USD", "ETH=F"],
+    }.get(symbol, [symbol])
+
+    for sym in alt_symbols:
+        for attempt in range(max_retries):
+            try:
+                log.info(f"[yfinance] attempt {attempt+1}: {sym} {period} {interval}")
+                df = yf.download(sym, period=period, interval=interval,
+                                 progress=False, auto_adjust=True, timeout=15)
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = df.columns.get_level_values(0)
+                if df.empty:
+                    log.warning(f"[yfinance] {sym} returned empty")
+                    break  # try next symbol
+                if df.index.tzinfo is None:
+                    df.index = df.index.tz_localize("UTC")
+                log.info(f"[yfinance] {sym} OK: {len(df)} bars")
+                return df
+            except Exception as e:
+                log.warning(f"[yfinance] {sym} attempt {attempt+1} failed: {e}")
+                if attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)  # 1s, 2s, 4s
+    return pd.DataFrame()
 
 
 def fetch_bars(symbol: str = "BTC-USD", days: int = 5, interval_min: int = 5,

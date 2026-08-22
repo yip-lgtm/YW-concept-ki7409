@@ -277,9 +277,12 @@ def compute_signal(knn_result: pd.Series, features: pd.DataFrame,
 def main():
     print(f"[OCS] Loading {SYMBOL} 5d 5m via data_source (polygon preferred)...")
     df = fetch_bars(SYMBOL, days=5, interval_min=5)
-    if df.empty or len(df) < 100:
-        print(f"[OCS] Insufficient data: {len(df)} bars")
-        return 1
+    if df.empty:
+        print(f"[OCS] FATAL: No data from any source")
+        return 2
+    if len(df) < 100:
+        print(f"[OCS] Insufficient data: {len(df)} bars (need 100+)")
+        return 3
 
     print(f"[OCS] Computing features...")
     feats = compute_features(df)
