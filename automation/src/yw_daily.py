@@ -244,6 +244,23 @@ def send_escalation_alert(candidates: list[dict]) -> int:
     msg = "\n".join(lines)
     return send_telegram_text(msg)
 
+
+def main() -> int:
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        print("FATAL: TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID not set", file=sys.stderr)
+        return 1
+
+    now_hkt = datetime.now(HKT)
+    today_str = now_hkt.strftime("%Y-%m-%d")
+    weekday = now_hkt.strftime("%a")
+
+    if weekday in ("Sat", "Sun"):
+        print(f"[yw_daily] {weekday} weekend - sending recap only")
+        recap = build_weekend_recap(today_str, weekday, ARTIFACTS_DIR)
+        code = send_telegram_text(recap)
+        print(f"[yw_daily] Weekend recap HTTP {code}")
+        return 0 if code == 200 else 1
+
     print(f"[yw_daily] Generating reminder for {today_str} ({weekday})")
 
     # Step 1: Snapshot
