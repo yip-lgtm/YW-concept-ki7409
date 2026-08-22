@@ -31,11 +31,16 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import yfinance as yf
 
 # Load env
 from env_loader import load_env
 load_env()
+
+# Polygon-preferred data source
+from data_source import fetch_bars as _fetch_bars_raw
+
+def fetch_bars(symbol="BTC-USD", days=5, interval_min=5):
+    return _fetch_bars_raw(symbol, days=days, interval_min=interval_min)
 
 # Config
 SYMBOL = "BTC-USD"  # Yahoo uses BTC-USD; user said BTC 5m
@@ -270,13 +275,10 @@ def compute_signal(knn_result: pd.Series, features: pd.DataFrame,
 
 
 def main():
-    print(f"[OCS] Loading {SYMBOL} {PERIOD} {INTERVAL}...")
-    df = yf.download(SYMBOL, period=PERIOD, interval=INTERVAL,
-                     progress=False, auto_adjust=True)
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = df.columns.get_level_values(0)
+    print(f"[OCS] Loading {SYMBOL} 5d 5m via data_source (polygon preferred)...")
+    df = fetch_bars(SYMBOL, days=5, interval_min=5)
     if df.empty or len(df) < 100:
-        print(f"[OCS] ❌ Insufficient data: {len(df)} bars")
+        print(f"[OCS] Insufficient data: {len(df)} bars")
         return 1
 
     print(f"[OCS] Computing features...")

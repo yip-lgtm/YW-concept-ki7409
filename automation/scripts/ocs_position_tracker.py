@@ -13,7 +13,11 @@ from pathlib import Path
 
 import pandas as pd
 import numpy as np
-import yfinance as yf
+
+# Polygon-preferred data source
+import sys
+sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+from data_source import fetch_bars_since as _fetch_bars_since_raw
 
 
 # Auto-detect repo path: GHA uses $GITHUB_WORKSPACE, local uses /workspace
@@ -117,18 +121,9 @@ def open_position_from_log():
     }
 
 
-def fetch_bars_since(start_iso, max_bars=200):
-    """Fetch 5m bars since start_iso (UTC)."""
-    df = yf.download(SYMBOL, period="5d", interval="5m",
-                     progress=False, auto_adjust=True)
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = df.columns.get_level_values(0)
-    if df.empty:
-        return df
-    start = pd.Timestamp(start_iso)
-    if df.index.tzinfo is None:
-        df.index = df.index.tz_localize("UTC")
-    return df[df.index >= start].head(max_bars)
+def fetch_bars_since(start_iso, max_bars=5000):
+    """Fetch 5m bars since start_iso (UTC) via polygon preferred, yfinance fallback."""
+    return _fetch_bars_since_raw(SYMBOL, start_iso, interval_min=5, max_bars=max_bars)
 
 
 def check_position_exit(pos, df):
