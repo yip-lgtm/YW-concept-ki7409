@@ -25,6 +25,8 @@ from typing import Optional
 import requests
 import pandas as pd
 
+# Data providers (Polygon rebranded to Massive; both APIs work in parallel)
+MASSIVE_BASE = "https://api.massive.com"
 POLYGON_BASE = "https://api.polygon.io"
 YFINANCE_TIMEOUT = 30
 POLYGON_TIMEOUT = 30
@@ -89,10 +91,24 @@ def fetch_polygon(symbol: str, days: int = 5, interval_min: int = 5,
         "apiKey": api_key,
     }
 
-    log.info(f"[polygon] GET {ticker} range={interval_min}{timespan} {from_date}..{to_date}")
-    r = requests.get(url, params=params, timeout=POLYGON_TIMEOUT)
-    r.raise_for_status()
-    data = r.json()
+    log.info(f"[massive/polygon] GET {ticker} range={interval_min}{timespan} {from_date}..{to_date}")
+    # Try massive.com first, fall back to polygon.io
+    for base in (MASSIVE_BASE, POLYGON_BASE):
+        try:
+            r = requests.get(f"{base}/v2/aggs/ticker/{ticker}/range/"
+                             f"{interval_min}/{timespan}/{from_date}/{to_date}",
+                             params=params, timeout=POLYGON_TIMEOUT)
+            r.raise_for_status()
+            data = r.json()
+            log.info(f"[data_source] {base} ok")
+            break
+        except requests.exceptions.HTTPError as e:
+            if r.status_code in (401, 403):
+                log.warning(f"[data_source] {base} {r.status_code} - try next")
+                continue
+            raise
+    else:
+        raise RuntimeError("Both massive.com and polygon.io failed")
 
     status = data.get("status", "")
     if status not in ("OK", "DELAYED"):
