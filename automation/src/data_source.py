@@ -170,10 +170,11 @@ def fetch_yfinance(symbol: str, period: str = "5d", interval: str = "5m",
 
 
 def fetch_bars(symbol: str = "BTC-USD", days: int = 5, interval_min: int = 5,
-               use_polygon: bool = True, use_cache: bool = True) -> pd.DataFrame:
+               use_polygon: bool = False, use_cache: bool = True) -> pd.DataFrame:
     """Main entry point: fetch OHLCV bars.
 
-    Prefers Polygon (POLYGON_API_KEY required). Falls back to yfinance.
+    Prefers yfinance (60d 5m, free, reliable).
+    Polygon is unreliable on free tier (5 calls/min, often returns 0 for 5m today).
     Caches results in memory for 5 min to avoid rate limits.
     """
     cache_key = f"{symbol}_{days}_{interval_min}_{use_polygon}"
@@ -183,15 +184,22 @@ def fetch_bars(symbol: str = "BTC-USD", days: int = 5, interval_min: int = 5,
             log.info(f"[data_source] Cache hit ({cache_key}, age={int(_time.time()-ts)}s)")
             return df_cached
 
+    # Try yfinance first (reliable, 60d 5m, free)
+    df = fetch_yfinance(symbol, period=f"{min(days, 60)}d", interval=f"{interval_min}m")
+    if not df.empty:
+        log.info(f"[data_source] yfinance primary: {len(df)} bars")
+        _CACHE[cache_key] = (df, _time.time())
+        return df
+
+    # Fall back to Polygon if explicitly requested and yfinance fails
     if use_polygon and os.environ.get("POLYGON_API_KEY"):
+        log.warning("[data_source] yfinance empty, trying Polygon...")
         try:
             df = fetch_polygon(symbol, days=days, interval_min=interval_min)
             _CACHE[cache_key] = (df, _time.time())
             return df
         except Exception as e:
-            log.warning(f"[data_source] Polygon failed: {e}, falling back to yfinance")
-    df = fetch_yfinance(symbol, period="5d", interval=f"{interval_min}m")
-    _CACHE[cache_key] = (df, _time.time())
+            log.warning(f"[data_source] Polygon also failed: {e}")
     return df
 
 
