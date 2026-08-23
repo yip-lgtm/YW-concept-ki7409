@@ -248,7 +248,10 @@ def compute_signal(knn_result: pd.Series, features: pd.DataFrame,
     ) - 0.5  # center around 0
 
     # Chop filter: skip if ATR is too low (choppy market)
-    in_chop = last_atr < close.rolling(50).std().mean() * 0.5
+    # Use CURRENT rolling 50-bar volatility (not 5-day mean)
+    # The 5-day mean over-stays chop during quiet regimes
+    current_vol = close.rolling(50).std().iloc[-1] if not pd.isna(close.rolling(50).std().iloc[-1]) else close.std()
+    in_chop = last_atr < current_vol * 0.5
 
     # KAMA proxy: 50 EMA
     ema50 = close.ewm(span=50, adjust=False).mean().iloc[-1]
