@@ -251,7 +251,9 @@ def compute_signal(knn_result: pd.Series, features: pd.DataFrame,
     # Use CURRENT rolling 50-bar volatility (not 5-day mean)
     # The 5-day mean over-stays chop during quiet regimes
     current_vol = close.rolling(50).std().iloc[-1] if not pd.isna(close.rolling(50).std().iloc[-1]) else close.std()
-    in_chop = last_atr < current_vol * 0.5
+    # 0.3 threshold: only flag chop when ATR < 30% of typical volatility
+    # 0.5 was too strict — blocked strong KNN signals in slightly calm markets
+    in_chop = last_atr < current_vol * 0.3
 
     # KAMA proxy: 50 EMA
     ema50 = close.ewm(span=50, adjust=False).mean().iloc[-1]

@@ -289,7 +289,7 @@ def main():
             # Use current 50-bar ATR vs current 50-bar std as chop threshold
             cur_atr = atr.iloc[max(0, i-50):i+1].mean() if i >= 50 else atr.iloc[:i+1].mean()
             cur_vol = df["Close"].iloc[max(0, i-50):i+1].std() if i >= 50 else df["Close"].iloc[:i+1].std()
-            in_chop = a < cur_vol * 0.5
+            in_chop = a < cur_vol * 0.3  # 0.3 threshold (was 0.5, too strict)
             kama = ema50.iloc[i]
 
             signal = "none"
