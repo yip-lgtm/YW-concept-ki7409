@@ -1,0 +1,144 @@
+{
+  "timestamp": "2026-08-24T16:48:11.653314+00:00",
+  "supervisor": "strategy-supervisor",
+  "ocs_btc_5m": {
+    "strategy": "OCS BTC 5m",
+    "agent": "ocs-btc-5m",
+    "issues": [],
+    "n_open": 1,
+    "n_trades_total": 0,
+    "win_rate": 0,
+    "profit_factor": 0,
+    "last_signal": "2026-08-24 16:40:00+00:00",
+    "last_vote": -7,
+    "last_conf": 1.0
+  },
+  "ranking": {
+    "component": "strategy-ranking",
+    "issues": [],
+    "latest_file": "ranking_2026-08-25.md",
+    "latest_date": "2026-08-25"
+  },
+  "yw_daily_today": {
+    "workflow": "yw-daily",
+    "today": "2026-08-24",
+    "ran_today": true,
+    "success_today": true,
+    "last_id": 32751281121
+  },
+  "workflows": [
+    {
+      "workflow": "yw-daily.yml",
+      "runs": [
+        {
+          "id": 32751281121,
+          "conclusion": "success",
+          "created_at": "2026-08-24T16:30:57Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 32750771739,
+          "conclusion": "failure",
+          "created_at": "2026-08-24T16:25:44Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 32734111774,
+          "conclusion": "failure",
+          "created_at": "2026-08-24T13:40:51Z",
+          "event": "schedule"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "workflow": "yw-publish-signal.yml",
+      "runs": [
+        {
+          "id": 32737138256,
+          "conclusion": "success",
+          "created_at": "2026-08-24T14:11:10Z",
+          "event": "schedule"
+        },
+        {
+          "id": 32522149454,
+          "conclusion": "success",
+          "created_at": "2026-08-21T20:09:44Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 32521972265,
+          "conclusion": "failure",
+          "created_at": "2026-08-21T20:07:41Z",
+          "event": "workflow_dispatch"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "workflow": "ocs-btc-5m.yml",
+      "runs": [
+        {
+          "id": 32752417040,
+          "conclusion": "success",
+          "created_at": "2026-08-24T16:42:52Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 32750719460,
+          "conclusion": "success",
+          "created_at": "2026-08-24T16:25:10Z",
+          "event": "schedule"
+        },
+        {
+          "id": 32749186616,
+          "conclusion": "success",
+          "created_at": "2026-08-24T16:09:36Z",
+          "event": "workflow_dispatch"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "workflow": "strategy-ranking.yml",
+      "runs": [
+        {
+          "id": 32751281656,
+          "conclusion": "failure",
+          "created_at": "2026-08-24T16:30:57Z",
+          "event": "push"
+        },
+        {
+          "id": 32750683835,
+          "conclusion": "failure",
+          "created_at": "2026-08-24T16:24:49Z",
+          "event": "push"
+        },
+        {
+          "id": 32750377658,
+          "conclusion": "failure",
+          "created_at": "2026-08-24T16:21:41Z",
+          "event": "push"
+        }
+      ],
+      "issues": []
+    },
+    {
+      "workflow": "strategy-reward.yml",
+      "runs": [
+        {
+          "id": 32751718444,
+          "conclusion": "success",
+          "created_at": "2026-08-24T16:35:34Z",
+          "event": "workflow_dispatch"
+        }
+      ],
+      "issues": []
+    }
+  ],
+  "health": {
+    "issues": [],
+    "status": "ok",
+    "n_issues": 0
+  }
+}

@@ -1,0 +1,57 @@
+name: 'Weekly README Auto-Update'
+
+# Every Sunday 13:00 UTC = 21:00 HKT (after yw-daily 21:00)
+# Aggregates weekly strategy ranking + PnL + awards + LLM iteration
+# Updates README.md with "本週策略報告" section
+
+on:
+  schedule:
+    - cron: '0 13 * * 0'  # Sunday 13:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  weekly-readme:
+    name: Weekly README update
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+
+      - name: Install deps
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q requests
+
+      - name: Run weekly README update
+        id: weekly
+        working-directory: automation
+        run: |
+          .venv/bin/python scripts/weekly_readme_update.py 2>&1 | tee /tmp/weekly_log.txt
+      - name: Commit README
+        if: always()
+        run: |
+          git config --global user.name "Mavis bot"
+          git config --global user.email "mavis@MiniMax"
+          git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
+          git add README.md || true
+          if git diff --cached --quiet; then
+            echo "No README changes"
+          else
+            git commit -m "docs(readme): weekly strategy report $(date -u +%Y-%m-%d)"
+            git push origin main || true
+          fi
