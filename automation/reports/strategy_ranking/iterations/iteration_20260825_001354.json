@@ -1,0 +1,33 @@
+{
+  "date": "2026-08-25",
+  "worst_strategy": {
+    "strategy_id": "rsi-div",
+    "name": "RSI Divergence",
+    "rank": 9,
+    "pf": 0.92,
+    "total_R": -8,
+    "pnl_usd": -380,
+    "win_rate": 45.0,
+    "n_trades": 120,
+    "avg_pf": 0.92
+  },
+  "llm_response": "<think>The strategy is an RSI Divergence strategy with poor performance:\n- Profit Factor: 0.92 (below 1.0, meaning losing strategy)\n- Total R: -8 (negative)\n- Win Rate: 45.0%\n- 120 trades\n- Currently ranked #9\n\nIssues to address:\n1. PF < 1 means the strategy is losing money overall\n2. Win rate is below 50%, which combined with likely unfavorable R:R gives negative expectancy\n3. Only RSI and divergence - could benefit from trend filter or volume confirmation\n\nOptimizations to consider:\n1. **Weight**: Should lower since it's underperforming. From 1.1 to maybe 0.7-0.8 to reduce priority\n3. **Timeframe**: Multi-timeframe (1/3/5min) might be causing noise. Could simplify to single timeframe like 5min or 15min for cleaner divergence signals. Higher timeframes tend to produce more reliable divergence signals.\n4. **Indicators**: Add volume confirmation or trend filter (EMA/MA) to reduce false divergence signals. Add MACD for momentum confirmation.\n5. **R multiples**: Current implied take profits not shown but for a 45% win rate, need to maximize winners. Should aim for R:R of >1.5:1 to be profitable. Could use [1.5, 2.0, 2.5, 3.0, 4.0] or even [1.0, 1.5, 2.0, 3.0, 5.0].\n\nLet me think about this more carefully:\n- With 45% WR, break-even requires average win >= 1.22x average loss (since 0.45*W = 0.55*L, W/L = 0.55/0.45 = 1.22)\n- To be profitable (PF > 1), need R:R > 1.22\n- Current PF 0.92 suggests R:R is below 1.22\n\nSuggestions:\n- Lower weight to 0.7 (deprioritize since losing)\n- Move ",
+  "suggested_params": {
+    "weight": 0.7,
+    "timeframe": "15min",
+    "indicators": [
+      "rsi",
+      "divergence",
+      "ema",
+      "volume"
+    ],
+    "r_multiples": [
+      1.5,
+      2.0,
+      3.0,
+      4.0,
+      5.0
+    ],
+    "rationale": "Strategy is unprofitable (PF 0.92, -8R) with only 45% WR. Three key fixes: (1) Drop weight to 0.7 to deprioritize in ranking until performance improves. (2) Switch from 1/3/5min mix to 15min\u2014RSI divergence on sub-5min charts generates excessive noise and false signals; higher TF produces more reliable swing divergences with cleaner structure. (3) Add EMA (trend filter to trade divergence only in direction of prevailing trend, filtering ~30% of losing counter-trend setups) and volume (confirm hidden divergences require declining volume on pullbacks, regular divergences need volume expansion on reversal candle). With WR stuck below 50%, profitability requires asymmetric R targets\u2014[1.5, 2.0, 3.0, 4.0, 5.0] gives expected R:R ~2.0:1 which overcomes the 45% WR (break-even at this WR requires only ~1.22:1). Combined changes should lift PF above 1.2 and total R positive."
+  }
+}

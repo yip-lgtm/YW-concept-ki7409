@@ -1,0 +1,109 @@
+name: 'Strategy Ranking & LLM Iteration'
+
+# Daily 21:30 HKT (after yw-daily at 21:00 + yw-publish at 21:30)
+# 1. Run ranking of all 9 strategies (backtest mode)
+# 2. Query MiniMax-M3 LLM for worst strategy optimization
+# 3. Auto-commit results to main
+
+on:
+  schedule:
+    # 13:30 UTC = 21:30 HKT (after 21:00 daily reminder)
+    - cron: '30 13 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  strategy-ranking:
+    name: Daily strategy ranking + LLM iteration
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+
+      - name: Install deps
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+
+      - name: Run strategy ranking
+        id: ranking
+        working-directory: automation
+        run: |
+          .venv/bin/python scripts/strategy_ranking.py 2>&1 | tee /tmp/ranking_log.txt
+          cat automation/reports/strategy_ranking/ranking_*.md | tail -50
+
+      - name: LLM iteration (find worst + suggest improvements)
+        id: iterate
+        working-directory: automation
+        env:
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+        run: |
+          .venv/bin/python scripts/llm_iterate.py 2>&1 | tee /tmp/iterate_log.txt
+
+      - name: Send TG summary
+        if: always()
+        working-directory: automation
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          .venv/bin/python -c "
+import os
+import requests
+from pathlib import Path
+import json
+from datetime import datetime, timezone, timedelta
+
+HKT = timezone(timedelta(hours=8))
+today = datetime.now(HKT).strftime('%Y-%m-%d')
+
+# Load latest ranking
+ranking_dir = Path('automation/reports/strategy_ranking')
+ranking_files = sorted(ranking_dir.glob(f'ranking_{today}*.md'))
+if not ranking_files:
+    print('No ranking file')
+    exit(0)
+
+ranking_text = ranking_files[0].read_text()
+
+# Find best/worst
+lines = ranking_text.split('\n')
+table_rows = [l for l in lines if l.startswith('|') and 'Strategy' not in l and '---' not in l]
+top3 = '\n'.join(table_rows[:3])
+
+msg = f'🏆 Daily Strategy Ranking — {today}\n\nTop 3 (best PF):\n{top3}\n\nFull report: github.com/yip-lgtm/YW-concept-ki7409/tree/main/automation/reports/strategy_ranking'
+
+r = requests.post(
+    f'https://api.telegram.org/bot{os.environ[\"TELEGRAM_BOT_TOKEN\"]}/sendMessage',
+    json={'chat_id': os.environ['TELEGRAM_CHAT_ID'], 'text': msg},
+    timeout=15,
+)
+print(f'TG: HTTP {r.status_code}')
+"
+
+      - name: Commit ranking + iteration
+        if: always()
+        run: |
+          git config --global user.name "Mavis bot"
+          git config --global user.email "mavis@MiniMax"
+          git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
+          git add automation/reports/strategy_ranking/ || true
+          git commit -m "auto(ranking): daily strategy PnL ranking + LLM iteration $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          git push origin main || true
