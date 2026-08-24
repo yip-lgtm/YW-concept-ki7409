@@ -34,31 +34,37 @@ def compute_ma(close: pd.Series, period: int, kind: str = "ema") -> pd.Series:
     return close.rolling(period).mean()
 
 
-def detect_rsi_divergence(df: pd.DataFrame, lookback: int = 20) -> dict:
+def detect_rsi_divergence(df: pd.DataFrame, lookback: int = 20,
+                            ema_filter: bool = True, volume_filter: bool = True) -> dict:
     """Detect bullish/bearish RSI divergence on the last N bars.
 
-    Bullish: price makes lower low, RSI makes higher low
-    Bearish: price makes higher high, RSI makes lower high
+    LLM-OPTIMIZED v1.5 (2026-08-25): Added EMA50 trend filter + volume confirmation
+    to reduce false divergence signals (PF 0.92 → target 1.2+).
+
+    Filters:
+      - ema_filter: trade only in direction of EMA50 trend
+        * bullish divergence: price must be ABOVE EMA50 (downtrend exhaustion, then up)
+        * bearish divergence: price must be BELOW EMA50
+      - volume_filter: divergence candle must have volume >= 1.2x avg
+        * filters out low-conviction divergences (need volume to confirm reversal)
+
+    Bullish: price makes lower low, RSI makes higher low (trend filter: above EMA50)
+    Bearish: price makes higher high, RSI makes lower high (trend filter: below EMA50)
     """
     if df.empty or len(df) < lookback:
-        return {"type": "none", "strength": 0}
+        return {"type": "none", "strength": 0, "filtered": False}
 
     window = df.tail(lookback)
     close = window["Close"]
     rsi = compute_rsi(close).dropna()
 
     if len(rsi) < 5:
-        return {"type": "none", "strength": 0}
+        return {"type": "none", "strength": 0, "filtered": False}
 
     # Find last 2 swing highs/lows
     mid = len(window) // 2
     first_half = window.iloc[:mid]
     second_half = window.iloc[mid:]
-
-    # Bullish: 1st half low < 2nd half low (price higher low?)
-    # Wait: Bullish divergence = price LOWER low, RSI HIGHER low
-    # So 1st half low > 2nd half low (price lower)
-    # And 1st half rsi low < 2nd half rsi low (rsi higher)
 
     p1_low = first_half["Low"].min()
     p2_low = second_half["Low"].min()
@@ -72,7 +78,7 @@ def detect_rsi_divergence(df: pd.DataFrame, lookback: int = 20) -> dict:
     r1_high = r1.max() if len(r1) else 0
     r2_high = r2.max() if len(r2) else 0
 
-    result = {"type": "none", "strength": 0, "price_diff_pct": 0, "rsi_diff": 0}
+    result = {"type": "none", "strength": 0, "price_diff_pct": 0, "rsi_diff": 0, "filtered": False}
 
     # Bullish: price lower, RSI higher
     if p2_low < p1_low and r2_low > r1_low:
@@ -84,6 +90,7 @@ def detect_rsi_divergence(df: pd.DataFrame, lookback: int = 20) -> dict:
             "strength": strength,
             "price_diff_pct": round(price_diff, 2),
             "rsi_diff": round(rsi_diff, 1),
+            "filtered": False,
         }
     # Bearish: price higher, RSI lower
     elif p2_high > p1_high and r2_high < r1_high:
@@ -95,12 +102,42 @@ def detect_rsi_divergence(df: pd.DataFrame, lookback: int = 20) -> dict:
             "strength": strength,
             "price_diff_pct": round(price_diff, 2),
             "rsi_diff": round(rsi_diff, 1),
+            "filtered": False,
         }
-    # Looser match: smaller moves (better for backtest)
+    # Looser match
     elif p2_low < p1_low * 0.9995 and r2_low > r1_low + 0.3:
-        result = {"type": "bullish", "strength": 25, "price_diff_pct": -0.05, "rsi_diff": 0.3}
+        result = {"type": "bullish", "strength": 25, "price_diff_pct": -0.05, "rsi_diff": 0.3, "filtered": False}
     elif p2_high > p1_high * 1.0005 and r2_high < r1_high - 0.3:
-        result = {"type": "bearish", "strength": 25, "price_diff_pct": 0.05, "rsi_diff": -0.3}
+        result = {"type": "bearish", "strength": 25, "price_diff_pct": 0.05, "rsi_diff": -0.3, "filtered": False}
+    else:
+        return result
+
+    # Apply LLM-optimized filters
+    if result["type"] != "none":
+        # Filter 1: EMA50 trend direction
+        if ema_filter and len(df) >= 50:
+            ema50 = compute_ma(close, 50, "ema").iloc[-1]
+            last_close = close.iloc[-1]
+            if result["type"] == "bullish" and last_close < ema50:
+                result["filtered"] = True
+                result["filter_reason"] = "price below EMA50 (no trend support)"
+                result["strength"] = max(0, result["strength"] // 3)  # heavily penalize
+                return result
+            if result["type"] == "bearish" and last_close > ema50:
+                result["filtered"] = True
+                result["filter_reason"] = "price above EMA50 (no trend support)"
+                result["strength"] = max(0, result["strength"] // 3)
+                return result
+
+        # Filter 2: Volume confirmation (divergence candle must have volume >= 1.2x avg)
+        if volume_filter and "Volume" in window.columns and len(window) >= 5:
+            last_vol = window["Volume"].iloc[-1]
+            avg_vol = window["Volume"].tail(10).mean()
+            if last_vol < avg_vol * 1.2:
+                result["filtered"] = True
+                result["filter_reason"] = f"volume {last_vol:.0f} < 1.2x avg {avg_vol:.0f}"
+                result["strength"] = max(0, result["strength"] // 2)
+                return result
 
     return result
 

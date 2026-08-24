@@ -63,12 +63,17 @@ STRATEGIES = {
     },
     "RSI-Divergence": {
         "name": "RSI Divergence",
-        "timeframe": "1min/3min/5min",
+        "timeframe": "15min",
         "desc": "價格 Lower Low + RSI Higher Low (看漲背離) / 價格 Higher High + RSI Lower High (看跌背離)",
         "doc": "docs/08-RSI-Divergence.md",
-        "data_granularity": "5m",
+        "data_granularity": "15m",
         "data_period": "5d",
-        "weight": 1.1,
+        "weight": 0.7,  # LLM-suggested: drop from 1.1 (PF 0.92)
+        "llm_optimized": True,
+        "llm_iteration_date": "2026-08-25",
+        "r_multiples": [1.5, 2.0, 3.0, 4.0, 5.0],  # asymmetric R targets
+        "trend_filter": "EMA50",  # trade only with trend
+        "volume_required": True,  # confirm with volume
     },
     "50-20-Pullback": {
         "name": "50/20 Pullback",
@@ -433,7 +438,7 @@ STRATEGY_WEIGHT = {
     "H-Pattern": 1.2,
     "3-Pushes": 1.0,
     "Two-Yang-One-Yin": 0.8,
-    "RSI-Divergence": 1.1,
+    "RSI-Divergence": 0.7,  # LLM-optimized 2026-08-25
     "50-20-Pullback": 1.0,
     "Stair-Pattern": 0.9,
     "CRT": 1.1,

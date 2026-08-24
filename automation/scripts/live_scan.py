@@ -88,7 +88,7 @@ STRATEGIES = {
     "H-Pattern":     {"fn": "h_pattern",     "args": {}, "weight": 1.2, "tf": "5m"},
     "3-Pushes":      {"fn": "3_pushes",      "args": {}, "weight": 1.0, "tf": "5m"},
     "Two-Yang":      {"fn": "two_yang",      "args": {}, "weight": 0.8, "tf": "15m"},
-    "RSI-Div":       {"fn": "rsi_div",       "args": {}, "weight": 1.1, "tf": "5m"},
+    "RSI-Div":       {"fn": "rsi_div",       "args": {"resample_15m": True}, "weight": 0.7, "tf": "15m", "llm_optimized": True},  # LLM-iter 2026-08-25: weight 1.1→0.7, 15min, +EMA+vol
     "50-20-Pullback":{"fn": "pb_5020",       "args": {}, "weight": 1.0, "tf": "5m"},
     "Stair":         {"fn": "stair",         "args": {}, "weight": 0.9, "tf": "5m"},
     "Kell-Cycle":    {"fn": "kell",          "args": {}, "weight": 0.9, "tf": "5m"},
@@ -178,7 +178,15 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
         elif cfg["fn"] == "two_yang":
             res = detect_two_yang_one_yin(df)
         elif cfg["fn"] == "rsi_div":
-            res = detect_rsi_divergence(df)
+            # LLM-iter 2026-08-25: resample 5m → 15m
+            if cfg.get("args", {}).get("resample_15m") and df is not None and len(df) >= 30:
+                df_rsi = df.resample("15min").agg({
+                    "Open": "first", "High": "max", "Low": "min",
+                    "Close": "last", "Volume": "sum"
+                }).dropna()
+                res = detect_rsi_divergence(df_rsi)
+            else:
+                res = detect_rsi_divergence(df)
         elif cfg["fn"] == "pb_5020":
             res = detect_5020_pullback(df)
         elif cfg["fn"] == "stair":
