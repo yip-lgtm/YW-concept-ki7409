@@ -1,0 +1,62 @@
+name: 'Daily Strategy Reward — Top 3 PnL'
+
+# Daily 21:35 HKT (after strategy-ranking at 21:30)
+# Awards top 3 strategies by Profit Factor:
+#   🥇 #1: 50 AI-Trader reputation points
+#   🥈 #2: 30 AI-Trader reputation points
+#   🥉 #3: 20 AI-Trader reputation points
+
+on:
+  schedule:
+    # 13:35 UTC = 21:35 HKT
+    - cron: '35 13 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  daily-reward:
+    name: Daily reward top 3 PnL strategies
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      AI_TRADER_TOKEN: ${{ secrets.AI_TRADER_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+
+      - name: Install deps
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+
+      - name: Run daily reward
+        id: reward
+        working-directory: automation
+        env:
+          AI_TRADER_TOKEN: ${{ secrets.AI_TRADER_TOKEN }}
+        run: |
+          .venv/bin/python scripts/strategy_reward.py 2>&1 | tee /tmp/reward_log.txt
+
+      - name: Commit awards log
+        if: always()
+        run: |
+          git config --global user.name "Mavis bot"
+          git config --global user.email "mavis@MiniMax"
+          git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
+          git add automation/reports/strategy_ranking/ || true
+          git commit -m "auto(reward): daily top 3 PnL awards $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          git push origin main || true
