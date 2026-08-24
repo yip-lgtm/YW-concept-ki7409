@@ -260,10 +260,11 @@ def compute_signal(knn_result: pd.Series, features: pd.DataFrame,
 
     sig = "none"
     direction = None
-    if vote >= VOTES_NEED and conf >= CONF_MIN and layer_score > 0 and not in_chop and last_close > ema50:
+    # KAMA filter removed - layer_score (RSI/Supertrend/EMA cross) already captures trend
+    if vote >= VOTES_NEED and conf >= CONF_MIN and layer_score > 0 and not in_chop:
         sig = "buy"
         direction = "long"
-    elif vote <= -VOTES_NEED and conf >= CONF_MIN and layer_score < 0 and not in_chop and last_close < ema50:
+    elif vote <= -VOTES_NEED and conf >= CONF_MIN and layer_score < 0 and not in_chop:
         sig = "sell"
         direction = "short"
 
