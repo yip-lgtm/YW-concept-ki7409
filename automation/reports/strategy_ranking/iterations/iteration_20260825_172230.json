@@ -1,0 +1,47 @@
+{
+  "date": "2026-08-25",
+  "applied": true,
+  "target_strategy": "RSI-Divergence",
+  "before": {
+    "weight": 1.1,
+    "timeframe": "1min/3min/5min",
+    "data_granularity": "5m",
+    "indicators": ["rsi", "divergence"],
+    "r_multiples": [1.0, 1.618, 2.618, 3.618, 5.0]
+  },
+  "llm_suggested": {
+    "weight": 0.7,
+    "timeframe": "15min",
+    "indicators": ["rsi", "divergence", "ema", "volume"],
+    "r_multiples": [1.5, 2.0, 3.0, 4.0, 5.0],
+    "rationale": "Strategy is unprofitable (PF 0.92, -8R) with only 45% WR. Three key fixes: (1) Drop weight to 0.7 to deprioritize in ranking until performance improves. (2) Switch from 1/3/5min mix to 15min—RSI divergence on sub-5min charts generates excessive noise and false signals; higher TF produces more reliable swing divergences with cleaner structure. (3) Add EMA (trend filter) and volume (confirm hidden/regular divergence). With WR stuck below 50%, profitability requires asymmetric R targets—[1.5, 2.0, 3.0, 4.0, 5.0] gives expected R:R ~2.0:1 which overcomes the 45% WR."
+  },
+  "after": {
+    "weight": 0.7,
+    "timeframe": "15min",
+    "data_granularity": "15m",
+    "indicators": ["rsi", "divergence", "ema50", "volume"],
+    "r_multiples": [1.5, 2.0, 3.0, 4.0, 5.0],
+    "trend_filter": "EMA50",
+    "volume_required": "1.2x avg"
+  },
+  "verification_60d": {
+    "ticker": "MNQ=F",
+    "trades": 414,
+    "win_rate": 30.2,
+    "avg_R": -0.25,
+    "total_R": -101.5,
+    "profit_factor": 0.65,
+    "trades_per_day": 6.9,
+    "verdict": "LLM prediction WRONG - actual still negative",
+    "issue": "Detector fires too often (7/day), mostly noise. Need strength threshold (>= 60) + larger stop loss",
+    "next_iteration": "Add strength >= 60 + 2.0 ATR stop + max 2 trades/day"
+  },
+  "files_changed": [
+    "automation/src/yw_indicators.py",
+    "automation/src/yw_grader.py",
+    "automation/scripts/live_scan.py",
+    "automation/scripts/strategy_ranking.py"
+  ],
+  "commit": "86ad377"
+}
