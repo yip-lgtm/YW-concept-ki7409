@@ -379,7 +379,36 @@ def grade_strategy(strategy_key: str, ticker: str) -> dict:
         else:
             # Incomplete response
             if "<think>" in content and len(search_text) < 10:
-                reason = "LLM incomplete response (only thinking)"
+                # LLM only returned thinking — try one retry with stronger prompt
+                try:
+                    retry_r = requests.post(
+                        "https://api.minimax.io/v1/chat/completions",
+                        headers={"Authorization": f"Bearer {MINIMAX_API_KEY}"},
+                        json={
+                            "model": "MiniMax-M3",
+                            "max_tokens": 1024,
+                            "messages": [
+                                {"role": "system", "content": "你是 YW Concept 機械化交易員。直接輸出 GRADE: X | CONFIDENCE: N | REASON: ... 一行結果。"},
+                                {"role": "user", "content": prompt + "\n\n**重要**: 只輸出 GRADE/CONFIDENCE/REASON 一行，禁止使用 <think> 標籤，禁止解釋。"},
+                            ],
+                        },
+                        timeout=45,
+                    )
+                    if retry_r.status_code == 200:
+                        rcontent = retry_r.json()["choices"][0]["message"]["content"].strip()
+                        rm = re.search(r"GRADE:\s*([ABC])\s*\|\s*CONFIDENCE:\s*(\d+)\s*\|\s*REASON:\s*(.+?)(?:\n|$)", rcontent, re.IGNORECASE)
+                        if rm:
+                            return {
+                                "strategy": strategy_key,
+                                "ticker": ticker,
+                                "grade": rm.group(1).upper(),
+                                "confidence": int(rm.group(2)),
+                                "reason": rm.group(3).strip()[:120],
+                                "summary": summary,
+                            }
+                except Exception:
+                    pass
+                reason = "LLM incomplete response (only thinking, retry failed)"
             else:
                 reason = search_text[:120] if search_text else "no parse"
 

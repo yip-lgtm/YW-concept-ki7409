@@ -46,21 +46,41 @@ ARTIFACTS_DIR = REPO_DIR / "automation" / "reports" / "daily"
 
 
 def send_telegram_text(text: str) -> int:
-    """Send text message to TG. Returns HTTP code."""
+    """Send message to TG. Chunks if >4000 chars. Falls back to plain text on Markdown error."""
     if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
         print("FATAL: TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID not set", file=sys.stderr)
         return 0
-    r = requests.post(
-        f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
-        json={
-            "chat_id": TELEGRAM_CHAT_ID,
-            "text": text,
-            "parse_mode": "Markdown",
-            "disable_web_page_preview": True,
-        },
-        timeout=30,
-    )
-    return r.status_code
+    # Telegram limit: 4096 chars per message
+    MAX_LEN = 4000
+    chunks = [text[i:i+MAX_LEN] for i in range(0, len(text), MAX_LEN)] or [text]
+    last_code = 0
+    for chunk in chunks:
+        # Try Markdown first
+        r = requests.post(
+            f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+            json={
+                "chat_id": TELEGRAM_CHAT_ID,
+                "text": chunk,
+                "parse_mode": "Markdown",
+                "disable_web_page_preview": True,
+            },
+            timeout=30,
+        )
+        if r.status_code == 200:
+            last_code = 200
+            continue
+        # Markdown parse error — retry as plain text
+        r2 = requests.post(
+            f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+            json={
+                "chat_id": TELEGRAM_CHAT_ID,
+                "text": chunk,
+                "disable_web_page_preview": True,
+            },
+            timeout=30,
+        )
+        last_code = r2.status_code
+    return last_code
 
 
 def build_reminder(
