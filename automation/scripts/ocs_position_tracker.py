@@ -216,19 +216,28 @@ def main():
             print(f"  Exit: {result['exit_level']} @ {result['exit_price']:.2f} "
                   f"R={result['R_multiple']:+.3f} bars={result['bars_held']}")
             trade = {**pos, **result, "status": "closed"}
-            closed.append(trade)
-            append_trade(trade)
+            # DEDUPE: only add to closed list + jsonl if not already in trades
+            existing_trades_pre = load_trades()
+            if trade["signal_id"] not in {t.get("signal_id") for t in existing_trades_pre}:
+                closed.append(trade)
+                append_trade(trade)
+            else:
+                print(f"  DEDUPE: signal_id {trade['signal_id'][:20]} already in trades.jsonl, skip")
 
-    # Check for new signals to open
+    # Check for new signals to open (DEDUPED: skip if signal_id already closed)
     new_pos = open_position_from_log()
     if new_pos:
-        already = any(p["signal_id"] == new_pos["signal_id"] for p in still_open)
-        if not already:
+        existing_trades = load_trades()
+        existing_open_ids = {p["signal_id"] for p in still_open}
+        existing_closed_ids = {t.get("signal_id") for t in existing_trades}
+        if new_pos["signal_id"] in existing_closed_ids:
+            print(f"\n[tracker] Skip {str(new_pos['signal_id'])[:20]} — already closed in trades.jsonl")
+        elif new_pos["signal_id"] in existing_open_ids:
+            print(f"\n[tracker] Position already open: {str(new_pos['signal_id'])[:20]}")
+        else:
             print(f"\n[tracker] New position: {str(new_pos['signal_id'])[:20]} "
                   f"({new_pos['direction']} @ {new_pos['entry']:.2f})")
             still_open.append(new_pos)
-        else:
-            print(f"\n[tracker] Position already open: {str(new_pos['signal_id'])[:20]}")
 
     save_positions(still_open)
 
@@ -239,15 +248,22 @@ def main():
     print(f"\n[tracker] Stats: {stats['n_trades']} trades, WR {stats['win_rate']}%, "
           f"avg R {stats['avg_R']}, total R {stats['total_R']}")
 
-    # TG notification on close
+    # TG notification on close (DEDUPED: skip signal_ids already in trades.jsonl)
     if closed:
+        existing_trades = load_trades()
+        existing_ids = {t.get("signal_id") for t in existing_trades}
+        new_closes = [t for t in closed if t.get("signal_id") not in existing_ids]
+        if not new_closes:
+            print(f"[tracker] No new closes ({len(closed)} duplicate(s) skipped)")
+        else:
+            print(f"[tracker] {len(new_closes)} new close(s) ({len(closed) - len(new_closes)} duplicate(s) skipped)")
         try:
             import requests
             tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
             tg_chat = os.environ.get("TELEGRAM_CHAT_ID", "")
-            if tg_token and tg_chat:
+            if tg_token and tg_chat and new_closes:
                 lines = ["OCS BTC 5m - Position Closed\n"]
-                for t in closed:
+                for t in new_closes:
                     label = "WIN" if t["R_multiple"] > 0 else "LOSS"
                     lines.append(
                         f"{label}: {t['direction'].upper()} "
@@ -260,12 +276,12 @@ def main():
                     f"PF {stats['profit_factor']}"
                 )
                 msg = "\n".join(lines)
-                requests.post(
+                r = requests.post(
                     f"https://api.telegram.org/bot{tg_token}/sendMessage",
                     json={"chat_id": tg_chat, "text": msg},
                     timeout=15,
                 )
-                print("[tracker] TG close alert sent")
+                print(f"[tracker] TG close alert sent: HTTP {r.status_code}")
         except Exception as e:
             print(f"[tracker] TG error: {e}")
 
