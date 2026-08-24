@@ -39,3 +39,24 @@ YW 核心定義來自 Discord 原始訊息。YW Indicator 說明整理自《YW�
 僅供學習研究，不構成投資建議。交易有風險。
 
 最後更新：2026-08-20
+
+---
+
+## 🚀 安裝與設定
+
+**新用戶請先睇 [INSTALL.md](INSTALL.md)** — 涵蓋：
+- 環境設定（Python 3.11+、GHA secrets）
+- 3 個 workflows 自動跑 setup
+- API key 設定（Massive/Telegram/MiniMax-M3/AI-Trader）
+- Troubleshooting 常見問題
+- 20 日 backtest 結果預期
+
+## 🤖 自動化 Pipeline
+
+呢個 repo 而家跑緊 3 個 GHA workflow（每個都需要 secrets）：
+
+1. **`yw-daily.yml`** — 每日 21:00 HKT LLM-graded reminder（4-Chart Standard）
+2. **`yw-publish-signal.yml`** — 21:30 HKT 自動 publish 頭位信號去 AI-Trader
+3. **`ocs-btc-5m.yml`** — 24/7 每 5 分鐘 OCS BTC 5m 信號（基於 OCS-Style AI Trader Pine 移植）
+
+詳情睇 [docs/OCS-SETUP.md](docs/OCS-SETUP.md)
