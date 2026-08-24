@@ -10,6 +10,8 @@ on:
     # 13:30 UTC = 21:30 HKT (after 21:00 daily reminder)
     - cron: '30 13 * * 1-5'
   workflow_dispatch:
+  # NOTE: don't add on: push - GHA creates phantom "push" runs
+  # when force-push happens, which fail because the workflow isn't designed for push events.
 
 permissions:
   contents: write
