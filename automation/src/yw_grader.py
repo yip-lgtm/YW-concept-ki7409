@@ -177,7 +177,7 @@ def compute_summary(df: pd.DataFrame, ticker: str) -> dict:
         stair = detect_stair_pattern(df)
         kell = detect_kell_setups(df)
         # CRT needs 4h data
-        if strat.get("needs_4h") or strategy_key == "CRT":
+        if STRATEGIES.get(strategy_key, {}).get("needs_4h") or strategy_key == "CRT":
             import yfinance as yf
             df_4h_raw = yf.download(ticker, period="1mo", interval="1h", progress=False, auto_adjust=True)
             if isinstance(df_4h_raw.columns, __import__("pandas").MultiIndex):
