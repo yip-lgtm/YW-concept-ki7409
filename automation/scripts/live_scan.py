@@ -103,10 +103,12 @@ MINIMAX_KEY = os.environ.get("MINIMAX_API_KEY")
 MINIMAX_URL = "https://api.minimax.io/v1/chat/completions"
 MINIMAX_MODEL = "MiniMax-M3"
 
-# Min LLM confidence to fire signal
-LLM_MIN_CONF = 55
+# Min LLM confidence to fire signal (lowered from 55 → 40 to capture more actionables)
+LLM_MIN_CONF = 40
 # Min detector strength to invoke LLM
 DETECTOR_MIN_PRESENT = True
+# Acceptable grades (A=strong, B=actionable, C=marginal but still fire with low conf)
+ACCEPTABLE_GRADES = ("A", "B", "C")
 
 
 def fetch_ticker_data(ticker: str) -> dict:
@@ -173,10 +175,13 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
             return out
         if cfg["fn"] == "h_pattern":
             res = detect_h_pattern(df)
+            out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "3_pushes":
             res = detect_3_pushes(df)
+            out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "two_yang":
             res = detect_two_yang_one_yin(df)
+            out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "rsi_div":
             # LLM-iter 2026-08-25: resample 5m → 15m
             if cfg.get("args", {}).get("resample_15m") and df is not None and len(df) >= 30:
@@ -187,12 +192,16 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
                 res = detect_rsi_divergence(df_rsi)
             else:
                 res = detect_rsi_divergence(df)
+            out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "pb_5020":
             res = detect_5020_pullback(df)
+            out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "stair":
             res = detect_stair_pattern(df)
+            out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "kell":
             res = detect_kell_setups(df)
+            out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "crt":
             df_4h = data.get("df_4h")
             if df_4h is None or len(df_4h) < 5:
@@ -200,6 +209,7 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
                 out["skip"] = "no 4h data"
                 return out
             res = detect_crt(df_4h, df)
+            out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         else:
             res = {"present": False, "skip": "unknown"}
         out.update(res)
@@ -362,7 +372,7 @@ def main() -> int:
             reason = grade_data["reason"]
         if conf < LLM_MIN_CONF:
             continue
-        if grade not in ("A", "B"):
+        if grade not in ACCEPTABLE_GRADES:
             continue
             signal = {
                 "strategy": det["strategy"],
