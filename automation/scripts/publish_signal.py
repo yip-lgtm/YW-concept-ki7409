@@ -33,10 +33,20 @@ def find_latest_grades(yw_repo_dir: str, date: str | None = None) -> Path | None
     repo = Path(yw_repo_dir).resolve()
     # If yw-repo is the automation/ dir, look for reports/ directly
     # If it's the repo root, look for automation/reports/
-    if (repo / "reports" / "daily").exists():
-        base = repo / "reports" / "daily"
-    else:
-        base = repo / "automation" / "reports" / "daily"
+    candidates = [
+        repo / "reports" / "daily",           # yw-repo = repo root
+        repo / "automation" / "reports" / "daily",  # yw-repo = automation/
+        repo.parent / "automation" / "reports" / "daily",  # yw-repo = ., parent = repo root
+        repo / ".." / "automation" / "reports" / "daily",  # relative
+    ]
+    base = None
+    for c in candidates:
+        if c.exists():
+            base = c
+            break
+    if base is None:
+        print(f"[publish] Tried: {[str(c) for c in candidates]}")
+        return None
     if date:
         f = base / date / f"grades-{date}.json"
         return f if f.exists() else None
