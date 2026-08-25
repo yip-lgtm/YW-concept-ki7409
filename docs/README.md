@@ -19,6 +19,7 @@
 |------|-------|
 | [OCS-SETUP.md](OCS-SETUP.md) | OCS BTC 5m auto-signal pipeline — setup guide |
 | [AUTO-ITERATION.md](AUTO-ITERATION.md) | 自動迭代說明手冊 — 9-agent LLM-iter system (架構、流程、歷史) |
+| [STRATEGY-SETUP.md](STRATEGY-SETUP.md) | 9 strategy sub-agents 最新 setup (weights, tf, R-multiples, LLM history) |
 
 ## Live Dashboards
 | URL | Description |
