@@ -1,0 +1,48 @@
+{
+  "date": "2026-08-25",
+  "target_strategy": "Two-Yang-One-Yin",
+  "live_data": {
+    "n_trades": 5,
+    "wins": 2,
+    "losses": 3,
+    "win_rate": 40.0,
+    "total_R": -1.0,
+    "profit_factor": 0.67
+  },
+  "ticker_breakdown": {
+    "BTC-USD": {
+      "n": 2,
+      "wins": 1,
+      "R": 0.0
+    },
+    "M2K=F": {
+      "n": 2,
+      "wins": 1,
+      "R": 0.0
+    },
+    "MES=F": {
+      "n": 1,
+      "wins": 0,
+      "R": -1.0
+    }
+  },
+  "llm_response_raw": "```\nGRADE: D | CONFIDENCE: 65 | REASON: 15min TF\u592a\u6162\uff0cM2K 1-bar exits=noise\uff0c\u7121trend/volume filter\u5c0e\u81f4choppy\u5e02\u98dfSL\uff0c\u6a23\u672c\u96d6\u5c0f\u4f46PF<1\u78ba\u8a8d\u8ca0\u671f\u671b\u503c\u3002\n```\n\n**suggested_params:**\n\n```python\nsuggested_params = {\n    \"weight\": 0.5,                    # \u964d\u4f4e\u66dd\u96aa\u76f4\u81f3\u91cd\u65b0\u9a57\u8b49\n    \"timeframe\": 5,                   # 15\u21925min \u52a0\u5feb\u6355\u6349pattern\n    \"indicators\": {\n        \"trend_filter\": \"EMA20 slope > 0 (long) / < 0 (short)\",\n        \"volatility\": \"ADX > 20\",     # \u904e\u6ffe\u76e4\u6574\n        \"volume\": \"vol > 1.2 * SMA20(vol)\",  # \u78ba\u8a8d\u7a81\u7834\n        \"stop\": \"ATR14 * 1.0\"         # \u81ea\u9069\u61c9SL\uff0c\u975e\u56fa\u5b9a\n    },\n    \"r_multiples\": [1.0, 1.618, 2.618],  # \u79fb\u96643.618/5.0\uff0cquick exits\u57285min TF\u66f4\u5408\u7406\n    \"session_filter\": \"US_RTH_only\",   # BTC 24/7\u566a\u97f3\u5927\uff0c\u9650\u5236session\n    \"min_bars_between_signals\": 10,    # \u907f\u514d01:41\u219202:42\u540c\u65b9\u5411\u91cd\u8907\u9032\u5834\n    \"rationale\": (\n        \"5min TF\u52a0\u901f\u8a0a\u865f\u97ff\u61c9\uff1bEMA+ADX\u904e\u6ffe\u8da8\u52e2/\u76e4\u6574\uff1bvolume\u78ba\u8a8d\u771f\u7a81\u7834\uff1b\"\n        \"ATR stop\u9069\u61c9\u5404ticker\u6ce2\u52d5\uff1bUS_RTH\u904e\u6ffecrypto\u4e9e\u6d32\u4f4e\u6d41\u52d5session\uff1b\"\n        \"10-bar cooldown\u9632\u6b62\u9023\u7e8c\u540c\u5411\u8a0a\u865f\u4e92\u76f8\u62b5\u6d88\u3002\"\n    )\n}\n```\n\n**Action items:**\n1. \u23f8\ufe0f **\u66ab\u505c live** weight\u964d\u81f30.5\u6216paper only\n2. \ud83e\uddea Backtest 5min TF on M2K/MES 2024-2026 \u770bn\u226550 trades\n3. \ud83d\udcca \u82e5PF\u4ecd<1.0 \u2192 \u6b63\u5f0f\u68c4\u7528",
+  "llm_grade": "?",
+  "llm_confidence": 0,
+  "llm_reason": "no parse",
+  "suggested_params": {
+    "weight": 0.5,
+    "timeframe": "5",
+    "indicators": [
+      "yang",
+      "yin",
+      "candle"
+    ],
+    "r_multiples": [
+      1.0,
+      1.618,
+      2.618
+    ]
+  },
+  "rationale": "no parse"
+}

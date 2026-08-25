@@ -363,9 +363,18 @@ def detect_two_yang_one_yin(df: pd.DataFrame) -> dict:
         c3_bot = min(c3["Open"], c3["Close"])
         # c2 must be wrapped by c1 above and c3 below (or vice versa)
         if c2_top <= c1_top and c2_bot >= c3_bot:
+            # LLM-iter: volume filter — c1 or c3 must have volume > 1.2x avg
+            if volume_filter and "Volume" in df.columns and len(df) >= 10:
+                avg_vol = float(df["Volume"].tail(10).mean())
+                c1_vol = float(c1.get("Volume", 0))
+                c3_vol = float(c3.get("Volume", 0))
+                if avg_vol > 0 and max(c1_vol, c3_vol) < avg_vol * 1.2:
+                    return {"present": False, "direction": "none", "filtered": True,
+                            "filter_reason": f"low volume (max={max(c1_vol, c3_vol):.0f}, avg={avg_vol:.0f})"}
             return {
                 "present": True, "direction": "long",
                 "strength": 70,
+                "filtered": False,
                 "details": f"兩陽夾一陰: c1 body {b1:.0f}, c2 body {b2:.0f}, c3 body {b3:.0f}",
             }
 

@@ -54,12 +54,20 @@ STRATEGIES = {
     },
     "Two-Yang-One-Yin": {
         "name": "兩陽夾一陰",
-        "timeframe": "15min",
-        "desc": "盤整尾段 + 兩根陽線實體夾住中間陰線實體 (只看 body)",
+        "timeframe": "5min",
+        "desc": "盤整尾段 + 兩根陽線實體夾住中間陰線實體 (只看 body, LLM-iter v1.5 +EMA20+ADX+vol+cooldown)",
         "doc": "docs/04-Two-Yang-One-Yin.md",
-        "data_granularity": "15m",
-        "data_period": "10d",
-        "weight": 0.8,
+        "data_granularity": "5m",
+        "data_period": "5d",
+        "weight": 0.5,  # LLM-iter 2026-08-25: 0.8→0.5 (PF 0.67 live)
+        "llm_optimized": True,
+        "llm_iteration_date": "2026-08-25",
+        "r_multiples": [1.0, 1.618, 2.618],  # LLM-iter: 移除 T3-T5
+        "trend_filter": "EMA20_slope",
+        "adx_filter": 20,
+        "volume_filter": "1.2x_SMA20",
+        "cooldown_bars": 10,
+        "atr_stop_mult": 1.0,  # 自適應 SL
     },
     "RSI-Divergence": {
         "name": "RSI Divergence",
@@ -437,7 +445,7 @@ def get_strategy_weight(strategy_key: str) -> float:
 STRATEGY_WEIGHT = {
     "H-Pattern": 1.2,
     "3-Pushes": 1.0,
-    "Two-Yang-One-Yin": 0.8,
+    "Two-Yang-One-Yin": 0.5,  # LLM-iter 2026-08-25
     "RSI-Divergence": 0.7,  # LLM-optimized 2026-08-25
     "50-20-Pullback": 1.0,
     "Stair-Pattern": 0.9,

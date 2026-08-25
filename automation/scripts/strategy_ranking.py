@@ -42,7 +42,7 @@ STRATEGIES = [
     {"id": "ocs-btc", "name": "OCS BTC 5m", "ticker": "BTC-USD", "type": "ocs", "weight": 1.0},
     {"id": "h-pattern", "name": "H-Pattern", "ticker": "MNQ=F", "type": "yw", "weight": 1.2},
     {"id": "3-pushes", "name": "3-Pushes", "ticker": "MNQ=F", "type": "yw", "weight": 1.0},
-    {"id": "two-yang", "name": "兩陽夾一陰", "ticker": "MNQ=F", "type": "yw", "weight": 0.8},
+    {"id": "two-yang", "name": "兩陽夾一陰", "ticker": "MNQ=F", "type": "yw", "weight": 0.5, "llm_optimized": true, "optim_date": "2026-08-25"},
     {"id": "rsi-div", "name": "RSI Divergence", "ticker": "MNQ=F", "type": "yw", "weight": 0.7, "llm_optimized": True, "optim_date": "2026-08-25"},
     {"id": "50-20-pullback", "name": "50/20 Pullback", "ticker": "MNQ=F", "type": "yw", "weight": 1.0},
     {"id": "stair-pattern", "name": "Stair Pattern", "ticker": "MNQ=F", "type": "yw", "weight": 0.9},
