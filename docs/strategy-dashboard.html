@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<title>9 Strategy Sub-Agents Dashboard — YW Concept</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    background: #0d1117; color: #c9d1d9; padding: 20px;
+  }
+  .container { max-width: 1400px; margin: 0 auto; }
+  h1 { color: #58a6ff; margin-bottom: 8px; font-size: 28px; }
+  h2 { color: #58a6ff; margin: 24px 0 12px; font-size: 20px; border-bottom: 1px solid #21262d; padding-bottom: 8px; }
+  h3 { color: #c9d1d9; margin: 12px 0 8px; font-size: 16px; }
+  .meta { color: #8b949e; font-size: 14px; margin-bottom: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 16px; }
+  .card {
+    background: #161b22; border: 1px solid #30363d; border-radius: 8px;
+    padding: 16px; transition: border-color 0.2s;
+  }
+  .card:hover { border-color: #58a6ff; }
+  .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .strategy-name { font-size: 18px; font-weight: 600; color: #f0f6fc; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+  .badge-ok { background: #1f6f3a; color: #c9f5d3; }
+  .badge-warn { background: #9e6a03; color: #f1c40f; }
+  .badge-bug { background: #8b1a1a; color: #ff8888; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0; }
+  .stat { text-align: center; }
+  .stat-label { color: #8b949e; font-size: 11px; text-transform: uppercase; }
+  .stat-value { color: #f0f6fc; font-size: 18px; font-weight: 600; margin-top: 2px; }
+  .stat-value.pos { color: #3fb950; }
+  .stat-value.neg { color: #f85149; }
+  .stat-value.muted { color: #6e7681; }
+  .source-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .source-link {
+    display: inline-block; padding: 3px 8px; background: #21262d; color: #58a6ff;
+    text-decoration: none; border-radius: 4px; font-size: 12px;
+    border: 1px solid #30363d;
+  }
+  .source-link:hover { background: #30363d; }
+  .reason { color: #c9d1d9; font-size: 13px; line-height: 1.5; padding: 8px; background: #0d1117;
+            border-left: 3px solid #58a6ff; border-radius: 4px; margin-top: 8px; }
+  .chart-container { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 16px; margin: 16px 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #21262d; }
+  th { color: #58a6ff; font-weight: 600; font-size: 13px; }
+  td { font-size: 14px; }
+  tr:hover { background: #161b22; }
+  .pf-good { color: #3fb950; }
+  .pf-bad { color: #f85149; }
+  .pf-med { color: #d29922; }
+  .nav { display: flex; gap: 12px; margin-bottom: 16px; padding: 12px; background: #161b22;
+         border-radius: 8px; border: 1px solid #30363d; flex-wrap: wrap; }
+  .nav a { color: #58a6ff; text-decoration: none; font-size: 14px; }
+  .nav a:hover { text-decoration: underline; }
+  .footer { text-align: center; color: #6e7681; font-size: 12px; margin-top: 32px; padding-top: 16px; border-top: 1px solid #21262d; }
+  code { color: #a4cafe; background: #21262d; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+  a { color: #58a6ff; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🎯 9 Strategy Sub-Agents Dashboard</h1>
+<div class="meta">
+  Repo: <a href="https://github.com/yip-lgtm/YW-concept-ki7409">yip-lgtm/YW-concept-ki7409</a>
+  | Last updated: 2026-08-25 20:47 HKT
+  | Window: 4d walk-forward + live 24/7 + 20d backtest
+</div>
+
+<div class="nav">
+  <a href="#summary">Summary</a>
+  <a href="#agents">9 Sub-Agents</a>
+  <a href="#charts">Charts</a>
+  <a href="#iterations">LLM Iterations</a>
+  <a href="#sources">Source Code</a>
+</div>
+
+<h2 id="summary">📊 Summary</h2>
+<div class="grid">
+  <div class="chart-container"><h3>Live Performance (PF)</h3><canvas id="livePFChart" height="200"></canvas></div>
+  <div class="chart-container"><h3>4-Day Backtest (PF)</h3><canvas id="bt4PFChart" height="200"></canvas></div>
+  <div class="chart-container"><h3>20-Day Backtest (PF)</h3><canvas id="bt20PFChart" height="200"></canvas></div>
+  <div class="chart-container"><h3>Weight Distribution</h3><canvas id="weightChart" height="200"></canvas></div>
+</div>
+
+<h2 id="agents">🤖 9 Strategy Sub-Agents</h2>
+<div class="grid">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="strategy-name">H-Pattern</div>
+      <span class="badge badge-bug">Grade D 25%</span>
+    </div>
+    <div style="color:#8b949e; font-size:12px; margin-bottom: 8px;">
+      Agent: <code>yw-h-pattern</code> | Ticker: <code>MNQ=F</code>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Weight</div><div class="stat-value">1.2</div></div>
+      <div class="stat"><div class="stat-label">Live PF</div><div class="stat-value muted">-</div></div>
+      <div class="stat"><div class="stat-label">4d PF</div><div class="stat-value muted">-</div></div>
+      <div class="stat"><div class="stat-label">20d PF</div><div class="stat-value muted">-</div></div>
+    </div>
+    <div style="font-size:12px; color:#8b949e; line-height:1.6;">
+      <strong>Live:</strong> 0 trades (0W-0L) WR 0% R +0.00<br>
+      <strong>4d BT:</strong> 0 trades WR 0% R +0.00<br>
+      <strong>20d BT:</strong> 0 trades WR 0% R +0.00
+    </div>
+    <div class="reason">💡 0 trades零樣本完全無法驗證edge，純noise，建議降低weight並擴timeframe增加觸發機會</div>
+    <div class="source-links">
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py#:~:text=detect_h_pattern" target="_blank">📄 yw_indicators.py</a>
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py" target="_blank">fn: detect_h_pattern()</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="strategy-name">3-Pushes</div>
+      <span class="badge badge-bug">Grade D 35%</span>
+    </div>
+    <div style="color:#8b949e; font-size:12px; margin-bottom: 8px;">
+      Agent: <code>yw-3-pushes</code> | Ticker: <code>MNQ=F</code>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Weight</div><div class="stat-value">1.0</div></div>
+      <div class="stat"><div class="stat-label">Live PF</div><div class="stat-value pos">2.5</div></div>
+      <div class="stat"><div class="stat-label">4d PF</div><div class="stat-value neg">0.58</div></div>
+      <div class="stat"><div class="stat-label">20d PF</div><div class="stat-value muted">-</div></div>
+    </div>
+    <div style="font-size:12px; color:#8b949e; line-height:1.6;">
+      <strong>Live:</strong> 7 trades (5W-2L) WR 71.4% R +3.00<br>
+      <strong>4d BT:</strong> 17 trades WR 35.3% R -4.34<br>
+      <strong>20d BT:</strong> 0 trades WR 0% R +0.00
+    </div>
+    <div class="reason">💡 0 trades 完全無樣本,無法驗證 edge,PF/WR 為預設值無意義,策略未觸發或條件過嚴</div>
+    <div class="source-links">
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py#:~:text=detect_3_pushes" target="_blank">📄 yw_indicators.py</a>
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py" target="_blank">fn: detect_3_pushes()</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="strategy-name">兩陽夾一陰</div>
+      <span class="badge badge-warn">Grade C 25%</span>
+    </div>
+    <div style="color:#8b949e; font-size:12px; margin-bottom: 8px;">
+      Agent: <code>yw-two-yang</code> | Ticker: <code>MNQ=F</code>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Weight</div><div class="stat-value">0.3</div></div>
+      <div class="stat"><div class="stat-label">Live PF</div><div class="stat-value muted">-</div></div>
+      <div class="stat"><div class="stat-label">4d PF</div><div class="stat-value muted">-</div></div>
+      <div class="stat"><div class="stat-label">20d PF</div><div class="stat-value muted">-</div></div>
+    </div>
+    <div style="font-size:12px; color:#8b949e; line-height:1.6;">
+      <strong>Live:</strong> 0 trades (0W-0L) WR 0% R +0.00<br>
+      <strong>4d BT:</strong> 0 trades WR 0% R +0.00<br>
+      <strong>20d BT:</strong> 0 trades WR 0% R +0.00
+    </div>
+    <div class="reason">💡 0 trades backtest無統計意義，需實際訊號測試驗證</div>
+    <div class="source-links">
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py#:~:text=detect_two_yang_one_yin" target="_blank">📄 yw_indicators.py</a>
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py" target="_blank">fn: detect_two_yang_one_yin()</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="strategy-name">RSI Divergence</div>
+      <span class="badge badge-bug">Grade D 28%</span>
+    </div>
+    <div style="color:#8b949e; font-size:12px; margin-bottom: 8px;">
+      Agent: <code>yw-rsi-div</code> | Ticker: <code>MNQ=F</code>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Weight</div><div class="stat-value">0.7</div></div>
+      <div class="stat"><div class="stat-label">Live PF</div><div class="stat-value muted">-</div></div>
+      <div class="stat"><div class="stat-label">4d PF</div><div class="stat-value neg">0.81</div></div>
+      <div class="stat"><div class="stat-label">20d PF</div><div class="stat-value muted">-</div></div>
+    </div>
+    <div style="font-size:12px; color:#8b949e; line-height:1.6;">
+      <strong>Live:</strong> 0 trades (0W-0L) WR 0% R +0.00<br>
+      <strong>4d BT:</strong> 29 trades WR 44.8% R -3.00<br>
+      <strong>20d BT:</strong> 0 trades WR 0% R +0.00
+    </div>
+    <div class="reason">💡 0 trades = 完全無訊號，divergence 條件太嚴苛，RSI+EMA50+volume 三重 filter 在 15min 過濾掉所有訊號，edge 未驗證。</div>
+    <div class="source-links">
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py#:~:text=detect_rsi_divergence" target="_blank">📄 yw_indicators.py</a>
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py" target="_blank">fn: detect_rsi_divergence()</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="strategy-name">50/20 Pullback</div>
+      <span class="badge badge-bug">Grade D 25%</span>
+    </div>
+    <div style="color:#8b949e; font-size:12px; margin-bottom: 8px;">
+      Agent: <code>yw-50-20-pullback</code> | Ticker: <code>MNQ=F</code>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Weight</div><div class="stat-value">1.0</div></div>
+      <div class="stat"><div class="stat-label">Live PF</div><div class="stat-value muted">-</div></div>
+      <div class="stat"><div class="stat-label">4d PF</div><div class="stat-value neg">0.83</div></div>
+      <div class="stat"><div class="stat-label">20d PF</div><div class="stat-value muted">-</div></div>
+    </div>
+    <div style="font-size:12px; color:#8b949e; line-height:1.6;">
+      <strong>Live:</strong> 0 trades (0W-0L) WR 0% R +0.00<br>
+      <strong>4d BT:</strong> 39 trades WR 46.2% R -3.49<br>
+      <strong>20d BT:</strong> 0 trades WR 0% R +0.00
+    </div>
+    <div class="reason">💡 0 trades信號未觸發，pullback條件過嚴或5min雜訊過多，無法驗證策略</div>
+    <div class="source-links">
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py#:~:text=detect_5020_pullback" target="_blank">📄 yw_indicators.py</a>
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py" target="_blank">fn: detect_5020_pullback()</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="strategy-name">Stair Pattern</div>
+      <span class="badge badge-bug">Grade D 85%</span>
+    </div>
+    <div style="color:#8b949e; font-size:12px; margin-bottom: 8px;">
+      Agent: <code>yw-stair-pattern</code> | Ticker: <code>MNQ=F</code>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Weight</div><div class="stat-value">1.2</div></div>
+      <div class="stat"><div class="stat-label">Live PF</div><div class="stat-value muted">-</div></div>
+      <div class="stat"><div class="stat-label">4d PF</div><div class="stat-value ">1.0</div></div>
+      <div class="stat"><div class="stat-label">20d PF</div><div class="stat-value muted">-</div></div>
+    </div>
+    <div style="font-size:12px; color:#8b949e; line-height:1.6;">
+      <strong>Live:</strong> 0 trades (0W-0L) WR 0% R +0.00<br>
+      <strong>4d BT:</strong> 12 trades WR 50.0% R -0.00<br>
+      <strong>20d BT:</strong> 0 trades WR 0% R +0.00
+    </div>
+    <div class="reason">💡 0 trades完全失效，單一step_pattern無訊號產生，需補強指標組合</div>
+    <div class="source-links">
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators_extra.py#:~:text=detect_stair_pattern" target="_blank">📄 yw_indicators_extra.py</a>
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators_extra.py" target="_blank">fn: detect_stair_pattern()</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="strategy-name">CRT</div>
+      <span class="badge badge-warn">Grade C 25%</span>
+    </div>
+    <div style="color:#8b949e; font-size:12px; margin-bottom: 8px;">
+      Agent: <code>yw-crt</code> | Ticker: <code>MNQ=F</code>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Weight</div><div class="stat-value">1.1</div></div>
+      <div class="stat"><div class="stat-label">Live PF</div><div class="stat-value pos">10.0</div></div>
+      <div class="stat"><div class="stat-label">4d PF</div><div class="stat-value muted">-</div></div>
+      <div class="stat"><div class="stat-label">20d PF</div><div class="stat-value muted">-</div></div>
+    </div>
+    <div style="font-size:12px; color:#8b949e; line-height:1.6;">
+      <strong>Live:</strong> 2 trades (2W-0L) WR 100.0% R +2.00<br>
+      <strong>4d BT:</strong> 0 trades WR 0% R +0.00<br>
+      <strong>20d BT:</strong> 0 trades WR 0% R +0.00
+    </div>
+    <div class="reason">💡 樣本僅2單，100%WR屬統計噪音，未能驗證edge真偽，宜保守觀察</div>
+    <div class="source-links">
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators_extra.py#:~:text=detect_crt" target="_blank">📄 yw_indicators_extra.py</a>
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators_extra.py" target="_blank">fn: detect_crt()</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="strategy-name">Kell Cycle</div>
+      <span class="badge badge-bug">Grade D 15%</span>
+    </div>
+    <div style="color:#8b949e; font-size:12px; margin-bottom: 8px;">
+      Agent: <code>yw-kell-cycle</code> | Ticker: <code>MNQ=F</code>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Weight</div><div class="stat-value">0.5</div></div>
+      <div class="stat"><div class="stat-label">Live PF</div><div class="stat-value muted">-</div></div>
+      <div class="stat"><div class="stat-label">4d PF</div><div class="stat-value pos">1.36</div></div>
+      <div class="stat"><div class="stat-label">20d PF</div><div class="stat-value muted">-</div></div>
+    </div>
+    <div style="font-size:12px; color:#8b949e; line-height:1.6;">
+      <strong>Live:</strong> 0 trades (0W-0L) WR 0% R +0.00<br>
+      <strong>4d BT:</strong> 16 trades WR 56.2% R +2.36<br>
+      <strong>20d BT:</strong> 0 trades WR 0% R +0.00
+    </div>
+    <div class="reason">💡 零交易樣本，無實際表現可評估，僅有 backtest 基線參考，信心極低</div>
+    <div class="source-links">
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators_extra.py#:~:text=detect_kell_setups" target="_blank">📄 yw_indicators_extra.py</a>
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators_extra.py" target="_blank">fn: detect_kell_setups()</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="strategy-name">OCS BTC 5m</div>
+      <span class="badge badge-bug">No iter</span>
+    </div>
+    <div style="color:#8b949e; font-size:12px; margin-bottom: 8px;">
+      Agent: <code>yw-ocs-btc</code> | Ticker: <code>BTC-USD</code>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Weight</div><div class="stat-value">1.0</div></div>
+      <div class="stat"><div class="stat-label">Live PF</div><div class="stat-value pos">10.0</div></div>
+      <div class="stat"><div class="stat-label">4d PF</div><div class="stat-value muted">-</div></div>
+      <div class="stat"><div class="stat-label">20d PF</div><div class="stat-value muted">-</div></div>
+    </div>
+    <div style="font-size:12px; color:#8b949e; line-height:1.6;">
+      <strong>Live:</strong> 1 trades (1W-0L) WR 100.0% R +1.00<br>
+      <strong>4d BT:</strong> 0 trades WR 0% R +0.00<br>
+      <strong>20d BT:</strong> 0 trades WR 0% R +0.00
+    </div>
+    
+    <div class="source-links">
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/ocs_btc_5m.py#:~:text=compute_signal" target="_blank">📄 ocs_btc_5m.py</a>
+      <a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/ocs_btc_5m.py" target="_blank">fn: compute_signal()</a>
+    </div>
+  </div>
+</div>
+<h2 id="charts">📈 Detailed Charts</h2>
+<div class="grid">
+  <div class="chart-container"><h3>Live Win Rate %</h3><canvas id="liveWRChart" height="200"></canvas></div>
+  <div class="chart-container"><h3>Live Total R (R-multiple)</h3><canvas id="liveRChart" height="200"></canvas></div>
+  <div class="chart-container"><h3>Trade Count (Live + 4d + 20d)</h3><canvas id="tradeCountChart" height="200"></canvas></div>
+  <div class="chart-container"><h3>LLM Iteration Confidence</h3><canvas id="confChart" height="200"></canvas></div>
+</div>
+
+<h2 id="iterations">🔁 LLM Iterations History</h2>
+<div class="chart-container">
+<table>
+  <thead><tr><th>Timestamp</th><th>9-Agent Summary</th><th>Auto-Applied (conf≥60%)</th></tr></thead>
+  <tbody>
+<tr><td><code>20260825_203641</code></td><td>9 agents iterated</td><td>yw-stair-pattern conf=85%</td></tr><tr><td><code>20260825_202217</code></td><td>9 agents iterated</td><td>yw-kell-cycle conf=72%, yw-two-yang conf=72%</td></tr><tr><td><code>20260825_200109</code></td><td>9 agents iterated</td><td>yw-h-pattern conf=75%, yw-rsi-div conf=72%, yw-stair-pattern conf=72%, yw-50-20-pullback conf=78%</td></tr><tr><td><code>20260825_200041</code></td><td>9 agents iterated</td><td>-</td></tr><tr><td><code>20260825_200012</code></td><td>9 agents iterated</td><td>-</td></tr></tbody></table></div>
+<h2 id="sources">📂 Source Code Reference</h2>
+<div class="chart-container">
+<table>
+  <thead><tr><th>Strategy</th><th>Detector Function</th><th>Source File</th><th>GitHub Link</th></tr></thead>
+  <tbody>
+
+    <tr>
+      <td><strong>H-Pattern</strong></td>
+      <td><code>detect_h_pattern()</code></td>
+      <td><code>automation/src/yw_indicators.py</code></td>
+      <td><a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py#:~:text=detect_h_pattern" target="_blank">View on GitHub →</a></td>
+    </tr>
+    <tr>
+      <td><strong>3-Pushes</strong></td>
+      <td><code>detect_3_pushes()</code></td>
+      <td><code>automation/src/yw_indicators.py</code></td>
+      <td><a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py#:~:text=detect_3_pushes" target="_blank">View on GitHub →</a></td>
+    </tr>
+    <tr>
+      <td><strong>兩陽夾一陰</strong></td>
+      <td><code>detect_two_yang_one_yin()</code></td>
+      <td><code>automation/src/yw_indicators.py</code></td>
+      <td><a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py#:~:text=detect_two_yang_one_yin" target="_blank">View on GitHub →</a></td>
+    </tr>
+    <tr>
+      <td><strong>RSI Divergence</strong></td>
+      <td><code>detect_rsi_divergence()</code></td>
+      <td><code>automation/src/yw_indicators.py</code></td>
+      <td><a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py#:~:text=detect_rsi_divergence" target="_blank">View on GitHub →</a></td>
+    </tr>
+    <tr>
+      <td><strong>50/20 Pullback</strong></td>
+      <td><code>detect_5020_pullback()</code></td>
+      <td><code>automation/src/yw_indicators.py</code></td>
+      <td><a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators.py#:~:text=detect_5020_pullback" target="_blank">View on GitHub →</a></td>
+    </tr>
+    <tr>
+      <td><strong>Stair Pattern</strong></td>
+      <td><code>detect_stair_pattern()</code></td>
+      <td><code>automation/src/yw_indicators_extra.py</code></td>
+      <td><a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators_extra.py#:~:text=detect_stair_pattern" target="_blank">View on GitHub →</a></td>
+    </tr>
+    <tr>
+      <td><strong>CRT</strong></td>
+      <td><code>detect_crt()</code></td>
+      <td><code>automation/src/yw_indicators_extra.py</code></td>
+      <td><a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators_extra.py#:~:text=detect_crt" target="_blank">View on GitHub →</a></td>
+    </tr>
+    <tr>
+      <td><strong>Kell Cycle</strong></td>
+      <td><code>detect_kell_setups()</code></td>
+      <td><code>automation/src/yw_indicators_extra.py</code></td>
+      <td><a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/yw_indicators_extra.py#:~:text=detect_kell_setups" target="_blank">View on GitHub →</a></td>
+    </tr>
+    <tr>
+      <td><strong>OCS BTC 5m</strong></td>
+      <td><code>compute_signal()</code></td>
+      <td><code>automation/src/ocs_btc_5m.py</code></td>
+      <td><a class="source-link" href="https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/ocs_btc_5m.py#:~:text=compute_signal" target="_blank">View on GitHub →</a></td>
+    </tr></tbody></table></div>
+<div class="footer">
+  Generated 2026-08-25 20:47 HKT • 
+  Data sources: live_scan/trades.jsonl + ocs_btc_5m/trades.jsonl + 
+  strategy_ranking/backtest_4d_2026-08-25.json + ranking_2026-08-25.json + 
+  iterations/iteration_all_*.json
+  <br>
+  <a href="https://github.com/yip-lgtm/YW-concept-ki7409">GitHub Repo</a> • 
+  <a href="https://github.com/yip-lgtm/YW-concept-ki7409/tree/main/automation/reports/strategy_ranking">Raw Reports</a>
+</div>
+
+<script>
+const data = [{"name": "H-Pattern", "weight": 1.2, "live_pf": 0, "live_wr": 0, "live_R": 0, "live_n": 0, "bt4_pf": 0, "bt4_n": 0, "bt20_pf": 0, "bt20_n": 0, "conf": 25, "grade": "D"}, {"name": "3-Pushes", "weight": 1.0, "live_pf": 2.5, "live_wr": 71.4, "live_R": 3.0, "live_n": 7, "bt4_pf": 0.58, "bt4_n": 17, "bt20_pf": 0, "bt20_n": 0, "conf": 35, "grade": "D"}, {"name": "\u5169\u967d\u593e\u4e00\u9670", "weight": 0.3, "live_pf": 0, "live_wr": 0, "live_R": 0, "live_n": 0, "bt4_pf": 0, "bt4_n": 0, "bt20_pf": 0, "bt20_n": 0, "conf": 25, "grade": "C"}, {"name": "RSI Divergence", "weight": 0.7, "live_pf": 0, "live_wr": 0, "live_R": 0, "live_n": 0, "bt4_pf": 0.81, "bt4_n": 29, "bt20_pf": 0, "bt20_n": 0, "conf": 28, "grade": "D"}, {"name": "50/20 Pullback", "weight": 1.0, "live_pf": 0, "live_wr": 0, "live_R": 0, "live_n": 0, "bt4_pf": 0.83, "bt4_n": 39, "bt20_pf": 0, "bt20_n": 0, "conf": 25, "grade": "D"}, {"name": "Stair Pattern", "weight": 1.2, "live_pf": 0, "live_wr": 0, "live_R": 0, "live_n": 0, "bt4_pf": 1.0, "bt4_n": 12, "bt20_pf": 0, "bt20_n": 0, "conf": 85, "grade": "D"}, {"name": "CRT", "weight": 1.1, "live_pf": 10.0, "live_wr": 100.0, "live_R": 2.0, "live_n": 2, "bt4_pf": 0, "bt4_n": 0, "bt20_pf": 0, "bt20_n": 0, "conf": 25, "grade": "C"}, {"name": "Kell Cycle", "weight": 0.5, "live_pf": 0, "live_wr": 0, "live_R": 0, "live_n": 0, "bt4_pf": 1.36, "bt4_n": 16, "bt20_pf": 0, "bt20_n": 0, "conf": 15, "grade": "D"}, {"name": "OCS BTC 5m", "weight": 1.0, "live_pf": 10.0, "live_wr": 100.0, "live_R": 1.0, "live_n": 1, "bt4_pf": 0, "bt4_n": 0, "bt20_pf": 0, "bt20_n": 0, "conf": 0, "grade": "?"}];
+const labels = data.map(d => d.name);
+const pfColors = data.map(d => {
+  if (d.live_pf > 1.2 || d.bt4_pf > 1.2 || d.bt20_pf > 1.2) return '#3fb950';
+  if ((d.live_pf > 0 && d.live_pf < 0.9) || (d.bt4_pf > 0 && d.bt4_pf < 0.9)) return '#f85149';
+  return '#58a6ff';
+});
+const chartOpts = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: {
+    y: { ticks: { color: '#c9d1d9' }, grid: { color: '#21262d' } },
+    x: { ticks: { color: '#c9d1d9' }, grid: { color: '#21262d' } }
+  }
+};
+function bar(id, label, vals, colors) {
+  new Chart(document.getElementById(id), {
+    type: 'bar', data: { labels, datasets: [{ label, data: vals, backgroundColor: colors || pfColors, borderColor: colors || pfColors, borderWidth: 1 }] },
+    options: chartOpts
+  });
+}
+bar('livePFChart', 'Live PF', data.map(d => d.live_pf));
+bar('bt4PFChart', '4d PF', data.map(d => d.bt4_pf));
+bar('bt20PFChart', '20d PF', data.map(d => d.bt20_pf));
+bar('weightChart', 'Weight', data.map(d => d.weight), data.map(() => '#d29922'));
+bar('liveWRChart', 'Live WR %', data.map(d => d.live_wr));
+bar('liveRChart', 'Live Total R', data.map(d => d.live_R), data.map(d => d.live_R > 0 ? '#3fb950' : d.live_R < 0 ? '#f85149' : '#6e7681'));
+new Chart(document.getElementById('tradeCountChart'), {
+  type: 'bar',
+  data: { labels, datasets: [
+    { label: 'Live', data: data.map(d => d.live_n), backgroundColor: '#58a6ff' },
+    { label: '4d BT', data: data.map(d => d.bt4_n), backgroundColor: '#3fb950' },
+    { label: '20d BT', data: data.map(d => d.bt20_n), backgroundColor: '#d29922' }
+  ]},
+  options: { ...chartOpts, plugins: { legend: { display: true, labels: { color: '#c9d1d9' } } } }
+});
+new Chart(document.getElementById('confChart'), {
+  type: 'bar',
+  data: { labels, datasets: [{ label: 'LLM Confidence %', data: data.map(d => d.conf), backgroundColor: data.map(d => d.conf >= 60 ? '#3fb950' : d.conf >= 30 ? '#d29922' : '#6e7681') }] },
+  options: chartOpts
+});
+</script>
+</body>
+</html>

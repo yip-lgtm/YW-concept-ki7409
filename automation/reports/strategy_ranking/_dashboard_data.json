@@ -1,0 +1,245 @@
+{
+  "h-pattern": {
+    "name": "H-Pattern",
+    "agent": "yw-h-pattern",
+    "ticker": "MNQ=F",
+    "weight": 1.2,
+    "live": {},
+    "backtest_4d": {
+      "strategy": "h-pattern",
+      "n_trades": 0,
+      "win_rate": 0,
+      "total_R": 0,
+      "profit_factor": 0
+    },
+    "backtest_20d": {},
+    "iteration": {
+      "grade": "D",
+      "confidence": 25,
+      "new_weight": 0.5,
+      "new_tf": "5min/15min",
+      "reason": "0 trades\u96f6\u6a23\u672c\u5b8c\u5168\u7121\u6cd5\u9a57\u8b49edge\uff0c\u7d14noise\uff0c\u5efa\u8b70\u964d\u4f4eweight\u4e26\u64f4timeframe\u589e\u52a0\u89f8\u767c\u6a5f\u6703"
+    }
+  },
+  "3-pushes": {
+    "name": "3-Pushes",
+    "agent": "yw-3-pushes",
+    "ticker": "MNQ=F",
+    "weight": 1.0,
+    "live": {
+      "n": 7,
+      "wins": 5,
+      "losses": 2,
+      "wr": 71.4,
+      "total_R": 3.0,
+      "pf": 2.5,
+      "pnl": -168.94
+    },
+    "backtest_4d": {
+      "strategy": "3-pushes",
+      "ticker": "MNQ=F",
+      "n_trades": 17,
+      "win_rate": 35.3,
+      "total_R": -4.34,
+      "profit_factor": 0.58,
+      "avg_R": -0.255,
+      "wins": 6,
+      "losses": 11
+    },
+    "backtest_20d": {},
+    "iteration": {
+      "grade": "D",
+      "confidence": 35,
+      "new_weight": 0.3,
+      "new_tf": "5min/15min",
+      "reason": "0 trades \u5b8c\u5168\u7121\u6a23\u672c,\u7121\u6cd5\u9a57\u8b49 edge,PF/WR \u70ba\u9810\u8a2d\u503c\u7121\u610f\u7fa9,\u7b56\u7565\u672a\u89f8\u767c\u6216\u689d\u4ef6\u904e\u56b4"
+    }
+  },
+  "two-yang": {
+    "name": "\u5169\u967d\u593e\u4e00\u9670",
+    "agent": "yw-two-yang",
+    "ticker": "MNQ=F",
+    "weight": 0.3,
+    "live": {},
+    "backtest_4d": {
+      "strategy": "two-yang",
+      "error": "insufficient data",
+      "n_trades": 0,
+      "win_rate": 0,
+      "total_R": 0,
+      "profit_factor": 0
+    },
+    "backtest_20d": {},
+    "iteration": {
+      "grade": "C",
+      "confidence": 25,
+      "new_weight": 0.6,
+      "new_tf": "5min/15min",
+      "reason": "0 trades backtest\u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u9700\u5be6\u969b\u8a0a\u865f\u6e2c\u8a66\u9a57\u8b49"
+    }
+  },
+  "rsi-div": {
+    "name": "RSI Divergence",
+    "agent": "yw-rsi-div",
+    "ticker": "MNQ=F",
+    "weight": 0.7,
+    "live": {},
+    "backtest_4d": {
+      "strategy": "rsi-div",
+      "ticker": "MNQ=F",
+      "n_trades": 29,
+      "win_rate": 44.8,
+      "total_R": -3.0,
+      "profit_factor": 0.81,
+      "avg_R": -0.103,
+      "wins": 13,
+      "losses": 16
+    },
+    "backtest_20d": {},
+    "iteration": {
+      "grade": "D",
+      "confidence": 28,
+      "new_weight": 0.3,
+      "new_tf": "5min/15min",
+      "reason": "0 trades = \u5b8c\u5168\u7121\u8a0a\u865f\uff0cdivergence \u689d\u4ef6\u592a\u56b4\u82db\uff0cRSI+EMA50+volume \u4e09\u91cd filter \u5728 15min \u904e\u6ffe\u6389\u6240\u6709\u8a0a\u865f\uff0cedge \u672a\u9a57\u8b49\u3002"
+    }
+  },
+  "50-20-pullback": {
+    "name": "50/20 Pullback",
+    "agent": "yw-50-20-pullback",
+    "ticker": "MNQ=F",
+    "weight": 1.0,
+    "live": {},
+    "backtest_4d": {
+      "strategy": "50-20-pullback",
+      "ticker": "MNQ=F",
+      "n_trades": 39,
+      "win_rate": 46.2,
+      "total_R": -3.49,
+      "profit_factor": 0.83,
+      "avg_R": -0.09,
+      "wins": 18,
+      "losses": 21
+    },
+    "backtest_20d": {},
+    "iteration": {
+      "grade": "D",
+      "confidence": 25,
+      "new_weight": 0.5,
+      "new_tf": "15min",
+      "reason": "0 trades\u4fe1\u865f\u672a\u89f8\u767c\uff0cpullback\u689d\u4ef6\u904e\u56b4\u62165min\u96dc\u8a0a\u904e\u591a\uff0c\u7121\u6cd5\u9a57\u8b49\u7b56\u7565"
+    }
+  },
+  "stair-pattern": {
+    "name": "Stair Pattern",
+    "agent": "yw-stair-pattern",
+    "ticker": "MNQ=F",
+    "weight": 1.2,
+    "live": {},
+    "backtest_4d": {
+      "strategy": "stair-pattern",
+      "ticker": "MNQ=F",
+      "n_trades": 12,
+      "win_rate": 50.0,
+      "total_R": -0.0,
+      "profit_factor": 1.0,
+      "avg_R": -0.0,
+      "wins": 6,
+      "losses": 6
+    },
+    "backtest_20d": {},
+    "iteration": {
+      "grade": "D",
+      "confidence": 85,
+      "new_weight": 1.2,
+      "new_tf": "15min",
+      "reason": "0 trades\u5b8c\u5168\u5931\u6548\uff0c\u55ae\u4e00step_pattern\u7121\u8a0a\u865f\u7522\u751f\uff0c\u9700\u88dc\u5f37\u6307\u6a19\u7d44\u5408"
+    }
+  },
+  "crt": {
+    "name": "CRT",
+    "agent": "yw-crt",
+    "ticker": "MNQ=F",
+    "weight": 1.1,
+    "live": {
+      "n": 2,
+      "wins": 2,
+      "losses": 0,
+      "wr": 100.0,
+      "total_R": 2.0,
+      "pf": 10.0,
+      "pnl": 3.17
+    },
+    "backtest_4d": {
+      "strategy": "crt",
+      "n_trades": 0,
+      "win_rate": 0,
+      "total_R": 0,
+      "profit_factor": 0
+    },
+    "backtest_20d": {},
+    "iteration": {
+      "grade": "C",
+      "confidence": 25,
+      "new_weight": 1.0,
+      "new_tf": "5min+4H",
+      "reason": "\u6a23\u672c\u50c52\u55ae\uff0c100%WR\u5c6c\u7d71\u8a08\u566a\u97f3\uff0c\u672a\u80fd\u9a57\u8b49edge\u771f\u507d\uff0c\u5b9c\u4fdd\u5b88\u89c0\u5bdf"
+    }
+  },
+  "kell-cycle": {
+    "name": "Kell Cycle",
+    "agent": "yw-kell-cycle",
+    "ticker": "MNQ=F",
+    "weight": 0.5,
+    "live": {},
+    "backtest_4d": {
+      "strategy": "kell-cycle",
+      "ticker": "MNQ=F",
+      "n_trades": 16,
+      "win_rate": 56.2,
+      "total_R": 2.36,
+      "profit_factor": 1.36,
+      "avg_R": 0.148,
+      "wins": 9,
+      "losses": 7
+    },
+    "backtest_20d": {},
+    "iteration": {
+      "grade": "D",
+      "confidence": 15,
+      "new_weight": 0.6,
+      "new_tf": "5min/15min",
+      "reason": "\u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7121\u5be6\u969b\u8868\u73fe\u53ef\u8a55\u4f30\uff0c\u50c5\u6709 backtest \u57fa\u7dda\u53c3\u8003\uff0c\u4fe1\u5fc3\u6975\u4f4e"
+    }
+  },
+  "ocs-btc": {
+    "name": "OCS BTC 5m",
+    "agent": "yw-ocs-btc",
+    "ticker": "BTC-USD",
+    "weight": 1.0,
+    "live": {
+      "n": 1,
+      "wins": 1,
+      "losses": 0,
+      "wr": 100.0,
+      "total_R": 1.0,
+      "pf": 10.0,
+      "pnl": 432.94
+    },
+    "backtest_4d": {
+      "strategy": "ocs-btc",
+      "n_trades": 0,
+      "win_rate": 0,
+      "total_R": 0,
+      "profit_factor": 0
+    },
+    "backtest_20d": {},
+    "iteration": {
+      "grade": "?",
+      "confidence": 0,
+      "new_weight": null,
+      "new_tf": null,
+      "reason": ""
+    }
+  }
+}
