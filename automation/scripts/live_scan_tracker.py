@@ -11,6 +11,8 @@ import os
 import sys
 import json
 import requests
+import pandas as pd
+import numpy as np
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -87,10 +89,19 @@ def fetch_bars_since(symbol: str, start_iso: str, max_bars=5000):
         df = _fetch_bars(symbol, days=5, interval_min=5)
         if df is None or df.empty:
             return None
-        # Filter to start_iso
+        # Filter to start_iso - handle tz properly
         if start_iso:
-            start = pd.Timestamp(start_iso).tz_localize(None) if not pd.Timestamp(start_iso).tzinfo else pd.Timestamp(start_iso).tz_convert(None)
-            df = df[df.index >= start]
+            start = pd.Timestamp(start_iso)
+            # If start has no tz, assume UTC
+            if start.tzinfo is None:
+                start = start.tz_localize("UTC")
+            # df.index may be tz-aware (UTC) or naive
+            if df.index.tz is None:
+                # Convert start to naive for comparison
+                start_naive = start.tz_convert(None) if start.tzinfo else start
+                df = df[df.index >= start_naive]
+            else:
+                df = df[df.index >= start]
         return df.tail(max_bars)
     except Exception as e:
         print(f"  WARN: fetch_bars_since error: {e}", file=sys.stderr)
@@ -176,7 +187,6 @@ def send_tg(text: str) -> int:
 
 
 def main() -> int:
-    import pandas as pd  # lazy import
     print(f"[live-tracker] {datetime.now(timezone.utc).isoformat()}")
     positions = load_positions()
     open_positions = [p for p in positions if p.get("status") == "open"]
