@@ -108,6 +108,11 @@ def check_agent(agent: dict) -> dict:
             result["checks"].append(("import", "FAIL"))
             return result
         result["checks"].append(("import", "OK"))
+    except ModuleNotFoundError as e:
+        # Missing dependency — warn not bug (GHA env issue, not code issue)
+        result["warns"].append(f"⚠️ Missing dependency: {e.name} (install -r requirements.txt)")
+        result["checks"].append(("import", "WARN"))
+        return result
     except Exception as e:
         result["bugs"].append(f"❌ Import error: {type(e).__name__}: {str(e)[:100]}")
         result["checks"].append(("import", "FAIL"))

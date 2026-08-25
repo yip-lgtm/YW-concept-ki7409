@@ -35,7 +35,7 @@ jobs:
         working-directory: automation
         run: |
           python -m venv .venv
-          .venv/bin/pip install -q requests
+          .venv/bin/pip install -q -r requirements.txt
 
       - name: Run weekly README update
         id: weekly
