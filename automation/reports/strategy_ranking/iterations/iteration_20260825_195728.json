@@ -1,0 +1,33 @@
+{
+  "date": "2026-08-25",
+  "worst_strategy": {
+    "strategy_id": "rsi-div",
+    "name": "RSI Divergence",
+    "rank": 9,
+    "pf": 0.92,
+    "total_R": -8,
+    "pnl_usd": -380,
+    "win_rate": 45.0,
+    "n_trades": 120,
+    "avg_pf": 0.92
+  },
+  "llm_response": "<think>Let me analyze this strategy optimization request carefully.\n\n## Current Strategy Analysis: RSI Divergence\n\n### Performance Metrics:\n- Rank: #9 (mid-tier)\n- Profit Factor: 0.92 (below 1.0 = losing strategy)\n- Total R: -8 (negative expectancy)\n- Win Rate: 45.0% (low for a divergence strategy)\n- Trades: 120 (sufficient sample size)\n- 7d Avg PF: 0.92 (consistent, not degrading)\n\n### Key Issues:\n1. **Negative expectancy**: PF < 1.0 and Total R is negative (-8 over 120 trades = -0.067R per trade)\n2. **Low win rate**: 45% is poor for divergence setups which should typically have 55-65% win rate when working correctly\n3. **Multiple timeframes (1/3/5min)**: Too many timeframes can cause conflicting signals and noise. This is likely contributing to false signals.\n\n### Diagnosis:\nThe strategy is losing money, which suggests:\n- False divergence signals (RSI divergence is notorious for this)\n- Possibly poor entry timing on multiple timeframes\n- The 45% win rate suggests exits are too early or entries are catching false breakouts\n\n### Optimization Recommendations:\n\n**1. Weight**: \n- Current: 1.1\n- Should DECREASE since strategy is losing money. The weight represents priority in daily reminder ranking. A losing strategy shouldn't have high weight.\n- Recommend: 0.6-0.7 (reduce priority since it's unprofitable)\n\n**2. Timeframe**:\n- Current: \"1/3/5min\" (three timeframes)\n- This is problematic. Multiple timeframes create signal conflicts.\n- Recommend: Focus on single timeframe \"5min\" fo",
+  "suggested_params": {
+    "weight": 0.6,
+    "timeframe": "5min",
+    "indicators": [
+      "rsi",
+      "divergence",
+      "volume",
+      "ema"
+    ],
+    "r_multiples": [
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      7.0
+    ],
+    "rationale": "Strategy is unprofitable (PF 0.92, -8R over 120 trades) with low 45% win rate. Three main issues: (1) Trading 1/3/5min simultaneously creates signal conflicts and noise\u2014consolidate to single 5min for cleaner divergence resolution. (2) Bare RSI+divergence produces too many false signals; add volume (confirm bullish/bearish divergence with volume expansion) and EMA (trade only with trend, not counter-trend) as filters to lift win rate toward 55%+. (3) Need asymmetric R-multiples\u2014widening to [1,2,3,5,7] lets winners run to capture full divergence moves (typical 3-7R swings) while tighter stops improve R:R. Reducing weight to 0.6 reflects current underperformance and prevents capital from flowing to a losing strategy until filters are validated. Expectancy math: with 55% WR and 2.5R avg win vs 1R stop, PF target = (0.55*2.5)/(0.45*1) = 3.06."
+  }
+}
