@@ -248,32 +248,55 @@ def main():
     print(f"\n[tracker] Stats: {stats['n_trades']} trades, WR {stats['win_rate']}%, "
           f"avg R {stats['avg_R']}, total R {stats['total_R']}")
 
-    # TG notification on close (DEDUPED: skip signal_ids already in trades.jsonl)
+    # TG notification on close - closed[] is already deduped in the loop above
     if closed:
-        existing_trades = load_trades()
-        existing_ids = {t.get("signal_id") for t in existing_trades}
-        new_closes = [t for t in closed if t.get("signal_id") not in existing_ids]
-        if not new_closes:
-            print(f"[tracker] No new closes ({len(closed)} duplicate(s) skipped)")
-        else:
-            print(f"[tracker] {len(new_closes)} new close(s) ({len(closed) - len(new_closes)} duplicate(s) skipped)")
+        print(f"[tracker] {len(closed)} new close(s) — full journey TG")
         try:
             import requests
             tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
             tg_chat = os.environ.get("TELEGRAM_CHAT_ID", "")
             if tg_token and tg_chat and new_closes:
-                lines = ["OCS BTC 5m - Position Closed\n"]
-                for t in new_closes:
-                    label = "WIN" if t["R_multiple"] > 0 else "LOSS"
+                lines = ["<b>🎯 OCS BTC 5m — Trade Journey Closed</b>\n"]
+                for t in closed:
+                    label = "WIN ✅" if t["R_multiple"] > 0 else "LOSS ❌"
+                    emoji = "🟢" if t["R_multiple"] > 0 else "🔴"
+                    entry_time = t.get('entry_time', '?')[:19]
+                    exit_time = t.get('exit_time', '?')[:19]
+                    try:
+                        from datetime import datetime
+                        et = datetime.fromisoformat(t['entry_time'].replace('Z', '+00:00') if t['entry_time'].endswith('Z') else t['entry_time'])
+                        xt = datetime.fromisoformat(t['exit_time'].replace('Z', '+00:00') if t['exit_time'].endswith('Z') else t['exit_time'])
+                        duration = xt - et
+                        mins = int(duration.total_seconds() // 60)
+                        duration_str = f"{mins}min" if mins < 60 else f"{mins//60}h{mins%60}m"
+                    except Exception:
+                        duration_str = "?"
+
                     lines.append(
-                        f"{label}: {t['direction'].upper()} "
-                        f"entry {t['entry']:,.0f} -> {t['exit_level']} {t['exit_price']:,.0f} | "
-                        f"R={t['R_multiple']:+.2f} | ${t['pnl_usd']:+,.0f} | {t['bars_held']} bars"
+                        f"{emoji} <b>{label}: OCS BTC 5m</b> {t['direction'].upper()}\n"
+                        f"\n"
+                        f"📊 <b>Signal</b>\n"
+                        f"  KNN vote: {t.get('vote', '?')} | Conf: {t.get('conf', 0):.2f}\n"
+                        f"\n"
+                        f"📈 <b>Position Opened</b>\n"
+                        f"  {t['direction'].upper()} BTC-USD @ ${t['entry']:,.2f}\n"
+                        f"  Time: {entry_time} UTC\n"
+                        f"  SL: ${t['sl']:,.2f} | T1: ${t['t1']:,.2f} | T5: ${t.get('t5', 0):,.2f}\n"
+                        f"\n"
+                        f"🎯 <b>Position Closed</b>\n"
+                        f"  Exit: {t['exit_level']} @ ${t['exit_price']:,.2f}\n"
+                        f"  Time: {exit_time} UTC\n"
+                        f"  Held: {t['bars_held']} bars ({duration_str})\n"
+                        f"\n"
+                        f"💰 <b>P&L</b>\n"
+                        f"  R-multiple: {t['R_multiple']:+.2f}R\n"
+                        f"  Cash: ${t['pnl_usd']:+,.2f}"
                     )
                 lines.append(
-                    f"\nStats: {stats['n_trades']} trades | WR {stats['win_rate']}% | "
-                    f"avg R {stats['avg_R']} | total R {stats['total_R']:+.1f} | "
-                    f"PF {stats['profit_factor']}"
+                    f"\n📈 <b>Running Stats</b>\n"
+                    f"  Trades: {stats['n_trades']} | WR: {stats['win_rate']}%\n"
+                    f"  Total R: {stats['total_R']:+.1f} | Avg R: {stats['avg_R']:+.2f}\n"
+                    f"  Profit Factor: {stats['profit_factor']:.2f}"
                 )
                 msg = "\n".join(lines)
                 r = requests.post(
