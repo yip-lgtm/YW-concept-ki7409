@@ -55,6 +55,14 @@ jobs:
           YF_CACHE: /tmp/yf_cache
         run: |
           .venv/bin/python scripts/live_scan.py 2>&1 | tee /tmp/live_scan_log.txt
+      - name: Run live-scan position tracker
+        id: tracker
+        working-directory: automation
+        env:
+          YF_CACHE: /tmp/yf_cache
+        run: |
+          # Walk forward open positions, check SL/TP hits, log P&L
+          .venv/bin/python scripts/live_scan_tracker.py 2>&1 | tee /tmp/live_tracker_log.txt || true
       - name: Commit heartbeat + signals
         if: always()
         run: |

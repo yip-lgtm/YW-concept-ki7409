@@ -73,6 +73,9 @@ LIVE_DIR = REPO / "automation" / "reports" / "live_scan"
 LIVE_DIR.mkdir(parents=True, exist_ok=True)
 SIGNALS_FILE = LIVE_DIR / "signals.jsonl"
 HEARTBEAT_FILE = LIVE_DIR / "heartbeat.json"
+POSITIONS_FILE = LIVE_DIR / "positions.json"
+TRADES_FILE = LIVE_DIR / "trades.jsonl"
+STATS_FILE = LIVE_DIR / "stats.json"
 DAILY_DIR = LIVE_DIR / "daily"
 DAILY_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -138,6 +141,92 @@ def fetch_ticker_data(ticker: str) -> dict:
         except Exception as e:
             out["err_4h"] = str(e)[:100]
     return out
+
+
+
+
+def compute_atr(df, period=14):
+    """Compute ATR from OHLCV DataFrame."""
+    if df.empty or len(df) < period:
+        return 0.0
+    h = df["High"]
+    l = df["Low"]
+    c = df["Close"]
+    tr = pd.concat([
+        h - l,
+        (h - c.shift()).abs(),
+        (l - c.shift()).abs()
+    ], axis=1).max(axis=1)
+    return float(tr.rolling(period).mean().iloc[-1])
+
+
+def calc_sl_tp(entry, atr, direction):
+    """Calculate SL/TP using 1.6x ATR stop + R-multiple targets.
+    
+    R multiples: T1=1R, T2=1.618R, T3=2.618R, T4=3.618R, T5=5R (Fib)
+    """
+    if atr <= 0 or entry <= 0:
+        return None
+    sl_dist = atr * 1.6
+    if direction in ("long", "buy", "up"):
+        sl = entry - sl_dist
+        t1 = entry + sl_dist * 1.0
+        t2 = entry + sl_dist * 1.618
+        t3 = entry + sl_dist * 2.618
+        t4 = entry + sl_dist * 3.618
+        t5 = entry + sl_dist * 5.0
+    else:
+        sl = entry + sl_dist
+        t1 = entry - sl_dist * 1.0
+        t2 = entry - sl_dist * 1.618
+        t3 = entry - sl_dist * 2.618
+        t4 = entry - sl_dist * 3.618
+        t5 = entry - sl_dist * 5.0
+    return {"sl": sl, "t1": t1, "t2": t2, "t3": t3, "t4": t4, "t5": t5, "sl_dist": sl_dist}
+
+
+def open_live_position(sig, atr):
+    """Open a position from a fired live_scan signal. Returns the position dict."""
+    entry = float(sig.get("last_close", 0))
+    direction = sig.get("direction", "long")
+    sl_tp = calc_sl_tp(entry, atr, direction)
+    if not sl_tp:
+        return None
+    pos = {
+        "signal_id": f"{sig['strategy']}|{sig['ticker']}|{sig['ts']}",
+        "strategy": sig["strategy"],
+        "ticker": sig["ticker"],
+        "direction": direction,
+        "grade": sig.get("grade", "?"),
+        "entry": entry,
+        "entry_time": sig["ts"],
+        "atr": atr,
+        "confidence": sig.get("confidence", 0),
+        "reason": sig.get("reason", "")[:200],
+        "sl": sl_tp["sl"],
+        "t1": sl_tp["t1"],
+        "t2": sl_tp["t2"],
+        "t3": sl_tp["t3"],
+        "t4": sl_tp["t4"],
+        "t5": sl_tp["t5"],
+        "sl_dist": sl_tp["sl_dist"],
+        "status": "open",
+    }
+    # Load existing + dedupe
+    if POSITIONS_FILE.exists():
+        positions = json.loads(POSITIONS_FILE.read_text())
+    else:
+        positions = []
+    # DEDUPE: skip if signal_id already in positions or trades
+    if any(p.get("signal_id") == pos["signal_id"] for p in positions):
+        return None
+    if TRADES_FILE.exists():
+        existing_trades = [json.loads(line) for line in TRADES_FILE.read_text().splitlines() if line.strip()]
+        if any(t.get("signal_id") == pos["signal_id"] for t in existing_trades):
+            return None
+    positions.append(pos)
+    POSITIONS_FILE.write_text(json.dumps(positions, indent=2, default=str))
+    return pos
 
 
 def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
@@ -392,15 +481,46 @@ def main() -> int:
         fired.append(signal)
         print(f"    [FIRED] {grade} {det['ticker']}")
     print(f"[live_scan] LLM-confirmed signals: {len(fired)}")
-    # Step 4: Fire each signal
+    # Step 4: Fire each signal — compute SL/TP, open position, send TG
     for sig in fired:
+        # Get ATR from the most recent data fetch
+        ticker_data = data_map.get(sig["ticker"], {})
+        df_5m = ticker_data.get("df_5m")
+        atr = compute_atr(df_5m) if df_5m is not None and not df_5m.empty else 0
+        sig["atr"] = atr
+        # Compute SL/TP
+        sl_tp = calc_sl_tp(sig.get("last_close", 0), atr, sig.get("direction", "long"))
+        if sl_tp:
+            sig.update(sl_tp)
+        # Open position (DEDUPED)
+        pos = open_live_position(sig, atr) if atr > 0 else None
+        if pos:
+            sig["position_id"] = pos["signal_id"]
+            print(f"  ✓ Opened position: {pos['signal_id'][:30]} @ {pos['entry']:.2f}")
+        else:
+            sig["position_id"] = None
+            print(f"  ⚠️ Position not opened (atr={atr} or duplicate)")
+        # Build TG with SL/TP
         emoji = "🟢" if sig["grade"] == "A" else "🟡"
         msg = f"""{emoji} <b>{sig['strategy']}</b> [{sig['grade']}] {sig['ticker']}
 
 💰 Last: ${sig['last_close']:,.2f}
 📊 Conf: {sig['confidence']}
 🎯 Dir: {sig['direction']}
-💬 {sig['reason']}
+💬 {sig['reason']}"""
+        if sl_tp:
+            msg += f"""
+
+<b>Risk Plan</b> (1.6×ATR stop, R-multiple targets):
+• SL: ${sl_tp['sl']:,.2f}
+• T1 (1R): ${sl_tp['t1']:,.2f}
+• T2 (1.618R): ${sl_tp['t2']:,.2f}
+• T3 (2.618R): ${sl_tp['t3']:,.2f}
+• T4 (3.618R): ${sl_tp['t4']:,.2f}
+• T5 (5R): ${sl_tp['t5']:,.2f}"""
+        if pos:
+            msg += "\n\n✅ Position opened (auto-track)"
+        msg += f"""
 
 ⏰ {sig['ts'][:19]} UTC"""
         tg_code = send_telegram(msg)
