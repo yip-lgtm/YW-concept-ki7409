@@ -370,9 +370,13 @@ def main() -> int:
             grade = grade_data["grade"]
             conf = grade_data["confidence"]
             reason = grade_data["reason"]
+        # Debug log
+        print(f"  [grade] {det['strategy']:15s} {det['ticker']:7s} → {grade} conf={conf} | {reason[:60]}")
         if conf < LLM_MIN_CONF:
+            print(f"    [skip] conf {conf} < {LLM_MIN_CONF}")
             continue
         if grade not in ACCEPTABLE_GRADES:
+            print(f"    [skip] grade {grade} not in {ACCEPTABLE_GRADES}")
             continue
             signal = {
                 "strategy": det["strategy"],
