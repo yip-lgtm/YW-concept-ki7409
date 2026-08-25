@@ -120,7 +120,7 @@ def check_position_exit(pos, df):
     for i, (ts, bar) in enumerate(df.iterrows()):
         high = float(bar["High"])
         low = float(bar["Low"])
-        if direction in ("long", "buy", "up"):
+        if direction in ("long", "buy", "up", "bullish", "LONG"):
             hit_sl = low <= sl
             hit_t1 = high >= t1
             hit_t2 = high >= t2
@@ -161,7 +161,7 @@ def check_position_exit(pos, df):
             R_multiple = 5.0
         else:
             continue
-        pnl_usd = (exit_price - entry) * (1 if direction in ("long", "buy", "up") else -1)
+        pnl_usd = (exit_price - entry) * (1 if direction in ("long", "buy", "up", "bullish", "LONG") else -1)
         return {
             "exit_time": str(ts),
             "exit_price": exit_price,

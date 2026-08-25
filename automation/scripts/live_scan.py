@@ -168,20 +168,29 @@ def calc_sl_tp(entry, atr, direction):
     if atr <= 0 or entry <= 0:
         return None
     sl_dist = atr * 1.6
-    if direction in ("long", "buy", "up"):
+    if direction in ("long", "buy", "up", "bullish", "LONG"):
         sl = entry - sl_dist
         t1 = entry + sl_dist * 1.0
         t2 = entry + sl_dist * 1.618
         t3 = entry + sl_dist * 2.618
         t4 = entry + sl_dist * 3.618
         t5 = entry + sl_dist * 5.0
-    else:
+    elif direction in ("short", "sell", "down", "bearish", "SHORT", "DOWN"):
         sl = entry + sl_dist
         t1 = entry - sl_dist * 1.0
         t2 = entry - sl_dist * 1.618
         t3 = entry - sl_dist * 2.618
         t4 = entry - sl_dist * 3.618
         t5 = entry - sl_dist * 5.0
+    else:
+        # Unknown direction — default to long but warn
+        print(f"[live-scan] WARN: unknown direction '{direction}', defaulting to long")
+        sl = entry - sl_dist
+        t1 = entry + sl_dist * 1.0
+        t2 = entry + sl_dist * 1.618
+        t3 = entry + sl_dist * 2.618
+        t4 = entry + sl_dist * 3.618
+        t5 = entry + sl_dist * 5.0
     return {"sl": sl, "t1": t1, "t2": t2, "t3": t3, "t4": t4, "t5": t5, "sl_dist": sl_dist}
 
 
