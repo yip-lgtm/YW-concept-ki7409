@@ -84,9 +84,10 @@ def save_stats(stats):
 
 
 def fetch_bars_since(symbol: str, start_iso: str, max_bars=5000):
-    """Fetch 5m bars since start_iso."""
+    """Fetch 5m bars since start_iso. Use longer window to be safe."""
     try:
-        df = _fetch_bars(symbol, days=5, interval_min=5)
+        # Use 7d window to ensure we have data after entry
+        df = _fetch_bars(symbol, days=7, interval_min=5)
         if df is None or df.empty:
             return None
         # Filter to start_iso - handle tz properly
@@ -97,11 +98,12 @@ def fetch_bars_since(symbol: str, start_iso: str, max_bars=5000):
                 start = start.tz_localize("UTC")
             # df.index may be tz-aware (UTC) or naive
             if df.index.tz is None:
-                # Convert start to naive for comparison
                 start_naive = start.tz_convert(None) if start.tzinfo else start
                 df = df[df.index >= start_naive]
             else:
                 df = df[df.index >= start]
+        if df is None or df.empty:
+            return None
         return df.tail(max_bars)
     except Exception as e:
         print(f"  WARN: fetch_bars_since error: {e}", file=sys.stderr)
