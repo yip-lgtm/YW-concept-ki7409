@@ -238,6 +238,54 @@ def open_live_position(sig, atr):
     return pos
 
 
+def _normalize_detector(fn_name: str, res: dict) -> tuple:
+    """Normalize detector output to (present, direction, strength).
+
+    Different detectors use different output formats. This wrapper unifies them
+    to a consistent {present, direction, strength} interface so live_scan and
+    the strategy supervisor can reason about them uniformly.
+
+    Returns:
+      (present: bool, direction: str, strength: int)
+    """
+    if not res:
+        return False, "none", 0
+    # Already in standard format (or has present with optional direction/long_candle)
+    if "present" in res:
+        # H-Pattern uses "long_candle" = "bullish"/"bearish" as direction
+        direction = res.get("direction")
+        if not direction or direction == "none":
+            direction = res.get("long_candle", "none")
+            if direction in ("bullish", "bearish"):
+                direction = "long" if direction == "bullish" else "short"
+        return (
+            bool(res["present"]),
+            direction or "none",
+            int(res.get("strength", 70 if res["present"] else 0)),
+        )
+    # 50-20-pullback: {cross_type, pullback, trend, ...}
+    if fn_name == "pb_5020":
+        pullback_ok = res.get("pullback") == "at_ema20"
+        trend = res.get("trend", "sideways")
+        if pullback_ok and trend in ("up", "down"):
+            return True, ("long" if trend == "up" else "short"), 65
+        return False, "none", 0
+    # Kell-Cycle: {reversal_extension, wedge_pop_drop, ema_crossback, base_n_break, exhaustion}
+    if fn_name == "kell":
+        for k, v in res.items():
+            if isinstance(v, dict) and v.get("present"):
+                return True, v.get("direction", "none"), 70
+        return False, "none", 0
+    # RSI-Div: {type, strength, ...}
+    if fn_name == "rsi_div":
+        sig_type = res.get("type", "none")
+        if sig_type in ("bullish", "bearish"):
+            return True, sig_type, int(res.get("strength", 60))
+        return False, "none", 0
+    # Unknown custom format — don't fire
+    return False, "none", 0
+
+
 def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
     """Run one detector on one ticker. Returns detection result."""
     out = {
@@ -311,7 +359,8 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
         else:
             res = {"present": False, "skip": "unknown"}
         out.update(res)
-        out["present"] = res.get("present", False)
+        # Normalize custom detector outputs to {present, direction, strength} interface
+        out["present"], out["direction"], out["strength"] = _normalize_detector(cfg["fn"], res)
     except Exception as e:
         out["err"] = f"{type(e).__name__}: {str(e)[:100]}"
         out["present"] = False

@@ -144,19 +144,29 @@ def check_agent(agent: dict) -> dict:
 
     # Check 3: Output is dict with detection info
     # (Some detectors return {present, direction}, others return {type, cross, etc.}
-    #  live_scan.py wraps them into unified interface. So this is a WARN, not BUG.)
+    #  live_scan.py wraps them via _normalize_detector() to unified interface.
+    #  So custom format is INFO (OK), not WARN — the system handles it.)
     has_present = "present" in out
     has_direction = "direction" in out
-    if not has_present and not has_direction:
-        # Check if it has a different standard structure
-        if any(k in out for k in ["type", "cross_type", "reversal_extension", "wedge_pop_drop", "crt_high"]):
-            result["warns"].append(f"⚠️ Custom output format (no present/direction): {list(out.keys())[:5]}")
+    is_present = bool(out.get("present", False))
+    if has_present and has_direction:
+        result["checks"].append(("output_fields", "OK"))
+    elif has_present and not is_present:
+        # No signal — direction not required (this is normal)
+        result["checks"].append(("output_fields", "OK (no signal)"))
+    elif has_present or has_direction:
+        # Has present=True but missing direction → real concern
+        if has_present and is_present:
+            result["warns"].append(f"⚠️ Signal True but no direction field")
             result["checks"].append(("output_fields", "WARN"))
         else:
-            result["bugs"].append(f"❌ Empty/unrecognized output: {list(out.keys())[:5]}")
-            result["checks"].append(("output_fields", "FAIL"))
+            result["checks"].append(("output_fields", "OK"))
+    elif any(k in out for k in ["type", "cross_type", "reversal_extension", "wedge_pop_drop", "crt_high"]):
+        # Custom format - live_scan.py has _normalize_detector() wrapper
+        result["checks"].append(("output_fields", "OK (custom)"))
     else:
-        result["checks"].append(("output_fields", "OK"))
+        result["bugs"].append(f"❌ Empty/unrecognized output: {list(out.keys())[:5]}")
+        result["checks"].append(("output_fields", "FAIL"))
 
     # Check 4: direction valid (if present)
     if has_direction and out["direction"] not in ("long", "short", "bullish", "bearish", "up", "down", "none", None):
