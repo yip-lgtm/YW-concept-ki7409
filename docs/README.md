@@ -18,3 +18,10 @@
 | File | Topic |
 |------|-------|
 | [OCS-SETUP.md](OCS-SETUP.md) | OCS BTC 5m auto-signal pipeline — setup guide |
+| [AUTO-ITERATION.md](AUTO-ITERATION.md) | 自動迭代說明手冊 — 9-agent LLM-iter system (架構、流程、歷史) |
+
+## Live Dashboards
+| URL | Description |
+|-----|-------------|
+| [strategy-dashboard.html](strategy-dashboard.html) | 9 strategy sub-agents dashboard (Chart.js, self-contained) |
+| Public: https://r1j8xqlpbghjd.space.minimax.io | Same dashboard, deployed via CDN |
