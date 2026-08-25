@@ -51,7 +51,15 @@ jobs:
           .venv/bin/python scripts/strategy_ranking.py 2>&1 | tee /tmp/ranking_log.txt
           cat automation/reports/strategy_ranking/ranking_*.md | tail -50
 
-      - name: LLM iteration (find worst + suggest improvements)
+      - name: LLM iteration per-agent (9 strategies in parallel)
+        id: iterate-all
+        working-directory: automation
+        env:
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+        run: |
+          .venv/bin/python scripts/llm_iterate_all.py 2>&1 | tee /tmp/iterate_all_log.txt
+
+      - name: "LLM iteration (legacy: worst strategy)"
         id: iterate
         working-directory: automation
         env:
