@@ -45,6 +45,14 @@ jobs:
         working-directory: automation
         run: |
           .venv/bin/python scripts/supervisor_monitor.py 2>&1 | tee /tmp/supervisor_log.txt
+      - name: Strategy sub-agent health check (9 agents)
+        working-directory: automation
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          .venv/bin/python scripts/strategy_supervisor.py --tg --bugs-only 2>&1 | tee /tmp/strategy_supervisor.log
+
       - name: Commit supervisor state
         if: always()
         run: |

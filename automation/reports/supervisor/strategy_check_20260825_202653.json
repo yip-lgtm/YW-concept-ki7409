@@ -1,0 +1,263 @@
+{
+  "timestamp": "20260825_202653",
+  "n_agents": 9,
+  "n_ok": 3,
+  "n_warn": 0,
+  "n_bug": 6,
+  "results": [
+    {
+      "agent": "yw-stair-pattern",
+      "id": "stair-pattern",
+      "module": "yw_indicators_extra",
+      "fn": "detect_stair_pattern",
+      "checks": [
+        [
+          "import",
+          "FAIL"
+        ]
+      ],
+      "bugs": [
+        "\u274c Import error: KeyError: 'yw_indicators_extra'"
+      ],
+      "warns": []
+    },
+    {
+      "agent": "ocs-btc-5m",
+      "id": "ocs-btc",
+      "module": "ocs_btc_5m",
+      "fn": "compute_signal",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "FAIL"
+        ]
+      ],
+      "bugs": [
+        "\u274c Smoke test: TypeError: compute_signal() missing 3 required positional arguments: 'features', 'close', and 'atr'"
+      ],
+      "warns": []
+    },
+    {
+      "agent": "yw-50-20-pullback",
+      "id": "50-20-pullback",
+      "module": "yw_indicators",
+      "fn": "detect_5020_pullback",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "FAIL"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=1.0"
+        ]
+      ],
+      "bugs": [
+        "\u274c Missing fields: ['present', 'direction']"
+      ],
+      "warns": []
+    },
+    {
+      "agent": "yw-h-pattern",
+      "id": "h-pattern",
+      "module": "yw_indicators",
+      "fn": "detect_h_pattern",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "FAIL"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=1.2"
+        ]
+      ],
+      "bugs": [
+        "\u274c Missing fields: ['direction']"
+      ],
+      "warns": []
+    },
+    {
+      "agent": "yw-rsi-div",
+      "id": "rsi-div",
+      "module": "yw_indicators",
+      "fn": "detect_rsi_divergence",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "FAIL"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=0.7"
+        ]
+      ],
+      "bugs": [
+        "\u274c Missing fields: ['present', 'direction']"
+      ],
+      "warns": []
+    },
+    {
+      "agent": "yw-kell-cycle",
+      "id": "kell-cycle",
+      "module": "yw_indicators_extra",
+      "fn": "detect_kell_setups",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "FAIL"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=0.9"
+        ]
+      ],
+      "bugs": [
+        "\u274c Missing fields: ['present', 'direction']"
+      ],
+      "warns": []
+    },
+    {
+      "agent": "yw-3-pushes",
+      "id": "3-pushes",
+      "module": "yw_indicators",
+      "fn": "detect_3_pushes",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=1.0"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "yw-crt",
+      "id": "crt",
+      "module": "yw_indicators_extra",
+      "fn": "detect_crt",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=1.1"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "yw-two-yang",
+      "id": "two-yang",
+      "module": "yw_indicators",
+      "fn": "detect_two_yang_one_yin",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=0.5"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    }
+  ]
+}
