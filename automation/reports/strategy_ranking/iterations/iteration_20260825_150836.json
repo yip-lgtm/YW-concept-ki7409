@@ -1,0 +1,33 @@
+{
+  "date": "2026-08-25",
+  "worst_strategy": {
+    "strategy_id": "rsi-div",
+    "name": "RSI Divergence",
+    "rank": 9,
+    "pf": 0.92,
+    "total_R": -8,
+    "pnl_usd": -380,
+    "win_rate": 45.0,
+    "n_trades": 120,
+    "avg_pf": 0.92
+  },
+  "llm_response": "<think>The strategy is underperforming with a profit factor below 1.0 (0.92), negative total R (-8), and a win rate of only 45%. Let me analyze this and suggest improvements.\n\nKey issues:\n1. Profit factor < 1 means losses exceed profits\n2. Negative R (-8) over 120 trades confirms unprofitable\n3. 45% win rate is below the typical 50%+ needed for profitability with standard R:R\n4. Only 7 days of history, so the strategy is consistently poor\n\nAnalysis for improvements:\n\n1. **Weight**: Currently 1.1 but strategy is losing. Should reduce weight since it's underperforming. Suggest around 0.6-0.7.\n\n2. **Timeframe**: The strategy uses 1/3/5min multi-timeframe. RSI divergence works better when noise is reduced. I should suggest a single, cleaner timeframe. 5min alone might filter noise better, or perhaps 15min if available. Let me stick to common ones - \"5min\" or \"3min\". \n\n3. **Indicators**: Adding complementary indicators could help confirm divergence signals and filter false signals. Good additions:\n   - `volume` - to confirm divergence with volume\n   - `ema` or `sma` - for trend confirmation\n   - `macd` - another momentum indicator that can confirm RSI divergence\n   - `atr` - for volatility-based stop placement\n\n4. **R multiples**: Current losing strategy might need tighter targets to lock in wins before they reverse. Or could go for wider targets if win rate improves. Since WR is 45%, we need better R:R. Let's suggest tightening targets: [0.8, 1.2, 1.8, 2.5, 3.5] - tighter T1 to c",
+  "suggested_params": {
+    "weight": 0.65,
+    "timeframe": "5min",
+    "indicators": [
+      "rsi",
+      "divergence",
+      "volume",
+      "ema"
+    ],
+    "r_multiples": [
+      0.8,
+      1.2,
+      1.8,
+      2.5,
+      3.5
+    ],
+    "rationale": "Strategy is unprofitable (PF 0.92, R -8 over 120 trades) with sub-50% win rate, indicating noisy/false divergence signals. Reducing weight from 1.1 to 0.65 deprioritizes this underperformer in the daily ranking. Switching to a single 5min timeframe eliminates lower-timeframe noise that likely generates false divergence triggers (45% WR suggests many failed setups). Adding volume confirms that divergences are backed by genuine exhaustion (declining volume on new extremes strengthens signal validity), while an EMA filter (e.g., 50/200 EMA) ensures trades align with the prevailing trend rather than counter-trend mean-reversion traps. Tightening r_multiples\u2014especially T1 at 0.8R\u2014addresses the poor win rate by banking quick profits before momentum reversals erase gains, while T2-T5 at 1.2/1.8/2.5/3.5 preserve upside when the divergence resolves into a full trend. Combined effect should filter low-quality setups and improve realized R-multiple distribution."
+  }
+}
