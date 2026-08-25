@@ -197,15 +197,18 @@ def build_health_report(ocs, ranking, workflows, yw_daily) -> dict:
     # OCS
     if ocs.get("n_open", 0) > 5:
         issues.append(f"OCS: {ocs['n_open']} open positions (max 3 expected)")
-    # YW daily
-    today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    weekday = datetime.now(timezone.utc).strftime("%a")
-    if weekday in ("Mon", "Tue", "Wed", "Thu", "Fri"):
-        # Trading day
+    # YW daily — check HKT date (yw-daily runs at 21:00 HKT = 13:00 UTC)
+    # Only alert AFTER 21:30 HKT (30 min after scheduled run, allowing GHA delay)
+    HKT = timezone(timedelta(hours=8))
+    now_hkt = datetime.now(HKT)
+    today_str = now_hkt.strftime("%Y-%m-%d")
+    weekday = now_hkt.strftime("%a")
+    if weekday in ("Mon", "Tue", "Wed", "Thu", "Fri") and now_hkt.hour >= 21:
+        # Past scheduled time AND trading day
         if not yw_daily.get("ran_today"):
-            issues.append(f"yw-daily not run today ({today_str})")
+            issues.append(f"yw-daily not run today ({today_str} HKT)")
         elif not yw_daily.get("success_today"):
-            issues.append(f"yw-daily failed today ({today_str})")
+            issues.append(f"yw-daily failed today ({today_str} HKT)")
     # Workflows
     for wf in workflows:
         for issue in wf.get("issues", []):

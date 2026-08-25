@@ -1,17 +1,17 @@
 {
-  "timestamp": "2026-08-24T16:48:11.653314+00:00",
+  "timestamp": "2026-08-25T01:11:29.175989+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
     "agent": "ocs-btc-5m",
-    "issues": [],
-    "n_open": 1,
-    "n_trades_total": 0,
-    "win_rate": 0,
-    "profit_factor": 0,
-    "last_signal": "2026-08-24 16:40:00+00:00",
-    "last_vote": -7,
-    "last_conf": 1.0
+    "issues": [
+      "no /tmp/ocs_btc/latest.json"
+    ],
+    "n_open": 0,
+    "n_trades_total": 1,
+    "win_rate": 100.0,
+    "profit_factor": 1000000000.0,
+    "last_signal": null
   },
   "ranking": {
     "component": "strategy-ranking",
@@ -21,10 +21,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-08-24",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 32751281121
+    "today": "2026-08-25",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -79,22 +78,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 32752417040,
+          "id": 32791454642,
           "conclusion": "success",
-          "created_at": "2026-08-24T16:42:52Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 32750719460,
-          "conclusion": "success",
-          "created_at": "2026-08-24T16:25:10Z",
+          "created_at": "2026-08-24T23:55:10Z",
           "event": "schedule"
         },
         {
-          "id": 32749186616,
+          "id": 32790002705,
           "conclusion": "success",
-          "created_at": "2026-08-24T16:09:36Z",
-          "event": "workflow_dispatch"
+          "created_at": "2026-08-24T23:35:11Z",
+          "event": "schedule"
+        },
+        {
+          "id": 32788055893,
+          "conclusion": "success",
+          "created_at": "2026-08-24T23:09:31Z",
+          "event": "schedule"
         }
       ],
       "issues": []
@@ -103,21 +102,21 @@
       "workflow": "strategy-ranking.yml",
       "runs": [
         {
-          "id": 32751281656,
+          "id": 32759150425,
           "conclusion": "failure",
-          "created_at": "2026-08-24T16:30:57Z",
+          "created_at": "2026-08-24T17:52:42Z",
           "event": "push"
         },
         {
-          "id": 32750683835,
+          "id": 32756607381,
           "conclusion": "failure",
-          "created_at": "2026-08-24T16:24:49Z",
+          "created_at": "2026-08-24T17:26:09Z",
           "event": "push"
         },
         {
-          "id": 32750377658,
+          "id": 32756284373,
           "conclusion": "failure",
-          "created_at": "2026-08-24T16:21:41Z",
+          "created_at": "2026-08-24T17:22:50Z",
           "event": "push"
         }
       ],
