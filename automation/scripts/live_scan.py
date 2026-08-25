@@ -378,17 +378,19 @@ def main() -> int:
         if grade not in ACCEPTABLE_GRADES:
             print(f"    [skip] grade {grade} not in {ACCEPTABLE_GRADES}")
             continue
-            signal = {
-                "strategy": det["strategy"],
-                "ticker": det["ticker"],
-                "grade": grade,
-                "confidence": conf,
-                "reason": reason,
-                "direction": det.get("direction", "long" if det.get("signal") == "buy" else "short"),
-                "last_close": det.get("last_close", 0),
-                "ts": ts_now,
-            }
-            fired.append(signal)
+        # Accept: build signal
+        signal = {
+            "strategy": det["strategy"],
+            "ticker": det["ticker"],
+            "grade": grade,
+            "confidence": conf,
+            "reason": reason,
+            "direction": det.get("direction", "long" if det.get("signal") == "buy" else "short"),
+            "last_close": det.get("last_close", 0),
+            "ts": ts_now,
+        }
+        fired.append(signal)
+        print(f"    [FIRED] {grade} {det['ticker']}")
     print(f"[live_scan] LLM-confirmed signals: {len(fired)}")
     # Step 4: Fire each signal
     for sig in fired:
