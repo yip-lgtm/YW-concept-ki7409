@@ -51,6 +51,7 @@ jobs:
           git config --global user.name "Mavis bot"
           git config --global user.email "mavis@MiniMax"
           git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
+          git pull --rebase --autostash origin main 2>&1 || echo "pull failed, continuing"
           git add automation/reports/supervisor/ || true
           git commit -m "auto(supervisor): health check $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
-          git push origin main || true
+          git push --force-with-lease origin main || echo "push failed"

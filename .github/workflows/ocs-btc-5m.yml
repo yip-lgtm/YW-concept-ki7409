@@ -76,6 +76,10 @@ jobs:
           git config --global user.name "Mavis bot"
           git config --global user.email "mavis@MiniMax"
           git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
+          # Pull latest main first to avoid conflicts with manual pushes
+          git pull --rebase --autostash origin main 2>&1 || echo "pull failed, continuing"
+          # Only commit OCS data files (not workflow files which may have manual updates)
           git add automation/reports/ocs_btc_5m/ || true
-          git commit -m "auto(ocs-btc): signal log $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
-          git push origin main || true
+          git commit -m "auto(ocs-btc): signal log $(date -u +%Y-%m-%dT%H:%M) trades=$(jq -r .n_trades automation/reports/ocs_btc_5m/stats.json 2>/dev/null || echo 0)" --allow-empty || true
+          # Try push with lease to detect remote changes
+          git push --force-with-lease origin main || echo "push failed, will retry next run"
