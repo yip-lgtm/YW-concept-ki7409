@@ -46,7 +46,7 @@ STRATEGIES = [
     {"id": "rsi-div", "name": "RSI Divergence", "ticker": "MNQ=F", "type": "yw", "weight": 0.7, "llm_optimized": True, "optim_date": "2026-08-25"},
     {"id": "50-20-pullback", "name": "50/20 Pullback", "ticker": "MNQ=F", "type": "yw", "weight": 1.0},
     {"id": "stair-pattern", "name": "Stair Pattern", "ticker": "MNQ=F", "type": "yw", "weight": 1.2, "llm_optimized": True, "optim_date": "2026-08-25 v3"},
-    {"id": "crt", "name": "CRT", "ticker": "MNQ=F", "type": "yw", "weight": 1.1},
+    {"id": "crt", "name": "CRT", "ticker": "MNQ=F", "type": "yw", "weight": 1.2, "llm_optimized": True, "optim_date": "2026-08-26 v5"},
     {"id": "kell-cycle", "name": "Kell Cycle", "ticker": "MNQ=F", "type": "yw", "weight": 0.6, "llm_optimized": True, "optim_date": "2026-08-26 v4"},
 ]
 
