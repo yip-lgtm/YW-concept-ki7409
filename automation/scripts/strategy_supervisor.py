@@ -70,20 +70,7 @@ def check_agent(agent: dict) -> dict:
     src_path = str(REPO / "automation/src")
     if src_path not in sys.path:
         sys.path.insert(0, src_path)
-    # Also pre-import parent modules
-    try:
-        import yw_indicators  # noqa
-    except ImportError:
-        pass
-    try:
-        import yw_indicators_extra  # noqa
-    except ImportError:
-        pass
-    try:
-        import ocs_btc_5m  # noqa
-    except ImportError:
-        pass
-    
+
     result = {
         "agent": agent["agent"],
         "id": agent["id"],
@@ -290,6 +277,14 @@ def main():
 
     return 0 if out["n_bug"] == 0 else 1
 
+
+# Pre-import all modules in main process so workers can pick them up via sys.modules
+sys.path.insert(0, str(REPO / "automation/src"))
+for _mod in ("yw_indicators", "yw_indicators_extra", "ocs_btc_5m"):
+    try:
+        __import__(_mod)
+    except Exception:
+        pass
 
 if __name__ == "__main__":
     sys.exit(main())
