@@ -1,0 +1,483 @@
+{
+  "generated_at": "2026-08-26 10:42 HKT",
+  "hkt_timestamp": "2026-08-26T10:42:57.716047+08:00",
+  "window": "last_24h + today",
+  "aggregate": {
+    "trades_24h": 24,
+    "trades_today": 15,
+    "wins_24h": 16,
+    "R_24h": 8.0,
+    "signals_24h": 25,
+    "wr_24h": 66.7
+  },
+  "strategies": [
+    {
+      "id": "ocs-btc",
+      "name": "OCS BTC 5m",
+      "agent": "yw-ocs-btc",
+      "ticker": "BTC-USD",
+      "weight": 1.0,
+      "optim_date": "\u2014",
+      "timeframe": "5min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
+        "pf": 0.0,
+        "pnl": -172.8
+      },
+      "live_today": {
+        "n": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
+        "pf": 0.0,
+        "pnl": -172.8
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
+      }
+    },
+    {
+      "id": "h-pattern",
+      "name": "H-Pattern",
+      "agent": "yw-h-pattern",
+      "ticker": "MNQ=F",
+      "weight": 1.2,
+      "optim_date": "\u2014",
+      "timeframe": "3min/5min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
+        "pf": 0.0,
+        "pnl": -231.75
+      },
+      "live_today": {
+        "n": 1,
+        "wins": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
+        "pf": 0.0,
+        "pnl": -231.75
+      },
+      "signals_24h": 1,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "C",
+        "confidence": 30,
+        "reason": "\u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u9ed8\u8a8d\u503c\u4e0d\u53ef\u4fe1\uff0c\u9700\u7d2f\u7a4d\u4fe1\u865f\u5f8c\u518d\u8a55\u4f30"
+      }
+    },
+    {
+      "id": "3-pushes",
+      "name": "3-Pushes",
+      "agent": "yw-3-pushes",
+      "ticker": "MNQ=F",
+      "weight": 1.0,
+      "optim_date": "\u2014",
+      "timeframe": "5min/15min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 9,
+        "wins": 7,
+        "losses": 2,
+        "wr": 77.8,
+        "R": 5.0,
+        "pf": 3.5,
+        "pnl": 36.49
+      },
+      "live_today": {
+        "n": 3,
+        "wins": 3,
+        "losses": 0,
+        "wr": 100.0,
+        "R": 3.0,
+        "pf": 10.0,
+        "pnl": 207.42
+      },
+      "signals_24h": 10,
+      "backtest_4d": {
+        "n_trades": 17,
+        "wr": 35.3,
+        "R": -4.34,
+        "pf": 0.58
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "D",
+        "confidence": 20,
+        "reason": "0 trades \u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u672a\u80fd\u9a57\u8b49 edge\uff0c\u5efa\u8b70\u964d\u6b0a\u91cd\u7d2f\u7a4d\u6a23\u672c"
+      }
+    },
+    {
+      "id": "two-yang",
+      "name": "\u5169\u967d\u593e\u4e00\u9670",
+      "agent": "yw-two-yang",
+      "ticker": "MNQ=F",
+      "weight": 0.3,
+      "optim_date": "2026-08-25 v2",
+      "timeframe": "5min/15min",
+      "r_multiples": [
+        1.5,
+        2.5,
+        4.0,
+        6.0,
+        8.0
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "C",
+        "confidence": 25,
+        "reason": "\u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7121\u4efb\u4f55\u7d71\u8a08\u610f\u7fa9\uff0c\u7b56\u7565\u5c1a\u672a\u88ab\u9a57\u8b49"
+      }
+    },
+    {
+      "id": "rsi-div",
+      "name": "RSI Divergence",
+      "agent": "yw-rsi-div",
+      "ticker": "MNQ=F",
+      "weight": 0.7,
+      "optim_date": "2026-08-25",
+      "timeframe": "15min",
+      "r_multiples": [
+        1.5,
+        2.0,
+        3.0,
+        4.0,
+        5.0
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 29,
+        "wr": 44.8,
+        "R": -3.0,
+        "pf": 0.81
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "C",
+        "confidence": 35,
+        "reason": "0 trades \u7121\u7d71\u8a08\u610f\u7fa9\uff0cRSI+divergence+EMA50+volume \u904e\u6ffe\u592a\u56b4\uff0c\u672a\u80fd\u7522\u751f\u8a0a\u865f\u9a57\u8b49\u3002"
+      }
+    },
+    {
+      "id": "50-20-pullback",
+      "name": "50/20 Pullback",
+      "agent": "yw-50-20-pullback",
+      "ticker": "MNQ=F",
+      "weight": 1.0,
+      "optim_date": "\u2014",
+      "timeframe": "5min/15min/60min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 39,
+        "wr": 46.2,
+        "R": -3.49,
+        "pf": 0.83
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "D",
+        "confidence": 35,
+        "reason": "0 trades = strategy\u672a\u89f8\u767c\u4efb\u4f55\u4fe1\u865f\uff0c\u53ef\u80fd\u689d\u4ef6\u592a\u56b4\u683c\u6216\u6578\u64da\u672a\u6d41\u5165"
+      }
+    },
+    {
+      "id": "stair-pattern",
+      "name": "Stair Pattern",
+      "agent": "yw-stair-pattern",
+      "ticker": "MNQ=F",
+      "weight": 1.2,
+      "optim_date": "2026-08-25 v3",
+      "timeframe": "5min/15min/1hr",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 12,
+        "wr": 50.0,
+        "R": -0.0,
+        "pf": 1.0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "D",
+        "confidence": 15,
+        "reason": "\u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7121\u6cd5\u9a57\u8b49\u7b56\u7565\u6709\u6548\u6027\uff0c\u98a8\u96aa\u672a\u77e5\uff0c\u9700\u964d\u6b0a\u91cd\u8a66\u904b\u884c"
+      }
+    },
+    {
+      "id": "crt",
+      "name": "CRT",
+      "agent": "yw-crt",
+      "ticker": "MNQ=F",
+      "weight": 1.1,
+      "optim_date": "\u2014",
+      "timeframe": "4H range / 5min execution",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 13,
+        "wins": 9,
+        "losses": 4,
+        "wr": 69.2,
+        "R": 5.0,
+        "pf": 2.25,
+        "pnl": 84.88
+      },
+      "live_today": {
+        "n": 10,
+        "wins": 6,
+        "losses": 4,
+        "wr": 60.0,
+        "R": 2.0,
+        "pf": 1.5,
+        "pnl": 41.2
+      },
+      "signals_24h": 14,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "C",
+        "confidence": 25,
+        "reason": "2 trades\u6a23\u672c\u592a\u5c0f,100%WR\u7d14\u5c6c\u5de7\u5408,\u7121\u6cd5\u9a57\u8b49\u7b56\u7565\u7a69\u5b9a\u6027,\u9700\u66f4\u591a\u6578\u64da"
+      }
+    },
+    {
+      "id": "kell-cycle",
+      "name": "Kell Cycle",
+      "agent": "yw-kell-cycle",
+      "ticker": "MNQ=F",
+      "weight": 0.6,
+      "optim_date": "2026-08-26 v4",
+      "timeframe": "5min/15min/1H/Daily",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 16,
+        "wr": 56.2,
+        "R": 2.36,
+        "pf": 1.36
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "D",
+        "confidence": 72,
+        "reason": "0 trades\u4ee3\u8868\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0ccycle + 5_subdetectors\u904e\u6ffe\u592a\u56b4\u683c\uff0c\u7121\u4efb\u4f55edge\u53ef\u8a55\u4f30\u3002"
+      }
+    }
+  ]
+}
