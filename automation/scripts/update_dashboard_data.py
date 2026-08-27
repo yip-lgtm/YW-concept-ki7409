@@ -9,8 +9,10 @@ from pathlib import Path
 from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 
-REPO = Path('/workspace/YW-concept-ki7409')
+import os
+REPO = Path(os.environ.get('GITHUB_WORKSPACE') or os.environ.get('YW_REPO') or '/workspace/YW-concept-ki7409')
 sys.path.insert(0, str(REPO / 'automation/src'))
+sys.path.insert(0, str(REPO / 'automation/scripts'))
 
 HKT = timezone(timedelta(hours=8))
 now = datetime.now(HKT)
