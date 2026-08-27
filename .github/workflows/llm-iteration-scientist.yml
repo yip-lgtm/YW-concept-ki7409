@@ -1,0 +1,40 @@
+name: LLM Iteration Scientist — Per-Agent Self-Optimization
+
+# Daily at 00:00 HKT (cron 0 16 * * 1-5)
+# Self-optimize 10 strategy agents using LLM analysis
+# Auto-applies high-confidence (>= 60%) parameter changes
+
+on:
+  schedule:
+    - cron: '0 16 * * 1-5'  # 00:00 HKT weekdays
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  llm-iteration-scientist:
+    name: 🧬 LLM Iteration Scientist
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - name: Run LLM Iteration Scientist
+        run: .venv/bin/python automation/scripts/llm_iteration_scientist.py
+      - name: Commit iteration report
+        run: |
+          git config user.name "llm-iteration-scientist"
+          git config user.email "iter-sci@MiniMax"
+          git add automation/reports/strategy_ranking/iterations/ || true
+          git add automation/src/ || true
+          git commit -m "auto(llm-iter-sci): per-agent iteration $(date -u +%Y-%m-%dT%H:%M:%SZ)" --allow-empty || true
+          git push --force-with-lease origin main || echo "push failed"
