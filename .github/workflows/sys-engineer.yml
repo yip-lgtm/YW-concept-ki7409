@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with: {python-version: '3.11'}
-      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - name: Run system engineer
         run: .venv/bin/python automation/scripts/sys_engineer.py
       - name: Commit sys-eng report

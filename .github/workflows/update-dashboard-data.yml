@@ -32,7 +32,7 @@ jobs:
         working-directory: automation
         run: |
           python -m venv .venv
-          .venv/bin/pip install -q -r requirements.txt
+          .venv/bin/pip install -q -r automation/requirements.txt
 
       - name: Regenerate dashboard-data.json
         working-directory: automation

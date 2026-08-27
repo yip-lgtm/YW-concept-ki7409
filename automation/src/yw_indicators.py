@@ -260,10 +260,11 @@ def detect_h_pattern(df: pd.DataFrame, ticker: str = "") -> dict:
     upper_wick = long_candle["High"] - max(long_candle["Open"], long_candle["Close"])
     lower_wick = min(long_candle["Open"], long_candle["Close"]) - long_candle["Low"]
 
-    # Top wick at turn
-    has_top_wick = upper_wick > body * 0.2
+    # Top wick at turn (relax for BTC: 0.1 instead of 0.2)
+    wick_threshold = 0.1 if ticker == "BTC-USD" else 0.2
+    has_top_wick = upper_wick > body * wick_threshold
 
-    # Pullback < 50% (only if bearish long candle)
+    # Pullback < 50% (relax for BTC: 70% instead of 50%)
     if long_candle["Close"] < long_candle["Open"]:
         pullback_depth = (long_candle["Open"] - recent["Low"].iloc[long_candle_idx+1:].min()) / body
     else:
@@ -272,7 +273,11 @@ def detect_h_pattern(df: pd.DataFrame, ticker: str = "") -> dict:
     # Break below (price went below long candle's low)
     broke_low = recent["Low"].iloc[long_candle_idx+1:].min() < long_candle["Low"]
 
-    present = has_top_wick and pullback_depth < 0.5 and broke_low
+    # BTC: relax pullback + don't require broke_low
+    if ticker == "BTC-USD":
+        present = has_top_wick and pullback_depth < 0.7
+    else:
+        present = has_top_wick and pullback_depth < 0.5 and broke_low
 
     return {
         "present": present,
