@@ -37,13 +37,13 @@ jobs:
         with:
           python-version: '3.11'
           cache: 'pip'
-          cache-dependency-path: automation/requirements.txt
+          cache-dependency-path: requirements.txt
 
       - name: Install deps
         working-directory: automation
         run: |
           python -m venv .venv
-          .venv/bin/pip install -q -r automation/requirements.txt
+          .venv/bin/pip install -q -r requirements.txt
 
       - name: Run YW daily reminder
         working-directory: automation
