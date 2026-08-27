@@ -1,0 +1,18 @@
+{
+  "date": "2026-08-27",
+  "window": "60d daily + 30d 5m walk-forward",
+  "rules": "BBI+KDJ 5 conditions, 5d hold, stop at signal-day low, 1 micro",
+  "findings": {
+    "60d_daily": "0 signals across all 5 tickers (J never < -20 on daily bars)",
+    "30d_5m": "0-1 signals per ticker with j_threshold=-20 (too strict)",
+    "30d_5m_relaxed": "1-3 signals per ticker with j_threshold=-5",
+    "root_cause": "When J in pit zone, BBI always falling in 24/7 crypto market (B1 designed for A-shares)"
+  },
+  "options": [
+    {"id": 1, "name": "j_threshold=-5 (keep 5 conditions)", "expected_signals_30d": "100-200/ticker"},
+    {"id": 2, "name": "Skip BBI-up condition", "expected_signals_30d": "50-100/ticker"},
+    {"id": 3, "name": "Inverse (short instead of long)", "expected_signals_30d": "depends on downtrend"},
+    {"id": 4, "name": "Keep current j=-20 (wait for big crash)", "expected_signals_30d": "1-3/ticker"}
+  ],
+  "recommendation": "Option 1 — relax j_threshold to -5"
+}
