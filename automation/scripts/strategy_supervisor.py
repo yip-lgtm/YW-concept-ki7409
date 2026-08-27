@@ -24,7 +24,11 @@ import sys
 import json
 import argparse
 from pathlib import Path
+import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
+
+# Lock for thread-safe module imports
+_IMPORT_LOCK = threading.Lock()
 from datetime import datetime, timezone, timedelta
 
 if "GITHUB_WORKSPACE" in os.environ:
@@ -84,12 +88,11 @@ def check_agent(agent: dict) -> dict:
 
     # Check 1: Import + callable
     try:
-        # Only force reimport if the module loaded successfully
-        # (del-ing a partially-loaded module breaks reimport)
-        if agent["module"] in sys.modules and sys.modules[agent["module"]] is not None:
-            mod = sys.modules[agent["module"]]
-        else:
-            mod = __import__(agent["module"])
+        # Thread-safe: lock around sys.modules manipulation
+        with _IMPORT_LOCK:
+            mod = sys.modules.get(agent["module"])
+            if mod is None:
+                mod = __import__(agent["module"])
         fn = getattr(mod, agent["fn"], None)
         if fn is None:
             result["bugs"].append(f"❌ Function {agent['fn']} not found in {agent['module']}")
@@ -281,11 +284,20 @@ def main():
 
 # Pre-import all modules in main process so workers can pick them up via sys.modules
 sys.path.insert(0, str(REPO / "automation/src"))
-for _mod in ("yw_indicators", "yw_indicators_extra", "yw_indicators_b1", "ocs_btc_5m"):
+for _mod in ("yw_indicators", "yw_indicators_extra", "yw_indicators_b1", "yw_indicators_b1_3in1", "ocs_btc_5m"):
     try:
         __import__(_mod)
     except Exception:
         pass
+
+# Pre-load each detector function sequentially (this populates the module fully)
+# Threads should NEVER call __import__ on detector modules
+for _agent in AGENTS:
+    _mod_name = _agent["module"]
+    _mod = sys.modules.get(_mod_name)
+    if _mod is not None:
+        # Touch the function to ensure full module load
+        getattr(_mod, _agent["fn"], None)
 
 if __name__ == "__main__":
     sys.exit(main())

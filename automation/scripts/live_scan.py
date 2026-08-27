@@ -99,6 +99,7 @@ STRATEGIES = {
     "50-20-Pullback":{"fn": "pb_5020",       "args": {}, "weight": 1.0, "tf": "5m"},
     "Stair":         {"fn": "stair",         "args": {}, "weight": 0.9, "tf": "5m"},
     "B1":            {"fn": "b1",            "args": {}, "weight": 1.0, "tf": "5m/15min/1h", "llm_optimized": True},
+    "B1-3in1":       {"fn": "b1_3in1",       "args": {}, "weight": 1.0, "tf": "5m", "llm_optimized": True, "multi_asset": True},
     "Kell-Cycle":    {"fn": "kell",          "args": {}, "weight": 0.9, "tf": "5m"},
     "CRT":           {"fn": "crt",           "args": {"needs_4h": True}, "weight": 1.1, "tf": "5m+4h"},
     "OCS-BTC-5m":    {"fn": "ocs",           "args": {"needs_btc": True}, "weight": 1.0, "tf": "5m"},
