@@ -34,6 +34,7 @@ AGENTS = [
     {"id": "crt",              "agent": "yw-crt",              "ticker": "MNQ=F",  "weight": 1.1, "tf": "5min+4H",   "indicators": ["candle_range", "htf_confirm"]},
     {"id": "kell-cycle",       "agent": "yw-kell-cycle",       "ticker": "MNQ=F",  "weight": 0.9, "tf": "5min",      "indicators": ["cycle", "5_subdetectors"]},
     {"id": "ocs-btc",          "agent": "ocs-btc-5m",          "ticker": "BTC-USD","weight": 1.0, "tf": "5min",      "indicators": ["8_features", "knn_k7"]},
+    {"id": "b1",                "agent": "yw-b1",                "ticker": "MNQ=F",  "weight": 1.0, "tf": "5min/15min/1h", "indicators": ["bbi", "kdj", "volume"]},
 ]
 
 

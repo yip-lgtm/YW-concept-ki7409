@@ -50,7 +50,7 @@ def main():
         'stair-pattern': 'Stair-Pattern', 'crt': 'CRT', 'kell-cycle': 'Kell-Cycle',
     }
 
-    md = ['# 9 Strategy Sub-Agents — Latest Setup (auto-generated)\n']
+    md = ['# 10 Strategy Sub-Agents — Latest Setup (auto-generated)\n']
     md.append('> **Auto-updated** from `automation/scripts/strategy_ranking.py` + `automation/src/yw_grader.py`')
     md.append(f'> **Last iter**: `{latest_iter_ts}`')
     md.append('')
@@ -77,6 +77,8 @@ def main():
         ('v2 2026-08-25 20:22', 'Kell-Cycle', 'w=0.9, tf=5min', 'w=0.5, tf=5min', '72%', '5 sub-detectors noisy, lower exposure'),
         ('v3 2026-08-25 20:36', 'Stair-Pattern', 'w=0.9, tf=5min', 'w=1.2, tf=15min', '85%', '20d 383 trades PF 1.08 = solid edge, raise'),
         ('v4 2026-08-26 00:35', 'Kell-Cycle', 'w=0.5, tf=5min', 'w=0.6, tf=15min', '72%', '4d 16 trades WR 56% R +2.36 = edge confirmed, raise'),
+        ('v5 2026-08-26 20:58', 'CRT', 'w=1.1, tf=4H+5min', 'w=1.2, tf=4H+5min', '62%', '24h 13 trades 7W-6L WR 54% R +1, raise'),
+        ('v6 2026-08-27 09:53', 'B1 战法', 'NEW', 'w=1.0, tf=5min/15min/1h', '42%', 'New strategy added (BBI+KDJ 右侧突破)'),
     ]
     for h in applied_history:
         md.append(f"| {h[0]} | {h[1]} | `{h[2]}` → `{h[3]}` | {h[4]} | {h[5]} |")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Strategy Supervisor — check all 9 strategy sub-agents for bugs.
+"""Strategy Supervisor — check all 10 strategy sub-agents for bugs.
 
 Runs 9 health checks in parallel:
   1. Import + callable
@@ -32,7 +32,7 @@ if "GITHUB_WORKSPACE" in os.environ:
 else:
     REPO = Path("/workspace/YW-concept-ki7409")
 
-# 9 strategy sub-agents with their detection functions
+# 10 strategy sub-agents with their detection functions
 AGENTS = [
     {"id": "h-pattern",       "agent": "yw-h-pattern",       "module": "yw_indicators",       "fn": "detect_h_pattern",        "needs_4h": False, "tickers": ["MNQ=F", "MES=F", "M2K=F"]},
     {"id": "3-pushes",        "agent": "yw-3-pushes",        "module": "yw_indicators",       "fn": "detect_3_pushes",         "needs_4h": False, "tickers": ["MNQ=F", "MES=F", "M2K=F"]},
@@ -43,6 +43,7 @@ AGENTS = [
     {"id": "crt",             "agent": "yw-crt",             "module": "yw_indicators_extra", "fn": "detect_crt",              "needs_4h": True,  "tickers": ["MNQ=F", "MES=F", "M2K=F"]},
     {"id": "kell-cycle",      "agent": "yw-kell-cycle",      "module": "yw_indicators_extra", "fn": "detect_kell_setups",      "needs_4h": False, "tickers": ["MNQ=F", "MES=F", "M2K=F"]},
     {"id": "ocs-btc",         "agent": "ocs-btc-5m",         "module": "ocs_btc_5m",          "fn": "compute_signal",          "needs_4h": False, "tickers": ["BTC-USD"]},
+    {"id": "b1",               "agent": "yw-b1",               "module": "yw_indicators_b1",     "fn": "detect_b1",              "needs_4h": False, "tickers": ["MNQ=F", "MES=F", "M2K=F"]},
 ]
 
 
@@ -231,7 +232,7 @@ def main():
 
     HKT = timezone(timedelta(hours=8))
     ts = datetime.now(HKT).strftime("%Y%m%d_%H%M%S")
-    print(f"[supervisor] Checking 9 strategy sub-agents @ {ts}")
+    print(f"[supervisor] Checking 10 strategy sub-agents @ {ts}")
 
     # Run in parallel
     results = []
@@ -280,7 +281,7 @@ def main():
 
 # Pre-import all modules in main process so workers can pick them up via sys.modules
 sys.path.insert(0, str(REPO / "automation/src"))
-for _mod in ("yw_indicators", "yw_indicators_extra", "ocs_btc_5m"):
+for _mod in ("yw_indicators", "yw_indicators_extra", "yw_indicators_b1", "ocs_btc_5m"):
     try:
         __import__(_mod)
     except Exception:

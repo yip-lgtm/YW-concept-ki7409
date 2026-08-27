@@ -94,6 +94,7 @@ STRATEGIES = {
     "RSI-Div":       {"fn": "rsi_div",       "args": {"resample_15m": True}, "weight": 0.7, "tf": "15m", "llm_optimized": True},  # LLM-iter 2026-08-25: weight 1.1→0.7, 15min, +EMA+vol
     "50-20-Pullback":{"fn": "pb_5020",       "args": {}, "weight": 1.0, "tf": "5m"},
     "Stair":         {"fn": "stair",         "args": {}, "weight": 0.9, "tf": "5m"},
+    "B1":            {"fn": "b1",            "args": {}, "weight": 1.0, "tf": "5m/15min/1h", "llm_optimized": True},
     "Kell-Cycle":    {"fn": "kell",          "args": {}, "weight": 0.9, "tf": "5m"},
     "CRT":           {"fn": "crt",           "args": {"needs_4h": True}, "weight": 1.1, "tf": "5m+4h"},
     "OCS-BTC-5m":    {"fn": "ocs",           "args": {"needs_btc": True}, "weight": 1.0, "tf": "5m"},
@@ -347,6 +348,10 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "kell":
             res = detect_kell_setups(df)
+            out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
+        elif cfg["fn"] == "b1":
+            from yw_indicators_b1 import detect_b1
+            res = detect_b1(df)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "crt":
             df_4h = data.get("df_4h")

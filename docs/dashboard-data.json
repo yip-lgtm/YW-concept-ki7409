@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-08-26 21:25 HKT",
-  "hkt_timestamp": "2026-08-26T21:25:50.862200+08:00",
+  "generated_at": "2026-08-27 09:54 HKT",
+  "hkt_timestamp": "2026-08-27T09:54:36.756698+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 21,
-    "trades_today": 21,
-    "wins_24h": 12,
-    "R_24h": 3.0,
-    "signals_24h": 20,
-    "wr_24h": 57.1
+    "trades_24h": 6,
+    "trades_today": 0,
+    "wins_24h": 3,
+    "R_24h": 0.0,
+    "signals_24h": 6,
+    "wr_24h": 50.0
   },
   "strategies": [
     {
@@ -27,22 +27,22 @@
         5
       ],
       "live_24h": {
-        "n": 2,
+        "n": 1,
         "wins": 0,
-        "losses": 2,
+        "losses": 1,
         "wr": 0.0,
-        "R": -2.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": -356.18
+        "pnl": -183.38
       },
       "live_today": {
-        "n": 2,
+        "n": 0,
         "wins": 0,
-        "losses": 2,
-        "wr": 0.0,
-        "R": -2.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": -356.18
+        "pnl": 0
       },
       "signals_24h": 0,
       "backtest_4d": {
@@ -79,24 +79,24 @@
         5
       ],
       "live_24h": {
-        "n": 1,
+        "n": 0,
         "wins": 0,
-        "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": -231.75
+        "pnl": 0
       },
       "live_today": {
-        "n": 1,
+        "n": 0,
         "wins": 0,
-        "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": -231.75
+        "pnl": 0
       },
-      "signals_24h": 1,
+      "signals_24h": 0,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -131,24 +131,24 @@
         5
       ],
       "live_24h": {
-        "n": 5,
-        "wins": 5,
+        "n": 2,
+        "wins": 2,
         "losses": 0,
         "wr": 100.0,
-        "R": 5.0,
+        "R": 2.0,
         "pf": 10.0,
-        "pnl": 405.77
+        "pnl": 198.35
       },
       "live_today": {
-        "n": 5,
-        "wins": 5,
+        "n": 0,
+        "wins": 0,
         "losses": 0,
-        "wr": 100.0,
-        "R": 5.0,
-        "pf": 10.0,
-        "pnl": 405.77
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
       },
-      "signals_24h": 5,
+      "signals_24h": 2,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -391,24 +391,24 @@
         5
       ],
       "live_24h": {
-        "n": 13,
-        "wins": 7,
-        "losses": 6,
-        "wr": 53.8,
-        "R": 1.0,
-        "pf": 1.17,
-        "pnl": 15.47
+        "n": 3,
+        "wins": 1,
+        "losses": 2,
+        "wr": 33.3,
+        "R": -1.0,
+        "pf": 0.5,
+        "pnl": -25.73
       },
       "live_today": {
-        "n": 13,
-        "wins": 7,
-        "losses": 6,
-        "wr": 53.8,
-        "R": 1.0,
-        "pf": 1.17,
-        "pnl": 15.47
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
       },
-      "signals_24h": 14,
+      "signals_24h": 4,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -477,6 +477,58 @@
         "grade": "D",
         "confidence": 25,
         "reason": "0 trades\u96f6\u6a23\u672c\uff0c\u7121\u6cd5\u9a57\u8b49edge\uff1b5min\u5c0dcycle\u592a\u77ed\uff0c\u8a0a\u865f\u672a\u89f8\u767c"
+      }
+    },
+    {
+      "id": "b1",
+      "name": "B1 \u6218\u6cd5",
+      "agent": "yw-b1",
+      "ticker": "MNQ=F",
+      "weight": 1.0,
+      "optim_date": "2026-08-27",
+      "timeframe": "5min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     }
   ]

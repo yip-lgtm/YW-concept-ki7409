@@ -118,7 +118,19 @@ STRATEGIES = {
         "data_granularity": "5m",
         "data_period": "5d",
         "weight": 0.9,
+    },    "B1": {
+        "name": "B1 战法 (右侧)",
+        "timeframe": "5min/15min/60min",
+        "desc": "Chinese right-side trading — BBI (MA 3/6/12/24) + KDJ (9,3,3). 5 conditions: Close>BBI↑ + J坑底< -20 + J拐头 + 阳线+突破前高 + Vol>5dMA",
+        "doc": "docs/B1-STRATEGY.md",
+        "data_granularity": "5m",
+        "data_period": "10d",
+        "weight": 1.0,
+        "r_multiples": [1, 1.618, 2.618, 3.618, 5],
+        "j_threshold": -20,
+        "use_volume_filter": True,
     },
+
 }
 
 # Per-ticker watchlist (YW trader focus)
