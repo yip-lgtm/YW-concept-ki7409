@@ -42,8 +42,8 @@ def calculate_kdj(df: pd.DataFrame, n: int = 9, k_smooth: int = 3, d_smooth: int
 
 def detect_b1(
     df: pd.DataFrame,
-    j_threshold: float = -20,
-    use_volume_filter: bool = True,
+    j_threshold: float = -5,
+    use_volume_filter: bool = False,
     vol_ma_period: int = 5,
 ) -> dict:
     """B1 買點偵測 — 5 conditions all true.

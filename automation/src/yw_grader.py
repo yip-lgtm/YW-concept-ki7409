@@ -122,14 +122,14 @@ STRATEGIES = {
     "B1": {
         "name": "B1 战法 (右侧) — MNQ/MGC/BTC",
         "timeframe": "5min/15min/60min",
-        "desc": "Chinese right-side trading — BBI (MA 3/6/12/24) + KDJ (9,3,3). 5 conditions: Close>BBI↑ + J坑底< -20 + J拐头 + 阳线+突破前高 + Vol>5dMA. Runs on 3 tickers: MNQ=F (0.4), MGC=F (0.3), BTC-USD (0.3)",
+        "desc": "Chinese right-side trading — BBI (MA 3/6/12/24) + KDJ (9,3,3). 5 conditions: Close>BBI↑ + J坑底< -5 (LLM-iter v2: relaxed from -20) + J拐头 + 阳线+突破前高. Runs on 3 tickers: MNQ=F (0.4), MGC=F (0.3), BTC-USD (0.3)",
         "doc": "docs/B1-STRATEGY.md",
         "data_granularity": "5m",
         "data_period": "10d",
         "weight": 1.0,
         "r_multiples": [1, 1.618, 2.618, 3.618, 5],
-        "j_threshold": -20,
-        "use_volume_filter": True,
+        "j_threshold": -5,
+        "use_volume_filter": False,
         "tickers": ["MNQ=F", "MGC=F", "BTC-USD"],
     },
     "B1-3in1": {
