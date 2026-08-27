@@ -337,13 +337,13 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
             out["skip"] = "insufficient data"
             return out
         if cfg["fn"] == "h_pattern":
-            res = detect_h_pattern(df)
+            res = detect_h_pattern(df, ticker=ticker)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "3_pushes":
-            res = detect_3_pushes(df)
+            res = detect_3_pushes(df, ticker=ticker)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "two_yang":
-            res = detect_two_yang_one_yin(df)
+            res = detect_two_yang_one_yin(df, ticker=ticker)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "rsi_div":
             # LLM-iter 2026-08-25: resample 5m → 15m
@@ -354,16 +354,16 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
                 }).dropna()
                 res = detect_rsi_divergence(df_rsi)
             else:
-                res = detect_rsi_divergence(df)
+                res = detect_rsi_divergence(df, ticker=ticker)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "pb_5020":
-            res = detect_5020_pullback(df)
+            res = detect_5020_pullback(df, ticker=ticker)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "stair":
-            res = detect_stair_pattern(df)
+            res = detect_stair_pattern(df, ticker=ticker)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "kell":
-            res = detect_kell_setups(df)
+            res = detect_kell_setups(df, ticker=ticker)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "b1":
             # B1 战法只跑 MNQ, MGC, BTC (右侧交易专攻 3 个标的)

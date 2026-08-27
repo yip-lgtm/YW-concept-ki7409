@@ -35,7 +35,8 @@ def compute_ma(close: pd.Series, period: int, kind: str = "ema") -> pd.Series:
 
 
 def detect_rsi_divergence(df: pd.DataFrame, lookback: int = 20,
-                            ema_filter: bool = True, volume_filter: bool = True) -> dict:
+                            ema_filter: bool = True, volume_filter: bool = True,
+                            ticker: str = "") -> dict:
     """Detect bullish/bearish RSI divergence on the last N bars.
 
     LLM-OPTIMIZED v1.5 (2026-08-25): Added EMA50 trend filter + volume confirmation
@@ -50,7 +51,12 @@ def detect_rsi_divergence(df: pd.DataFrame, lookback: int = 20,
 
     Bullish: price makes lower low, RSI makes higher low (trend filter: above EMA50)
     Bearish: price makes higher high, RSI makes lower high (trend filter: below EMA50)
+
+    BTC mode: disable ema_filter (24/7 trending market) and volume_filter (volume patterns different)
     """
+    if ticker == "BTC-USD":
+        ema_filter = False
+        volume_filter = False
     if df.empty or len(df) < lookback:
         return {"type": "none", "strength": 0, "filtered": False}
 
@@ -142,7 +148,7 @@ def detect_rsi_divergence(df: pd.DataFrame, lookback: int = 20,
     return result
 
 
-def detect_5020_pullback(df: pd.DataFrame, lookback: int = 30) -> dict:
+def detect_5020_pullback(df: pd.DataFrame, lookback: int = 30, ticker: str = "") -> dict:
     """Detect 20 EMA / 50 SMA cross + current price pullback to EMA20.
 
     Returns:
@@ -157,6 +163,8 @@ def detect_5020_pullback(df: pd.DataFrame, lookback: int = 30) -> dict:
     """
     if df.empty or len(df) < 50:
         return {"cross_type": "none", "trend": "sideways"}
+    # BTC mode: relax trend requirement (24/7 trending, no clean crosses)
+    btc_mode = ticker == "BTC-USD"
 
     close = df["Close"]
     ema20 = compute_ma(close, 20, "ema")
@@ -201,6 +209,10 @@ def detect_5020_pullback(df: pd.DataFrame, lookback: int = 30) -> dict:
         trend = "up"
     elif not above_50sma and cross_type == "death":
         trend = "down"
+    elif btc_mode:
+        # BTC mode: use price vs 50 SMA as trend (no cross required)
+        # Crypto 24/7 trending rarely has clean EMA20/50 crosses
+        trend = "up" if above_50sma else "down"
     else:
         trend = "sideways"
 
@@ -217,7 +229,7 @@ def detect_5020_pullback(df: pd.DataFrame, lookback: int = 30) -> dict:
     }
 
 
-def detect_h_pattern(df: pd.DataFrame) -> dict:
+def detect_h_pattern(df: pd.DataFrame, ticker: str = "") -> dict:
     """Detect YW H-Pattern signature.
 
     H-Pattern features:
@@ -272,7 +284,7 @@ def detect_h_pattern(df: pd.DataFrame) -> dict:
     }
 
 
-def detect_3_pushes(df: pd.DataFrame) -> dict:
+def detect_3_pushes(df: pd.DataFrame, ticker: str = "") -> dict:
     """Detect YW 3-Pushes pattern.
 
     Features:
@@ -315,11 +327,14 @@ def detect_3_pushes(df: pd.DataFrame) -> dict:
     return {"present": False, "direction": "none"}
 
 
-def detect_two_yang_one_yin(df: pd.DataFrame) -> dict:
+def detect_two_yang_one_yin(df: pd.DataFrame, volume_filter: bool = False, ticker: str = "") -> dict:
     """Detect YW 兩陽夾一陰 (15min).
 
     Pattern: middle bearish candle body wrapped by 2 bullish candles' bodies.
     """
+    # BTC mode: don't require volume filter (24/7 different patterns)
+    if ticker == "BTC-USD":
+        volume_filter = False
     if df.empty or len(df) < 5:
         return {"present": False, "direction": "none"}
 

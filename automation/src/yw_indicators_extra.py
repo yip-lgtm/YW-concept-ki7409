@@ -83,7 +83,7 @@ def detect_crt(df_4h: pd.DataFrame, df_5m: pd.DataFrame) -> dict:
     }
 
 
-def detect_stair_pattern(df: pd.DataFrame) -> dict:
+def detect_stair_pattern(df: pd.DataFrame, ticker: str = "") -> dict:
     """YW Stair Pattern (H-Pattern 變體).
 
     Features:
@@ -157,7 +157,7 @@ def detect_stair_pattern(df: pd.DataFrame) -> dict:
     }
 
 
-def detect_kell_setups(df: pd.DataFrame) -> dict:
+def detect_kell_setups(df: pd.DataFrame, ticker: str = "") -> dict:
     """Detect all 5 Kell Cycle setups + return dict of which are present.
 
     Returns:
