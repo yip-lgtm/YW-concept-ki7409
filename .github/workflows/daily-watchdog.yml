@@ -1,0 +1,55 @@
+name: Daily Watchdog — Auto-Trigger if Daily Stalled
+
+# Triggers daily workflows if they haven't completed by 00:30 HKT
+# Covers yw-daily, strategy-ranking, strategy-reward, yw-publish-signal
+# Runs at 00:30 HKT (16:30 UTC) Mon-Sat (covers all 7 days)
+
+on:
+  schedule:
+    - cron: '30 16 * * 1-6'  # 00:30 HKT weekdays + Saturday
+    - cron: '30 16 * * 0'    # 00:30 HKT Sunday
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  watchdog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check daily workflows + re-trigger
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          THRESHOLD_MIN=60  # 1 hour
+          NOW=$(date -u +%s)
+          
+          echo "=== Daily Watchdog @ $(date -u) ==="
+          echo "Threshold: ${THRESHOLD_MIN}min"
+          echo ""
+          
+          for WF in "yw-daily.yml" "strategy-ranking.yml" "strategy-reward.yml" "yw-publish-signal.yml"; do
+            LAST_SUCCESS=$(curl -s -H "Authorization: token $GH_TOKEN" \
+              "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/$WF/runs?status=completed&conclusion=success&per_page=1" \
+              | python3 -c "import sys, json; d=json.load(sys.stdin); r=d.get('workflow_runs', [{}])[0]; print(r.get('created_at', '1970-01-01T00:00:00Z'))" 2>/dev/null || echo "1970-01-01T00:00:00Z")
+            
+            LAST_TS=$(date -u -d "$LAST_SUCCESS" +%s 2>/dev/null || echo 0)
+            DIFF=$(( (NOW - LAST_TS) / 60 ))
+            
+            echo "[$WF] last: $LAST_SUCCESS (${DIFF}m ago)"
+            
+            # Daily workflows should run every ~24h
+            # If last run > 20h ago, re-trigger
+            if [ $DIFF -gt 1200 ]; then
+              echo "  ⚠️  STALLED — re-triggering"
+              curl -s -X POST -H "Authorization: token $GH_TOKEN" \
+                -H "Accept: application/vnd.github+json" \
+                "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/$WF/dispatches" \
+                -d '{"ref": "main"}' -H "Content-Type: application/json" > /dev/null
+              echo "  ✓ Triggered $WF"
+            else
+              echo "  ✓ Healthy"
+            fi
+            echo ""
+          done

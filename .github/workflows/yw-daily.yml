@@ -9,8 +9,8 @@ on:
     # 13:00 UTC = 21:00 HKT
     # Mon-Fri: full daily reminder (24 grades + charts)
     # Sat-Sun: weekend recap (markets closed, weekly summary)
-    - cron: '0 13 * * 1-5'  # weekday
-    - cron: '0 13 * * 6,0'  # weekend
+    - cron: '0 16 * * 1-5'  # weekday
+    - cron: '0 16 * * 6,0'  # weekend
   workflow_dispatch:
 
 permissions:
