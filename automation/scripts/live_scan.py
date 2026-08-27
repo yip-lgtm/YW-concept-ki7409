@@ -489,6 +489,9 @@ def publish_ai_trader(signal: dict) -> int:
         return 0
 
 
+sys.path.insert(0, str(REPO / "automation/scripts"))
+from audit import log_action
+
 def main() -> int:
     t_start = time.time()
     ts_now = datetime.now(timezone.utc).isoformat()
@@ -575,6 +578,9 @@ def main() -> int:
         }
         fired.append(signal)
         print(f"    [FIRED] {grade} {det['ticker']}")
+        # Audit: Power 3 accountable for this signal
+        log_action("strategy-agent", "signal", f"{det['strategy']} {det['ticker']}", grade,
+                  f"conf={conf}% dir={signal.get('direction', '?')}", "Power 3 (Strategy Agent)")
     print(f"[live_scan] LLM-confirmed signals: {len(fired)}")
     # Step 4: Fire each signal — compute SL/TP, open position, send TG
     for sig in fired:

@@ -314,6 +314,11 @@ def iterate_agent(agent: dict) -> dict:
     if result.get("diagnosis"):
         print(f"    Diagnosis: {result['diagnosis'][:80]}")
     
+    # Audit: log iteration (Power 4 accountable for any auto-apply)
+    log_action("iter-scientist", "iteration", agent["agent"], result["grade"],
+              f"conf={result['confidence']}% auto_apply={result['auto_apply']}",
+              "Power 4 (LLM Iteration Scientist)")
+    
     return result
 
 
@@ -352,6 +357,9 @@ def send_tg_summary(results: list):
     except Exception as e:
         print(f"[scientist] TG error: {e}")
 
+
+sys.path.insert(0, str(REPO / "automation/scripts"))
+from audit import log_action
 
 def main():
     HKT = timezone(timedelta(hours=8))

@@ -294,6 +294,9 @@ def check_supervisor_health() -> dict:
     return result
 
 
+sys.path.insert(0, str(REPO / "automation/scripts"))
+from audit import log_action
+
 def main():
     print(f"[sys-eng] === System Engineer @ {datetime.now(HKT).strftime('%Y-%m-%d %H:%M:%S HKT')} ===")
     
@@ -360,6 +363,19 @@ def main():
         "n_lazy": len(lazy),
     }, indent=2, default=str))
     print(f"[sys-eng] Saved: {out_path}")
+    
+    # Audit: log actions
+    for a in actions_taken:
+        if a.get("type") == "bug_diagnosis":
+            log_action("sys-engineer", "diagnose", a.get("agent", "?"), "OK",
+                      a.get("diagnosis", "")[:200], "Power 2 (System Engineer)")
+        elif a.get("type") == "lazy_detected":
+            log_action("sys-engineer", "detect_lazy", a.get("agent", "?"), "WARN",
+                      f"0 signals 24h, {a.get('n_signals_7d', 0)} in 7d",
+                      "Power 2 (System Engineer)")
+        elif a.get("type") == "supervisor_health":
+            log_action("sys-engineer", "check_supervisor", "supervisor", "WARN",
+                      str(a.get("issues", []))[:200], "Power 2 (System Engineer)")
     
     # Step 5: Send TG summary if any issues
     if actions_taken:

@@ -278,6 +278,9 @@ def check_sys_engineer() -> dict:
     return result
 
 
+sys.path.insert(0, str(REPO / "automation/scripts"))
+from audit import log_action
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--tg", action="store_true", help="Send to TG")
@@ -329,6 +332,14 @@ def main():
         "n_bug": sum(1 for r in results if r["bugs"]),
         "results": results,
     }
+    # Audit: log BUGs (Power 1: Supervisor accountable for detection)
+    for r in results:
+        if r.get("bugs"):
+            log_action("supervisor", "health_check", r.get("agent", "?"), "BUG",
+                      str(r["bugs"])[:200], "Power 1 (Supervisor)")
+        elif r.get("warns"):
+            log_action("supervisor", "health_check", r.get("agent", "?"), "WARN",
+                      str(r["warns"])[:200], "Power 1 (Supervisor)")
     out_path = REPO / "automation/reports/supervisor" / f"strategy_check_{ts}.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(out, indent=2, default=str))
