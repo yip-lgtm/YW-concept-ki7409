@@ -257,10 +257,60 @@ def send_tg(text: str):
         print(f"[sys-eng] TG error: {e}")
 
 
+def check_supervisor_health() -> dict:
+    """Power 2 (System Engineer) monitors Supervisor.
+    
+    Checks: did supervisor run recently? Is it healthy?
+    """
+    result = {
+        "supervisor_alive": False,
+        "supervisor_recent": False,
+        "last_report_age_hours": None,
+        "n_bugs_in_last_report": 0,
+        "issues": [],
+    }
+    if not SUP_DIR.exists():
+        result["issues"].append("supervisor reports dir not found")
+        return result
+    reports = sorted(SUP_DIR.glob("strategy_check_*.json"), reverse=True)
+    if not reports:
+        result["issues"].append("no supervisor reports yet")
+        return result
+    result["supervisor_alive"] = True
+    latest = reports[0]
+    age_hours = (datetime.now() - datetime.fromtimestamp(latest.stat().st_mtime)).total_seconds() / 3600
+    result["last_report_age_hours"] = round(age_hours, 2)
+    if age_hours < 1:
+        result["supervisor_recent"] = True
+    try:
+        data = json.loads(latest.read_text())
+        result["n_bugs_in_last_report"] = data.get("n_bug", 0)
+        if age_hours > 1:
+            result["issues"].append(f"supervisor stale ({age_hours:.1f}h)")
+        if result["n_bugs_in_last_report"] > 0:
+            result["issues"].append(f"supervisor found {result['n_bugs_in_last_report']} BUGs")
+    except Exception as e:
+        result["issues"].append(f"supervisor report parse error: {e}")
+    return result
+
+
 def main():
     print(f"[sys-eng] === System Engineer @ {datetime.now(HKT).strftime('%Y-%m-%d %H:%M:%S HKT')} ===")
     
     actions_taken = []
+    
+    # Step 0: Power 2 (sys-engineer) checks Power 1 (supervisor) — mutual oversight
+    sup_health = check_supervisor_health()
+    print(f"[sys-eng] Supervisor health: alive={sup_health['supervisor_alive']}, recent={sup_health['supervisor_recent']}, age={sup_health['last_report_age_hours']}h, bugs={sup_health['n_bugs_in_last_report']}")
+    if not sup_health['supervisor_recent'] or sup_health['issues']:
+        for issue in sup_health['issues']:
+            print(f"  ⚠️ {issue}")
+        actions_taken.append({
+            "type": "supervisor_health",
+            "alive": sup_health['supervisor_alive'],
+            "recent": sup_health['supervisor_recent'],
+            "issues": sup_health['issues'],
+        })
     
     # Step 1: Read latest supervisor report
     report = latest_supervisor_report()

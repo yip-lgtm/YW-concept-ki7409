@@ -229,6 +229,55 @@ def send_tg(results: list, bugs_only: bool = False):
     return r.json()
 
 
+def check_sys_engineer() -> dict:
+    """Power 1 (Supervisor) monitors System Engineer.
+    
+    Checks: did sys-engineer run recently? Are its reports valid?
+    """
+    result = {
+        "agent": "sys-engineer",
+        "id": "sys-engineer",
+        "module": "sys_engineer",
+        "fn": "main",
+        "checks": [],
+        "bugs": [],
+        "warns": [],
+    }
+    try:
+        sys_eng_dir = REPO / "automation/reports/sys_engineer"
+        if not sys_eng_dir.exists():
+            result["warns"].append("⚠️ sys_engineer reports dir not found")
+            result["checks"].append(("sys_eng_dir", "WARN"))
+            return result
+        reports = sorted(sys_eng_dir.glob("sys_eng_*.json"), reverse=True)
+        if not reports:
+            result["warns"].append("⚠️ No sys_engineer reports yet")
+            result["checks"].append(("reports", "WARN"))
+            return result
+        latest = reports[0]
+        from datetime import datetime as dt
+        age_hours = (dt.now() - dt.fromtimestamp(latest.stat().st_mtime)).total_seconds() / 3600
+        if age_hours > 2:
+            result["warns"].append(f"⚠️ sys_engineer last ran {age_hours:.1f}h ago (>2h)")
+            result["checks"].append(("recency", f"WARN ({age_hours:.1f}h)"))
+        else:
+            result["checks"].append(("recency", f"OK ({age_hours:.1f}h)"))
+        try:
+            data = json.loads(latest.read_text())
+            n_bugs = data.get("n_bugs", 0)
+            n_lazy = data.get("n_lazy", 0)
+            if n_bugs > 0:
+                result["warns"].append(f"⚠️ sys_engineer found {n_bugs} BUGs in last report")
+            result["checks"].append(("content", f"OK bugs={n_bugs} lazy={n_lazy}"))
+        except Exception as e:
+            result["warns"].append(f"⚠️ sys_engineer report parse error: {e}")
+            result["checks"].append(("content", "WARN"))
+    except Exception as e:
+        result["bugs"].append(f"❌ sys_engineer check error: {e}")
+        result["checks"].append(("sys_eng_check", "FAIL"))
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--tg", action="store_true", help="Send to TG")
@@ -240,10 +289,15 @@ def main():
     ts = datetime.now(HKT).strftime("%Y%m%d_%H%M%S")
     print(f"[supervisor] Checking 10 strategy sub-agents @ {ts}")
 
-    # Run in parallel
+    # Power 1: Check 10 strategy sub-agents in parallel
+    # Power 1 also checks sys-engineer (mutual oversight)
     results = []
-    with ThreadPoolExecutor(max_workers=9) as executor:
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        # 10 strategy agents
         futures = {executor.submit(check_agent, a): a for a in AGENTS}
+        # Plus sys-engineer check (Power 1 monitors Power 2)
+        sys_eng_future = executor.submit(check_sys_engineer)
+        
         for future in as_completed(futures):
             try:
                 r = future.result()
@@ -253,14 +307,23 @@ def main():
             except Exception as e:
                 print(f"  💥 {futures[future]['agent']}: {e}")
                 results.append({"agent": futures[future]["agent"], "bugs": [f"💥 Exception: {e}"], "warns": [], "checks": []})
+        
+        # Add sys-engineer check
+        try:
+            r = sys_eng_future.result()
+            results.append(r)
+            status = "❌" if r["bugs"] else "⚠️ " if r["warns"] else "✅"
+            print(f"  {status} {r['agent']:18s} ({len(r['bugs'])} bugs, {len(r['warns'])} warns)")
+        except Exception as e:
+            print(f"  💥 sys-engineer check: {e}")
 
     # Sort by status
     results.sort(key=lambda r: (len(r["bugs"]), len(r["warns"])), reverse=True)
 
-    # Save
+    # Save (now 11 = 10 agents + sys-engineer)
     out = {
         "timestamp": ts,
-        "n_agents": 9,
+        "n_agents": 11,
         "n_ok": sum(1 for r in results if not r["bugs"]),
         "n_warn": sum(1 for r in results if r["warns"] and not r["bugs"]),
         "n_bug": sum(1 for r in results if r["bugs"]),
