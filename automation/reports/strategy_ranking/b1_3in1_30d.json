@@ -1,0 +1,588 @@
+{
+  "date": "2026-08-27",
+  "window": "30d walk-forward",
+  "method": "3\u54081 (MNQ + MGC + BTC), pick strongest per bar, 5d hold, stop at signal low",
+  "rules": {
+    "j_threshold": -5,
+    "use_volume_filter": false,
+    "hold_days": 5,
+    "stop": "signal-day low"
+  },
+  "aggregate": {
+    "n_trades": 41,
+    "wins": 16,
+    "losses": 25,
+    "win_rate": 39.0,
+    "total_return_pct": -0.3,
+    "avg_return_pct": -0.01,
+    "profit_factor": 0.87,
+    "stop_outs": 17,
+    "hold_exits": 24
+  },
+  "per_ticker": {
+    "MGC=F": {
+      "n": 16,
+      "wins": 9,
+      "win_rate": 56.2,
+      "total_return_pct": 0.64,
+      "stop_outs": 6
+    },
+    "MNQ=F": {
+      "n": 9,
+      "wins": 1,
+      "win_rate": 11.1,
+      "total_return_pct": -0.96,
+      "stop_outs": 5
+    },
+    "BTC-USD": {
+      "n": 16,
+      "wins": 6,
+      "win_rate": 37.5,
+      "total_return_pct": 0.03,
+      "stop_outs": 6
+    }
+  },
+  "multi_ticker_signals": 0,
+  "trades": [
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 83,
+      "signal_date": "2026-07-24",
+      "entry_date": "2026-07-24",
+      "entry_price": 4062.0,
+      "stop_loss": 4059.60009765625,
+      "j": 13.787161037536663,
+      "strength": 100,
+      "exit_date": "2026-07-24",
+      "exit_price": 4061.5,
+      "return": -0.00012309207287050715,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 95,
+      "signal_date": "2026-07-24",
+      "entry_date": "2026-07-24",
+      "entry_price": 4060.699951171875,
+      "stop_loss": 4053.5,
+      "j": 35.33772603775803,
+      "strength": 100,
+      "exit_date": "2026-07-24",
+      "exit_price": 4062.39990234375,
+      "return": 0.00041863501177534973,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 220,
+      "signal_date": "2026-07-26",
+      "entry_date": "2026-07-26",
+      "entry_price": 4088.699951171875,
+      "stop_loss": 4087.10009765625,
+      "j": 9.584899747939495,
+      "strength": 100,
+      "exit_date": "2026-07-26",
+      "exit_price": 4104.2001953125,
+      "return": 0.003790995750662121,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "MNQ=F",
+      "signal_idx": 263,
+      "signal_date": "2026-07-26",
+      "entry_date": "2026-07-26",
+      "entry_price": 28643.75,
+      "stop_loss": 28605.0,
+      "j": 41.01981004961384,
+      "strength": 100,
+      "exit_date": "2026-07-26",
+      "exit_price": 28605.0,
+      "return": -0.0013528256600480034,
+      "exit_reason": "stop_loss",
+      "bars_held": 3,
+      "competing_signals": [
+        "MNQ=F"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 277,
+      "signal_date": "2026-07-29",
+      "entry_date": "2026-07-29",
+      "entry_price": 63852.01171875,
+      "stop_loss": 63816.05859375,
+      "j": 14.621357744972713,
+      "strength": 100,
+      "exit_date": "2026-07-29",
+      "exit_price": 63887.87890625,
+      "return": 0.0005617236878609994,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 801,
+      "signal_date": "2026-07-31",
+      "entry_date": "2026-07-31",
+      "entry_price": 63003.609375,
+      "stop_loss": 62960.62109375,
+      "j": 20.2249446859231,
+      "strength": 100,
+      "exit_date": "2026-07-31",
+      "exit_price": 62960.62109375,
+      "return": -0.0006823145796954589,
+      "exit_reason": "stop_loss",
+      "bars_held": 3,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 864,
+      "signal_date": "2026-08-01",
+      "entry_date": "2026-08-01",
+      "entry_price": 62891.5,
+      "stop_loss": 62824.78125,
+      "j": 29.084632051190738,
+      "strength": 100,
+      "exit_date": "2026-08-01",
+      "exit_price": 62919.69921875,
+      "return": 0.00044837885485319955,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 904,
+      "signal_date": "2026-08-01",
+      "entry_date": "2026-08-01",
+      "entry_price": 62986.44140625,
+      "stop_loss": 62940.37109375,
+      "j": 28.034303135657197,
+      "strength": 100,
+      "exit_date": "2026-08-01",
+      "exit_price": 62940.37109375,
+      "return": -0.0007314322173379452,
+      "exit_reason": "stop_loss",
+      "bars_held": 1,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 1256,
+      "signal_date": "2026-07-30",
+      "entry_date": "2026-07-30",
+      "entry_price": 4169.7998046875,
+      "stop_loss": 4166.60009765625,
+      "j": 7.4610246854248885,
+      "strength": 100,
+      "exit_date": "2026-07-30",
+      "exit_price": 4166.60009765625,
+      "return": -0.0007673526742586141,
+      "exit_reason": "stop_loss",
+      "bars_held": 1,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 1275,
+      "signal_date": "2026-08-02",
+      "entry_date": "2026-08-02",
+      "entry_price": 63199.7109375,
+      "stop_loss": 63127.44921875,
+      "j": 29.085302417834356,
+      "strength": 100,
+      "exit_date": "2026-08-02",
+      "exit_price": 63127.44921875,
+      "return": -0.0011433868553839064,
+      "exit_reason": "stop_loss",
+      "bars_held": 1,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 1333,
+      "signal_date": "2026-08-02",
+      "entry_date": "2026-08-02",
+      "entry_price": 63027.69140625,
+      "stop_loss": 63000.48828125,
+      "j": 8.594225327696066,
+      "strength": 100,
+      "exit_date": "2026-08-02",
+      "exit_price": 63072.41015625,
+      "return": 0.0007095095663866496,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 1401,
+      "signal_date": "2026-07-31",
+      "entry_date": "2026-07-31",
+      "entry_price": 4135.60009765625,
+      "stop_loss": 4130.39990234375,
+      "j": 25.971131867899174,
+      "strength": 100,
+      "exit_date": "2026-07-31",
+      "exit_price": 4136.5,
+      "return": 0.0002175989753603105,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 1627,
+      "signal_date": "2026-08-03",
+      "entry_date": "2026-08-03",
+      "entry_price": 63812.0390625,
+      "stop_loss": 63636.4609375,
+      "j": 32.86604542192481,
+      "strength": 100,
+      "exit_date": "2026-08-03",
+      "exit_price": 63636.4609375,
+      "return": -0.002751489022753715,
+      "exit_reason": "stop_loss",
+      "bars_held": 3,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 1758,
+      "signal_date": "2026-08-04",
+      "entry_date": "2026-08-04",
+      "entry_price": 63746.30859375,
+      "stop_loss": 63621.25,
+      "j": 24.804171779198924,
+      "strength": 100,
+      "exit_date": "2026-08-04",
+      "exit_price": 63731.75,
+      "return": -0.00022838332244115852,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 1769,
+      "signal_date": "2026-08-04",
+      "entry_date": "2026-08-04",
+      "entry_price": 63733.75,
+      "stop_loss": 63635.98046875,
+      "j": 21.62494014354632,
+      "strength": 100,
+      "exit_date": "2026-08-04",
+      "exit_price": 63729.05078125,
+      "return": -7.373202973306922e-05,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "MNQ=F",
+      "signal_idx": 1822,
+      "signal_date": "2026-08-03",
+      "entry_date": "2026-08-03",
+      "entry_price": 28913.25,
+      "stop_loss": 28885.75,
+      "j": 6.894095996477773,
+      "strength": 100,
+      "exit_date": "2026-08-03",
+      "exit_price": 28900.25,
+      "return": -0.00044962084857288613,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MNQ=F"
+      ]
+    },
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 2200,
+      "signal_date": "2026-08-04",
+      "entry_date": "2026-08-05",
+      "entry_price": 4186.0,
+      "stop_loss": 4184.89990234375,
+      "j": -1.4377048757674373,
+      "strength": 80,
+      "exit_date": "2026-08-05",
+      "exit_price": 4196.39990234375,
+      "return": 0.0024844487204371715,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 2309,
+      "signal_date": "2026-08-05",
+      "entry_date": "2026-08-05",
+      "entry_price": 4254.2001953125,
+      "stop_loss": 4243.7998046875,
+      "j": 6.052685633732622,
+      "strength": 100,
+      "exit_date": "2026-08-05",
+      "exit_price": 4262.2998046875,
+      "return": 0.001903908843764469,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "MNQ=F",
+      "signal_idx": 2610,
+      "signal_date": "2026-08-06",
+      "entry_date": "2026-08-06",
+      "entry_price": 29590.0,
+      "stop_loss": 29530.75,
+      "j": 12.496527701326926,
+      "strength": 100,
+      "exit_date": "2026-08-06",
+      "exit_price": 29530.75,
+      "return": -0.0020023656640757014,
+      "exit_reason": "stop_loss",
+      "bars_held": 1,
+      "competing_signals": [
+        "MNQ=F"
+      ]
+    },
+    {
+      "ticker": "MNQ=F",
+      "signal_idx": 2703,
+      "signal_date": "2026-08-06",
+      "entry_date": "2026-08-06",
+      "entry_price": 29571.5,
+      "stop_loss": 29500.5,
+      "j": 32.018037345966874,
+      "strength": 100,
+      "exit_date": "2026-08-06",
+      "exit_price": 29569.5,
+      "return": -6.763268687756793e-05,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MNQ=F"
+      ]
+    },
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 2739,
+      "signal_date": "2026-08-06",
+      "entry_date": "2026-08-06",
+      "entry_price": 4312.60009765625,
+      "stop_loss": 4309.5,
+      "j": 19.750749889405498,
+      "strength": 100,
+      "exit_date": "2026-08-06",
+      "exit_price": 4309.5,
+      "return": -0.0007188465394541906,
+      "exit_reason": "stop_loss",
+      "bars_held": 1,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "MNQ=F",
+      "signal_idx": 2858,
+      "signal_date": "2026-08-07",
+      "entry_date": "2026-08-07",
+      "entry_price": 29805.75,
+      "stop_loss": 29683.0,
+      "j": 32.74812012676003,
+      "strength": 100,
+      "exit_date": "2026-08-07",
+      "exit_price": 29683.0,
+      "return": -0.00411833287201295,
+      "exit_reason": "stop_loss",
+      "bars_held": 4,
+      "competing_signals": [
+        "MNQ=F"
+      ]
+    },
+    {
+      "ticker": "MNQ=F",
+      "signal_idx": 2867,
+      "signal_date": "2026-08-07",
+      "entry_date": "2026-08-07",
+      "entry_price": 29719.0,
+      "stop_loss": 29568.25,
+      "j": 35.36345781383605,
+      "strength": 100,
+      "exit_date": "2026-08-07",
+      "exit_price": 29708.0,
+      "return": -0.0003701335845755241,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MNQ=F"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 3001,
+      "signal_date": "2026-08-08",
+      "entry_date": "2026-08-08",
+      "entry_price": 64968.12890625,
+      "stop_loss": 64953.01171875,
+      "j": 9.040268793509817,
+      "strength": 100,
+      "exit_date": "2026-08-08",
+      "exit_price": 64986.69140625,
+      "return": 0.0002857170171359863,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 3552,
+      "signal_date": "2026-08-10",
+      "entry_date": "2026-08-10",
+      "entry_price": 65246.0390625,
+      "stop_loss": 65152.609375,
+      "j": 23.32488004136573,
+      "strength": 100,
+      "exit_date": "2026-08-10",
+      "exit_price": 65226.2109375,
+      "return": -0.0003038977581613252,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    },
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 3952,
+      "signal_date": "2026-08-13",
+      "entry_date": "2026-08-13",
+      "entry_price": 4444.7998046875,
+      "stop_loss": 4440.0,
+      "j": 16.111926277891286,
+      "strength": 100,
+      "exit_date": "2026-08-13",
+      "exit_price": 4447.39990234375,
+      "return": 0.0005849752003471402,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 4074,
+      "signal_date": "2026-08-13",
+      "entry_date": "2026-08-13",
+      "entry_price": 4415.5,
+      "stop_loss": 4405.2001953125,
+      "j": 39.35522397052159,
+      "strength": 100,
+      "exit_date": "2026-08-13",
+      "exit_price": 4417.10009765625,
+      "return": 0.0003623819853357491,
+      "exit_reason": "hold_exit",
+      "bars_held": 5,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "MGC=F",
+      "signal_idx": 4213,
+      "signal_date": "2026-08-14",
+      "entry_date": "2026-08-14",
+      "entry_price": 4408.0,
+      "stop_loss": 4405.0,
+      "j": 11.046359114533189,
+      "strength": 100,
+      "exit_date": "2026-08-14",
+      "exit_price": 4405.0,
+      "return": -0.0006805807622504537,
+      "exit_reason": "stop_loss",
+      "bars_held": 2,
+      "competing_signals": [
+        "MGC=F"
+      ]
+    },
+    {
+      "ticker": "MNQ=F",
+      "signal_idx": 4634,
+      "signal_date": "2026-08-17",
+      "entry_date": "2026-08-17",
+      "entry_price": 30109.25,
+      "stop_loss": 30094.5,
+      "j": 26.900836524772103,
+      "strength": 100,
+      "exit_date": "2026-08-17",
+      "exit_price": 30094.5,
+      "return": -0.0004898826772503467,
+      "exit_reason": "stop_loss",
+      "bars_held": 1,
+      "competing_signals": [
+        "MNQ=F"
+      ]
+    },
+    {
+      "ticker": "BTC-USD",
+      "signal_idx": 4638,
+      "signal_date": "2026-08-14",
+      "entry_date": "2026-08-14",
+      "entry_price": 63483.828125,
+      "stop_loss": 63433.05859375,
+      "j": 18.7973098604198,
+      "strength": 100,
+      "exit_date": "2026-08-14",
+      "exit_price": 63433.05859375,
+      "return": -0.0007997238469935133,
+      "exit_reason": "stop_loss",
+      "bars_held": 4,
+      "competing_signals": [
+        "BTC-USD"
+      ]
+    }
+  ]
+}

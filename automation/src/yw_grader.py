@@ -132,6 +132,20 @@ STRATEGIES = {
         "use_volume_filter": True,
         "tickers": ["MNQ=F", "MGC=F", "BTC-USD"],
     },
+    "B1-3in1": {
+        "name": "B1 战法 3合1 (Combined MNQ+MGC+BTC)",
+        "timeframe": "5min/15min/60min",
+        "desc": "Multi-asset B1: scans 3 tickers, picks strongest. Use when J< -5 (relaxed from -20 for 24/7 crypto)",
+        "doc": "docs/B1-3IN1-STRATEGY.md",
+        "data_granularity": "5m",
+        "data_period": "5d",
+        "weight": 1.0,
+        "r_multiples": [1, 1.618, 2.618, 3.618, 5],
+        "j_threshold": -5,
+        "use_volume_filter": False,
+        "tickers": ["MNQ=F", "MGC=F", "BTC-USD"],
+    },
+
 
 }
 

@@ -51,6 +51,7 @@ STRATEGIES = [
     {"id": "b1-mnq", "name": "B1 战法 (MNQ)", "ticker": "MNQ=F", "type": "yw", "weight": 0.4, "llm_optimized": True, "optim_date": "2026-08-27"},
     {"id": "b1-mgc", "name": "B1 战法 (MGC)", "ticker": "MGC=F", "type": "yw", "weight": 0.3, "llm_optimized": True, "optim_date": "2026-08-27"},
     {"id": "b1-btc", "name": "B1 战法 (BTC)", "ticker": "BTC-USD", "type": "yw", "weight": 0.3, "llm_optimized": True, "optim_date": "2026-08-27"},
+    {"id": "b1-3in1", "name": "B1 战法 3合1 (MNQ+MGC+BTC)", "ticker": "MNQ=F", "type": "yw", "weight": 1.0, "llm_optimized": True, "optim_date": "2026-08-27"},
 ]
 
 
