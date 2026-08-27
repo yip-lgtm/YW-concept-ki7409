@@ -1,0 +1,44 @@
+name: System Engineer — Auto-Fix Supervisor Issues
+
+# Runs hourly to:
+# 1. Read latest supervisor report
+# 2. Diagnose BUG with LLM (MiniMax-M3)
+# 3. Detect lazy agents (0 signals/24h)
+# 4. Auto-apply fixes for known patterns
+# 5. Send TG report
+
+on:
+  schedule:
+    - cron: '17 * * * *'  # Every hour at :17 (off-peak)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  sys-engineer:
+    name: 🛠️ System Engineer
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - name: Run system engineer
+        run: .venv/bin/python automation/scripts/sys_engineer.py
+      - name: Commit sys-eng report
+        run: |
+          git config user.name "sys-engineer" && \
+          git config user.email "sys-eng@MiniMax" && \
+          git add automation/reports/sys_engineer/ || true
+          git commit -m "auto(sys-eng): report $(date -u +%Y-%m-%dT%H:%M:%SZ)" --allow-empty || true
+          git push --force-with-lease origin main || echo "push failed"
