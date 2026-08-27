@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <title>9 Strategy Sub-Agents Dashboard — YW Concept</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="300">  <!-- auto refresh 5min -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -128,6 +129,10 @@ const sourceFiles = {
   'crt':             ['yw_indicators_extra.py', 'detect_crt'],
   'kell-cycle':      ['yw_indicators_extra.py', 'detect_kell_setups'],
   'ocs-btc':         ['ocs_btc_5m.py', 'compute_signal'],
+  'b1-mnq':          ['yw_indicators_b1.py', 'detect_b1'],
+  'b1-mgc':          ['yw_indicators_b1.py', 'detect_b1'],
+  'b1-btc':          ['yw_indicators_b1.py', 'detect_b1'],
+  'b1-3in1':         ['yw_indicators_b1_3in1.py', 'detect_b1_3in1'],
 };
 const REPO_URL = 'https://github.com/yip-lgtm/YW-concept-ki7409/blob/main/automation/src/';
 
@@ -177,13 +182,15 @@ function render(d) {
   html.push('</div>');
   
   // 9 Sub-agent cards
-  html.push('<h2 id="agents">🤖 9 Strategy Sub-Agents</h2>');
+  html.push('<h2 id="agents">🤖 13 Strategy Variants (10 sub-agents)</h2>');
   html.push('<div class="grid">');
   d.strategies.forEach(s => {
     const grade = s.iteration.grade || '?';
     const conf = s.iteration.confidence || 0;
     const badgeClass = (grade === 'A' || grade === 'B') ? 'badge-ok' : grade === 'C' ? 'badge-warn' : 'badge-bug';
     const badgeText = grade !== '?' ? `Grade ${grade} ${conf}%` : 'No iter';
+    const isB1Family = s.id.startsWith('b1-');
+    const familyBadge = isB1Family ? '<span class="badge" style="background:#1f6feb; color:#fff; margin-left:4px;">B1 Family</span>' : '';
     const l24 = s.live_24h;
     const bt4 = s.backtest_4d;
     const bt20 = s.backtest_20d;
@@ -197,7 +204,7 @@ function render(d) {
     html.push(`<div class="card">
       <div class="card-header">
         <div class="strategy-name">${s.name}</div>
-        <span class="badge ${badgeClass}">${badgeText}</span>
+        <span class="badge ${badgeClass}">${badgeText}</span>${familyBadge}
       </div>
       <div style="color:#8b949e; font-size:12px; margin-bottom: 8px;">
         Agent: <code>${s.agent}</code> | Ticker: <code>${s.ticker}</code> | TF: <code>${s.timeframe}</code>
