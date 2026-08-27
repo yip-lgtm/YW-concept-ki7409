@@ -90,12 +90,18 @@ def is_today(trade):
 last24h = [t for t in all_trades if is_in_last_24h(t)]
 today_trades = [t for t in all_trades if is_today(t)]
 
-# 4. Live signals
+# 4. Live signals (defensive parse — skip blank/corrupt lines)
 all_signals = []
 if (LS / 'signals.jsonl').exists():
     with open(LS / 'signals.jsonl') as f:
         for line in f:
-            all_signals.append(json.loads(line))
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                all_signals.append(json.loads(line))
+            except json.JSONDecodeError:
+                continue  # skip corrupt lines
 
 def sig_in_last_24h(s):
     try:

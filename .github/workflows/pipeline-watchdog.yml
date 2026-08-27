@@ -5,7 +5,7 @@ name: Pipeline Watchdog — Auto-Trigger if Stalled
 
 on:
   schedule:
-    - cron: '*/15 * * * *'  # Every 15 min check
+    - cron: '*/5 * * * *'  # Every 5 min check
   workflow_dispatch: {}
 
 permissions:
