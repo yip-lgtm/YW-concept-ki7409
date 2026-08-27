@@ -118,10 +118,11 @@ STRATEGIES = {
         "data_granularity": "5m",
         "data_period": "5d",
         "weight": 0.9,
-    },    "B1": {
-        "name": "B1 战法 (右侧)",
+    },
+    "B1": {
+        "name": "B1 战法 (右侧) — MNQ/MGC/BTC",
         "timeframe": "5min/15min/60min",
-        "desc": "Chinese right-side trading — BBI (MA 3/6/12/24) + KDJ (9,3,3). 5 conditions: Close>BBI↑ + J坑底< -20 + J拐头 + 阳线+突破前高 + Vol>5dMA",
+        "desc": "Chinese right-side trading — BBI (MA 3/6/12/24) + KDJ (9,3,3). 5 conditions: Close>BBI↑ + J坑底< -20 + J拐头 + 阳线+突破前高 + Vol>5dMA. Runs on 3 tickers: MNQ=F (0.4), MGC=F (0.3), BTC-USD (0.3)",
         "doc": "docs/B1-STRATEGY.md",
         "data_granularity": "5m",
         "data_period": "10d",
@@ -129,14 +130,17 @@ STRATEGIES = {
         "r_multiples": [1, 1.618, 2.618, 3.618, 5],
         "j_threshold": -20,
         "use_volume_filter": True,
+        "tickers": ["MNQ=F", "MGC=F", "BTC-USD"],
     },
 
 }
 
 # Per-ticker watchlist (YW trader focus)
 WATCHLIST = [
-    ("MNQ=F", "Micro Nasdaq-100"),  # primary
+    ("MNQ=F", "Micro Nasdaq-100"),  # primary (equity index)
     ("MES=F", "Micro S&P 500"),     # secondary
+    ("MGC=F", "Micro Gold"),        # commodity — B1 战法 target
+    ("BTC-USD", "BTC USD"),         # crypto — B1 战法 target
     ("M2K=F", "Micro Russell 2000"), # divergence reference
 ]
 

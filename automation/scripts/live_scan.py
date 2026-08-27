@@ -83,8 +83,12 @@ TICKERS = [
     ("MNQ=F", "Micro Nasdaq"),
     ("MES=F", "Micro S&P"),
     ("M2K=F", "Micro Russell"),
+    ("MGC=F", "Micro Gold"),
     ("BTC-USD", "BTC USD"),
 ]
+
+# B1 战法: 右侧交易，专攻 3 个标的 (MNQ, MGC, BTC)
+B1_TICKERS = {"MNQ=F", "MGC=F", "BTC-USD"}
 
 # Strategy name → (detector_fn, required_args, weight, timeframe)
 STRATEGIES = {
@@ -350,6 +354,11 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
             res = detect_kell_setups(df)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "b1":
+            # B1 战法只跑 MNQ, MGC, BTC (右侧交易专攻 3 个标的)
+            if ticker not in B1_TICKERS:
+                out["present"] = False
+                out["skip"] = f"B1 only runs on {B1_TICKERS}"
+                return out
             from yw_indicators_b1 import detect_b1
             res = detect_b1(df)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0

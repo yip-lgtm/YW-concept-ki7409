@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-27 09:54 HKT",
-  "hkt_timestamp": "2026-08-27T09:54:36.756698+08:00",
+  "generated_at": "2026-08-27 09:57 HKT",
+  "hkt_timestamp": "2026-08-27T09:57:04.112022+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 6,
@@ -480,11 +480,115 @@
       }
     },
     {
-      "id": "b1",
-      "name": "B1 \u6218\u6cd5",
-      "agent": "yw-b1",
+      "id": "b1-mnq",
+      "name": "B1 \u6218\u6cd5 (MNQ)",
+      "agent": "yw-b1-mnq",
       "ticker": "MNQ=F",
-      "weight": 1.0,
+      "weight": 0.4,
+      "optim_date": "2026-08-27",
+      "timeframe": "5min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
+      }
+    },
+    {
+      "id": "b1-mgc",
+      "name": "B1 \u6218\u6cd5 (MGC)",
+      "agent": "yw-b1-mgc",
+      "ticker": "MGC=F",
+      "weight": 0.3,
+      "optim_date": "2026-08-27",
+      "timeframe": "5min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
+      }
+    },
+    {
+      "id": "b1-btc",
+      "name": "B1 \u6218\u6cd5 (BTC)",
+      "agent": "yw-b1-btc",
+      "ticker": "BTC-USD",
+      "weight": 0.3,
       "optim_date": "2026-08-27",
       "timeframe": "5min",
       "r_multiples": [

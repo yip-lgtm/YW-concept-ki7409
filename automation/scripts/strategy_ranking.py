@@ -48,7 +48,9 @@ STRATEGIES = [
     {"id": "stair-pattern", "name": "Stair Pattern", "ticker": "MNQ=F", "type": "yw", "weight": 1.2, "llm_optimized": True, "optim_date": "2026-08-25 v3"},
     {"id": "crt", "name": "CRT", "ticker": "MNQ=F", "type": "yw", "weight": 1.2, "llm_optimized": True, "optim_date": "2026-08-26 v5"},
     {"id": "kell-cycle", "name": "Kell Cycle", "ticker": "MNQ=F", "type": "yw", "weight": 0.6, "llm_optimized": True, "optim_date": "2026-08-26 v4"},
-    {"id": "b1", "name": "B1 战法", "ticker": "MNQ=F", "type": "yw", "weight": 1.0, "llm_optimized": True, "optim_date": "2026-08-27"},
+    {"id": "b1-mnq", "name": "B1 战法 (MNQ)", "ticker": "MNQ=F", "type": "yw", "weight": 0.4, "llm_optimized": True, "optim_date": "2026-08-27"},
+    {"id": "b1-mgc", "name": "B1 战法 (MGC)", "ticker": "MGC=F", "type": "yw", "weight": 0.3, "llm_optimized": True, "optim_date": "2026-08-27"},
+    {"id": "b1-btc", "name": "B1 战法 (BTC)", "ticker": "BTC-USD", "type": "yw", "weight": 0.3, "llm_optimized": True, "optim_date": "2026-08-27"},
 ]
 
 

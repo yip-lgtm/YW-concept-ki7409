@@ -1,8 +1,19 @@
 {
   "date": "2026-08-27",
   "window_days": 4,
-  "timestamp": "20260827_095236",
+  "timestamp": "20260827_095649",
   "strategies": [
+    {
+      "strategy": "3-pushes",
+      "ticker": "MNQ=F",
+      "n_trades": 21,
+      "win_rate": 66.7,
+      "total_R": 6.54,
+      "profit_factor": 1.93,
+      "avg_R": 0.311,
+      "wins": 14,
+      "losses": 7
+    },
     {
       "strategy": "stair-pattern",
       "ticker": "MNQ=F",
@@ -13,6 +24,17 @@
       "avg_R": 0.167,
       "wins": 7,
       "losses": 5
+    },
+    {
+      "strategy": "rsi-div",
+      "ticker": "MNQ=F",
+      "n_trades": 31,
+      "win_rate": 51.6,
+      "total_R": 1.52,
+      "profit_factor": 1.11,
+      "avg_R": 0.049,
+      "wins": 16,
+      "losses": 15
     },
     {
       "strategy": "kell-cycle",
@@ -28,25 +50,16 @@
     {
       "strategy": "50-20-pullback",
       "ticker": "MNQ=F",
-      "n_trades": 51,
-      "win_rate": 43.1,
+      "n_trades": 52,
+      "win_rate": 42.3,
       "total_R": -7.46,
       "profit_factor": 0.74,
-      "avg_R": -0.146,
+      "avg_R": -0.144,
       "wins": 22,
-      "losses": 29
+      "losses": 30
     },
     {
       "strategy": "h-pattern",
-      "error": "insufficient data",
-      "n_trades": 0,
-      "win_rate": 0,
-      "total_R": 0,
-      "profit_factor": 0
-    },
-    {
-      "strategy": "3-pushes",
-      "error": "insufficient data",
       "n_trades": 0,
       "win_rate": 0,
       "total_R": 0,
@@ -74,15 +87,21 @@
       "profit_factor": 0
     },
     {
-      "strategy": "b1",
+      "strategy": "b1-mgc",
       "n_trades": 0,
       "win_rate": 0,
       "total_R": 0,
       "profit_factor": 0
     },
     {
-      "strategy": "rsi-div",
-      "error": "insufficient data",
+      "strategy": "b1-mnq",
+      "n_trades": 0,
+      "win_rate": 0,
+      "total_R": 0,
+      "profit_factor": 0
+    },
+    {
+      "strategy": "b1-btc",
       "n_trades": 0,
       "win_rate": 0,
       "total_R": 0,

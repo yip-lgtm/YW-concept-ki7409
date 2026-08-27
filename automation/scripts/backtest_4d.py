@@ -35,7 +35,9 @@ STRATEGIES = [
     {"id": "crt",             "ticker": "MNQ=F", "fn": None, "module": "yw_indicators_extra", "fn_name": "detect_crt", "needs_4h": True},
     {"id": "kell-cycle",      "ticker": "MNQ=F", "fn": None, "module": "yw_indicators_extra", "fn_name": "detect_kell_setups"},
     {"id": "ocs-btc",         "ticker": "BTC-USD", "fn": None, "module": "ocs_btc_5m",         "fn_name": "compute_signal", "skip": True},
-    {"id": "b1",               "ticker": "MNQ=F",  "fn": None, "module": "yw_indicators_b1",    "fn_name": "detect_b1"},
+    {"id": "b1-mnq",           "ticker": "MNQ=F",  "fn": None, "module": "yw_indicators_b1",    "fn_name": "detect_b1"},
+    {"id": "b1-mgc",           "ticker": "MGC=F",  "fn": None, "module": "yw_indicators_b1",    "fn_name": "detect_b1"},
+    {"id": "b1-btc",           "ticker": "BTC-USD","fn": None, "module": "yw_indicators_b1",    "fn_name": "detect_b1"},
 ]
 
 def get_data(ticker: str, days: int = 4):
