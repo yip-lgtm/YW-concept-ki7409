@@ -114,10 +114,21 @@ MINIMAX_MODEL = "MiniMax-M3"
 
 # Min LLM confidence to fire signal (lowered from 55 → 40 to capture more actionables)
 LLM_MIN_CONF = 40
+LLM_MIN_CONF_BTC = 30  # Lower threshold for BTC (more volatile, fewer A/B signals)
 # Min detector strength to invoke LLM
 DETECTOR_MIN_PRESENT = True
 # Acceptable grades (A=strong, B=actionable, C=marginal but still fire with low conf)
 ACCEPTABLE_GRADES = ("A", "B", "C")
+# BTC-USD: all 10 strategies must scan it 24/7
+BTC_FORCE_MODE = True
+# BTC-only detectors (don't restrict other tickers)
+BTC_PRIORITY_STRATEGIES = ["50-20-pullback", "crt", "kell-cycle", "two-yang", "h-pattern", "rsi-div"]
+# Boost LLM confidence for BTC by +10 (volatility bonus)
+BTC_CONFIDENCE_BOOST = 10
+# Lower detector strength threshold for BTC (more signals through)
+BTC_DETECTOR_MIN_STRENGTH = 40  # vs default 60
+# Force fire BTC signals even at C grade
+BTC_FORCE_FIRE = True
 
 
 def fetch_ticker_data(ticker: str) -> dict:
@@ -133,8 +144,8 @@ def fetch_ticker_data(ticker: str) -> dict:
             out["n_5m"] = len(df_5m)
     except Exception as e:
         out["err_5m"] = f"{type(e).__name__}: {str(e)[:100]}"
-    # 4h bars only for CRT
-    if ticker != "BTC-USD":
+    # 4h bars for CRT (now includes BTC in BTC_FORCE_MODE)
+    if BTC_FORCE_MODE or ticker != "BTC-USD":
         try:
             df_1h = fetch_bars(ticker, days=30, interval_min=60)
             if df_1h is not None and not df_1h.empty:
@@ -534,12 +545,23 @@ def main() -> int:
             reason = grade_data["reason"]
         # Debug log
         print(f"  [grade] {det['strategy']:15s} {det['ticker']:7s} → {grade} conf={conf} | {reason[:60]}")
-        if conf < LLM_MIN_CONF:
-            print(f"    [skip] conf {conf} < {LLM_MIN_CONF}")
+        # BTC amplification: boost conf by +10 (volatility bonus)
+        ticker = det.get("ticker", "")
+        if ticker == "BTC-USD" and BTC_FORCE_MODE:
+            conf = min(100, conf + BTC_CONFIDENCE_BOOST)
+            print(f"    [BTC-amplify] conf boosted to {conf}")
+        # BTC uses lower threshold (more volatile market, fewer A/B signals)
+        min_conf = LLM_MIN_CONF_BTC if ticker == "BTC-USD" else LLM_MIN_CONF
+        if conf < min_conf:
+            print(f"    [skip] conf {conf} < {min_conf} ({'BTC-mode' if ticker == 'BTC-USD' else 'normal'})")
             continue
         if grade not in ACCEPTABLE_GRADES:
-            print(f"    [skip] grade {grade} not in {ACCEPTABLE_GRADES}")
-            continue
+            # BTC force fire: if C grade + BTC, allow it through
+            if BTC_FORCE_FIRE and ticker == "BTC-USD" and grade == "C":
+                print(f"    [BTC-force-fire] C-grade BTC signal accepted")
+            else:
+                print(f"    [skip] grade {grade} not in {ACCEPTABLE_GRADES}")
+                continue
         # Accept: build signal
         signal = {
             "strategy": det["strategy"],
