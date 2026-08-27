@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent rsi-div
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -48,7 +48,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent 50-20-pullback
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -66,7 +66,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent h-pattern
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -84,7 +84,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent 3-pushes
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -102,7 +102,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent two-yang
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -120,7 +120,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent stair-pattern
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -138,7 +138,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent crt
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -156,7 +156,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent kell-cycle
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -174,7 +174,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent b1
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -192,7 +192,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
       - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent ocs-btc
       - uses: stefanzweifel/git-auto-commit-action@v5

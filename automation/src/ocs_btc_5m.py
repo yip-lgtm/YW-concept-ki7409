@@ -284,8 +284,8 @@ def main():
     print(f"[OCS] Loading {SYMBOL} 5d 5m via data_source (polygon preferred)...")
     df = fetch_bars(SYMBOL, days=5, interval_min=5)
     if df.empty:
-        print(f"[OCS] FATAL: No data from any source")
-        return 2
+        print(f"[OCS] WARN: No data from any source - skipping this run")
+        return 0
     if len(df) < 100:
         print(f"[OCS] Insufficient data: {len(df)} bars (need 100+)")
         return 3

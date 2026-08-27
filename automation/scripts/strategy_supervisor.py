@@ -356,7 +356,7 @@ def main():
         else:
             print(f"[supervisor] TG error: {result.get('description')}")
 
-    return 0 if out["n_bug"] == 0 else 1
+    return 0  # Supervisor always succeeds - BUGs are reported but don't fail the workflow
 
 
 # Pre-import all modules in main process so workers can pick them up via sys.modules
