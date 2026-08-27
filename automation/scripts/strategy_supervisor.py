@@ -166,9 +166,10 @@ def check_agent(agent: dict) -> dict:
 
     # Check 5: yw_grader.py STRATEGIES config
     try:
-        sys.path.insert(0, str(REPO / "automation/src"))
-        if "yw_indicators" in sys.modules:
-            del sys.modules["yw_indicators"]
+        # Don't delete sys.modules["yw_indicators"] - it can break other threads
+        if "yw_grader" not in sys.modules:
+            sys.path.insert(0, str(REPO / "automation/src"))
+            import yw_grader
         from yw_grader import STRATEGIES
         # Map agent.id to grader key
         grader_key_map = {
@@ -176,6 +177,8 @@ def check_agent(agent: dict) -> dict:
             "rsi-div": "RSI-Divergence", "50-20-pullback": "50-20-Pullback",
             "stair-pattern": "Stair-Pattern", "crt": "CRT", "kell-cycle": "Kell-Cycle",
             "ocs-btc": "OCS-BTC-5m",
+            "b1": "B1", "b1-3in1": "B1-3in1",
+            "b1-mnq": "B1", "b1-mgc": "B1", "b1-btc": "B1",
         }
         key = grader_key_map.get(agent["id"])
         if key and key in STRATEGIES:
