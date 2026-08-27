@@ -247,4 +247,24 @@ def main():
 
 
 if __name__ == "__main__":
+    import argparse
+    p = argparse.ArgumentParser()
+    p.add_argument("--agent", help="iterate only this agent (id or name)")
+    args = p.parse_args()
+    if args.agent:
+        # Single-agent mode
+        HKT = timezone(timedelta(hours=8))
+        ts = datetime.now(HKT).strftime("%Y%m%d_%H%M%S")
+        agent = next((a for a in AGENTS if a["id"] == args.agent or a["agent"] == args.agent), None)
+        if not agent:
+            print(f"[iterate] Agent '{args.agent}' not found. Available:")
+            for a in AGENTS:
+                print(f"  - {a['id']} ({a['agent']})")
+            sys.exit(1)
+        r = iterate_strategy(agent)
+        # Save
+        out = ITER_DIR / f"iteration_{args.agent}_{ts}.json"
+        out.write_text(json.dumps({"date": datetime.now(HKT).strftime("%Y-%m-%d"), "agent": agent["agent"], "result": r}, indent=2, default=str))
+        print(f"[iterate] Saved: {out}")
+        sys.exit(0)
     sys.exit(main())

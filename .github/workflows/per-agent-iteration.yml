@@ -1,0 +1,199 @@
+name: Per-Agent LLM Iteration — 10 Agents @ 00:00 HKT
+
+# Each of the 10 strategy sub-agents gets its own iteration job
+# All run in parallel at 00:00 HKT (16:00 UTC) weekdays
+# Self-optimizing — auto-applies high-confidence suggestions
+
+on:
+  schedule:
+    - cron: '0 16 * * 1-5'  # 00:00 HKT weekdays
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: 'Run iteration for specific agent (id)'
+        required: false
+
+permissions:
+  contents: write
+
+jobs:
+  # 10 parallel jobs, one per agent
+  iterate-rsi-div:
+    name: '🔁 yw-rsi-div (RSI Divergence)'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent rsi-div
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: {commit_message: 'auto(iter): rsi-div iteration @ '}
+
+  iterate-50-20-pullback:
+    name: '🔁 yw-50-20-pullback'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent 50-20-pullback
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: {commit_message: 'auto(iter): 50-20-pullback iteration @ '}
+
+  iterate-h-pattern:
+    name: '🔁 yw-h-pattern (H-Pattern)'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent h-pattern
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: {commit_message: 'auto(iter): h-pattern iteration @ '}
+
+  iterate-3-pushes:
+    name: '🔁 yw-3-pushes (3-Pushes)'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent 3-pushes
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: {commit_message: 'auto(iter): 3-pushes iteration @ '}
+
+  iterate-two-yang:
+    name: '🔁 yw-two-yang (兩陽夾一陰)'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent two-yang
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: {commit_message: 'auto(iter): two-yang iteration @ '}
+
+  iterate-stair-pattern:
+    name: '🔁 yw-stair-pattern (Stair)'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent stair-pattern
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: {commit_message: 'auto(iter): stair-pattern iteration @ '}
+
+  iterate-crt:
+    name: '🔁 yw-crt (CRT)'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent crt
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: {commit_message: 'auto(iter): crt iteration @ '}
+
+  iterate-kell-cycle:
+    name: '🔁 yw-kell-cycle (Kell Cycle)'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent kell-cycle
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: {commit_message: 'auto(iter): kell-cycle iteration @ '}
+
+  iterate-b1:
+    name: '🔁 yw-b1 (B1 战法)'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent b1
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: {commit_message: 'auto(iter): b1 iteration @ '}
+
+  iterate-ocs-btc:
+    name: '🔁 ocs-btc-5m (OCS BTC 5m)'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11'}
+      - run: python -m venv .venv && .venv/bin/pip install -q -r requirements.txt
+      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent ocs-btc
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with: {commit_message: 'auto(iter): ocs-btc iteration @ '}
