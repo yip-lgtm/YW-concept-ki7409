@@ -1,0 +1,56 @@
+name: Always-On Trigger — Stall Detector
+
+# Last-resort safety net:
+# - Every 5 min, check if unified-pipeline ran in last 10 min
+# - If not, re-trigger it
+# - Sends TG alert if re-trigger happens
+# 
+# This is the 3rd level of defense:
+# 1. unified-pipeline cron (primary)
+# 2. master-self-heal (now disabled to save GHA quota)
+# 3. always-on-trigger (this file - safety net)
+
+on:
+  schedule:
+    - cron: '3,8,13,18,23,28,33,38,43,48,53,58 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+    steps:
+      - name: Check unified-pipeline + re-trigger if stalled
+        run: |
+          THRESHOLD_MIN=10
+          NOW=$(date -u +%s)
+          
+          LAST_SUCCESS=$(curl -s -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/unified-pipeline.yml/runs?status=completed&conclusion=success&per_page=1" \
+            | python3 -c "import sys, json; d=json.load(sys.stdin); r=d.get('workflow_runs', [{}])[0]; print(r.get('created_at', '1970-01-01T00:00:00Z'))" 2>/dev/null || echo "1970-01-01T00:00:00Z")
+          
+          LAST_TS=$(date -u -d "$LAST_SUCCESS" +%s 2>/dev/null || echo 0)
+          DIFF=$(( (NOW - LAST_TS) / 60 ))
+          
+          echo "[unified-pipeline] last success: $LAST_SUCCESS (${DIFF}m ago)"
+          
+          if [ $DIFF -gt $THRESHOLD_MIN ]; then
+            echo "  Stalled (${DIFF}m > ${THRESHOLD_MIN}m) - re-triggering"
+            curl -s -X POST -H "Authorization: token $GH_TOKEN" \
+              "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/unified-pipeline.yml/dispatches" \
+              -d '{"ref": "main"}' -H "Content-Type: application/json" > /dev/null
+            echo "  Triggered unified-pipeline.yml"
+            MSG="🚨 Always-On: unified-pipeline stalled ${DIFF}m. Auto re-triggered."
+            curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
+              -d "chat_id=${TG_CHAT}&text=${MSG}" > /dev/null 2>&1
+          else
+            echo "  Healthy"
+          fi

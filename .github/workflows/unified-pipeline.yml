@@ -16,7 +16,10 @@ name: Unified Pipeline — 24/7 Master
 
 on:
   schedule:
+    # 12 offsets per hour (primary)
     - cron: '0,5,10,15,20,25,30,35,40,45,50,55 * * * *'
+    # Backup offsets (in case GHA drops some)
+    - cron: '2,7,12,17,22,27,32,37,42,47,52,57 * * * *'
   workflow_dispatch: {}
 
 permissions:
