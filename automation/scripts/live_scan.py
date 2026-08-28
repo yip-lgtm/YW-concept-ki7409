@@ -155,6 +155,8 @@ def fetch_ticker_data(ticker: str) -> dict:
                 }).dropna()
                 out["df_4h"] = df_4h
                 out["n_4h"] = len(df_4h)
+                out["df_1h"] = df_1h  # 1h bars for B1 (BBI/KDJ work better on 1h)
+                out["n_1h"] = len(df_1h)
         except Exception as e:
             out["err_4h"] = str(e)[:100]
     return out
@@ -299,6 +301,17 @@ def _normalize_detector(fn_name: str, res: dict) -> tuple:
         if sig_type in ("bullish", "bearish"):
             return True, sig_type, int(res.get("strength", 60))
         return False, "none", 0
+    # B1: {present, direction, strength, bbi, k, d, j, ...}
+    if fn_name == "b1":
+        if res.get("present"):
+            return True, res.get("direction", "long"), int(res.get("strength", 70))
+        return False, "none", 0
+    # B1-3in1: {present, count, best, all_signals}
+    if fn_name == "b1_3in1":
+        if res.get("present") and res.get("best"):
+            best = res["best"]
+            return True, best.get("direction", "long"), int(best.get("strength", 70))
+        return False, "none", 0
     # Unknown custom format — don't fire
     return False, "none", 0
 
@@ -372,9 +385,22 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
                 out["skip"] = f"B1 only runs on {B1_TICKERS}"
                 return out
             from yw_indicators_b1 import detect_b1
+            # B1 works best on 1h bars (BBI/KDJ less noise). Use 1h if available, else 5m.
             # j_threshold=20: relaxed from 5 (5 too strict for 24/7 BTC, 30d walk-fwd: j<5:6, j<15:9, j<30:25)
-            res = detect_b1(df, j_threshold=20)
+            df_b1 = data.get("df_1h") if data.get("df_1h") is not None and len(data.get("df_1h", [])) >= 30 else df
+            res = detect_b1(df_b1, j_threshold=20)
+            out["last_close"] = float(df_b1["Close"].iloc[-1]) if not df_b1.empty else 0
+            if data.get("df_1h") is not None:
+                out["tf_used"] = "1h"
+        elif cfg["fn"] == "b1_3in1":
+            # B1 3合1: scans MNQ + MGC + BTC, picks strongest
+            from yw_indicators_b1_3in1 import detect_b1_3in1
+            # j_threshold=20 (same as B1), 30d for walk-fwd
+            res = detect_b1_3in1(j_threshold=20, days=30)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
+            out["multi_asset"] = True
+            out["b1_3in1_count"] = res.get("count", 0)
+            out["b1_3in1_best"] = res.get("best", {}).get("ticker") if res.get("best") else None
         elif cfg["fn"] == "crt":
             df_4h = data.get("df_4h")
             if df_4h is None or len(df_4h) < 5:
