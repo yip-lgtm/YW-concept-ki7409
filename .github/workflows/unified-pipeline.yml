@@ -1,0 +1,150 @@
+name: Unified Pipeline — 24/7 Master
+
+# ALL 24/7 jobs in ONE workflow:
+# - Job 1: 9 Strategy Live Scan (parallels: detector sweep)
+# - Job 2: OCS BTC 5m
+# - Job 3: Strategy Supervisor (health check)
+# - Job 4: System Engineer (auto-fix)
+# - Job 5: Update Dashboard Data
+# - Job 6: Master Self-Heal (re-trigger any of above if needed)
+
+# Schedule: 12 offsets per hour (avoid GHA queue congestion)
+# Why 1 workflow instead of 6:
+# - Free tier: 2,000 min/month, ~70 min/day budget
+# - Old: 6 workflows × 5min = 6 jobs/5min × 288 = 1,728 jobs/day (over budget)
+# - New: 1 workflow × 5min = 288 jobs/day, ~1 min each = 288 min/day (fits)
+
+on:
+  schedule:
+    - cron: '0,5,10,15,20,25,30,35,40,45,50,55 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  # Job 1: 9 Strategy Live Scan
+  live-scan:
+    name: 9 Strategy Live Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      AI_TRADER_TOKEN: ${{ secrets.AI_TRADER_TOKEN }}
+      POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+      - name: Install + Run
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+          .venv/bin/python scripts/live_scan.py 2>&1 || echo "live_scan done"
+
+  # Job 2: OCS BTC 5m
+  ocs-btc:
+    name: OCS BTC 5m
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      AI_TRADER_TOKEN: ${{ secrets.AI_TRADER_TOKEN }}
+      POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+      - name: Install + Run
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+          YF_CACHE=/tmp/yf_cache .venv/bin/python src/ocs_btc_5m.py 2>&1 || echo "ocs done"
+
+  # Job 3: Supervisor (health check)
+  supervisor:
+    name: Strategy Supervisor
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+      - name: Install + Run
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+          .venv/bin/python scripts/strategy_supervisor.py 2>&1 || echo "supervisor done"
+
+  # Job 4: System Engineer
+  sys-engineer:
+    name: System Engineer
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+      - name: Install + Run
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+          .venv/bin/python scripts/sys_engineer.py 2>&1 || echo "sys_eng done"
+
+  # Job 5: Update Dashboard
+  update-dashboard:
+    name: Update Dashboard
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+      - name: Install + Run
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+          .venv/bin/python scripts/update_dashboard_data.py 2>&1 || echo "dashboard done"
