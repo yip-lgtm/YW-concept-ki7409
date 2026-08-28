@@ -59,13 +59,10 @@ def main():
 *Signal*: {signal.upper()} (vote {vote:+d}/±7, conf {conf:.2f})
 *Direction*: {direction}
 
-*Risk Plan* (1.6× ATR stop, R-multiple targets):
-• *Stop*: ${sl:,.2f} (${sl_dist:,.2f} away)
-• *T1* (1R): ${t1_p:,.2f}
-• *T2* (1.618R): ${t2_p:,.2f}
-• *T3* (2.618R): ${t3_p:,.2f}
-• *T4* (3.618R): ${t4_p:,.2f}
-• *T5* (5.0R): ${t5_p:,.2f}
+*Risk Plan* (1.6× ATR stop, T2 close mode):
+• *Stop*: ${sl:,.2f} (${sl_dist:,.2f} away, close if hit)
+• *T2* (1.618R): ${t2_p:,.2f} 🎯 close target
+• *T3-T5* (runners if T2 missed): ${t3_p:,.2f} / ${t4_p:,.2f} / ${t5_p:,.2f}
 
 ⚠️ Treat T1 as first scale-out, stop is catastrophic invalidation.
 """

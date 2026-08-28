@@ -639,13 +639,10 @@ def main() -> int:
         if sl_tp:
             msg += f"""
 
-<b>Risk Plan</b> (1.6×ATR stop, R-multiple targets):
-• SL: ${sl_tp['sl']:,.2f}
-• T1 (1R): ${sl_tp['t1']:,.2f}
-• T2 (1.618R): ${sl_tp['t2']:,.2f}
-• T3 (2.618R): ${sl_tp['t3']:,.2f}
-• T4 (3.618R): ${sl_tp['t4']:,.2f}
-• T5 (5R): ${sl_tp['t5']:,.2f}"""
+<b>Risk Plan</b> (1.6×ATR stop, T2 close mode):
+• SL: ${sl_tp['sl']:,.2f} (close if hit)
+• T2 (1.618R): ${sl_tp['t2']:,.2f} 🎯 close target
+• T3-T5: ${sl_tp['t3']:,.2f} / ${sl_tp['t4']:,.2f} / ${sl_tp['t5']:,.2f} (runner if T2 missed)"""
         if pos:
             msg += "\n\n✅ Position opened (auto-track)"
         msg += f"""

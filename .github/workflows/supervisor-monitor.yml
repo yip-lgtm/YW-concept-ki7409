@@ -6,8 +6,8 @@ name: 'Strategy Supervisor — 24/7 Health Monitor'
 
 on:
   schedule:
-    # Every 5 min offset by 2 min (so OCS scan finishes first)
-    - cron: '2-59/5 * * * *'
+    # 12 offsets per hour — between live-scan (1,6,11...) and OCS
+    - cron: '2,7,12,17,22,27,32,37,42,47,52,57 * * * *'
   workflow_dispatch:
 
 permissions:
