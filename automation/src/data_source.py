@@ -169,6 +169,54 @@ def fetch_yfinance(symbol: str, period: str = "5d", interval: str = "5m",
     return pd.DataFrame()
 
 
+
+
+def fetch_coingecko(symbol: str = "BTC-USD", days: int = 5) -> pd.DataFrame:
+    """Fallback: fetch OHLCV from CoinGecko free API.
+
+    CoinGecko has 5m granularity (for paid plans), but free tier gives
+    hourly granularity. Useful as a last-resort fallback.
+    """
+    import requests
+    coingecko_ids = {
+        "BTC-USD": "bitcoin",
+        "BTCUSD=X": "bitcoin",
+        "ETH-USD": "ethereum",
+    }
+    cg_id = coingecko_ids.get(symbol, symbol.lower().replace("-usd", ""))
+    
+    try:
+        url = f"https://api.coingecko.com/api/v3/coins/{cg_id}/market_chart"
+        params = {"vs_currency": "usd", "days": min(days, 90)}
+        r = requests.get(url, params=params, timeout=20)
+        r.raise_for_status()
+        data = r.json()
+        
+        prices = data.get("prices", [])
+        volumes = data.get("total_volumes", [])
+        if not prices:
+            return pd.DataFrame()
+        
+        df = pd.DataFrame(prices, columns=["ts", "Close"])
+        df["ts"] = pd.to_datetime(df["ts"], unit="ms", utc=True)
+        df = df.set_index("ts")
+        
+        if volumes:
+            df["Volume"] = [v[1] for v in volumes]
+        else:
+            df["Volume"] = 0
+        
+        # CoinGecko only gives close prices, fill OHLC as close
+        df["Open"] = df["Close"]
+        df["High"] = df["Close"]
+        df["Low"] = df["Close"]
+        
+        return df[["Open", "High", "Low", "Close", "Volume"]]
+    except Exception as e:
+        print(f"[coingecko] {symbol} error: {e}")
+        return pd.DataFrame()
+
+
 def fetch_bars(symbol: str = "BTC-USD", days: int = 5, interval_min: int = 5,
                use_polygon: bool = False, use_cache: bool = True) -> pd.DataFrame:
     """Main entry point: fetch OHLCV bars.
@@ -200,6 +248,17 @@ def fetch_bars(symbol: str = "BTC-USD", days: int = 5, interval_min: int = 5,
             return df
         except Exception as e:
             log.warning(f"[data_source] Polygon also failed: {e}")
+
+    # Last resort: CoinGecko (only BTC/ETH, 1h granularity)
+    if symbol.upper().startswith(("BTC", "ETH")):
+        log.warning(f"[data_source] All sources failed, trying CoinGecko fallback...")
+        try:
+            df = fetch_coingecko(symbol, days=days)
+            if not df.empty:
+                _CACHE[cache_key] = (df, _time.time())
+                return df
+        except Exception as e:
+            log.warning(f"[data_source] CoinGecko also failed: {e}")
     return df
 
 
