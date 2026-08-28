@@ -152,18 +152,19 @@ def check_position_exit(pos, df):
             hit_t5 = low <= t5
 
         # SL priority: if both SL and any TP hit, assume SL
+        # T2_CLOSE_MODE: lock in 1.618R when T2 hit, skip T1 (let winners run)
+        # LL-iter 2026-08-28: avg R -0.333, all T1+SL only. Move close to T2 (1.618R).
         if hit_sl:
             exit_price = sl
             exit_level = "SL"
             R_multiple = -1.0
-        elif hit_t1:
-            exit_price = t1
-            exit_level = "T1"
-            R_multiple = 1.0
         elif hit_t2:
             exit_price = t2
             exit_level = "T2"
             R_multiple = 1.618
+        elif hit_t1:
+            # T1 hit but T2 not yet - let it run, don't close
+            continue
         elif hit_t3:
             exit_price = t3
             exit_level = "T3"
