@@ -4,9 +4,6 @@ name: Pipeline Watchdog — Auto-Trigger if Stalled
 # Self-healing mechanism for GHA scheduling issues
 
 on:
-  schedule:
-    # 12 offsets to avoid GHA queue congestion
-    - cron: '3,8,13,18,23,28,33,38,43,48,53,58 * * * *'
   workflow_dispatch: {}
 
 permissions:

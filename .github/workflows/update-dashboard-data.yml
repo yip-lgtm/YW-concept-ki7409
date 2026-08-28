@@ -5,8 +5,6 @@ name: 'Dashboard Data Auto-Update (hourly)'
 # automatically shows the latest data without redeployment.
 
 on:
-  schedule:
-    - cron: '17 * * * *'  # Every hour at :17 (off-peak from other crons)
   workflow_dispatch:
 
 permissions:
