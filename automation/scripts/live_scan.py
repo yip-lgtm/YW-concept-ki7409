@@ -372,7 +372,8 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
                 out["skip"] = f"B1 only runs on {B1_TICKERS}"
                 return out
             from yw_indicators_b1 import detect_b1
-            res = detect_b1(df)
+            # j_threshold=20: relaxed from 5 (5 too strict for 24/7 BTC, 30d walk-fwd: j<5:6, j<15:9, j<30:25)
+            res = detect_b1(df, j_threshold=20)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "crt":
             df_4h = data.get("df_4h")
