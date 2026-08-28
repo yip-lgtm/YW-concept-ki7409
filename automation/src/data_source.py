@@ -239,13 +239,14 @@ def fetch_bars(symbol: str = "BTC-USD", days: int = 5, interval_min: int = 5,
         _CACHE[cache_key] = (df, _time.time())
         return df
 
-    # Fall back to Polygon if explicitly requested and yfinance fails
-    if use_polygon and os.environ.get("POLYGON_API_KEY"):
+    # Auto-try Polygon if API key is available (regardless of use_polygon flag)
+    if os.environ.get("POLYGON_API_KEY"):
         log.warning("[data_source] yfinance empty, trying Polygon...")
         try:
             df = fetch_polygon(symbol, days=days, interval_min=interval_min)
-            _CACHE[cache_key] = (df, _time.time())
-            return df
+            if not df.empty:
+                _CACHE[cache_key] = (df, _time.time())
+                return df
         except Exception as e:
             log.warning(f"[data_source] Polygon also failed: {e}")
 
