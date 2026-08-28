@@ -54,6 +54,13 @@ jobs:
           .venv/bin/pip install -q -r requirements.txt
           .venv/bin/python scripts/live_scan.py 2>&1 || echo "live_scan done"
 
+      - name: Commit heartbeat + signals
+        run: |
+          git pull --rebase --autostash origin main 2>&1 || echo "pull failed, continuing"
+          git add automation/reports/live_scan/ || true
+          git commit -m "auto(live-scan): 9 strategies $(date -u +%Y-%m-%dT%H:%M) signals=$(jq -r .n_signals automation/reports/live_scan/heartbeat.json 2>/dev/null || echo 0)" --allow-empty || true
+          git push --force-with-lease origin main || echo "push failed"
+
   # Job 2: OCS BTC 5m
   ocs-btc:
     name: OCS BTC 5m
@@ -80,6 +87,13 @@ jobs:
           .venv/bin/pip install -q -r requirements.txt
           YF_CACHE=/tmp/yf_cache .venv/bin/python src/ocs_btc_5m.py 2>&1 || echo "ocs done"
 
+      - name: Commit signal log
+        run: |
+          git pull --rebase --autostash origin main 2>&1 || echo "pull failed, continuing"
+          git add automation/reports/ocs_btc_5m/ || true
+          git commit -m "auto(ocs-btc): signal log $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          git push --force-with-lease origin main || echo "push failed"
+
   # Job 3: Supervisor (health check)
   supervisor:
     name: Strategy Supervisor
@@ -104,6 +118,13 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install -q -r requirements.txt
           .venv/bin/python scripts/strategy_supervisor.py 2>&1 || echo "supervisor done"
+
+      - name: Commit health check
+        run: |
+          git pull --rebase --autostash origin main 2>&1 || echo "pull failed, continuing"
+          git add automation/reports/supervisor/ automation/reports/audit/ 2>/dev/null || true
+          git commit -m "auto(supervisor): health check $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          git push --force-with-lease origin main || echo "push failed"
 
   # Job 4: System Engineer
   sys-engineer:
@@ -130,6 +151,13 @@ jobs:
           .venv/bin/pip install -q -r requirements.txt
           .venv/bin/python scripts/sys_engineer.py 2>&1 || echo "sys_eng done"
 
+      - name: Commit sys-eng report
+        run: |
+          git pull --rebase --autostash origin main 2>&1 || echo "pull failed, continuing"
+          git add automation/reports/sys_engineer/ automation/reports/audit/ 2>/dev/null || true
+          git commit -m "auto(sys-eng): report $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          git push --force-with-lease origin main || echo "push failed"
+
   # Job 5: Update Dashboard
   update-dashboard:
     name: Update Dashboard
@@ -151,3 +179,10 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install -q -r requirements.txt
           .venv/bin/python scripts/update_dashboard_data.py 2>&1 || echo "dashboard done"
+
+      - name: Commit dashboard data
+        run: |
+          git pull --rebase --autostash origin main 2>&1 || echo "pull failed, continuing"
+          git add docs/dashboard-data.json || true
+          git commit -m "auto(dashboard): update data $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          git push --force-with-lease origin main || echo "push failed"
