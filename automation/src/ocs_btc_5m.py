@@ -53,6 +53,8 @@ CONF_MIN = 0.55
 VOTES_NEED = 4
 # BTC force mode: lower vote threshold (KNN often ±2-3 in trending 24/7 crypto, vote±4 too rare)
 BTC_VOTES_NEED = 3
+# BTC force mode: lower conf threshold (24/7 crypto has different KNN distribution)
+BTC_CONF_MIN = 0.40
 # BTC force mode: skip in_chop filter (ATR/price-std comparison is unreliable for 24/7 crypto)
 BTC_SKIP_INCHOP = True
 USE_LORENTZ = True
@@ -265,13 +267,14 @@ def compute_signal(knn_result: pd.Series, features: pd.DataFrame,
     sig = "none"
     direction = None
     # KAMA filter removed - layer_score (RSI/Supertrend/EMA cross) already captures trend
-    # BTC force mode: lower vote threshold to 3 + skip in_chop (24/7 crypto trending)
+    # BTC force mode: lower vote (3) + conf (0.40) + skip in_chop (24/7 crypto trending)
     vote_need = BTC_VOTES_NEED if BTC_SKIP_INCHOP else VOTES_NEED
+    conf_need = BTC_CONF_MIN if BTC_SKIP_INCHOP else CONF_MIN
     chop_ok = (not in_chop) if not BTC_SKIP_INCHOP else True
-    if vote >= vote_need and conf >= CONF_MIN and layer_score > 0 and chop_ok:
+    if vote >= vote_need and conf >= conf_need and layer_score > 0 and chop_ok:
         sig = "buy"
         direction = "long"
-    elif vote <= -vote_need and conf >= CONF_MIN and layer_score < 0 and chop_ok:
+    elif vote <= -vote_need and conf >= conf_need and layer_score < 0 and chop_ok:
         sig = "sell"
         direction = "short"
 
