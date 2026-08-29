@@ -54,7 +54,12 @@ jobs:
           .venv/bin/pip install -q -r requirements.txt
           .venv/bin/python scripts/live_scan.py 2>&1 || echo "live_scan done"
 
-      - name: Commit heartbeat + signals
+      - name: Run position tracker (close positions, update stats)
+        working-directory: automation
+        run: |
+          .venv/bin/python scripts/live_scan_tracker.py 2>&1 | tee /tmp/live_tracker_log.txt || echo "tracker done"
+
+      - name: Commit heartbeat + signals + positions
         run: |
           git config --global user.email "mavis@MiniMax" 2>/dev/null || true
           git config --global user.name "Mavis" 2>/dev/null || true
@@ -64,7 +69,7 @@ jobs:
           git checkout origin/main -- .github/ docs/ automation/src/ automation/scripts/ automation/requirements.txt 2>&1 || echo "checkout failed, continuing"
           # Now our automation/reports/live_scan/ is preserved
           git add automation/reports/live_scan/ || true
-          git commit -m "auto(live-scan): 9 strategies $(date -u +%Y-%m-%dT%H:%M) signals=$(jq -r .n_signals automation/reports/live_scan/heartbeat.json 2>/dev/null || echo 0)" --allow-empty || true
+          git commit -m "auto(live-scan): 9 strategies $(date -u +%Y-%m-%dT%H:%M) signals=$(jq -r .n_signals automation/reports/live_scan/heartbeat.json 2>/dev/null || echo 0) trades=$(jq -r .n_trades automation/reports/live_scan/stats.json 2>/dev/null || echo 0)" --allow-empty || true
           git push --force-with-lease origin main || echo "push failed"
 
   # Job 2: OCS BTC 5m
