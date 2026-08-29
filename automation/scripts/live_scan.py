@@ -87,6 +87,41 @@ TICKERS = [
     ("BTC-USD", "BTC USD"),
 ]
 
+# Market hours filter (skip non-24/7 tickers when market is closed)
+# Futures market: Sun-Fri 6pm-5pm ET (closed Sat)
+# Crypto: 24/7
+def is_market_open(symbol: str) -> bool:
+    """Check if market is open for this symbol (in HKT)."""
+    # Crypto: 24/7
+    if symbol in ("BTC-USD", "BTC=F", "ETH-USD"):
+        return True
+    # For futures: check if it's Saturday
+    # weekday(): Mon=0, Sun=6
+    now_hkt = datetime.now(timezone(timedelta(hours=8)))
+    weekday = now_hkt.weekday()
+    hour = now_hkt.hour
+    # Saturday: closed all day
+    if weekday == 5:  # Saturday
+        return False
+    # Friday after 5am HKT (5pm ET Thursday): closed
+    # Actually Friday is open from Sun-Fri logic - check the day
+    # Friday: open (closes Friday 5pm ET = Saturday 5am HKT)
+    # Sunday: closed until 6am HKT (6pm ET Sunday) - but we treat 6am+ as open
+    if weekday == 6:  # Sunday
+        return hour >= 6
+    # Mon-Thu: open
+    return True
+
+def get_active_tickers() -> list:
+    """Get tickers to scan based on market hours."""
+    active = []
+    for sym, name in TICKERS:
+        if is_market_open(sym):
+            active.append((sym, name))
+        else:
+            print(f"[live_scan] {sym}: market closed, skipping")
+    return active
+
 # B1 战法: 右侧交易，专攻 3 个标的 (MNQ, MGC, BTC)
 B1_TICKERS = {"MNQ=F", "MGC=F", "BTC-USD"}
 
@@ -523,10 +558,14 @@ def main() -> int:
     t_start = time.time()
     ts_now = datetime.now(timezone.utc).isoformat()
     print(f"[live_scan] === {ts_now} ===")
-    # Step 1: Fetch all ticker data in parallel
-    print("[live_scan] Fetching 4 tickers in parallel...")
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        data_futs = {pool.submit(fetch_ticker_data, tk[0]): tk[0] for tk in TICKERS}
+    # Step 1: Get active tickers (filter by market hours)
+    active_tickers = get_active_tickers()
+    if not active_tickers:
+        print("[live_scan] No markets open, skipping")
+        return 0
+    print(f"[live_scan] Fetching {len(active_tickers)} tickers in parallel...")
+    with ThreadPoolExecutor(min(4, len(active_tickers))) as pool:
+        data_futs = {pool.submit(fetch_ticker_data, tk[0]): tk[0] for tk in active_tickers}
         data_map = {}
         for future in data_futs:
             ticker = data_futs[future]
