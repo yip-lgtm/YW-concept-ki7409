@@ -91,25 +91,31 @@ TICKERS = [
 # Futures market: Sun-Fri 6pm-5pm ET (closed Sat)
 # Crypto: 24/7
 def is_market_open(symbol: str) -> bool:
-    """Check if market is open for this symbol (in HKT)."""
+    """Check if market is open for this symbol (in HKT).
+
+    Futures market hours (CME Globex):
+    - Opens: Sunday 6pm ET (EDT) = Monday 6am HKT
+    - Closes: Friday 5pm ET = Saturday 5am HKT
+
+    Schedule in HKT (UTC+8):
+    - Saturday (all day): CLOSED
+    - Sunday (all day): CLOSED
+    - Monday 0-5:59am: CLOSED
+    - Monday 6am - Friday 23:59: OPEN
+    """
     # Crypto: 24/7
     if symbol in ("BTC-USD", "BTC=F", "ETH-USD"):
         return True
-    # For futures: check if it's Saturday
-    # weekday(): Mon=0, Sun=6
+    # For futures: weekend + Mon early morning closed
     now_hkt = datetime.now(timezone(timedelta(hours=8)))
-    weekday = now_hkt.weekday()
+    weekday = now_hkt.weekday()  # 0=Mon, 5=Sat, 6=Sun
     hour = now_hkt.hour
-    # Saturday: closed all day
-    if weekday == 5:  # Saturday
+    if weekday == 5:  # Saturday all day
         return False
-    # Friday after 5am HKT (5pm ET Thursday): closed
-    # Actually Friday is open from Sun-Fri logic - check the day
-    # Friday: open (closes Friday 5pm ET = Saturday 5am HKT)
-    # Sunday: closed until 6am HKT (6pm ET Sunday) - but we treat 6am+ as open
-    if weekday == 6:  # Sunday
-        return hour >= 6
-    # Mon-Thu: open
+    if weekday == 6:  # Sunday all day
+        return False
+    if weekday == 0 and hour < 6:  # Monday before 6am
+        return False
     return True
 
 def get_active_tickers() -> list:
