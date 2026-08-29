@@ -578,11 +578,11 @@ def main() -> int:
         n4 = d.get("n_4h", 0)
         print(f"  {tk}: 5m={n5} 4h={n4}")
     # Step 2: Run 9 detectors × 4 tickers = 36 in parallel
-    print("[live_scan] Running 9 detectors × 4 tickers (36 parallel)...")
+    print("[live_scan] Running detectors on active tickers...")
     detections = []
     with ThreadPoolExecutor(max_workers=12) as pool:
         futs = []
-        for ticker, _ in TICKERS:
+        for ticker, _ in active_tickers:
             data = data_map[ticker]
             for name, cfg in STRATEGIES.items():
                 futs.append(pool.submit(run_detector, name, cfg, ticker, data))
