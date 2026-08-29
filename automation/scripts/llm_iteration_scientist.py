@@ -100,8 +100,17 @@ def load_strategy_data(agent_id: str) -> dict:
                         continue
                     try:
                         s = json.loads(line)
-                        strategy = s.get('strategy', '').lower().replace('-', '').replace('_', '')
-                        if strategy != agent_id.lower().replace('-', '').replace('_', ''):
+                        strategy_raw = s.get('strategy', '').lower()
+                        strategy = strategy_raw.replace('-', '').replace('_', '')
+                        agent_norm = agent_id.lower().replace('-', '').replace('_', '')
+                        # Match if either:
+                        # 1. Exact match after normalization
+                        # 2. Strategy name is contained in agent_id (e.g. "stair" in "stairpattern")
+                        # 3. Agent_id is contained in strategy (e.g. "ocsbtc" in "ocsbtc5m")
+                        if not (strategy == agent_norm 
+                                or strategy in agent_norm 
+                                or agent_norm in strategy
+                                or strategy_raw in agent_id.lower()):
                             continue
                         ts_str = s.get('ts', '')
                         if not ts_str:
