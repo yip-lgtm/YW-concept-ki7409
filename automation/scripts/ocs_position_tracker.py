@@ -256,7 +256,7 @@ def main():
             import requests
             tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
             tg_chat = os.environ.get("TELEGRAM_CHAT_ID", "")
-            if tg_token and tg_chat and new_closes:
+            if tg_token and tg_chat and closed:
                 lines = ["<b>🎯 OCS BTC 5m — Trade Journey Closed</b>\n"]
                 for t in closed:
                     label = "WIN ✅" if t["R_multiple"] > 0 else "LOSS ❌"
