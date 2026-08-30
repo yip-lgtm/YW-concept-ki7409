@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-30 20:58 HKT",
-  "hkt_timestamp": "2026-08-30T20:58:41.005037+08:00",
+  "generated_at": "2026-08-30 21:08 HKT",
+  "hkt_timestamp": "2026-08-30T21:08:49.023169+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 20,
@@ -17,7 +17,7 @@
       "agent": "yw-ocs-btc",
       "ticker": "BTC-USD",
       "weight": 1.0,
-      "optim_date": "\u2014",
+      "optim_date": "—",
       "timeframe": "5min",
       "r_multiples": [
         1,
@@ -69,7 +69,7 @@
       "agent": "yw-h-pattern",
       "ticker": "MNQ=F",
       "weight": 1.2,
-      "optim_date": "\u2014",
+      "optim_date": "—",
       "timeframe": "3min/5min",
       "r_multiples": [
         1,
@@ -121,7 +121,7 @@
       "agent": "yw-3-pushes",
       "ticker": "MNQ=F",
       "weight": 1.0,
-      "optim_date": "\u2014",
+      "optim_date": "—",
       "timeframe": "5min/15min",
       "r_multiples": [
         1,
@@ -169,7 +169,7 @@
     },
     {
       "id": "two-yang",
-      "name": "\u5169\u967d\u593e\u4e00\u9670",
+      "name": "兩陽夾一陰",
       "agent": "yw-two-yang",
       "ticker": "MNQ=F",
       "weight": 0.3,
@@ -216,7 +216,7 @@
       "iteration": {
         "grade": "C",
         "confidence": 25,
-        "reason": "0 trades\u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u672a\u80fd\u9a57\u8b49edge\uff1b\u6307\u6a19\u7d44\u5408\u53ef\u80fd\u904e\u56b4\u6216\u8a0a\u865f\u672a\u89f8\u767c"
+        "reason": "0 trades無統計意義，未能驗證edge；指標組合可能過嚴或訊號未觸發"
       }
     },
     {
@@ -277,7 +277,7 @@
       "agent": "yw-50-20-pullback",
       "ticker": "MNQ=F",
       "weight": 1.0,
-      "optim_date": "\u2014",
+      "optim_date": "—",
       "timeframe": "5min/15min/60min",
       "r_multiples": [
         1,
@@ -320,7 +320,7 @@
       "iteration": {
         "grade": "D",
         "confidence": 35,
-        "reason": "\u96f6\u4ea4\u6613\u8868\u793a\u689d\u4ef6\u904e\u56b4\u6216\u6642\u6846\u4e0d\u5339\u914d\uff0c\u9700\u653e\u5bec\u9032\u5834\u908f\u8f2f"
+        "reason": "零交易表示條件過嚴或時框不匹配，需放寬進場邏輯"
       }
     },
     {
@@ -372,7 +372,7 @@
       "iteration": {
         "grade": "D",
         "confidence": 25,
-        "reason": "0 trades\u4fe1\u865f\u672a\u89f8\u767c\uff0c\u7d14step_pattern\u592a\u55ae\u4e00\uff0c\u7f3a\u78ba\u8a8d\u6307\u6a19\u540c\u591a\u6642\u6846\u5171\u632f"
+        "reason": "0 trades信號未觸發，純step_pattern太單一，缺確認指標同多時框共振"
       }
     },
     {
@@ -476,12 +476,12 @@
       "iteration": {
         "grade": "D",
         "confidence": 25,
-        "reason": "0 trades\u96f6\u6a23\u672c\uff0c\u7121\u6cd5\u9a57\u8b49edge\uff1b5min\u5c0dcycle\u592a\u77ed\uff0c\u8a0a\u865f\u672a\u89f8\u767c"
+        "reason": "0 trades零樣本，無法驗證edge；5min對cycle太短，訊號未觸發"
       }
     },
     {
       "id": "b1-mnq",
-      "name": "B1 \u6218\u6cd5 (MNQ)",
+      "name": "B1 战法 (MNQ)",
       "agent": "yw-b1-mnq",
       "ticker": "MNQ=F",
       "weight": 0.4,
@@ -533,7 +533,7 @@
     },
     {
       "id": "b1-mgc",
-      "name": "B1 \u6218\u6cd5 (MGC)",
+      "name": "B1 战法 (MGC)",
       "agent": "yw-b1-mgc",
       "ticker": "MGC=F",
       "weight": 0.3,
@@ -585,7 +585,7 @@
     },
     {
       "id": "b1-btc",
-      "name": "B1 \u6218\u6cd5 (BTC)",
+      "name": "B1 战法 (BTC)",
       "agent": "yw-b1-btc",
       "ticker": "BTC-USD",
       "weight": 0.3,
@@ -637,7 +637,7 @@
     },
     {
       "id": "b1-3in1",
-      "name": "B1 \u6218\u6cd5 3\u54081 (MNQ+MGC+BTC)",
+      "name": "B1 战法 3合1 (MNQ+MGC+BTC)",
       "agent": "yw-b1-3in1",
       "ticker": "MNQ=F",
       "weight": 1.0,
@@ -687,5 +687,113 @@
         "reason": ""
       }
     }
-  ]
+  ],
+  "ranking_24h": [
+    {
+      "rank": 1,
+      "strategy": "CRT",
+      "n_trades": 11,
+      "n_wins": 9,
+      "n_losses": 2,
+      "win_rate": 81.8,
+      "total_R": 12.56,
+      "avg_R": 1.142,
+      "total_pnl_usd": 1113.05
+    },
+    {
+      "rank": 2,
+      "strategy": "50-20-Pullback",
+      "n_trades": 24,
+      "n_wins": 13,
+      "n_losses": 11,
+      "win_rate": 54.2,
+      "total_R": 10.03,
+      "avg_R": 0.418,
+      "total_pnl_usd": 972.74
+    },
+    {
+      "rank": 3,
+      "strategy": "Two-Yang",
+      "n_trades": 10,
+      "n_wins": 6,
+      "n_losses": 4,
+      "win_rate": 60.0,
+      "total_R": 5.71,
+      "avg_R": 0.571,
+      "total_pnl_usd": 546.47
+    },
+    {
+      "rank": 4,
+      "strategy": "RSI-Div",
+      "n_trades": 4,
+      "n_wins": 3,
+      "n_losses": 1,
+      "win_rate": 75.0,
+      "total_R": 3.85,
+      "avg_R": 0.964,
+      "total_pnl_usd": 330.18
+    },
+    {
+      "rank": 5,
+      "strategy": "Kell-Cycle",
+      "n_trades": 4,
+      "n_wins": 3,
+      "n_losses": 1,
+      "win_rate": 75.0,
+      "total_R": 3.85,
+      "avg_R": 0.964,
+      "total_pnl_usd": 456.38
+    },
+    {
+      "rank": 6,
+      "strategy": "H-Pattern",
+      "n_trades": 5,
+      "n_wins": 2,
+      "n_losses": 3,
+      "win_rate": 40.0,
+      "total_R": 0.24,
+      "avg_R": 0.047,
+      "total_pnl_usd": -1.67
+    },
+    {
+      "rank": 7,
+      "strategy": "Stair",
+      "n_trades": 2,
+      "n_wins": 0,
+      "n_losses": 2,
+      "win_rate": 0.0,
+      "total_R": -2.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -152.04
+    },
+    {
+      "rank": 8,
+      "strategy": "B1-3in1",
+      "n_trades": 2,
+      "n_wins": 0,
+      "n_losses": 2,
+      "win_rate": 0.0,
+      "total_R": -2.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": 178.91
+    },
+    {
+      "rank": 9,
+      "strategy": "3-Pushes",
+      "n_trades": 5,
+      "n_wins": 1,
+      "n_losses": 4,
+      "win_rate": 20.0,
+      "total_R": -2.38,
+      "avg_R": -0.476,
+      "total_pnl_usd": -282.05
+    }
+  ],
+  "ranking_24h_aggregate": {
+    "n_trades": 67,
+    "n_wins": 37,
+    "win_rate": 55.2,
+    "total_R": 29.87,
+    "total_pnl_usd": 3161.97
+  }
 }
