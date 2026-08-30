@@ -1,6 +1,6 @@
 //+------------------------------------------------------------------+
 //|                                          CRT_BTC_EA.mq5          |
-//|                                          Apex Bootcamp v1.03     |
+//|                                          Apex Bootcamp v1.04     |
 //|                                          Simplified, no classes  |
 //+------------------------------------------------------------------+
 #property copyright "Apex Bootcamp"
@@ -68,11 +68,11 @@ int OnInit()
       return(INIT_FAILED);
    }
    
-   Print("CRT BTC EA v1.03 started on ", _Symbol);
+   Print("CRT BTC EA v1.04 started on ", _Symbol);
    Print("Risk/trade: $", DoubleToString(RiskUSD, 2));
    Print("T2 close: ", UseT2Close ? "YES (1.618R)" : "NO");
    
-   if(EnableAlerts) Alert("CRT BTC EA v1.03 started on ", _Symbol);
+   if(EnableAlerts) Alert("CRT BTC EA v1.04 started on ", _Symbol);
    
    return(INIT_SUCCEEDED);
 }
@@ -249,7 +249,7 @@ void OpenCRTTrade(int direction, double entryPrice, double crtHigh, double crtLo
    req.action = TRADE_ACTION_DEAL;
    req.symbol = _Symbol;
    req.volume = lots;
-   req.type = cmd;
+   req.type = (ENUM_ORDER_TYPE)cmd;
    req.price = price;
    req.sl = sl;
    req.tp = t2;
