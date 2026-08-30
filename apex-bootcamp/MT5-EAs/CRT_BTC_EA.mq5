@@ -1,6 +1,6 @@
 //+------------------------------------------------------------------+
 //|                                          CRT_BTC_EA.mq5          |
-//|                                          Apex Bootcamp v1.02     |
+//|                                          Apex Bootcamp v1.03     |
 //|                                          Simplified, no classes  |
 //+------------------------------------------------------------------+
 #property copyright "Apex Bootcamp"
@@ -68,11 +68,11 @@ int OnInit()
       return(INIT_FAILED);
    }
    
-   Print("CRT BTC EA v1.02 started on ", _Symbol);
+   Print("CRT BTC EA v1.03 started on ", _Symbol);
    Print("Risk/trade: $", DoubleToString(RiskUSD, 2));
    Print("T2 close: ", UseT2Close ? "YES (1.618R)" : "NO");
    
-   if(EnableAlerts) Alert("CRT BTC EA v1.02 started on ", _Symbol);
+   if(EnableAlerts) Alert("CRT BTC EA v1.03 started on ", _Symbol);
    
    return(INIT_SUCCEEDED);
 }
@@ -234,7 +234,7 @@ void OpenCRTTrade(int direction, double entryPrice, double crtHigh, double crtLo
       t2 = entryPrice - risk * T2_R_Mult;
    }
    
-   // Send order
+   // Send order using MqlTradeRequest (modern MQL5)
    int slippage = 30;
    double ask = SymbolInfoDouble(_Symbol, SYMBOL_ASK);
    double bid = SymbolInfoDouble(_Symbol, SYMBOL_BID);
@@ -242,7 +242,23 @@ void OpenCRTTrade(int direction, double entryPrice, double crtHigh, double crtLo
    int cmd = (direction > 0) ? ORDER_TYPE_BUY : ORDER_TYPE_SELL;
    string comment = StringFormat("CRT%s T2=%.2f", direction > 0 ? "L" : "S", t2);
    
-   ulong ticket = OrderSend(_Symbol, cmd, lots, price, slippage, sl, t2, comment, 0, 0, clrNONE);
+   MqlTradeRequest req;
+   MqlTradeResult res;
+   ZeroMemory(req);
+   ZeroMemory(res);
+   req.action = TRADE_ACTION_DEAL;
+   req.symbol = _Symbol;
+   req.volume = lots;
+   req.type = cmd;
+   req.price = price;
+   req.sl = sl;
+   req.tp = t2;
+   req.deviation = slippage;
+   req.comment = comment;
+   req.magic = 0;
+   
+   bool sent = OrderSend(req, res);
+   ulong ticket = res.order;
    if(ticket > 0)
    {
       int idx = ArraySize(g_tickets);
@@ -310,7 +326,7 @@ void ManageOpenPositions()
          continue;
       }
       
-      double currentPrice = PositionGetDouble(POS_PRICE_CURRENT);
+      double currentPrice = PositionGetDouble(POSITION_PRICE_CURRENT);
       
       if(g_directions[i] > 0)
       {
@@ -338,7 +354,7 @@ void UpdateStats(int idx)
 {
    if(PositionSelectByTicket(g_tickets[idx]))
    {
-      double profit = PositionGetDouble(POS_PROFIT) + PositionGetDouble(POS_SWAP);
+      double profit = PositionGetDouble(POSITION_PROFIT) + PositionGetDouble(POSITION_SWAP);
       double slDistance = MathAbs(g_entries[idx] - g_sls[idx]);
       double rMult = 0;
       if(slDistance > 0 && g_sizes[idx] > 0)
@@ -391,7 +407,7 @@ int CountOpenPositions()
       ulong ticket = PositionGetTicket(i);
       if(ticket > 0 && PositionSelectByTicket(ticket))
       {
-         if(PositionGetString(POS_SYMBOL) == _Symbol) count++;
+         if(PositionGetString(POSITION_SYMBOL) == _Symbol) count++;
       }
    }
    return count;
