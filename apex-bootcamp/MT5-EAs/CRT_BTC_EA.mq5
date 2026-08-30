@@ -46,7 +46,7 @@ double  g_sls[];
 double  g_t1s[];
 double  g_t2s[];
 double  g_sizes[];
-int     g_directions[];   // +1 long, -1 short
+int     g_directions[];
 bool    g_t1Hit[];
 bool    g_closed[];
 
@@ -93,7 +93,7 @@ void OnDeinit(const int reason)
 void OnTick()
 {
    // New bar detection
-   datetime currentBarTime = iTime(_Symbol, PERIOD_M5, 0);
+   datetime currentBarTime = iTime(_Symbol, PERIOD_M5, 1);
    bool isNewBar = (currentBarTime != g_lastBarTime);
    if(isNewBar) g_lastBarTime = currentBarTime;
    
@@ -284,7 +284,7 @@ void OpenCRTTrade(int direction, double entryPrice, double crtHigh, double crtLo
    else
    {
       int err = GetLastError();
-      Print("OrderSend FAILED err=", err, " ", ErrorDescription(err));
+      Print("OrderSend FAILED err=", err);
    }
 }
 
