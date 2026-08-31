@@ -147,11 +147,18 @@ def load_strategy_data(agent_id: str) -> dict:
                         continue
                     try:
                         t = json.loads(line)
-                        strategy = t.get('strategy', '').lower().replace('-', '').replace('_', '')
-                        if strategy != agent_id.lower().replace('-', '').replace('_', ''):
+                        strategy_raw = t.get('strategy', '').lower()
+                        strategy = strategy_raw.replace('-', '').replace('_', '')
+                        agent_norm = agent_id.lower().replace('-', '').replace('_', '')
+                        if not (strategy == agent_norm 
+                                or strategy in agent_norm 
+                                or agent_norm in strategy
+                                or strategy_raw in agent_id.lower()):
                             continue
                         data["n_trades"] += 1
-                        r_val = t.get('R', 0)
+                        # Get R value - check both "R" and "R_multiple" keys for compatibility
+                        r_val = t.get('R_multiple', t.get('R', 0))
+                        if r_val is None: r_val = 0
                         if r_val > 0:
                             data["n_wins"] += 1
                         else:
