@@ -135,7 +135,14 @@ def check_latest_ranking() -> dict:
         if rank_files:
             latest = rank_files[0]
             state["latest_file"] = latest.name
-            state["latest_date"] = latest.stem.replace("ranking_", "")
+            # Extract date from "ranking_today_2026-08-25" or "ranking_2026-08-25"
+            stem = latest.stem.replace("ranking_", "")
+            date_part = stem.split("_")[-1] if "_" in stem else stem
+            try:
+                datetime.strptime(date_part, "%Y-%m-%d")
+                state["latest_date"] = date_part
+            except ValueError:
+                state["latest_date"] = None
         else:
             state["issues"].append("no ranking files")
     except Exception as e:

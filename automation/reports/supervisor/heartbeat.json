@@ -1,143 +1,75 @@
 {
-  "timestamp": "2026-08-25T08:39:58.529362+00:00",
+  "timestamp": "2026-08-31T10:14:03.732485+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
     "agent": "ocs-btc-5m",
     "issues": [
-      "no /tmp/ocs_btc/latest.json"
-    ],
-    "n_open": 0,
-    "n_trades_total": 1,
-    "win_rate": 100.0,
-    "profit_factor": 1000000000.0,
-    "last_signal": null
+      "read error: Expecting property name enclosed in double quotes: line 5 column 1 (char 78)"
+    ]
   },
   "ranking": {
     "component": "strategy-ranking",
     "issues": [],
-    "latest_file": "ranking_2026-08-25.md",
+    "latest_file": "ranking_today_2026-08-25.md",
     "latest_date": "2026-08-25"
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-08-25",
+    "today": "2026-08-31",
     "ran_today": false,
-    "success_today": false
+    "success_today": false,
+    "issues": [
+      "api error"
+    ]
   },
   "workflows": [
     {
       "workflow": "yw-daily.yml",
-      "runs": [
-        {
-          "id": 32751281121,
-          "conclusion": "success",
-          "created_at": "2026-08-24T16:30:57Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 32750771739,
-          "conclusion": "failure",
-          "created_at": "2026-08-24T16:25:44Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 32734111774,
-          "conclusion": "failure",
-          "created_at": "2026-08-24T13:40:51Z",
-          "event": "schedule"
-        }
-      ],
-      "issues": []
+      "runs": [],
+      "issues": [
+        "api error"
+      ]
     },
     {
       "workflow": "yw-publish-signal.yml",
-      "runs": [
-        {
-          "id": 32737138256,
-          "conclusion": "success",
-          "created_at": "2026-08-24T14:11:10Z",
-          "event": "schedule"
-        },
-        {
-          "id": 32522149454,
-          "conclusion": "success",
-          "created_at": "2026-08-21T20:09:44Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 32521972265,
-          "conclusion": "failure",
-          "created_at": "2026-08-21T20:07:41Z",
-          "event": "workflow_dispatch"
-        }
-      ],
-      "issues": []
+      "runs": [],
+      "issues": [
+        "api error"
+      ]
     },
     {
       "workflow": "ocs-btc-5m.yml",
-      "runs": [
-        {
-          "id": 32823908947,
-          "conclusion": "success",
-          "created_at": "2026-08-25T07:54:38Z",
-          "event": "schedule"
-        },
-        {
-          "id": 32819775795,
-          "conclusion": "success",
-          "created_at": "2026-08-25T07:03:49Z",
-          "event": "schedule"
-        },
-        {
-          "id": 32815207122,
-          "conclusion": "success",
-          "created_at": "2026-08-25T06:01:52Z",
-          "event": "schedule"
-        }
-      ],
-      "issues": []
+      "runs": [],
+      "issues": [
+        "api error"
+      ]
     },
     {
       "workflow": "strategy-ranking.yml",
-      "runs": [
-        {
-          "id": 32824651516,
-          "conclusion": "failure",
-          "created_at": "2026-08-25T08:03:25Z",
-          "event": "push"
-        },
-        {
-          "id": 32823255341,
-          "conclusion": "failure",
-          "created_at": "2026-08-25T07:46:44Z",
-          "event": "push"
-        },
-        {
-          "id": 32823227675,
-          "conclusion": "failure",
-          "created_at": "2026-08-25T07:46:24Z",
-          "event": "push"
-        }
-      ],
-      "issues": []
+      "runs": [],
+      "issues": [
+        "api error"
+      ]
     },
     {
       "workflow": "strategy-reward.yml",
-      "runs": [
-        {
-          "id": 32751718444,
-          "conclusion": "success",
-          "created_at": "2026-08-24T16:35:34Z",
-          "event": "workflow_dispatch"
-        }
-      ],
-      "issues": []
+      "runs": [],
+      "issues": [
+        "api error"
+      ]
     }
   ],
   "health": {
-    "issues": [],
-    "status": "ok",
-    "n_issues": 0
+    "issues": [
+      "yw-daily.yml: api error",
+      "yw-publish-signal.yml: api error",
+      "ocs-btc-5m.yml: api error",
+      "strategy-ranking.yml: api error",
+      "strategy-reward.yml: api error",
+      "ranking stale: 6 days old"
+    ],
+    "status": "critical",
+    "n_issues": 6
   }
 }
