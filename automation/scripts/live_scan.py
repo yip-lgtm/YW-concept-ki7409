@@ -541,6 +541,28 @@ def send_telegram(text: str) -> int:
         return 0
 
 
+def send_telegram_photo(photo_path: str, caption: str = "") -> int:
+    """Send a photo to TG with optional caption."""
+    if not TG_TOKEN or not TG_CHAT:
+        return 0
+    from pathlib import Path
+    p = Path(photo_path)
+    if not p.exists():
+        return 0
+    try:
+        with open(p, "rb") as f:
+            r = requests.post(
+                f"https://api.telegram.org/bot{TG_TOKEN}/sendPhoto",
+                data={"chat_id": TG_CHAT, "caption": caption[:1024]},
+                files={"photo": (p.name, f, "image/png")},
+                timeout=30,
+            )
+        return r.status_code
+    except Exception as e:
+        print(f"  [TG photo] Error: {e}")
+        return 0
+
+
 def publish_ai_trader(signal: dict) -> int:
     """Publish signal to AI-Trader. Returns HTTP code."""
     if not AI_TOKEN:
@@ -726,7 +748,10 @@ def main() -> int:
         chart_path = generate_signal_chart(sig)
         if chart_path:
             sig["chart_path"] = chart_path
-            print(f"  ✓ {sig['strategy']} {sig['ticker']} [{sig['grade']}] TG={tg_code} AI={ai_code} CHART={chart_path}")
+            # Send chart as photo to TG
+            chart_caption = f"📊 {sig['strategy']} [{sig['grade']}] {sig['ticker']} {sig['direction']} | Entry ${sig.get('last_close', 0):,.2f}"
+            photo_code = send_telegram_photo(chart_path, chart_caption)
+            print(f"  ✓ {sig['strategy']} {sig['ticker']} [{sig['grade']}] TG={tg_code} AI={ai_code} CHART={chart_path} PHOTO={photo_code}")
         else:
             print(f"  ✓ {sig['strategy']} {sig['ticker']} [{sig['grade']}] TG={tg_code} AI={ai_code}")
     # Step 5: Heartbeat
