@@ -312,6 +312,27 @@ SUGGESTED_PARAMS: NONE
         return {"grade": "?", "confidence": 0, "diagnosis": f"err: {str(e)[:80]}", "suggested_params": {}, "auto_apply": False}
 
 
+def rule_based_analysis(agent: dict, data: dict) -> dict:
+    """Rule-based fallback when LLM API fails."""
+    n_trades = data.get("n_trades", 0)
+    n_signals = data.get("n_signals_7d", 0)
+    wr = data.get("win_rate", 0)
+    pf = data.get("profit_factor", 0)
+    total_r = data.get("total_R", 0)
+    
+    if n_trades == 0 and n_signals == 0:
+        return {"grade": "D", "confidence": 0, "diagnosis": "INSUFFICIENT DATA", "reason": "Not firing", "suggested_params": {}, "auto_apply": False}
+    if n_trades == 0 and n_signals > 0:
+        return {"grade": "D", "confidence": 30, "diagnosis": f"{n_signals} sigs, 0 trades - low conversion", "reason": "Check LLM filter", "suggested_params": {}, "auto_apply": False}
+    if pf >= 1.2 and wr >= 50:
+        return {"grade": "A", "confidence": 75, "diagnosis": f"Strong: PF={pf:.2f} WR={wr:.1f}% R={total_r:+.1f}", "reason": "Maintain params", "suggested_params": {}, "auto_apply": False}
+    if pf >= 1.0:
+        return {"grade": "B", "confidence": 65, "diagnosis": f"Decent: PF={pf:.2f} WR={wr:.1f}% R={total_r:+.1f}", "reason": "Could improve", "suggested_params": {}, "auto_apply": False}
+    if pf >= 0.8:
+        return {"grade": "C", "confidence": 50, "diagnosis": f"Marginal: PF={pf:.2f} WR={wr:.1f}% R={total_r:+.1f}", "reason": "Needs tuning", "suggested_params": {}, "auto_apply": False}
+    return {"grade": "D", "confidence": 0, "diagnosis": f"Underperf: PF={pf:.2f} WR={wr:.1f}% R={total_r:+.1f}", "reason": "Consider pause", "suggested_params": {}, "auto_apply": False}
+
+
 def iterate_agent(agent: dict) -> dict:
     """Full iteration workflow for one agent."""
     print(f"\n  [scientist] === {agent['agent']} ===")
@@ -319,6 +340,19 @@ def iterate_agent(agent: dict) -> dict:
     print(f"    Loaded: {data['n_signals_7d']} signals, {data['n_trades']} trades, PF={data['profit_factor']}")
     
     result = call_llm_scientist(agent, data)
+    
+    # Fallback to rule-based if LLM failed
+    if result.get("grade") == "?" and result.get("confidence") == 0:
+        fb = rule_based_analysis(agent, data)
+        result = {
+            "grade": fb["grade"],
+            "confidence": fb["confidence"],
+            "diagnosis": f"[Rule-based - LLM unavailable] {fb['diagnosis']}",
+            "reason": fb["reason"],
+            "suggested_params": fb.get("suggested_params", {}),
+            "auto_apply": False,  # Never auto-apply from fallback
+        }
+        print(f"    [FALLBACK] {result['grade']} conf={result['confidence']}")
     result["agent"] = agent["agent"]
     result["agent_id"] = agent["id"]
     result["n_signals_7d"] = data["n_signals_7d"]
