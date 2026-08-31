@@ -56,6 +56,21 @@ STRATEGY_AGENTS = [
     "ocs-btc-5m",
 ]
 
+# 4 Powers of Separation (mutual oversight)
+POWERS_OF_SEPARATION = [
+    "supervisor",     # Power 1: 24/7 health check
+    "sys_engineer",   # Power 2: bug fixes
+    "llm_scientist",  # Power 3: strategy grade + auto-apply
+    "tech_analyst",   # Power 4: chart + entry plan
+]
+
+POWER_STATE_DIRS = {
+    "supervisor":    "reports/supervisor/last_check.json",
+    "sys_engineer":  "reports/sys_engineer/latest.json",
+    "llm_scientist": "reports/llm_iteration/latest.json",
+    "tech_analyst":  "reports/tech_analyst/last_run.json",
+}
+
 WORKFLOWS_TO_CHECK = [
     "yw-daily.yml",
     "yw-publish-signal.yml",
@@ -226,6 +241,36 @@ def build_health_report(ocs, ranking, workflows, yw_daily) -> dict:
     }
 
 
+def check_powers_of_separation() -> list:
+    """Check health of all 4 powers. Each power has its own state file.
+    
+    Returns list of alerts if any power is stale (>30 min without update).
+    """
+    alerts = []
+    now = datetime.now(timezone.utc)
+    for power, rel_path in POWER_STATE_DIRS.items():
+        state_file = REPO / "automation" / rel_path
+        if not state_file.exists():
+            alerts.append({"power": power, "issue": f"state file missing: {rel_path}"})
+            continue
+        try:
+            with open(state_file) as f:
+                state = json.load(f)
+            ts_str = state.get("ts") or state.get("updated_at")
+            if not ts_str:
+                alerts.append({"power": power, "issue": "no ts in state"})
+                continue
+            ts = datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+            if ts.tzinfo is None:
+                ts = ts.replace(tzinfo=timezone.utc)
+            age_min = (now - ts).total_seconds() / 60
+            if age_min > 30:
+                alerts.append({"power": power, "issue": f"stale {age_min:.0f}min"})
+        except Exception as e:
+            alerts.append({"power": power, "issue": f"parse error: {e}"})
+    return alerts
+
+
 def main() -> int:
     print(f"[supervisor] === {datetime.now(timezone.utc).isoformat()} ===")
     # Step 1: OCS state
@@ -262,6 +307,16 @@ def main() -> int:
     }
     HEARTBEAT_FILE.write_text(json.dumps(heartbeat, indent=2, default=str))
     print(f"[supervisor] ✓ Heartbeat saved: {HEARTBEAT_FILE}")
+    
+    # Step 6b: 4 Powers of Separation health check
+    power_alerts = check_powers_of_separation()
+    if power_alerts:
+        print(f"[supervisor] ⚠️ Power issues: {len(power_alerts)}")
+        for pa in power_alerts:
+            print(f"  - {pa['power']}: {pa['issue']}")
+    else:
+        print(f"[supervisor] ✓ All 4 powers healthy")
+    
     # Step 7: Alert if issues
     if health["issues"]:
         # Dedupe: only alert if not same as last alert
@@ -291,6 +346,10 @@ def main() -> int:
             msg += f"Issues: {health['n_issues']}\n\n"
             for iss in health["issues"][:8]:
                 msg += f"• {iss}\n"
+            if power_alerts:
+                msg += f"\n🏛️ 4-Power Health:\n"
+                for pa in power_alerts:
+                    msg += f"  ⚠️ {pa['power']}: {pa['issue']}\n"
             code = send_tg(msg)
             print(f"[supervisor] Alert sent: HTTP {code}")
         else:
