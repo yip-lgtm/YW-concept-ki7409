@@ -173,6 +173,26 @@ def send_telegram_photo(photo_path: str, caption: str) -> bool:
         return False
 
 
+def load_last_coverage() -> float:
+    """Load last reported coverage % for de-dup."""
+    f_path = COVERAGE_FILE
+    if not f_path.exists():
+        return 100.0
+    try:
+        with open(f_path) as f:
+            return json.load(f).get("pct", 100.0)
+    except Exception:
+        return 100.0
+
+
+def save_last_coverage(pct: float):
+    """Save current coverage % (de-dup persistence)."""
+    try:
+        COVERAGE_FILE.write_text(json.dumps({"pct": pct, "ts": datetime.now(HKT).isoformat()}, indent=2))
+    except Exception:
+        pass
+
+
 def main():
     print(f"[tech-analyst] === @ {datetime.now(HKT).strftime('%Y-%m-%d %H:%M:%S HKT')} ===")
     

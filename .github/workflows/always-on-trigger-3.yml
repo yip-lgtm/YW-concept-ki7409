@@ -18,18 +18,28 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 1
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.APEX_PAT }}
     steps:
       - name: Check + re-trigger
         run: |
           THRESHOLD_MIN=8
           NOW=$(date -u +%s)
           
-          LAST_SUCCESS=$(curl -s -H "Authorization: token $GH_TOKEN" \
-            "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/unified-pipeline.yml/runs?status=completed&conclusion=success&per_page=1" \
-            | python3 -c "import sys, json; d=json.load(sys.stdin); r=d.get('workflow_runs', [{}])[0]; print(r.get('created_at', '1970-01-01T00:00:00Z'))" 2>/dev/null || echo "1970-01-01T00:00:00Z")
+          # Check any status (not just success) to avoid 1970 fallback bug
+          LAST_RUN=$(curl -s -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/unified-pipeline.yml/runs?per_page=1" \
+            | python3 -c "import sys, json; d=json.load(sys.stdin); r=d.get('workflow_runs', []); print(r[0].get('created_at', '') if r else '')" 2>/dev/null || echo "")
           
-          LAST_TS=$(date -u -d "$LAST_SUCCESS" +%s 2>/dev/null || echo 0)
+          if [ -z "$LAST_RUN" ]; then
+            echo "No runs found - skipping (API may be down)"
+            exit 0
+          fi
+          
+          LAST_TS=$(date -u -d "$LAST_RUN" +%s 2>/dev/null || echo 0)
+          if [ "$LAST_TS" = "0" ]; then
+            echo "Invalid date - skipping"
+            exit 0
+          fi
           DIFF=$(( (NOW - LAST_TS) / 60 ))
           
           echo "[always-on-3] last: ${DIFF}m ago"

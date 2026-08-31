@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 4
     env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.APEX_PAT }}
       TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
     steps:
@@ -29,14 +29,24 @@ jobs:
           STALLED_LIST=""
           
           for WF in "live-scan.yml" "ocs-btc-5m.yml" "supervisor-monitor.yml" "sys-engineer.yml" "update-dashboard-data.yml"; do
-            LAST_SUCCESS=$(curl -s -H "Authorization: token $GH_TOKEN" \
-              "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/$WF/runs?status=completed&conclusion=success&per_page=1" \
-              | python3 -c "import sys, json; d=json.load(sys.stdin); r=d.get('workflow_runs', [{}])[0]; print(r.get('created_at', '1970-01-01T00:00:00Z'))" 2>/dev/null || echo "1970-01-01T00:00:00Z")
+            # Check any status, not just success (avoids 0-runs fallback issue)
+            LAST_RUN=$(curl -s -H "Authorization: token $GH_TOKEN" \
+              "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/$WF/runs?per_page=1" \
+              | python3 -c "import sys, json; d=json.load(sys.stdin); r=d.get('workflow_runs', []); print(r[0].get('created_at', '') if r else '')" 2>/dev/null || echo "")
             
-            LAST_TS=$(date -u -d "$LAST_SUCCESS" +%s 2>/dev/null || echo 0)
+            if [ -z "$LAST_RUN" ]; then
+              echo "[$WF] no runs found - skipping (API may be down)"
+              continue
+            fi
+            
+            LAST_TS=$(date -u -d "$LAST_RUN" +%s 2>/dev/null || echo 0)
+            if [ "$LAST_TS" = "0" ]; then
+              echo "[$WF] invalid date - skipping"
+              continue
+            fi
             DIFF=$(( (NOW - LAST_TS) / 60 ))
             
-            echo "[$WF] last success: $LAST_SUCCESS (${DIFF}m ago)"
+            echo "[$WF] last run: $LAST_RUN (${DIFF}m ago)"
             
             if [ $DIFF -gt $THRESHOLD_MIN ]; then
               echo "  Stalled (${DIFF}m > ${THRESHOLD_MIN}m) - re-triggering"
