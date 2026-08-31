@@ -560,6 +560,23 @@ def publish_ai_trader(signal: dict) -> int:
 sys.path.insert(0, str(REPO / "automation/scripts"))
 from audit import log_action
 
+# Auto-generate chart for each signal
+def generate_signal_chart(sig: dict) -> str:
+    """Generate candlestick chart for a single signal. Returns path."""
+    try:
+        from signal_chart import make_chart
+        from pathlib import Path
+        CHARTS_DIR = REPO / "automation" / "reports" / "signal_charts"
+        CHARTS_DIR.mkdir(parents=True, exist_ok=True)
+        signal_id = sig.get("position_id", sig.get("signal_id", "unknown"))
+        safe = signal_id.replace("|", "_").replace(":", "-").replace("/", "_")[:80]
+        out = CHARTS_DIR / f"{safe}.png"
+        if make_chart(sig, out):
+            return str(out)
+    except Exception as e:
+        print(f"  [chart] Error: {e}")
+    return ""
+
 def main() -> int:
     t_start = time.time()
     ts_now = datetime.now(timezone.utc).isoformat()
@@ -705,7 +722,13 @@ def main() -> int:
         sig["ai_code"] = ai_code
         with SIGNALS_FILE.open("a") as f:
             f.write(json.dumps(sig, default=str) + "\n")
-        print(f"  ✓ {sig['strategy']} {sig['ticker']} [{sig['grade']}] TG={tg_code} AI={ai_code}")
+        # Auto-generate chart for this signal
+        chart_path = generate_signal_chart(sig)
+        if chart_path:
+            sig["chart_path"] = chart_path
+            print(f"  ✓ {sig['strategy']} {sig['ticker']} [{sig['grade']}] TG={tg_code} AI={ai_code} CHART={chart_path}")
+        else:
+            print(f"  ✓ {sig['strategy']} {sig['ticker']} [{sig['grade']}] TG={tg_code} AI={ai_code}")
     # Step 5: Heartbeat
     heartbeat = {
         "timestamp": ts_now,
