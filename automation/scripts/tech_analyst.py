@@ -173,6 +173,32 @@ def send_telegram_photo(photo_path: str, caption: str) -> bool:
         return False
 
 
+def trigger_unified_pipeline() -> bool:
+    """Auto-trigger unified-pipeline workflow when coverage drops."""
+    pat = (
+        os.environ.get("GITHUB_APEX_PAT")
+        or os.environ.get("APEX_PAT")
+        or os.environ.get("GITHUB_PAT")
+        or os.environ.get("GH_TOKEN", "")
+    )
+    if not pat:
+        return False
+    try:
+        r = requests.post(
+            "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/unified-pipeline.yml/dispatches",
+            headers={
+                "Authorization": f"Bearer {pat}",
+                "Accept": "application/vnd.github+json",
+            },
+            json={"ref": "main"},
+            timeout=15,
+        )
+        return r.status_code == 204
+    except Exception as e:
+        print(f"  [auto-heal] trigger failed: {e}")
+        return False
+
+
 def load_last_coverage() -> float:
     """Load last reported coverage % for de-dup."""
     f_path = COVERAGE_FILE
@@ -296,10 +322,18 @@ def main():
     current_coverage = round(charts_present / max(charts_total, 1) * 100, 1)
     coverage_dropped = current_coverage < last_coverage - 5  # 5pp threshold
     
+    # Auto-heal: trigger unified-pipeline if coverage drop
+    if coverage_dropped and charts_total > 5:
+        heal_result = trigger_unified_pipeline()
+        if heal_result:
+            log_action("tech_analyst", "auto_heal", "unified-pipeline", "INFO",
+                      f"triggered due to coverage drop {last_coverage}% -> {current_coverage}%")
+    
     if charts_failed > charts_total * 0.5 or coverage_dropped:
         msg = f"⚠️ Tech Analyst: {charts_failed}/{charts_total} charts failed"
         if coverage_dropped:
             msg += f" (coverage: {last_coverage}% → {current_coverage}%)"
+            msg += f"\n🔄 Auto-heal: unified-pipeline re-triggered"
         if TG_TOKEN and TG_CHAT:
             try:
                 requests.post(
