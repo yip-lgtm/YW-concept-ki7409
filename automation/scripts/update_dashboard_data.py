@@ -165,9 +165,16 @@ sid_to_name = {v['id']: v['name'] for v in weights.values()}
 strategies_out = []
 for sid, w in weights.items():
     name = w['name']
-    live_24h = [t for t in last24h if t.get('strategy') == name]
-    today = [t for t in today_trades if t.get('strategy') == name]
-    sigs_24h = [s for s in last24h_sigs if s.get('strategy') == name]
+    # Fuzzy match: handle "Stair" vs "Stair Pattern", "Kell-Cycle" vs "Kell Cycle", etc.
+    def _match(t_or_s_name, target_name):
+        if t_or_s_name == target_name:
+            return True
+        t = t_or_s_name.lower().replace('-', '').replace('_', '')
+        n = target_name.lower().replace('-', '').replace('_', '')
+        return (t in n) or (n in t)
+    live_24h = [t for t in last24h if _match(t.get('strategy', ''), name)]
+    today = [t for t in today_trades if _match(t.get('strategy', ''), name)]
+    sigs_24h = [s for s in last24h_sigs if _match(s.get('strategy', ''), name)]
     iter_ = latest_iter.get(sid, {})
 
     cfg = grader_cfg.get({
