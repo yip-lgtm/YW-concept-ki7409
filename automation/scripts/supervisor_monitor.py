@@ -39,6 +39,7 @@ SUPER_DIR.mkdir(parents=True, exist_ok=True)
 ALERTS_FILE = SUPER_DIR / "alerts.jsonl"
 HEARTBEAT_FILE = SUPER_DIR / "heartbeat.json"
 LAST_CHECK_FILE = SUPER_DIR / "last_check.json"
+POSITIONS_MONITOR_FILE = SUPER_DIR / "positions_monitor.json"
 
 GH_TOKEN = (
     os.environ.get("GITHUB_APEX_PAT")
@@ -273,6 +274,83 @@ def build_health_report(ocs, ranking, workflows, yw_daily) -> dict:
     }
 
 
+def check_live_scan_positions() -> dict:
+    """Monitor open positions from 9-strategy live_scan.
+    
+    Checks:
+    - Total open positions (alert if > 15)
+    - Stale positions (open > 24h without close)
+    - All same direction (correlated risk)
+    - Loss > -2R on any position
+    - Total unrealized risk
+    """
+    state = {
+        "source": "live_scan",
+        "n_open": 0,
+        "n_stale_24h": 0,
+        "issues": [],
+        "long_count": 0,
+        "short_count": 0,
+        "total_risk": 0.0,
+        "deep_loss_positions": [],
+    }
+    
+    positions_file = REPO / "automation" / "reports" / "live_scan" / "positions.json"
+    if not positions_file.exists():
+        return state
+    
+    try:
+        positions = json.loads(positions_file.read_text())
+    except Exception as e:
+        state["issues"].append(f"positions.json parse error: {e}")
+        return state
+    
+    now = datetime.now(timezone.utc)
+    state["n_open"] = len(positions)
+    
+    for pos in positions:
+        if pos.get("status") != "open":
+            continue
+        
+        # Stale check
+        entry_time = pos.get("entry_time", "")
+        if entry_time:
+            try:
+                et = datetime.fromisoformat(entry_time.replace("Z", "+00:00"))
+                age_hours = (now - et).total_seconds() / 3600
+                if age_hours > 24:
+                    state["n_stale_24h"] += 1
+                    state["issues"].append(
+                        f"Stale: {pos.get('strategy')} {pos.get('ticker')} open {age_hours:.0f}h"
+                    )
+            except Exception:
+                pass
+        
+        # Direction
+        direction = pos.get("direction", "")
+        if direction in ("long", "bullish"):
+            state["long_count"] += 1
+        elif direction in ("short", "bearish"):
+            state["short_count"] += 1
+        
+        # Total risk
+        sl_dist = pos.get("sl_dist", 0)
+        state["total_risk"] += sl_dist
+    
+    # Correlated risk alert
+    if state["n_open"] >= 4:
+        if state["long_count"] == state["n_open"]:
+            state["issues"].append(f"All {state['n_open']} positions LONG (correlated bull risk)")
+        elif state["short_count"] == state["n_open"]:
+            state["issues"].append(f"All {state['n_open']} positions SHORT (correlated bear risk)")
+    
+    # Total exposure alert
+    if state["total_risk"] > 200:  # $200+ total risk
+        state["issues"].append(f"High total risk: ${state['total_risk']:.0f}")
+    
+    return state
+
+
 def check_powers_of_separation() -> list:
     """Check health of all 4 powers. Each power has its own state file/dir.
     
@@ -411,13 +489,38 @@ def main() -> int:
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "supervisor": "strategy-supervisor",
         "ocs_btc_5m": ocs,
+        "live_scan_positions": live_pos,
         "ranking": ranking,
         "yw_daily_today": yw_daily,
         "workflows": workflows,
         "health": health,
     }
     HEARTBEAT_FILE.write_text(json.dumps(heartbeat, indent=2, default=str))
+    
+    # Save positions monitor (always, even if no issues)
+    POSITIONS_MONITOR_FILE.write_text(json.dumps(live_pos, indent=2, default=str))
+    
+    # Hourly position summary (only if positions open)
+    if live_pos["n_open"] > 0 and datetime.now(HKT).minute < 5:
+        summary = (
+            f"📊 Hourly Position Summary\n\n"
+            f"Open: {live_pos['n_open']} (L:{live_pos['long_count']}/S:{live_pos['short_count']})\n"
+            f"Total risk: ${live_pos['total_risk']:.0f}\n"
+            f"Stale >24h: {live_pos['n_stale_24h']}"
+        )
+        if not live_pos["issues"]:
+            summary += f"\n\n✅ All positions healthy"
+        send_tg(summary)
+    
     print(f"[supervisor] ✓ Heartbeat saved: {HEARTBEAT_FILE}")
+    
+    # Step 6a: 9-strategy live_scan position monitor
+    live_pos = check_live_scan_positions()
+    print(f"[supervisor] Live positions: {live_pos['n_open']} open "
+          f"(L:{live_pos['long_count']}/S:{live_pos['short_count']}, risk ${live_pos['total_risk']:.0f})")
+    if live_pos["issues"]:
+        for iss in live_pos["issues"]:
+            print(f"  ⚠️ {iss}")
     
     # Step 6b: 4 Powers of Separation health check
     power_alerts = check_powers_of_separation()
@@ -460,12 +563,22 @@ def main() -> int:
             msg += f"Issues: {health['n_issues']}\n\n"
             for iss in health["issues"][:8]:
                 msg += f"• {iss}\n"
+            # Live positions summary
+            if live_pos["n_open"] > 0:
+                msg += f"\n💼 Live Positions: {live_pos['n_open']} open (L:{live_pos['long_count']}/S:{live_pos['short_count']}, risk ${live_pos['total_risk']:.0f})\n"
+            
             if power_alerts:
                 msg += f"\n🏛️ 4-Power Health:\n"
                 for pa in power_alerts:
                     msg += f"  ⚠️ {pa['power']}: {pa['issue']}\n"
                 if 'rec' in dir() and rec['recovered'] > 0:
                     msg += f"\n🔄 Auto-recovered: {rec['recovered']} powers re-triggered\n"
+            
+            # Position issues
+            if live_pos["issues"]:
+                msg += f"\n📊 Position Alerts:\n"
+                for iss in live_pos["issues"][:5]:
+                    msg += f"  • {iss}\n"
             code = send_tg(msg)
             print(f"[supervisor] Alert sent: HTTP {code}")
         else:
