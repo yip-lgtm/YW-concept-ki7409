@@ -377,31 +377,77 @@ def main():
             log_action("sys-engineer", "check_supervisor", "supervisor", "WARN",
                       str(a.get("issues", []))[:200], "Power 2 (System Engineer)")
     
-    # Step 5: Send TG summary if any issues
-    if actions_taken:
-        msg = f"🛠️ System Engineer Report\n\n"
-        msg += f"📊 Issues found: {len(actions_taken)}\n"
-        if report:
-            msg += f"  • BUG: {report.get('n_bug', 0)}\n"
-            msg += f"  • WARN: {report.get('n_warn', 0)}\n"
-        msg += f"  • LAZY (0 signals/24h): {len(lazy)}\n\n"
-        if lazy:
-            msg += f"😴 Lazy agents:\n"
-            for a in lazy[:5]:
-                msg += f"  - {a['agent']}\n"
-        bugs = [a for a in actions_taken if a.get("type") == "bug_diagnosis"]
-        if bugs:
-            msg += f"\n🐛 Bug diagnoses:\n"
-            for b in bugs[:3]:
-                msg += f"  - {b['agent']}: {b.get('diagnosis', '')[:100]}\n"
-        send_tg(msg)
+    # Step 5: Send TG summary if any issues (de-duplicated)
+    # Only send if:
+    # 1. BUG/WARN appears
+    # 2. Lazy list changed from last reported
+    # 3. Every 6h daily summary
+    BUG_DIAGNOSIS_TYPES = ("bug_diagnosis",)
+    
+    has_bugs = any(a.get("type") in BUG_DIAGNOSIS_TYPES for a in actions_taken)
+    current_lazy = sorted([a["agent"] for a in lazy]) if lazy else []
+    last_lazy = load_last_lazy()
+    lazy_changed = current_lazy != last_lazy
+    save_last_lazy(current_lazy)
+    
+    now_hkt = datetime.now(HKT)
+    is_summary_time = now_hkt.hour in (0, 6, 12, 18) and now_hkt.minute < 5
+    
+    if has_bugs or lazy_changed or is_summary_time:
+        if has_bugs or lazy_changed:
+            msg = f"🛠️ System Engineer Report\n\n"
+            msg += f"📊 Issues found: {len(actions_taken)}\n"
+            if report:
+                msg += f"  • BUG: {report.get('n_bug', 0)}\n"
+                msg += f"  • WARN: {report.get('n_warn', 0)}\n"
+            msg += f"  • LAZY (0 signals/24h): {len(lazy)}\n\n"
+            if lazy:
+                msg += f"😴 Lazy agents:\n"
+                for a in lazy[:5]:
+                    msg += f"  - {a['agent']}\n"
+            if lazy_changed and last_lazy:
+                added = set(current_lazy) - set(last_lazy)
+                removed = set(last_lazy) - set(current_lazy)
+                if added:
+                    msg += f"  🆕 Added: {', '.join(added)}\n"
+                if removed:
+                    msg += f"  ✅ Recovered: {', '.join(removed)}\n"
+            bugs = [a for a in actions_taken if a.get("type") in BUG_DIAGNOSIS_TYPES]
+            if bugs:
+                msg += f"\n🐛 Bug diagnoses:\n"
+                for b in bugs[:3]:
+                    msg += f"  - {b['agent']}: {b.get('diagnosis', '')[:100]}\n"
+            send_tg(msg)
+            print(f"[sys-eng] TG sent (bugs={has_bugs}, lazy_changed={lazy_changed})")
+        elif is_summary_time:
+            send_tg(f"✅ System Engineer [6h summary]: {len(lazy)} lazy. Healthy.")
     else:
-        print("[sys-eng] ✓ No issues found")
-        # Send health report (only once a day at 00:00 HKT)
-        if datetime.now(HKT).hour == 0:
-            send_tg(f"✅ System Engineer: All 10 agents healthy. 0 BUG, 0 lazy.")
+        print(f"[sys-eng] No change in lazy ({len(lazy)} agents). Skipping TG to avoid spam.")
     
     return 0
+
+
+def load_last_lazy() -> list:
+    """Load last reported lazy list to detect changes."""
+    f_path = REPO / "automation" / "reports" / "sys_engineer" / "last_lazy.json"
+    if not f_path.exists():
+        return []
+    try:
+        with open(f_path) as f:
+            return json.load(f).get("lazy", [])
+    except Exception:
+        return []
+
+
+def save_last_lazy(lazy: list):
+    """Save current lazy list for next-run change detection."""
+    f_path = REPO / "automation" / "sys_engineer_last_lazy.json"
+    f_path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with open(f_path, "w") as f:
+            json.dump({"lazy": lazy, "ts": datetime.now(HKT).isoformat()}, f)
+    except Exception as e:
+        print(f"[sys-eng] Save last_lazy failed: {e}")
 
 
 if __name__ == "__main__":
