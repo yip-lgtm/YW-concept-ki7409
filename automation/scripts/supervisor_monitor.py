@@ -40,7 +40,12 @@ ALERTS_FILE = SUPER_DIR / "alerts.jsonl"
 HEARTBEAT_FILE = SUPER_DIR / "heartbeat.json"
 LAST_CHECK_FILE = SUPER_DIR / "last_check.json"
 
-GH_TOKEN = os.environ.get("GITHUB_PAT") or os.environ.get("APEX_PAT") or os.environ.get("GITHUB_TOKEN")
+GH_TOKEN = (
+    os.environ.get("GITHUB_APEX_PAT")
+    or os.environ.get("GITHUB_PAT")
+    or os.environ.get("APEX_PAT")
+    or os.environ.get("GITHUB_TOKEN", "")
+)
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID")
 OCS_DIR = REPO / "automation" / "reports" / "ocs_btc_5m"
@@ -68,10 +73,20 @@ POWER_STATE_FILES = {
     # power: list of files to check, take latest mtime
     "supervisor":    ["automation/reports/supervisor/last_check.json",
                       "automation/reports/supervisor/heartbeat.json"],
-    "sys_engineer":  ["automation/reports/sys_engineer/"],   # dir, use newest .json
+    "sys_engineer":  ["automation/reports/sys_engineer/"],
     "llm_scientist": ["automation/reports/strategy_ranking/iterations/"],
     "tech_analyst":  ["automation/reports/tech_analyst/last_run.json"],
 }
+
+# Power → workflow to re-trigger if stale
+POWER_WORKFLOW_MAP = {
+    "supervisor":    "supervisor-monitor.yml",
+    "sys_engineer":  "sys-engineer.yml",
+    "llm_scientist": "llm-iteration-scientist.yml",
+    "tech_analyst":  "unified-pipeline.yml",
+}
+
+POWER_RECOVERY_FILE = REPO / "automation" / "sys_power_recovery.json"
 
 WORKFLOWS_TO_CHECK = [
     "yw-daily.yml",
@@ -276,6 +291,84 @@ def check_powers_of_separation() -> list:
     return alerts
 
 
+def trigger_workflow(workflow: str) -> bool:
+    """Auto-trigger a workflow via GitHub API."""
+    if not GH_TOKEN:
+        return False
+    try:
+        r = requests.post(
+            f"{GH_API}/actions/workflows/{workflow}/dispatches",
+            headers={"Authorization": f"Bearer {GH_TOKEN}", "Accept": "application/vnd.github+json"},
+            json={"ref": "main"},
+            timeout=15,
+        )
+        return r.status_code == 204
+    except Exception as e:
+        print(f"  [trigger] {workflow} failed: {e}")
+        return False
+
+
+def auto_recover_powers(power_alerts: list) -> dict:
+    """Auto-trigger stale powers (with de-dup)."""
+    if not power_alerts:
+        return {"recovered": 0, "skipped": 0}
+    
+    # Load last recovery (de-dup: don't re-trigger same power within 30 min)
+    last_recovery = {}
+    if POWER_RECOVERY_FILE.exists():
+        try:
+            with open(POWER_RECOVERY_FILE) as f:
+                last_recovery = json.load(f).get("recoveries", {})
+        except Exception:
+            pass
+    
+    now = datetime.now(timezone.utc)
+    recovered = 0
+    skipped = 0
+    new_recovery = {}
+    
+    for pa in power_alerts:
+        power = pa["power"]
+        workflow = POWER_WORKFLOW_MAP.get(power)
+        if not workflow:
+            continue
+        
+        # De-dup: skip if recovered < 30 min ago
+        last_ts = last_recovery.get(power, "")
+        if last_ts:
+            try:
+                last_dt = datetime.fromisoformat(last_ts.replace("Z", "+00:00"))
+                if last_dt.tzinfo is None:
+                    last_dt = last_dt.replace(tzinfo=timezone.utc)
+                if (now - last_dt).total_seconds() < 1800:  # 30 min
+                    skipped += 1
+                    continue
+            except Exception:
+                pass
+        
+        # Trigger
+        if trigger_workflow(workflow):
+            new_recovery[power] = now.isoformat()
+            recovered += 1
+            print(f"  [auto-recover] ✓ triggered {workflow} for {power}")
+        else:
+            print(f"  [auto-recover] ✗ failed to trigger {workflow}")
+    
+    # Save recovery state
+    if new_recovery:
+        merged = {**last_recovery, **new_recovery}
+        # Trim to keep only last 7 days
+        cutoff = (now.timestamp() - 7 * 86400)
+        merged = {p: t for p, t in merged.items() 
+                  if datetime.fromisoformat(t.replace("Z", "+00:00")).timestamp() > cutoff}
+        try:
+            POWER_RECOVERY_FILE.write_text(json.dumps({"recoveries": merged, "updated": now.isoformat()}, indent=2))
+        except Exception:
+            pass
+    
+    return {"recovered": recovered, "skipped": skipped}
+
+
 def main() -> int:
     print(f"[supervisor] === {datetime.now(timezone.utc).isoformat()} ===")
     # Step 1: OCS state
@@ -319,6 +412,9 @@ def main() -> int:
         print(f"[supervisor] ⚠️ Power issues: {len(power_alerts)}")
         for pa in power_alerts:
             print(f"  - {pa['power']}: {pa['issue']}")
+        # Auto-recover: re-trigger stale power's workflow
+        rec = auto_recover_powers(power_alerts)
+        print(f"[supervisor] [auto-recover] recovered={rec['recovered']} skipped={rec['skipped']}")
     else:
         print(f"[supervisor] ✓ All 4 powers healthy")
     
@@ -355,6 +451,8 @@ def main() -> int:
                 msg += f"\n🏛️ 4-Power Health:\n"
                 for pa in power_alerts:
                     msg += f"  ⚠️ {pa['power']}: {pa['issue']}\n"
+                if 'rec' in dir() and rec['recovered'] > 0:
+                    msg += f"\n🔄 Auto-recovered: {rec['recovered']} powers re-triggered\n"
             code = send_tg(msg)
             print(f"[supervisor] Alert sent: HTTP {code}")
         else:
