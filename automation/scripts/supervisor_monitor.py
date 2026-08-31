@@ -88,6 +88,14 @@ POWER_WORKFLOW_MAP = {
 
 POWER_RECOVERY_FILE = REPO / "automation" / "sys_power_recovery.json"
 
+# Per-power stale threshold (minutes). Different powers have different cadences.
+POWER_STALE_THRESHOLD_MIN = {
+    "supervisor":    30,    # 5-min cadence
+    "sys_engineer":  90,    # 1-hour cadence
+    "llm_scientist": 24 * 60,   # daily cadence (00:00 HKT)
+    "tech_analyst":  30,    # 5-min cadence
+}
+
 WORKFLOWS_TO_CHECK = [
     "yw-daily.yml",
     "yw-publish-signal.yml",
@@ -286,8 +294,13 @@ def check_powers_of_separation() -> list:
             alerts.append({"power": power, "issue": "no state files found"})
             continue
         age_min = (now.timestamp() - latest_mtime) / 60
-        if age_min > 30:
-            alerts.append({"power": power, "issue": f"stale {age_min:.0f}min"})
+        threshold = POWER_STALE_THRESHOLD_MIN.get(power, 30)
+        if age_min > threshold:
+            alerts.append({
+                "power": power, 
+                "issue": f"stale {age_min:.0f}min (threshold {threshold}min)",
+                "threshold": threshold,
+            })
     return alerts
 
 
