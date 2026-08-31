@@ -271,9 +271,15 @@ def main():
     log_action("tech_analyst", "run_complete", "all", "INFO",
               f"total={charts_total}, present={charts_present}, generated={charts_generated}, failed={charts_failed}, photos={photos_sent}")
     
-    # Send TG alert if missing charts (rare - recovery case)
-    if charts_failed > charts_total * 0.5:
-        msg = f"⚠️ Tech Analyst: {charts_failed}/{charts_total} charts failed (likely yfinance no data)"
+    # Send TG alert only if coverage DEGRADED from last run
+    last_coverage = load_last_coverage()
+    current_coverage = round(charts_present / max(charts_total, 1) * 100, 1)
+    coverage_dropped = current_coverage < last_coverage - 5  # 5pp threshold
+    
+    if charts_failed > charts_total * 0.5 or coverage_dropped:
+        msg = f"⚠️ Tech Analyst: {charts_failed}/{charts_total} charts failed"
+        if coverage_dropped:
+            msg += f" (coverage: {last_coverage}% → {current_coverage}%)"
         if TG_TOKEN and TG_CHAT:
             try:
                 requests.post(
@@ -282,6 +288,7 @@ def main():
                 )
             except Exception:
                 pass
+    save_last_coverage(current_coverage)
     
     return 0
 

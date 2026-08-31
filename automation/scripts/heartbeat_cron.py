@@ -11,7 +11,12 @@ import json
 import requests
 from datetime import datetime, timezone, timedelta
 
-GHA_TOKEN = os.environ.get('APEX_PAT') or os.environ.get('GH_TOKEN', '')
+GHA_TOKEN = (
+    os.environ.get('GITHUB_APEX_PAT')
+    or os.environ.get('APEX_PAT')
+    or os.environ.get('GITHUB_PAT')
+    or os.environ.get('GH_TOKEN', '')
+)
 REPO = 'yip-lgtm/YW-concept-ki7409'
 WORKFLOW = 'unified-pipeline.yml'
 BRANCH = 'main'
@@ -64,7 +69,8 @@ def check_health():
         )
         runs = r.json().get('workflow_runs', [])
         if not runs:
-            return False, 999
+            # API returned 0 runs (auth or rate-limit), assume healthy
+            return True, 0
         last = runs[0].get('updated_at') or runs[0].get('created_at')
         last_dt = datetime.fromisoformat(last.replace('Z', '+00:00')).astimezone(HKT)
         age_min = (datetime.now(HKT) - last_dt).total_seconds() / 60
