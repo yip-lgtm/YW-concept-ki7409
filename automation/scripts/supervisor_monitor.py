@@ -28,6 +28,8 @@ import requests
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+HKT = timezone(timedelta(hours=8))
+
 if "GITHUB_WORKSPACE" in os.environ:
     REPO = Path(os.environ["GITHUB_WORKSPACE"])
 else:
@@ -247,7 +249,6 @@ def build_health_report(ocs, ranking, workflows, yw_daily) -> dict:
         issues.append(f"OCS: {ocs['n_open']} open positions (max 3 expected)")
     # YW daily — check HKT date (yw-daily runs at 21:00 HKT = 13:00 UTC)
     # Only alert AFTER 21:30 HKT (30 min after scheduled run, allowing GHA delay)
-    HKT = timezone(timedelta(hours=8))
     now_hkt = datetime.now(HKT)
     today_str = now_hkt.strftime("%Y-%m-%d")
     weekday = now_hkt.strftime("%a")
@@ -489,15 +490,27 @@ def main() -> int:
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "supervisor": "strategy-supervisor",
         "ocs_btc_5m": ocs,
-        "live_scan_positions": live_pos,
         "ranking": ranking,
         "yw_daily_today": yw_daily,
         "workflows": workflows,
         "health": health,
     }
     HEARTBEAT_FILE.write_text(json.dumps(heartbeat, indent=2, default=str))
+    print(f"[supervisor] ✓ Heartbeat saved: {HEARTBEAT_FILE}")
     
-    # Save positions monitor (always, even if no issues)
+    # Step 6a: 9-strategy live_scan position monitor
+    live_pos = check_live_scan_positions()
+    print(f"[supervisor] Live positions: {live_pos['n_open']} open "
+          f"(L:{live_pos['long_count']}/S:{live_pos['short_count']}, risk ${live_pos['total_risk']:.0f})")
+    if live_pos["issues"]:
+        for iss in live_pos["issues"]:
+            print(f"  ⚠️ {iss}")
+    
+    # Add positions to heartbeat
+    heartbeat["live_scan_positions"] = live_pos
+    HEARTBEAT_FILE.write_text(json.dumps(heartbeat, indent=2, default=str))
+    
+    # Save positions monitor
     POSITIONS_MONITOR_FILE.write_text(json.dumps(live_pos, indent=2, default=str))
     
     # Hourly position summary (only if positions open)
@@ -511,16 +524,6 @@ def main() -> int:
         if not live_pos["issues"]:
             summary += f"\n\n✅ All positions healthy"
         send_tg(summary)
-    
-    print(f"[supervisor] ✓ Heartbeat saved: {HEARTBEAT_FILE}")
-    
-    # Step 6a: 9-strategy live_scan position monitor
-    live_pos = check_live_scan_positions()
-    print(f"[supervisor] Live positions: {live_pos['n_open']} open "
-          f"(L:{live_pos['long_count']}/S:{live_pos['short_count']}, risk ${live_pos['total_risk']:.0f})")
-    if live_pos["issues"]:
-        for iss in live_pos["issues"]:
-            print(f"  ⚠️ {iss}")
     
     # Step 6b: 4 Powers of Separation health check
     power_alerts = check_powers_of_separation()
