@@ -288,7 +288,8 @@ SUGGESTED_PARAMS: NONE
             if params_str != "NONE":
                 try:
                     result["suggested_params"] = json.loads(params_str)
-                    result["auto_apply"] = result["confidence"] >= 60
+                    # Auto-apply ONLY if grade is A or B with conf >= 60
+                    result["auto_apply"] = (result["grade"] in ("A", "B")) and (result["confidence"] >= 60)
                 except Exception:
                     pass
         else:
