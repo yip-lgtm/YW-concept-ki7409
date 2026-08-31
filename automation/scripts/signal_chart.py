@@ -135,6 +135,45 @@ def make_chart(signal: dict, output_path: Path) -> bool:
     ax.axhline(y=t4, color='#3b82f6', linestyle=':', linewidth=1.0, alpha=0.6, label=f'T4 ${t4:.2f}')
     ax.axhline(y=t5, color='#3b82f6', linestyle=':', linewidth=1.0, alpha=0.6, label=f'T5 ${t5:.2f}')
     
+    # Add strategy-specific moving averages (4 visibility fixes applied)
+    ema_period = 20
+    sma_period = 50
+    if len(df) >= sma_period:
+        sma50 = df['Close'].rolling(sma_period).mean()
+        # 1. fill_between: shade between close and SMA50
+        ax.fill_between(df.index, df['Close'], sma50.values,
+                         where=(df['Close'] >= sma50.values), 
+                         color='#3b82f6', alpha=0.18, interpolate=True, zorder=2)
+        ax.fill_between(df.index, df['Close'], sma50.values,
+                         where=(df['Close'] < sma50.values),
+                         color='#ef4444', alpha=0.12, interpolate=True, zorder=2)
+        # 3+4. Thick dashed SMA50 line (zorder=10 puts above candles)
+        ax.plot(df.index, sma50.values, color='#3b82f6', linewidth=4.5, 
+                alpha=1.0, linestyle='--', zorder=10, label=f'SMA50 (trend)')
+    if len(df) >= ema_period:
+        ema20 = df['Close'].ewm(span=ema_period, adjust=False).mean()
+        # 1. fill_between: shade between close and EMA20
+        ax.fill_between(df.index, df['Close'], ema20.values,
+                         where=(df['Close'] >= ema20.values),
+                         color='#fbbf24', alpha=0.12, interpolate=True, zorder=3)
+        ax.fill_between(df.index, df['Close'], ema20.values,
+                         where=(df['Close'] < ema20.values),
+                         color='#fbbf24', alpha=0.06, interpolate=True, zorder=3)
+        # 3+4. Thick dotted EMA20 line (zorder=11)
+        ax.plot(df.index, ema20.values, color='#fbbf24', linewidth=4.0, 
+                alpha=1.0, linestyle=':', zorder=11, label=f'EMA20 (pullback target)')
+    
+    # Add current MA values annotation (right side)
+    if len(df) >= sma_period:
+        last_sma = sma50.iloc[-1]
+        last_ema = ema20.iloc[-1]
+        last_close = df['Close'].iloc[-1]
+        ma_text = f"\nMAs @ {df.index[-1].strftime('%H:%M')}\nClose: ${last_close:.2f}\nEMA20: ${last_ema:.2f}\nSMA50: ${last_sma:.2f}"
+        ax.text(0.98, 0.15, ma_text, transform=ax.transAxes,
+                fontsize=9, color='#fbbf24', weight='normal',
+                bbox=dict(boxstyle='round,pad=0.4', facecolor='#1e293b', edgecolor='#fbbf24', alpha=0.95),
+                verticalalignment='top', horizontalalignment='right')
+    
     # Entry arrow
     try:
         if 'ts' in signal:
