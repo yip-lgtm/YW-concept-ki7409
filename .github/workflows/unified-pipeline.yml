@@ -6,6 +6,7 @@ name: Unified Pipeline — 24/7 Master
 # - Job 3: Strategy Supervisor (health check)
 # - Job 4: System Engineer (auto-fix)
 # - Job 4b: Technical Analyst (4th power: chart + entry plan)
+# - Job 4c: TTrades BTC (5th power: ICT Fractal Model on BTC)
 # - Job 5: Update Dashboard Data
 # - Job 6: Master Self-Heal (re-trigger any of above if needed)
 
@@ -223,6 +224,40 @@ jobs:
           # Commit tech_analyst output
           git add automation/reports/tech_analyst/ automation/reports/signal_charts/ automation/reports/audit/ 2>/dev/null || true
           git commit -m "auto(tech-analyst): chart coverage $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          git push --force-with-lease origin main || echo "push failed"
+
+  # Job 4c: TTrades BTC (5th Power: ICT Fractal Model on $247K BTC)
+  ttrades-btc:
+    name: TTrades BTC — ICT Fractal Model
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+      - name: Install + Run TTrades BTC
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+          .venv/bin/python scripts/ttrades_btc.py 2>&1 || echo "ttrades_btc done"
+
+      - name: Commit TTrades output
+        run: |
+          git config --global user.email "mavis@MiniMax" 2>/dev/null || true
+          git config --global user.name "Mavis" 2>/dev/null || true
+          git fetch origin main 2>&1 || echo "fetch failed, continuing"
+          git checkout origin/main -- .github/ docs/ automation/src/ automation/scripts/ automation/requirements.txt 2>&1 || echo "checkout failed, continuing"
+          git add automation/reports/ttrades_btc/ 2>/dev/null || true
+          git commit -m "auto(ttrades-btc): ICT fractal $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
           git push --force-with-lease origin main || echo "push failed"
 
   # Job 5: Update Dashboard

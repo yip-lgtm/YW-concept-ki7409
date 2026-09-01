@@ -79,6 +79,7 @@ POWER_STATE_FILES = {
     "sys_engineer":  ["automation/reports/sys_engineer/"],
     "llm_scientist": ["automation/reports/strategy_ranking/iterations/"],
     "tech_analyst":  ["automation/reports/tech_analyst/last_run.json"],
+    "ttrades_btc":   ["automation/reports/ttrades_btc/"],
 }
 
 # Power → workflow to re-trigger if stale
@@ -87,7 +88,8 @@ POWER_WORKFLOW_MAP = {
     "sys_engineer":  "sys-engineer.yml",
     "llm_scientist": "llm-iteration-scientist.yml",
     "tech_analyst":  "unified-pipeline.yml",
-    "ranking":       "strategy-ranking.yml",  # extra: ranking
+    "ttrades_btc":   "unified-pipeline.yml",  # 5th power
+    "ranking":       "strategy-ranking.yml",
 }
 
 POWER_RECOVERY_FILE = REPO / "automation" / "sys_power_recovery.json"
@@ -98,6 +100,7 @@ POWER_STALE_THRESHOLD_MIN = {
     "sys_engineer":  90,    # 1-hour cadence
     "llm_scientist": 24 * 60,   # daily cadence (00:00 HKT)
     "tech_analyst":  30,    # 5-min cadence
+    "ttrades_btc":   30,    # 5-min cadence (5th power)
 }
 
 WORKFLOWS_TO_CHECK = [
