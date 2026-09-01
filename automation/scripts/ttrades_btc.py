@@ -159,6 +159,42 @@ def check_eq_respect(swing, ltf_df):
     return last >= eq
 
 
+def check_d1_trend(daily_df, direction):
+    """D1 trend filter: only take signals aligned with D1 trend.
+    
+    Uses D1 EMA50 as trend proxy.
+    LONG: D1 close > D1 EMA50 (uptrend)
+    SHORT: D1 close < D1 EMA50 (downtrend)
+    """
+    if len(daily_df) < 60:
+        return {"aligned": False, "trend": "unknown", "reason": "insufficient daily data"}
+    
+    d1_close = float(daily_df['Close'].iloc[-1])
+    d1_ema50 = float(daily_df['Close'].ewm(span=50, adjust=False).mean().iloc[-1])
+    d1_ema20 = float(daily_df['Close'].ewm(span=20, adjust=False).mean().iloc[-1])
+    
+    if d1_close > d1_ema50 and d1_ema20 > d1_ema50:
+        trend = "uptrend"
+    elif d1_close < d1_ema50 and d1_ema20 < d1_ema50:
+        trend = "downtrend"
+    else:
+        trend = "ranging"
+    
+    if direction == "long":
+        aligned = trend == "uptrend"
+    else:
+        aligned = trend == "downtrend"
+    
+    return {
+        "aligned": aligned,
+        "trend": trend,
+        "d1_close": d1_close,
+        "d1_ema50": d1_ema50,
+        "d1_ema20": d1_ema20,
+        "reason": f"D1 {trend}" + ("" if aligned else " (counter-trend)"),
+    }
+
+
 def label_weekly_profile(weekly_df):
     """Label-only weekly profile. Never hard-gate.
     
@@ -283,6 +319,45 @@ def calculate_trade_levels(swing, atr):
     }
 
 
+def check_paper_mode() -> tuple:
+    """Check if TTrades should run in paper mode (no real entries).
+    
+    Paper mode rules:
+    - Until we have 10+ closed paper trades
+    - AND win rate >= 50% over those 10
+    - AND profit factor >= 1.0
+    
+    This protects real capital during validation phase.
+    """
+    paper_log = SIGNAL_DIR / "paper_trades.jsonl"
+    if not paper_log.exists():
+        return True, "no paper trade history (default paper)"
+    
+    try:
+        with paper_log.open() as f:
+            trades = [json.loads(l) for l in f if l.strip()]
+    except Exception:
+        return True, "paper log parse error"
+    
+    n_closed = len([t for t in trades if t.get("status") == "closed"])
+    if n_closed < 10:
+        return True, f"only {n_closed}/10 closed paper trades"
+    
+    wins = [t for t in trades if t.get("R_multiple", 0) > 0]
+    wr = len(wins) / n_closed * 100 if n_closed > 0 else 0
+    total_R = sum(t.get("R_multiple", 0) for t in trades)
+    gross_win = sum(t.get("R_multiple", 0) for t in wins)
+    gross_loss = abs(sum(t.get("R_multiple", 0) for t in trades if t.get("R_multiple", 0) < 0))
+    pf = gross_win / gross_loss if gross_loss > 0 else 0
+    
+    if wr < 50:
+        return True, f"WR {wr:.1f}% < 50%"
+    if pf < 1.0:
+        return True, f"PF {pf:.2f} < 1.0"
+    
+    return False, f"validated: {n_closed} trades, WR {wr:.1f}%, PF {pf:.2f}"
+
+
 def main():
     print(f"[ttrades-btc] === {datetime.now(HKT).strftime('%Y-%m-%d %H:%M:%S HKT')} ===")
     weekday = datetime.now(HKT).weekday()
@@ -338,6 +413,12 @@ def main():
     
     # Step 4: Weekly label (not gate)
     weekly_label = label_weekly_profile(weekly)
+    
+    # Step 4b: D1 trend filter (B from backtest review) - hard gate
+    # Use 2y period to ensure 60+ daily bars (EMA50 needs warmup)
+    daily_df = fetch_ohlcv(TICKER, "1d", "2y")
+    d1_trend = check_d1_trend(daily_df, swing["direction"])
+    print(f"  [step4b] D1 trend: {d1_trend['trend']} (aligned={d1_trend['aligned']})")
     print(f"  [step4] Weekly: {weekly_label['profile']}")
     
     # Step 5: Daily profile (skip NY if London expanded)
@@ -354,6 +435,7 @@ def main():
         "swing": swing,
         "cisd": cisd,
         "eq_respected": eq_ok,
+        "d1_trend": d1_trend,
         "weekly_profile": weekly_label,
         "daily_profile": daily_profile,
         "account_size": ACCOUNT_SIZE,
@@ -361,8 +443,9 @@ def main():
         "risk_amount": RISK_AMOUNT,
     }
     
-    # Actionable: CISD + EQ + not London-expanded
-    if cisd["confirmed"] and eq_ok and not daily_profile.get("skip_ny", False):
+    # Actionable: CISD + EQ + D1 trend aligned + not London-expanded
+    if (cisd["confirmed"] and eq_ok and d1_trend["aligned"] 
+        and not daily_profile.get("skip_ny", False)):
         atr_vals = (h1['High'].tail(14) - h1['Low'].tail(14))
         atr = float(atr_vals.mean()) if len(atr_vals) > 0 else 0
         
@@ -394,8 +477,19 @@ def main():
         reasons = []
         if not cisd["confirmed"]: reasons.append("CISD not confirmed")
         if not eq_ok: reasons.append("EQ not respected")
+        if not d1_trend["aligned"]: reasons.append(f"D1 counter-trend ({d1_trend['trend']})")
         if daily_profile.get("skip_ny", False): reasons.append("London expanded (skip NY)")
         signal["reason"] = "; ".join(reasons) if reasons else "no trigger"
+    
+    # Step 6: Paper trade gate (D from backtest review)
+    # Until 10+ trades with WR > 50%, all are paper (no real entry)
+    paper_mode, paper_reason = check_paper_mode()
+    signal["paper_mode"] = paper_mode
+    if paper_mode:
+        signal["trade_mode"] = "paper"
+        signal["paper_reason"] = paper_reason
+    else:
+        signal["trade_mode"] = "live"
     
     SIGNAL_FILE.write_text(json.dumps(signal, indent=2, default=str))
     with LOG_FILE.open("a") as f:

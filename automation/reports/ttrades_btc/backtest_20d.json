@@ -1,5 +1,5 @@
 {
-  "ts": "2026-09-01T12:23:00.668971+08:00",
+  "ts": "2026-09-01T12:25:11.527655+08:00",
   "window_days": 20,
   "ticker": "BTC-USD",
   "params": {
@@ -9,69 +9,10 @@
     "sl_buffer_atr_mult": 0.15
   },
   "result": {
-    "n_trades": 3,
-    "wins": 0,
-    "losses": 3,
-    "win_rate": 0.0,
-    "total_R": -2.6,
-    "avg_R": -0.867,
-    "profit_factor": 0.0,
-    "by_exit": {
-      "SL": 2,
-      "TIMEOUT": 1
-    }
+    "n_trades": 0,
+    "win_rate": 0,
+    "total_R": 0,
+    "profit_factor": 0
   },
-  "trades": [
-    {
-      "entry_time": "2026-08-25T20:00:00+00:00",
-      "exit_time": null,
-      "direction": "short",
-      "swing_type": "C2",
-      "side": "bearish",
-      "entry": 78526.796875,
-      "sl": 79677.223046875,
-      "t1": 77376.370703125,
-      "t2_close": 76686.11499999999,
-      "t3": 75535.68882812498,
-      "exit_price": 79677.223046875,
-      "exit_type": "SL",
-      "R_multiple": -1.0,
-      "cisd_series_length": 1,
-      "weekly_label": "skipped_in_backtest"
-    },
-    {
-      "entry_time": "2026-08-29T04:00:00+00:00",
-      "exit_time": null,
-      "direction": "short",
-      "swing_type": "C2",
-      "side": "bearish",
-      "entry": 77619.0,
-      "sl": 78023.1509765625,
-      "t1": 77214.8490234375,
-      "t2_close": 76972.3584375,
-      "t3": 76568.20746093751,
-      "exit_price": 78023.1509765625,
-      "exit_type": "SL",
-      "R_multiple": -1.0,
-      "cisd_series_length": 1,
-      "weekly_label": "skipped_in_backtest"
-    },
-    {
-      "entry_time": "2026-08-30T20:00:00+00:00",
-      "exit_time": "2026-09-01T04:00:00+00:00",
-      "direction": "short",
-      "swing_type": "C2",
-      "side": "bearish",
-      "entry": 77683.5,
-      "sl": 79439.24693080357,
-      "t1": 75927.75306919643,
-      "t2_close": 74874.3049107143,
-      "t3": 73118.55797991074,
-      "exit_price": 78738.46875,
-      "exit_type": "TIMEOUT",
-      "R_multiple": -0.6008660653145297,
-      "cisd_series_length": 1,
-      "weekly_label": "skipped_in_backtest"
-    }
-  ]
+  "trades": []
 }

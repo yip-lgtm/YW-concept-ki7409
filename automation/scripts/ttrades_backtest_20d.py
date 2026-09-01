@@ -33,7 +33,7 @@ SL_BUFFER_ATR_MULT = 0.15
 sys.path.insert(0, str(REPO / "automation" / "scripts"))
 from ttrades_btc import (
     detect_c2_closure, detect_c3_closure, check_cisd,
-    check_eq_respect, calculate_trade_levels
+    check_eq_respect, calculate_trade_levels, check_d1_trend
 )
 
 OUT_DIR = REPO / "automation" / "reports" / "ttrades_btc"
@@ -42,17 +42,16 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 def fetch_data():
     """Fetch enough data to walk forward 20 days."""
-    # yfinance 1h limit: 730d, 15m limit: 60d
     h1 = yf.download(TICKER, period="30d", interval="1h", progress=False, auto_adjust=True)
     m15 = yf.download(TICKER, period="8d", interval="15m", progress=False, auto_adjust=True)
-    if isinstance(h1.columns, pd.MultiIndex):
-        h1.columns = [c[0] for c in h1.columns]
-    if isinstance(m15.columns, pd.MultiIndex):
-        m15.columns = [c[0] for c in m15.columns]
-    return h1, m15
+    h1_daily = yf.download(TICKER, period="2y", interval="1d", progress=False, auto_adjust=True)
+    for df in [h1, m15, h1_daily]:
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = [c[0] for c in df.columns]
+    return h1, m15, h1_daily
 
 
-def walk_forward(h1: pd.DataFrame, m15: pd.DataFrame, days: int = 20) -> list:
+def walk_forward(h1: pd.DataFrame, m15: pd.DataFrame, h1_daily: pd.DataFrame, days: int = 20) -> list:
     """Walk forward through H1 data, checking each H4 close for signal.
     
     For each potential signal:
@@ -106,6 +105,15 @@ def walk_forward(h1: pd.DataFrame, m15: pd.DataFrame, days: int = 20) -> list:
         
         # Step 3: EQ respect
         if not check_eq_respect(swing, m15_slice):
+            continue
+        
+        # Step 3b: D1 trend filter (B from backtest review)
+        # Use daily data up to current time
+        d1_slice = h1_daily[h1_daily.index.date <= current_h4_time.date()]
+        if len(d1_slice) < 60:
+            continue
+        d1_trend = check_d1_trend(d1_slice, swing["direction"])
+        if not d1_trend["aligned"]:
             continue
         
         # Step 4: Skip if recent signal (avoid duplicate)
@@ -201,15 +209,14 @@ def walk_forward(h1: pd.DataFrame, m15: pd.DataFrame, days: int = 20) -> list:
 def main():
     print(f"[ttrades-backtest-20d] === {datetime.now(HKT).strftime('%Y-%m-%d %H:%M:%S HKT')} ===")
     
-    h1, m15 = fetch_data()
-    if h1.empty or m15.empty:
+    h1, m15, h1_daily = fetch_data()
+    if h1.empty or m15.empty or h1_daily.empty:
         print("  ✗ No data")
         return 1
     
-    print(f"  [data] H1: {len(h1)} bars, M15: {len(m15)} bars")
-    print(f"  [data] H1 range: {h1.index[0]} to {h1.index[-1]}")
+    print(f"  [data] H1: {len(h1)}, M15: {len(m15)}, Daily: {len(h1_daily)}")
     
-    trades = walk_forward(h1, m15, days=20)
+    trades = walk_forward(h1, m15, h1_daily, days=20)
     
     # Stats
     n = len(trades)
