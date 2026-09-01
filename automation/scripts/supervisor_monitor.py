@@ -87,6 +87,7 @@ POWER_WORKFLOW_MAP = {
     "sys_engineer":  "sys-engineer.yml",
     "llm_scientist": "llm-iteration-scientist.yml",
     "tech_analyst":  "unified-pipeline.yml",
+    "ranking":       "strategy-ranking.yml",  # extra: ranking
 }
 
 POWER_RECOVERY_FILE = REPO / "automation" / "sys_power_recovery.json"
@@ -273,6 +274,54 @@ def build_health_report(ocs, ranking, workflows, yw_daily) -> dict:
         "status": "ok" if not issues else "warning" if len(issues) <= 2 else "critical",
         "n_issues": len(issues),
     }
+
+
+def check_ranking_freshness() -> dict:
+    """Check if strategy ranking is fresh (auto-heal if stale).
+    
+    Ranking is daily (00:05 HKT weekdays) - stale if >36h old on weekday.
+    """
+    state = {"strategy": "ranking", "issues": []}
+    ranking_dir = RANKING_DIR
+    if not ranking_dir.exists():
+        state["issues"].append("ranking dir missing")
+        return state
+    
+    # Find latest ranking_YYYY-MM-DD.json
+    import re
+    today_utc = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    today_hkt = (datetime.now(UTC) + timedelta(hours=8)).strftime("%Y-%m-%d") if (UTC := timezone.utc) else today_utc
+    weekday = datetime.now(timezone(timedelta(hours=8))).weekday()  # 0=Mon
+    
+    latest_file = None
+    latest_date = ""
+    for f in ranking_dir.glob("ranking_2026-*.json"):
+        m = re.search(r"ranking_(\d{4}-\d{2}-\d{2})", f.name)
+        if m:
+            if m.group(1) > latest_date:
+                latest_date = m.group(1)
+                latest_file = f
+    
+    state["latest_file"] = latest_file.name if latest_file else None
+    state["latest_date"] = latest_date
+    
+    if not latest_file:
+        state["issues"].append("no ranking files found")
+    else:
+        # Check staleness
+        try:
+            latest_dt = datetime.strptime(latest_date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+            now = datetime.now(timezone.utc)
+            age_hours = (now - latest_dt).total_seconds() / 3600
+            state["age_hours"] = round(age_hours, 1)
+            
+            # If weekday and ranking is >24h old → stale
+            if weekday < 5 and age_hours > 24:
+                state["issues"].append(f"ranking stale: {age_hours:.0f}h (weekday)")
+        except Exception as e:
+            state["issues"].append(f"date parse: {e}")
+    
+    return state
 
 
 def check_live_scan_positions() -> dict:
@@ -524,6 +573,20 @@ def main() -> int:
         if not live_pos["issues"]:
             summary += f"\n\n✅ All positions healthy"
         send_tg(summary)
+    
+    # Step 5b: Strategy ranking freshness
+    ranking_check = check_ranking_freshness()
+    if ranking_check["issues"]:
+        print(f"[supervisor] ⚠️ Ranking: {ranking_check['issues']}")
+        # Auto-heal: trigger strategy-ranking workflow
+        for iss in ranking_check["issues"]:
+            if "stale" in iss:
+                print(f"  [auto-heal] triggering strategy-ranking.yml")
+                if trigger_workflow(POWER_WORKFLOW_MAP.get("ranking", "strategy-ranking.yml")):
+                    print(f"  [auto-heal] ✓ strategy-ranking triggered")
+                break
+    else:
+        print(f"[supervisor] ✓ Ranking fresh ({ranking_check.get('latest_date')})")
     
     # Step 6b: 4 Powers of Separation health check
     power_alerts = check_powers_of_separation()
