@@ -111,6 +111,34 @@ def sig_in_last_24h(s):
 
 last24h_sigs = [s for s in all_signals if sig_in_last_24h(s)]
 
+# 4b. 24h Live Ranking (from real closed trades)
+RANKING_24H_FILE = REPO / 'automation/reports/strategy_ranking/24h/ranking_24h.json'
+ranking_24h_list = []
+ranking_24h_agg = {"n_trades": 0, "n_wins": 0, "win_rate": 0, "total_R": 0, "total_pnl_usd": 0}
+ranking_24h_updated = None
+r24 = None
+if RANKING_24H_FILE.exists():
+    try:
+        with open(RANKING_24H_FILE) as f:
+            r24 = json.load(f)
+        ranking_24h_list = r24.get("ranking", [])
+        if ranking_24h_list:
+            n_total = sum(r.get("n_trades", 0) for r in ranking_24h_list)
+            n_wins = sum(r.get("n_wins", 0) for r in ranking_24h_list)
+            total_R = sum(r.get("total_R", 0) for r in ranking_24h_list)
+            total_pnl = sum(r.get("total_pnl_usd", 0) for r in ranking_24h_list)
+            ranking_24h_agg = {
+                "n_trades": n_total,
+                "n_wins": n_wins,
+                "win_rate": round(n_wins / n_total * 100, 1) if n_total > 0 else 0,
+                "total_R": round(total_R, 2),
+                "total_pnl_usd": round(total_pnl, 2),
+            }
+        ranking_24h_updated = r24.get("hkt_timestamp") if r24 else None
+        print(f"  24h ranking: {len(ranking_24h_list)} strategies, {n_total} trades")
+    except Exception as e:
+        print(f"  24h ranking load error: {e}")
+
 # 5. Latest iteration
 iter_files = sorted((REPO / 'automation/reports/strategy_ranking/iterations').glob('iteration_all_*.json'), reverse=True)
 latest_iter = {}
@@ -236,6 +264,9 @@ out = {
         'signals_24h': total_sigs_24h,
         'wr_24h': round(total_w_24h / total_24h * 100, 1) if total_24h else 0,
     },
+    'ranking_24h': ranking_24h_list,
+    'ranking_24h_aggregate': ranking_24h_agg,
+    'ranking_24h_updated': r24.get("hkt_timestamp") if r24 else None,
     'strategies': strategies_out,
 }
 

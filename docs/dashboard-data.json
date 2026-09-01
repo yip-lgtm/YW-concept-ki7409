@@ -1,15 +1,85 @@
 {
-  "generated_at": "2026-08-31 11:05 HKT",
-  "hkt_timestamp": "2026-08-31T11:05:53.571715+08:00",
+  "generated_at": "2026-09-01 20:24 HKT",
+  "hkt_timestamp": "2026-09-01T20:24:26.593015+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 33,
-    "trades_today": 26,
-    "wins_24h": 14,
-    "R_24h": 3.65,
-    "signals_24h": 42,
-    "wr_24h": 42.4
+    "trades_24h": 102,
+    "trades_today": 36,
+    "wins_24h": 27,
+    "R_24h": -31.32,
+    "signals_24h": 104,
+    "wr_24h": 26.5
   },
+  "ranking_24h": [
+    {
+      "strategy": "RSI-Div",
+      "n_trades": 2,
+      "n_wins": 2,
+      "n_losses": 0,
+      "win_rate": 100.0,
+      "total_R": 3.24,
+      "avg_R": 1.618,
+      "total_pnl_usd": 532.16,
+      "profit_factor": 10.0,
+      "rank": 1
+    },
+    {
+      "strategy": "CRT",
+      "n_trades": 1,
+      "n_wins": 1,
+      "n_losses": 0,
+      "win_rate": 100.0,
+      "total_R": 1.62,
+      "avg_R": 1.618,
+      "total_pnl_usd": 247.02,
+      "profit_factor": 10.0,
+      "rank": 2
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "n_trades": 4,
+      "n_wins": 2,
+      "n_losses": 2,
+      "win_rate": 50.0,
+      "total_R": 1.24,
+      "avg_R": 0.309,
+      "total_pnl_usd": 210.29,
+      "profit_factor": 1.62,
+      "rank": 3
+    },
+    {
+      "strategy": "3-Pushes",
+      "n_trades": 2,
+      "n_wins": 1,
+      "n_losses": 1,
+      "win_rate": 50.0,
+      "total_R": 0.62,
+      "avg_R": 0.309,
+      "total_pnl_usd": 92.03,
+      "profit_factor": 1.62,
+      "rank": 4
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "n_trades": 1,
+      "n_wins": 0,
+      "n_losses": 1,
+      "win_rate": 0.0,
+      "total_R": -1.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": 164.17,
+      "profit_factor": 0.0,
+      "rank": 5
+    }
+  ],
+  "ranking_24h_aggregate": {
+    "n_trades": 10,
+    "n_wins": 6,
+    "win_rate": 60.0,
+    "total_R": 5.72,
+    "total_pnl_usd": 1245.67
+  },
+  "ranking_24h_updated": "2026-09-01T20:23:31.885867+08:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -17,7 +87,7 @@
       "agent": "yw-ocs-btc",
       "ticker": "BTC-USD",
       "weight": 1.0,
-      "optim_date": "—",
+      "optim_date": "\u2014",
       "timeframe": "5min",
       "r_multiples": [
         1,
@@ -69,7 +139,7 @@
       "agent": "yw-h-pattern",
       "ticker": "MNQ=F",
       "weight": 1.2,
-      "optim_date": "—",
+      "optim_date": "\u2014",
       "timeframe": "3min/5min",
       "r_multiples": [
         1,
@@ -79,24 +149,24 @@
         5
       ],
       "live_24h": {
-        "n": 3,
-        "wins": 0,
-        "losses": 3,
-        "wr": 0.0,
-        "R": -3.0,
-        "pf": 0.0,
-        "pnl": -797.51
+        "n": 6,
+        "wins": 4,
+        "losses": 2,
+        "wr": 66.7,
+        "R": 4.47,
+        "pf": 3.24,
+        "pnl": 1451.44
       },
       "live_today": {
-        "n": 3,
-        "wins": 0,
-        "losses": 3,
-        "wr": 0.0,
-        "R": -3.0,
-        "pf": 0.0,
-        "pnl": -797.51
+        "n": 4,
+        "wins": 4,
+        "losses": 0,
+        "wr": 100.0,
+        "R": 6.47,
+        "pf": 10.0,
+        "pnl": 1948.84
       },
-      "signals_24h": 4,
+      "signals_24h": 6,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -110,9 +180,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "D",
+        "confidence": 25,
+        "reason": "0 trades\u8868\u793a\u8a0a\u865f\u904e\u56b4\uff0c\u7121\u5be6\u6230\u6578\u64da\u8b49\u660eedge\uff0cstats\u7121\u53c3\u8003\u50f9\u503c"
       }
     },
     {
@@ -121,7 +191,7 @@
       "agent": "yw-3-pushes",
       "ticker": "MNQ=F",
       "weight": 1.0,
-      "optim_date": "—",
+      "optim_date": "\u2014",
       "timeframe": "5min/15min",
       "r_multiples": [
         1,
@@ -131,24 +201,24 @@
         5
       ],
       "live_24h": {
-        "n": 9,
-        "wins": 5,
-        "losses": 4,
-        "wr": 55.6,
-        "R": 4.09,
-        "pf": 2.02,
-        "pnl": 1343.41
+        "n": 33,
+        "wins": 8,
+        "losses": 25,
+        "wr": 24.2,
+        "R": -12.06,
+        "pf": 0.52,
+        "pnl": -442.62
       },
       "live_today": {
-        "n": 6,
-        "wins": 4,
-        "losses": 2,
-        "wr": 66.7,
-        "R": 4.47,
-        "pf": 3.24,
-        "pnl": 1565.29
+        "n": 7,
+        "wins": 2,
+        "losses": 5,
+        "wr": 28.6,
+        "R": -1.76,
+        "pf": 0.65,
+        "pnl": -295.91
       },
-      "signals_24h": 10,
+      "signals_24h": 35,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -162,14 +232,14 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "C",
+        "confidence": 35,
+        "reason": "0 trades = strategy\u672a\u89f8\u767c\uff0c\u689d\u4ef6\u904e\u7dca\uff0c\u9700\u653e\u5bec\u5165\u5834\u6216\u52a0\u6307\u6a19\u78ba\u8a8d\u3002"
       }
     },
     {
       "id": "two-yang",
-      "name": "兩陽夾一陰",
+      "name": "\u5169\u967d\u593e\u4e00\u9670",
       "agent": "yw-two-yang",
       "ticker": "MNQ=F",
       "weight": 0.3,
@@ -214,9 +284,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
+        "grade": "D",
         "confidence": 25,
-        "reason": "0 trades無統計意義，未能驗證edge；指標組合可能過嚴或訊號未觸發"
+        "reason": "0 trades means no signals generated; current config too restrictive or misaligned, no edge proven"
       }
     },
     {
@@ -266,9 +336,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "D",
+        "confidence": 35,
+        "reason": "0 trades\u5168\u671f\u7121\u8a0a\u865f\uff0cRSI divergence\u65bc15min\u6975\u7a00\u6709\uff0c\u7b56\u7565\u672a\u771f\u6b63\u904b\u884c\uff0c\u96e3\u4ee5\u9a57\u8b49edge\u3002"
       }
     },
     {
@@ -277,7 +347,7 @@
       "agent": "yw-50-20-pullback",
       "ticker": "MNQ=F",
       "weight": 1.0,
-      "optim_date": "—",
+      "optim_date": "\u2014",
       "timeframe": "5min/15min/60min",
       "r_multiples": [
         1,
@@ -319,8 +389,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 35,
-        "reason": "零交易表示條件過嚴或時框不匹配，需放寬進場邏輯"
+        "confidence": 25,
+        "reason": "0 trades\u5b8c\u5168\u7121\u4fe1\u865f\uff0c\u7b56\u7565\u7121\u5be6\u969b\u8ca2\u737b\uff0cpullback\u689d\u4ef6\u53ef\u80fd\u904e\u56b4\u6216EMA/SMA\u7d44\u5408\u57285min\u7121\u8a0a\u865f"
       }
     },
     {
@@ -339,13 +409,13 @@
         5
       ],
       "live_24h": {
-        "n": 9,
-        "wins": 3,
-        "losses": 6,
-        "wr": 33.3,
-        "R": -1.15,
-        "pf": 0.81,
-        "pnl": -909.48
+        "n": 26,
+        "wins": 5,
+        "losses": 21,
+        "wr": 19.2,
+        "R": -12.91,
+        "pf": 0.39,
+        "pnl": -408.85
       },
       "live_today": {
         "n": 6,
@@ -354,9 +424,9 @@
         "wr": 50.0,
         "R": 1.85,
         "pf": 1.62,
-        "pnl": -577.64
+        "pnl": -134.82
       },
-      "signals_24h": 12,
+      "signals_24h": 27,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -371,8 +441,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "0 trades信號未觸發，純step_pattern太單一，缺確認指標同多時框共振"
+        "confidence": 62,
+        "reason": "0 trades\u53cd\u6620\u8a0a\u865f\u689d\u4ef6\u904e\u56b4\uff0c5min\u968e\u68af\u6a21\u5f0f\u672a\u89f8\u767c\uff0c\u9700\u653e\u5bec\u689d\u4ef6\u4e26\u64f4\u5c55\u6642\u9593\u6846\u67b6"
       }
     },
     {
@@ -391,24 +461,24 @@
         5
       ],
       "live_24h": {
-        "n": 12,
-        "wins": 6,
-        "losses": 6,
-        "wr": 50.0,
-        "R": 3.71,
-        "pf": 1.62,
-        "pnl": 238.94
+        "n": 37,
+        "wins": 10,
+        "losses": 27,
+        "wr": 27.0,
+        "R": -10.82,
+        "pf": 0.6,
+        "pnl": -1016.29
       },
       "live_today": {
-        "n": 11,
-        "wins": 6,
-        "losses": 5,
-        "wr": 54.5,
-        "R": 4.71,
-        "pf": 1.94,
-        "pnl": 377.93
+        "n": 19,
+        "wins": 8,
+        "losses": 11,
+        "wr": 42.1,
+        "R": 1.94,
+        "pf": 1.18,
+        "pnl": 79.11
       },
-      "signals_24h": 16,
+      "signals_24h": 36,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -422,9 +492,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "C",
+        "confidence": 84,
+        "reason": "\u6574\u9ad4\u5fae\u5229\u4e14PF\u504f\u4f4e\uff0c\u76c8\u5229\u96c6\u4e2dMES\uff1bMNQ\u53caMGC\u62d6\u7d2f\uff0c\u6a23\u672c\u4ecd\u7d30"
       }
     },
     {
@@ -475,13 +545,13 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "0 trades零樣本，無法驗證edge；5min對cycle太短，訊號未觸發"
+        "confidence": 72,
+        "reason": "0 trades\u5168\u7121\u57f7\u884c\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\uff1b5min+cycle+subdetectors\u53ef\u80fd\u592a\u56b4\u683c\u6ffe\u8d70\u5168\u90e8\u8a0a\u865f\uff0c\u9700\u653e\u5bec\u689d\u4ef6"
       }
     },
     {
       "id": "b1-mnq",
-      "name": "B1 战法 (MNQ)",
+      "name": "B1 \u6218\u6cd5 (MNQ)",
       "agent": "yw-b1-mnq",
       "ticker": "MNQ=F",
       "weight": 0.4,
@@ -533,7 +603,7 @@
     },
     {
       "id": "b1-mgc",
-      "name": "B1 战法 (MGC)",
+      "name": "B1 \u6218\u6cd5 (MGC)",
       "agent": "yw-b1-mgc",
       "ticker": "MGC=F",
       "weight": 0.3,
@@ -585,7 +655,7 @@
     },
     {
       "id": "b1-btc",
-      "name": "B1 战法 (BTC)",
+      "name": "B1 \u6218\u6cd5 (BTC)",
       "agent": "yw-b1-btc",
       "ticker": "BTC-USD",
       "weight": 0.3,
@@ -637,7 +707,7 @@
     },
     {
       "id": "b1-3in1",
-      "name": "B1 战法 3合1 (MNQ+MGC+BTC)",
+      "name": "B1 \u6218\u6cd5 3\u54081 (MNQ+MGC+BTC)",
       "agent": "yw-b1-3in1",
       "ticker": "MNQ=F",
       "weight": 1.0,
@@ -687,113 +757,5 @@
         "reason": ""
       }
     }
-  ],
-  "ranking_24h": [
-    {
-      "rank": 1,
-      "strategy": "50-20-Pullback",
-      "n_trades": 16,
-      "n_wins": 8,
-      "n_losses": 8,
-      "win_rate": 50.0,
-      "total_R": 4.94,
-      "avg_R": 0.309,
-      "total_pnl_usd": 1333.4
-    },
-    {
-      "rank": 2,
-      "strategy": "3-Pushes",
-      "n_trades": 9,
-      "n_wins": 5,
-      "n_losses": 4,
-      "win_rate": 55.6,
-      "total_R": 4.09,
-      "avg_R": 0.454,
-      "total_pnl_usd": 1343.41
-    },
-    {
-      "rank": 3,
-      "strategy": "CRT",
-      "n_trades": 12,
-      "n_wins": 6,
-      "n_losses": 6,
-      "win_rate": 50.0,
-      "total_R": 3.71,
-      "avg_R": 0.309,
-      "total_pnl_usd": 238.94
-    },
-    {
-      "rank": 4,
-      "strategy": "RSI-Div",
-      "n_trades": 7,
-      "n_wins": 4,
-      "n_losses": 3,
-      "win_rate": 57.1,
-      "total_R": 3.47,
-      "avg_R": 0.496,
-      "total_pnl_usd": 697.82
-    },
-    {
-      "rank": 5,
-      "strategy": "Kell-Cycle",
-      "n_trades": 3,
-      "n_wins": 2,
-      "n_losses": 1,
-      "win_rate": 66.7,
-      "total_R": 2.24,
-      "avg_R": 0.745,
-      "total_pnl_usd": 80.5
-    },
-    {
-      "rank": 6,
-      "strategy": "B1-3in1",
-      "n_trades": 1,
-      "n_wins": 0,
-      "n_losses": 1,
-      "win_rate": 0.0,
-      "total_R": -1.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": 66.91
-    },
-    {
-      "rank": 7,
-      "strategy": "Stair",
-      "n_trades": 9,
-      "n_wins": 3,
-      "n_losses": 6,
-      "win_rate": 33.3,
-      "total_R": -1.15,
-      "avg_R": -0.127,
-      "total_pnl_usd": -909.48
-    },
-    {
-      "rank": 8,
-      "strategy": "Two-Yang",
-      "n_trades": 4,
-      "n_wins": 1,
-      "n_losses": 3,
-      "win_rate": 25.0,
-      "total_R": -1.38,
-      "avg_R": -0.345,
-      "total_pnl_usd": -94.63
-    },
-    {
-      "rank": 9,
-      "strategy": "H-Pattern",
-      "n_trades": 3,
-      "n_wins": 0,
-      "n_losses": 3,
-      "win_rate": 0.0,
-      "total_R": -3.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -797.51
-    }
-  ],
-  "ranking_24h_aggregate": {
-    "n_trades": 64,
-    "n_wins": 29,
-    "win_rate": 45.3,
-    "total_R": 11.92,
-    "total_pnl_usd": 1959.36
-  }
+  ]
 }
