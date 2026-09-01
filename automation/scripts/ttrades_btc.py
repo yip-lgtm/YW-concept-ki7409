@@ -1,30 +1,20 @@
 #!/usr/bin/env python3
-"""ttrades_btc — 5th Power subagent: TTrades ICT Fractal Model on BTC.
+"""ttrades_btc — 5th Power: TTrades ICT Fractal Model on BTC (per docs/17).
 
-Implements TTrades Model (OSOK + Fractal) per docs/17-TTrades-Model.md.
-
-Key components:
-1. C2 Closure detection (swing)
-   - Bearish: C2.high > C1.high, C2.close < C1.high
-   - Bullish: C2.low < C1.low, C2.close > C1.low
-2. CISD confirmation (lower TF)
-   - H1 swing → M15 CISD
-   - D1 swing → H1 CISD
-3. Weekly profile (4 types)
-4. Daily profile (London/NY reversal)
-5. Projection: -2 (TP1), -4 (TP2)
-
-Output signal:
-- T2 close mode (1.6R)
-- $247K account, 0.25% risk = $617.50 per trade
-- SL = C2 swing + ATR buffer
-- T1 (1.0R) / T2 CLOSE (1.6R) / T3 (2.6R) runner
+v2 corrections (after user review of v1):
+- CISD scoped to consecutive bullish/bearish series only
+- C3 Closure fallback when C2 didn't return to C1
+- C2 wick EQ respect check (price on correct side of EQ)
+- Weekly profile is LABEL only, never hard-gate
+  - classic_expansion only valid on/after Thu
+  - Tue/Wed: 'early_week' label, doesn't block
+- SL = C2 swing + 0.15×ATR buffer (not 1.6×ATR)
+- Daily profile check: London expanded → skip NY
+- Manipulation -2 / -4 projection targets
+- Position sizing: $617.50 / risk_per_unit = units
 """
 from __future__ import annotations
-import os
-import sys
-import json
-import requests
+import os, sys, json, requests
 import yfinance as yf
 import pandas as pd
 import numpy as np
@@ -42,261 +32,357 @@ TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
 
 TICKER = "BTC-USD"
 ACCOUNT_SIZE = 247_000
-RISK_PCT = 0.0025  # 0.25%
+RISK_PCT = 0.0025
 RISK_AMOUNT = ACCOUNT_SIZE * RISK_PCT  # $617.50
 
-# TTrades signal file (read by ttrades_act.py)
-SIGNAL_FILE = REPO / "automation" / "reports" / "ttrades_btc" / "latest.json"
-SIGNAL_DIR = SIGNAL_FILE.parent
+SIGNAL_DIR = REPO / "automation" / "reports" / "ttrades_btc"
 SIGNAL_DIR.mkdir(parents=True, exist_ok=True)
-
+SIGNAL_FILE = SIGNAL_DIR / "latest.json"
 LOG_FILE = SIGNAL_DIR / "signals.jsonl"
 
 
-def fetch_ohlcv(symbol: str, interval: str, period: str = "60d") -> pd.DataFrame:
-    """Fetch OHLCV data via yfinance."""
+def fetch_ohlcv(symbol, interval, period="60d"):
     try:
         df = yf.download(symbol, period=period, interval=interval, progress=False, auto_adjust=True)
-        if df.empty:
-            return df
-        # Flatten multi-index if needed
+        if df.empty: return df
         if isinstance(df.columns, pd.MultiIndex):
             df.columns = [c[0] for c in df.columns]
         return df
     except Exception as e:
-        print(f"  ✗ yfinance error: {e}")
+        print(f"  ✗ yfinance: {e}")
         return pd.DataFrame()
 
 
-def detect_c2_closure(df: pd.DataFrame, lookback: int = 5) -> dict | None:
-    """Detect C2 closure (ideal swing) on given timeframe.
+def detect_c2_closure(df):
+    """H4 C2 Closure: sweep C1 extreme + close back inside."""
+    if len(df) < 3: return None
+    c1, c2, c3 = df.iloc[-3], df.iloc[-2], df.iloc[-1]
     
-    C2 closure rules:
-    - Bearish C2: C2.high > C1.high AND C2.close < C1.high
-    - Bullish C2: C2.low < C1.low AND C2.close > C1.low
-    - Sweep + return = "manipulation"
-    """
-    if len(df) < lookback + 2:
-        return None
-    
-    # Get last 3 candles: C1, C2, C3
-    # We need swing from C1 to C2 (C2 makes new high/low) then C2 reverts
-    last = df.iloc[-lookback:]
-    
-    c1 = last.iloc[-3]  # 2 bars ago
-    c2 = last.iloc[-2]  # 1 bar ago (the swing)
-    c3 = last.iloc[-1]  # current (potential expansion)
-    
-    # Bearish C2: C2 made higher high then closed back below C1.high
     if c2['High'] > c1['High'] and c2['Close'] < c1['High']:
-        # C2 swept the high (manipulation) and closed back inside
-        return {
-            "type": "bearish_c2",
-            "c1_high": float(c1['High']),
-            "c2_high": float(c2['High']),  # swing high
-            "c2_low": float(c2['Low']),
-            "c2_close": float(c2['Close']),
-            "c3_open": float(c3['Open']),
-            "c3_close": float(c3['Close']),
-            "swing_level": float(c2['High']),  # SL reference
-            "manipulation": c2['High'] - c1['High'],
-            "direction": "short",
-        }
-    
-    # Bullish C2: C2 made lower low then closed back above C1.low
+        eq = (float(c2['High']) + float(c2['Low'])) / 2
+        return {"type": "c2_closure", "side": "bearish",
+                "c2_high": float(c2['High']), "c2_low": float(c2['Low']),
+                "c2_close": float(c2['Close']), "c2_eq": eq,
+                "c3_close": float(c3['Close']),
+                "swing_level": float(c2['High']), "direction": "short"}
     if c2['Low'] < c1['Low'] and c2['Close'] > c1['Low']:
-        return {
-            "type": "bullish_c2",
-            "c1_low": float(c1['Low']),
-            "c2_low": float(c2['Low']),
-            "c2_high": float(c2['High']),
-            "c2_close": float(c2['Close']),
-            "c3_open": float(c3['Open']),
-            "c3_close": float(c3['Close']),
-            "swing_level": float(c2['Low']),
-            "manipulation": c1['Low'] - c2['Low'],
-            "direction": "long",
-        }
-    
+        eq = (float(c2['High']) + float(c2['Low'])) / 2
+        return {"type": "c2_closure", "side": "bullish",
+                "c2_high": float(c2['High']), "c2_low": float(c2['Low']),
+                "c2_close": float(c2['Close']), "c2_eq": eq,
+                "c3_close": float(c3['Close']),
+                "swing_level": float(c2['Low']), "direction": "long"}
     return None
 
 
-def check_cisd(ltf_df: pd.DataFrame, direction: str) -> bool:
-    """Check CISD (Change in State of Delivery) on lower timeframe.
+def detect_c3_closure(df):
+    """H4 C3 Closure fallback: C2 didn't return, C3 strong body confirms."""
+    if len(df) < 4: return None
+    c1, c2, c3, c4 = df.iloc[-4], df.iloc[-3], df.iloc[-2], df.iloc[-1]
     
-    Bearish CISD: close below lowest bullish open in sequence
-    Bullish CISD: close above highest bearish open in sequence
-    """
-    if len(ltf_df) < 5:
-        return False
-    
-    # Get last 5 candles
-    recent = ltf_df.iloc[-5:]
-    
-    if direction == "short":
-        # Find lowest bullish candle's open (most recent bullish series)
-        bullish_opens = [row['Open'] for _, row in recent.iterrows() if row['Close'] > row['Open']]
-        if not bullish_opens:
-            return False
-        min_bull_open = min(bullish_opens)
-        # CISD: last close below min_bull_open
-        return recent.iloc[-1]['Close'] < min_bull_open
-    
-    elif direction == "long":
-        bearish_opens = [row['Open'] for _, row in recent.iterrows() if row['Close'] < row['Open']]
-        if not bearish_opens:
-            return False
-        max_bear_open = max(bearish_opens)
-        return recent.iloc[-1]['Close'] > max_bear_open
-    
-    return False
-
-
-def check_weekly_profile(weekly_df: pd.DataFrame) -> dict:
-    """Detect weekly profile (4 types per TTrades).
-    
-    Returns:
-    {
-      "profile": str,  # classic_expansion, midweek_reversal, etc.
-      "expected_c2_day": int,  # 1-5 (Mon-Fri)
-    }
-    """
-    if len(weekly_df) < 7:
-        return {"profile": "unknown", "expected_c2_day": None}
-    
-    # Get this week's daily bars
-    this_week = weekly_df.iloc[-5:]
-    if len(this_week) < 5:
-        return {"profile": "unknown", "expected_c2_day": None}
-    
-    weekly_open = float(this_week.iloc[0]['Open'])
-    day_closes = [float(c) for c in this_week['Close']]
-    
-    # Check if Monday/Tuesday are against weekly open
-    if day_closes[0] < weekly_open and day_closes[1] < weekly_open:
-        # Mon/Tue going down → Midweek Reversal (Wed=C2)
-        return {"profile": "midweek_reversal", "expected_c2_day": 3}
-    
-    # Check if extended in one direction (Thursday Counter)
-    if all(c < weekly_open for c in day_closes[:3]):
-        return {"profile": "thursday_counter", "expected_c2_day": 4}
-    
-    # Check if consolidation (Consolidation Reversal)
-    ranges = [abs(float(this_week.iloc[i]['High']) - float(this_week.iloc[i]['Low'])) 
-              for i in range(min(3, len(this_week)))]
-    avg_range = sum(ranges) / len(ranges) if ranges else 0
-    if all(r < avg_range * 1.2 for r in ranges):
-        return {"profile": "consolidation_reversal", "expected_c2_day": 4}
-    
-    # Default: classic expansion (Fri reversal possible)
-    return {"profile": "classic_expansion", "expected_c2_day": 5}
-
-
-def calculate_trade_levels(c2: dict, atr: float) -> dict:
-    """Calculate SL, T1-T5 with T2 close mode (1.6R)."""
-    swing = c2["swing_level"]
-    last_close = c2["c3_close"]
-    
-    # SL: 1.6x ATR beyond swing (TTrades uses swing + buffer)
-    if c2["direction"] == "short":
-        sl = swing + atr * 1.6
-        risk = sl - last_close
-    else:
-        sl = swing - atr * 1.6
-        risk = last_close - sl
-    
-    if risk <= 0:
+    c3_body = abs(float(c3['Close']) - float(c3['Open']))
+    c3_range = float(c3['High']) - float(c3['Low'])
+    if c3_range <= 0 or c3_body / c3_range < 0.55:
         return None
     
-    # T2 close mode: T1=1R, T2=1.618R (close), T3=2.618R runner
-    t1 = last_close + (-risk if c2["direction"] == "short" else risk) * 1.0
-    t2 = last_close + (-risk if c2["direction"] == "short" else risk) * 1.618
-    t3 = last_close + (-risk if c2["direction"] == "short" else risk) * 2.618
-    t4 = last_close + (-risk if c2["direction"] == "short" else risk) * 3.618
-    t5 = last_close + (-risk if c2["direction"] == "short" else risk) * 5.0
+    if c2['High'] > c1['High'] and c2['Close'] >= c1['High'] and c3['Close'] < c3['Open']:
+        eq = (float(c2['High']) + float(c2['Low'])) / 2
+        return {"type": "c3_closure", "side": "bearish",
+                "c2_high": float(c2['High']), "c2_eq": eq,
+                "c4_close": float(c4['Close']),
+                "swing_level": float(c2['High']), "direction": "short"}
+    if c2['Low'] < c1['Low'] and c2['Close'] <= c1['Low'] and c3['Close'] > c3['Open']:
+        eq = (float(c2['High']) + float(c2['Low'])) / 2
+        return {"type": "c3_closure", "side": "bullish",
+                "c2_low": float(c2['Low']), "c2_eq": eq,
+                "c4_close": float(c4['Close']),
+                "swing_level": float(c2['Low']), "direction": "long"}
+    return None
+
+
+def _consecutive_series(ltf_df, max_lookback=8):
+    """Group consecutive bullish/bearish candles. Return list of (dir, start, end)."""
+    series = []
+    current_dir = None
+    start = None
+    for i, (_, row) in enumerate(ltf_df.tail(max_lookback).iterrows()):
+        if row['Close'] > row['Open']: d = "bull"
+        elif row['Close'] < row['Open']: d = "bear"
+        else: continue
+        if d != current_dir:
+            if current_dir is not None:
+                series.append((current_dir, start, i - 1))
+            current_dir = d
+            start = i
+    if current_dir is not None:
+        series.append((current_dir, start, max_lookback - 1))
+    return series
+
+
+def check_cisd(ltf_df, direction):
+    """M15 CISD: close breaks opposing series' extreme open (scoped to last series)."""
+    if len(ltf_df) < 5:
+        return {"confirmed": False, "reason": "insufficient"}
+    
+    series = _consecutive_series(ltf_df)
+    if not series:
+        return {"confirmed": False, "reason": "no series"}
+    
+    last_close = float(ltf_df['Close'].iloc[-1])
+    target_dir = "bull" if direction == "short" else "bear"
+    opposing = [(d, s, e) for d, s, e in series if d == target_dir]
+    
+    if not opposing:
+        return {"confirmed": False, "reason": f"no {target_dir} series to break"}
+    
+    d, s, e = opposing[-1]
+    series_opens = [float(ltf_df['Open'].iloc[i]) for i in range(s, e + 1)]
+    extreme = min(series_opens) if direction == "short" else max(series_opens)
+    confirmed = (last_close < extreme) if direction == "short" else (last_close > extreme)
     
     return {
-        "entry": last_close,
-        "sl": sl,
-        "t1": t1,
-        "t2_close": t2,
-        "t3": t3,
-        "t4": t4,
-        "t5": t5,
-        "risk_per_unit": abs(risk),
+        "confirmed": confirmed,
+        "opposing_open": extreme,
+        "series_length": e - s + 1,
+        "last_close": last_close,
+        "reason": f"cisd_{direction}" if confirmed else "no break",
+    }
+
+
+def check_eq_respect(swing, ltf_df):
+    """Price must respect C2 wick EQ (be on correct side)."""
+    eq = swing.get("c2_eq")
+    if eq is None or len(ltf_df) < 1: return False
+    last = float(ltf_df['Close'].iloc[-1])
+    if swing["direction"] == "short":
+        return last <= eq
+    return last >= eq
+
+
+def label_weekly_profile(weekly_df):
+    """Label-only weekly profile. Never hard-gate.
+    
+    Tightened rules per docs/17:
+    - Tue/Wed: 'early_week' (too early to label, doesn't block)
+    - midweek_reversal: Wed only (Mon-Tue against weekly open)
+    - thursday_counter / consolidation_reversal: Thu+
+    - classic_expansion: Fri only (Mon-Thu trend + Fri reversal)
+    """
+    weekday = datetime.now(HKT).weekday()
+    label = {"profile": "unknown", "valid_for_signal": True, "notes": ""}
+    
+    if weekday < 2:
+        label["profile"] = "early_week"
+        label["notes"] = f"day {weekday+1} - too early, not blocking"
+        return label
+    
+    if len(weekly_df) < 5:
+        return label
+    
+    weekly_open = float(weekly_df['Open'].iloc[-1])
+    if weekly_open == 0:
+        return label
+    
+    # Get this week's daily closes up to today
+    n_days = weekday + 1
+    this_week_closes = [float(weekly_df['Close'].iloc[-n_days + i]) for i in range(n_days)]
+    
+    if weekday == 2 and n_days >= 3:
+        if this_week_closes[0] < weekly_open and this_week_closes[1] < weekly_open:
+            label["profile"] = "midweek_reversal"
+            return label
+    
+    if weekday >= 3 and n_days >= 4:
+        same_dir = sum(1 for c in this_week_closes[:3] if c < weekly_open)
+        if same_dir >= 3:
+            label["profile"] = "thursday_counter"
+            return label
+        if weekday == 4 and same_dir >= 3:
+            label["profile"] = "classic_expansion"
+            label["notes"] = "Fri potential reversal (20-50% range)"
+            return label
+        # consolidation
+        ranges = [abs(float(weekly_df['High'].iloc[-n_days + i]) - float(weekly_df['Low'].iloc[-n_days + i]))
+                  for i in range(min(3, n_days))]
+        avg_range = sum(ranges) / len(ranges) if ranges else 0
+        if avg_range > 0 and all(r < avg_range * 1.2 for r in ranges):
+            label["profile"] = "consolidation_reversal"
+            return label
+    
+    return label
+
+
+def check_daily_profile(h1_df):
+    """Lightweight: if London already expanded (range > 2× ATR), skip NY."""
+    if len(h1_df) < 8:
+        return {"london_expanded": False, "skip_ny": False}
+    
+    recent = h1_df.tail(16)
+    try:
+        london_bars = recent[recent.index.hour.isin(range(8, 16))]
+    except Exception:
+        return {"london_expanded": False, "skip_ny": False}
+    
+    if len(london_bars) < 3:
+        return {"london_expanded": False, "skip_ny": False}
+    
+    london_range = float(london_bars['High'].max()) - float(london_bars['Low'].min())
+    recent_atr = float((recent['High'] - recent['Low']).mean())
+    expanded = london_range > recent_atr * 2
+    
+    return {
+        "london_expanded": expanded,
+        "london_range": london_range,
+        "skip_ny": expanded,
+    }
+
+
+def calculate_trade_levels(swing, atr):
+    """SL = C2 swing + 0.15×ATR. T1=1R, T2=1.6R, T3=2.6R. -2/-4 projection."""
+    swing_level = swing["swing_level"]
+    last_close = swing.get("c3_close") or swing.get("c4_close")
+    if last_close is None: return None
+    
+    buffer = atr * 0.15
+    if swing["direction"] == "short":
+        sl = swing_level + buffer
+        risk = sl - last_close
+    else:
+        sl = swing_level - buffer
+        risk = last_close - sl
+    
+    if risk <= 0: return None
+    
+    sign = -1 if swing["direction"] == "short" else 1
+    entry = last_close
+    t1 = entry + sign * risk * 1.0
+    t2_close = entry + sign * risk * 1.6
+    t3 = entry + sign * risk * 2.6
+    t4 = entry + sign * risk * 3.6
+    t5 = entry + sign * risk * 5.0
+    
+    # Manipulation projection
+    if swing["direction"] == "short":
+        pivot = swing.get("c2_high", swing_level)
+        proj_neg2 = entry - (pivot - entry) * 1.0
+        proj_neg4 = entry - (pivot - entry) * 2.0
+    else:
+        pivot = swing.get("c2_low", swing_level)
+        proj_neg2 = entry + (entry - pivot) * 1.0
+        proj_neg4 = entry + (entry - pivot) * 2.0
+    
+    units = RISK_AMOUNT / risk
+    
+    return {
+        "entry": entry, "sl": sl,
+        "t1": t1, "t2_close": t2_close, "t3": t3, "t4": t4, "t5": t5,
+        "risk_per_unit": risk, "units": units, "notional": units * entry,
+        "manipulation_pivot": pivot,
+        "projection_neg2": proj_neg2, "projection_neg4": proj_neg4,
+        "sl_buffer_atr": buffer,
     }
 
 
 def main():
     print(f"[ttrades-btc] === {datetime.now(HKT).strftime('%Y-%m-%d %H:%M:%S HKT')} ===")
+    weekday = datetime.now(HKT).weekday()
     
-    # Fetch multi-timeframe data
-    print("  [data] Fetching BTC multi-timeframe...")
-    daily = fetch_ohlcv(TICKER, "1d", "60d")
-    h4 = fetch_ohlcv(TICKER, "1h", "30d")  # yfinance limit
+    if weekday == 0:
+        print("  [skip] Monday (OSOK rule)")
+        SIGNAL_FILE.write_text(json.dumps({
+            "ts": datetime.now(HKT).isoformat(), "ticker": TICKER,
+            "actionable": False, "reason": "Monday skip (OSOK rule)",
+            "account_size": ACCOUNT_SIZE, "risk_amount": RISK_AMOUNT,
+        }, indent=2, default=str))
+        return 0
+    
+    print("  [data] Fetching multi-TF...")
     h1 = fetch_ohlcv(TICKER, "1h", "30d")
     m15 = fetch_ohlcv(TICKER, "15m", "7d")
-    
-    if daily.empty or m15.empty:
-        print("  ✗ No data")
-        return 0
-    
-    # Step 1: Detect C2 closure on H4 (primary swing TF)
-    print("  [step1] Detecting C2 closure on H4...")
-    c2_h4 = detect_c2_closure(h4)
-    
-    # Step 2: CISD confirmation on M15
-    cisd_confirmed = False
-    if c2_h4:
-        print(f"  [step1] H4 C2 detected: {c2_h4['type']}, swing ${c2_h4['swing_level']:.2f}")
-        print(f"  [step2] Checking M15 CISD for {c2_h4['direction']}...")
-        cisd_confirmed = check_cisd(m15, c2_h4["direction"])
-        print(f"  [step2] M15 CISD: {'✓' if cisd_confirmed else '✗'}")
-    else:
-        print("  [step1] No C2 closure detected on H4")
-    
-    # Step 3: Check daily profile (optional)
-    # Step 4: Check weekly profile
     weekly = fetch_ohlcv(TICKER, "1wk", "1y")
-    weekly_profile = check_weekly_profile(weekly)
-    print(f"  [step4] Weekly profile: {weekly_profile['profile']}")
     
-    # Skip Monday (TTrades rule)
-    weekday = datetime.now(HKT).weekday()
-    if weekday == 0:
-        print("  [rule] Monday: skip (TTrades rule)")
+    if h1.empty or m15.empty:
+        print("  ✗ No data"); return 0
+    
+    # Resample H1 to H4
+    h4 = h1.resample("4h").agg({
+        "Open": "first", "High": "max", "Low": "min", "Close": "last"
+    }).dropna()
+    
+    # Step 1: C2 Closure or C3 Closure fallback
+    print("  [step1] H4 swing detection...")
+    swing = detect_c2_closure(h4)
+    swing_type = "C2"
+    if swing is None:
+        swing = detect_c3_closure(h4)
+        swing_type = "C3"
+    if swing is None:
+        print("  [step1] No H4 C2/C3 closure")
+        SIGNAL_FILE.write_text(json.dumps({
+            "ts": datetime.now(HKT).isoformat(), "ticker": TICKER,
+            "actionable": False, "reason": f"no H4 {swing_type} closure (Fractal quiet)",
+            "weekly_profile": label_weekly_profile(weekly),
+            "account_size": ACCOUNT_SIZE, "risk_amount": RISK_AMOUNT,
+        }, indent=2, default=str))
         return 0
+    print(f"  [step1] H4 {swing_type}: {swing['side']} @ swing ${swing['swing_level']:.2f}")
+    
+    # Step 2: CISD (scoped to last series)
+    print(f"  [step2] M15 CISD ({swing['direction']})...")
+    cisd = check_cisd(m15, swing["direction"])
+    print(f"  [step2] CISD: {'✓' if cisd['confirmed'] else '✗'} ({cisd.get('reason')})")
+    
+    # Step 3: EQ respect
+    eq_ok = check_eq_respect(swing, m15)
+    print(f"  [step3] EQ respect (EQ=${swing.get('c2_eq', 0):.2f}): {'✓' if eq_ok else '✗'}")
+    
+    # Step 4: Weekly label (not gate)
+    weekly_label = label_weekly_profile(weekly)
+    print(f"  [step4] Weekly: {weekly_label['profile']}")
+    
+    # Step 5: Daily profile (skip NY if London expanded)
+    daily_profile = check_daily_profile(h1)
+    print(f"  [step5] London expanded: {daily_profile.get('london_expanded')}, skip_ny: {daily_profile.get('skip_ny')}")
     
     # Build signal
     signal = {
         "ts": datetime.now(HKT).isoformat(),
         "ticker": TICKER,
-        "strategy": "TTrades-OSOK",
-        "c2_h4": c2_h4,
-        "cisd_m15": cisd_confirmed,
-        "weekly_profile": weekly_profile,
+        "strategy": "TTrades-Fractal",
+        "swing_type": swing_type,
+        "side": swing["side"],
+        "swing": swing,
+        "cisd": cisd,
+        "eq_respected": eq_ok,
+        "weekly_profile": weekly_label,
+        "daily_profile": daily_profile,
         "account_size": ACCOUNT_SIZE,
         "risk_pct": RISK_PCT,
         "risk_amount": RISK_AMOUNT,
     }
     
-    if c2_h4 and cisd_confirmed:
-        # Calculate trade levels
-        atr_series = h4['High'].tail(14).values - h4['Low'].tail(14).values
-        atr = float(np.mean(atr_series)) if len(atr_series) > 0 else 0
+    # Actionable: CISD + EQ + not London-expanded
+    if cisd["confirmed"] and eq_ok and not daily_profile.get("skip_ny", False):
+        atr_vals = (h1['High'].tail(14) - h1['Low'].tail(14))
+        atr = float(atr_vals.mean()) if len(atr_vals) > 0 else 0
         
         if atr > 0:
-            levels = calculate_trade_levels(c2_h4, atr)
+            levels = calculate_trade_levels(swing, atr)
             if levels:
                 signal.update(levels)
                 signal["actionable"] = True
-                signal["direction"] = c2_h4["direction"]
-                signal["grade"] = "A"  # TTrades with C2 + CISD is high conf
-                signal["confidence"] = 85
-                signal["reason"] = f"TTrades OSOK: H4 C2 closure + M15 CISD confirmed, weekly profile {weekly_profile['profile']}"
-                
-                print(f"  ✓ Signal: {c2_h4['direction'].upper()} @ ${levels['entry']:.2f}")
-                print(f"  ✓ SL: ${levels['sl']:.2f} | T2 CLOSE: ${levels['t2_close']:.2f}")
+                signal["direction"] = swing["direction"]
+                if swing_type == "C2" and weekly_label["profile"] in ("midweek_reversal", "consolidation_reversal"):
+                    signal["grade"] = "A"; signal["confidence"] = 85
+                else:
+                    signal["grade"] = "B"; signal["confidence"] = 72
+                signal["reason"] = (
+                    f"TTrades Fractal: H4 {swing_type} closure ({swing['side']}) + "
+                    f"M15 CISD ({cisd['series_length']}-bar series) + EQ respected"
+                )
+                print(f"  ✓ {signal['direction'].upper()} @ ${levels['entry']:.2f}")
+                print(f"  ✓ SL ${levels['sl']:.2f} (C2 + 0.15×ATR)")
+                print(f"  ✓ T2 CLOSE ${levels['t2_close']:.2f} (1.6R)")
             else:
                 signal["actionable"] = False
                 signal["reason"] = "levels calc failed"
@@ -305,45 +391,43 @@ def main():
             signal["reason"] = "no ATR"
     else:
         signal["actionable"] = False
-        if not c2_h4:
-            signal["reason"] = "no H4 C2 closure"
-        else:
-            signal["reason"] = "M15 CISD not confirmed"
+        reasons = []
+        if not cisd["confirmed"]: reasons.append("CISD not confirmed")
+        if not eq_ok: reasons.append("EQ not respected")
+        if daily_profile.get("skip_ny", False): reasons.append("London expanded (skip NY)")
+        signal["reason"] = "; ".join(reasons) if reasons else "no trigger"
     
-    # Save
     SIGNAL_FILE.write_text(json.dumps(signal, indent=2, default=str))
-    
-    # Log to history
     with LOG_FILE.open("a") as f:
         f.write(json.dumps(signal, default=str) + "\n")
     
-    # Send TG if actionable
-    if signal.get("actionable"):
-        direction_emoji = "↑" if signal["direction"] == "long" else "↓"
-        msg = (
-            f"🎯 TTrades-OSOK [{signal['grade']}] {TICKER}\n\n"
-            f"💰 Entry: ${levels['entry']:,.2f}\n"
-            f"🎯 Dir: {signal['direction']} {direction_emoji}\n"
-            f"📊 Conf: {signal['confidence']}\n"
-            f"🛡️ SL: ${levels['sl']:,.2f} (C2 swing + 1.6×ATR)\n"
-            f"🎯 T2 CLOSE: ${levels['t2_close']:,.2f} (1.6R) ← exit target\n"
-            f"💎 T3: ${levels['t3']:,.2f} (2.6R) runner\n"
-            f"💼 Risk: ${signal['risk_amount']:.2f} (0.25% of $247K)\n\n"
-            f"💬 {signal['reason']}\n"
-            f"⏰ {signal['ts']}"
-        )
-        if TG_TOKEN and TG_CHAT:
-            try:
-                r = requests.post(
-                    f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
-                    json={"chat_id": TG_CHAT, "text": msg[:4000]},
-                    timeout=15,
-                )
-                print(f"  [TG] HTTP {r.status_code}")
-            except Exception as e:
-                print(f"  [TG] {e}")
+    if signal.get("actionable") and TG_TOKEN and TG_CHAT:
+        try:
+            d_emoji = "↑" if signal["direction"] == "long" else "↓"
+            msg = (
+                f"🎯 TTrades-Fractal [{signal['grade']}] {TICKER}\n\n"
+                f"💰 Entry: ${levels['entry']:,.2f}\n"
+                f"🎯 Dir: {signal['direction']} {d_emoji}\n"
+                f"📊 Conf: {signal['confidence']}\n"
+                f"🛡️ SL: ${levels['sl']:,.2f} (C2 swing + 0.15×ATR)\n"
+                f"🎯 T1: ${levels['t1']:,.2f} (1.0R) reduce\n"
+                f"🎯 T2 CLOSE: ${levels['t2_close']:,.2f} (1.6R) ← exit target\n"
+                f"💎 T3: ${levels['t3']:,.2f} (2.6R) runner\n"
+                f"📐 Manipulation -2: ${levels['projection_neg2']:,.2f}\n"
+                f"📐 Projection -4: ${levels['projection_neg4']:,.2f}\n"
+                f"💼 Units: {levels['units']:.4f} BTC (notional ${levels['notional']:,.0f})\n\n"
+                f"💬 {signal['reason']}\n"
+                f"📅 Weekly: {weekly_label['profile']}\n"
+                f"⏰ {signal['ts']}"
+            )
+            r = requests.post(
+                f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
+                json={"chat_id": TG_CHAT, "text": msg[:4000]}, timeout=15)
+            print(f"  [TG] HTTP {r.status_code}")
+        except Exception as e:
+            print(f"  [TG] {e}")
     else:
-        print(f"  [no-action] {signal.get('reason', 'unknown')}")
+        print(f"  [no-action] {signal.get('reason', '?')}")
     
     return 0
 
