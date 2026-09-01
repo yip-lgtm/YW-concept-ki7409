@@ -287,11 +287,9 @@ def check_ranking_freshness() -> dict:
         state["issues"].append("ranking dir missing")
         return state
     
-    # Find latest ranking_YYYY-MM-DD.json
     import re
-    today_utc = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    today_hkt = (datetime.now(UTC) + timedelta(hours=8)).strftime("%Y-%m-%d") if (UTC := timezone.utc) else today_utc
-    weekday = datetime.now(timezone(timedelta(hours=8))).weekday()  # 0=Mon
+    HKT_TZ = timezone(timedelta(hours=8))
+    weekday = datetime.now(HKT_TZ).weekday()  # 0=Mon
     
     latest_file = None
     latest_date = ""
