@@ -229,8 +229,10 @@ def main():
         print("[tech-analyst] No signals to process")
         return 0
     
-    # Find recent signals (last 2h that don't have chart)
-    now = datetime.now(HKT)
+    # Use UTC for cutoff since signal timestamps are in UTC
+    # (BEFORE: used HKT which made 24h comparison break for UTC timestamps)
+    UTC = timezone(timedelta(hours=0))
+    now = datetime.now(UTC)
     cutoff = (now - timedelta(hours=2)).isoformat()
     recent = [s for s in signals if s.get("ts", "") >= cutoff]
     
