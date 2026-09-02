@@ -15,8 +15,91 @@ sys.path.insert(0, str(REPO / 'automation/src'))
 sys.path.insert(0, str(REPO / 'automation/scripts'))
 
 HKT = timezone(timedelta(hours=8))
+
+def parse_ts_safe(ts_str):
+    """Parse ISO timestamp with mixed tz (UTC +00:00, EDT -04:00) → UTC datetime."""
+    if not ts_str: return None
+    try:
+        ts_str = ts_str.replace("Z", "+00:00").replace(" ", "T")
+        dt = datetime.fromisoformat(ts_str)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(timezone.utc)
+    except Exception:
+        return None
 now = datetime.now(HKT)
 HKT_STR = now.strftime("%Y-%m-%d %H:%M HKT")
+
+def regenerate_24h_ranking():
+    """Regenerate ranking_24h.json from real trades (handles mixed tz)."""
+    from collections import defaultdict
+    UTC = timezone.utc
+    now_utc = datetime.now(UTC)
+    cutoff_dt = now_utc - timedelta(hours=24)
+    
+    trades = []
+    for path in [REPO / "automation/reports/live_scan/trades.jsonl",
+                 REPO / "automation/reports/ocs_btc_5m/trades.jsonl"]:
+        try:
+            with open(path) as f:
+                for l in f:
+                    trades.append(json.loads(l))
+        except FileNotFoundError:
+            pass
+    
+    # 24h with proper tz parse
+    last24 = []
+    for t in trades:
+        et = parse_ts_safe(t.get("exit_time", ""))
+        if et and et >= cutoff_dt:
+            last24.append(t)
+    
+    # Group by strategy
+    by_strat = defaultdict(list)
+    for t in last24:
+        s = t.get("strategy", "unknown")
+        by_strat[s].append(t)
+    
+    ranking = []
+    for strat, tlist in by_strat.items():
+        n = len(tlist)
+        wins = [t for t in tlist if t.get("R_multiple", 0) > 0]
+        losses = [t for t in tlist if t.get("R_multiple", 0) <= 0]
+        total_R = sum(t.get("R_multiple", 0) for t in tlist)
+        total_pnl = sum(t.get("pnl_usd", 0) for t in tlist)
+        wr = len(wins) / n * 100 if n > 0 else 0
+        gross_win = sum(t.get("R_multiple", 0) for t in wins)
+        gross_loss = abs(sum(t.get("R_multiple", 0) for t in losses))
+        pf = gross_win / gross_loss if gross_loss > 0 else (10.0 if gross_win > 0 else 0)
+        ranking.append({
+            "strategy": strat,
+            "n_trades": n, "n_wins": len(wins), "n_losses": len(losses),
+            "win_rate": round(wr, 1),
+            "total_R": round(total_R, 2),
+            "avg_R": round(total_R / n, 3) if n > 0 else 0,
+            "total_pnl_usd": round(total_pnl, 2),
+            "profit_factor": round(pf, 2),
+        })
+    
+    ranking.sort(key=lambda x: x["total_R"], reverse=True)
+    for i, r in enumerate(ranking):
+        r["rank"] = i + 1
+    
+    out = {
+        "date": now_utc.astimezone(HKT).strftime("%Y-%m-%d"),
+        "window_hours": 24,
+        "hkt_timestamp": now_utc.isoformat(),
+        "type": "24h_live_ranking",
+        "n_total": len(last24),
+        "ranking": ranking,
+    }
+    ranking_24h_path = REPO / "automation/reports/strategy_ranking/24h/ranking_24h.json"
+    ranking_24h_path.write_text(json.dumps(out, indent=2))
+    print(f"  [regen] 24h ranking: {len(ranking)} strategies, {len(last24)} trades")
+    return out
+
+# Auto-regenerate 24h ranking on every dashboard update
+regenerate_24h_ranking()
 
 # 1. Weights
 sr = (REPO / 'automation/scripts/strategy_ranking.py').read_text()
