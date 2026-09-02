@@ -101,6 +101,13 @@ POWER_WORKFLOW_MAP = {
     "ranking":       "strategy-ranking.yml",
 }
 
+# LLM iteration state file paths (separate from scientist grading)
+LLM_ITERATION_FILES = {
+    "iteration_scientist": "automation/reports/strategy_ranking/iterations/",  # newest *.json
+    "iteration_all":       "automation/reports/strategy_ranking/iterations/",
+    "ranking_24h":         "automation/reports/strategy_ranking/24h/ranking_24h.json",
+}
+
 POWER_RECOVERY_FILE = REPO / "automation" / "sys_power_recovery.json"
 
 # Per-power stale threshold (minutes). Different powers have different cadences.
