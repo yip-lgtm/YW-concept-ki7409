@@ -7,6 +7,9 @@ name: 'OCS BTC 5m Auto-Signal'
 #   - Saves signal log
 
 on:
+  schedule:
+    # OCS BTC 5m: every 5 min 24/7 (offsets for 12 GHA triggers)
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
