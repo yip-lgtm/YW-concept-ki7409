@@ -14,6 +14,21 @@ import requests
 import pandas as pd
 import numpy as np
 from datetime import datetime, timezone, timedelta
+try:
+    from zoneinfo import ZoneInfo
+    NY_TZ = ZoneInfo("America/New_York")
+except ImportError:
+    NY_TZ = timezone(timedelta(hours=-5))
+
+def to_ny(iso_ts: str) -> str:
+    """Convert ISO ts to NY time string."""
+    try:
+        dt = datetime.fromisoformat(iso_ts.replace('Z', '+00:00'))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(NY_TZ).strftime('%Y-%m-%d %H:%M %Z')
+    except Exception:
+        return str(iso_ts)
 from pathlib import Path
 
 if "GITHUB_WORKSPACE" in os.environ:
@@ -237,8 +252,10 @@ def main() -> int:
             for t in closed:
                 label = "WIN ✅" if t["R_multiple"] > 0 else "LOSS ❌"
                 emoji = "🟢" if t["R_multiple"] > 0 else "🔴"
-                entry_time = t.get('entry_time', '?')[:19]
-                exit_time = t.get('exit_time', '?')[:19]
+                entry_time_full = t.get('entry_time', '?')
+                exit_time_full = t.get('exit_time', '?')
+                entry_time = to_ny(entry_time_full) if entry_time_full != '?' else '?'
+                exit_time = to_ny(exit_time_full) if exit_time_full != '?' else '?' 
                 # Calculate duration
                 try:
                     et = datetime.fromisoformat(t['entry_time'].replace('Z', '+00:00') if t['entry_time'].endswith('Z') else t['entry_time'])
@@ -259,12 +276,12 @@ def main() -> int:
                     f"\n"
                     f"📈 <b>Position Opened</b>\n"
                     f"  {t['direction'].upper()} {t['ticker']} @ ${t['entry']:,.2f}\n"
-                    f"  Time: {entry_time} UTC\n"
+                    f"  Time: {to_ny(entry_time)} (NY)\n"
                     f"  SL: ${t['sl']:,.2f} | T1: ${t['t1']:,.2f} | T5: ${t.get('t5', 0):,.2f}\n"
                     f"\n"
                     f"🎯 <b>Position Closed</b>\n"
                     f"  Exit: {t['exit_level']} @ ${t['exit_price']:,.2f}\n"
-                    f"  Time: {exit_time} UTC\n"
+                    f"  Time: {to_ny(exit_time)} (NY)\n"
                     f"  Held: {t['bars_held']} bars ({duration_str})\n"
                     f"\n"
                     f"💰 <b>P&L</b>\n"

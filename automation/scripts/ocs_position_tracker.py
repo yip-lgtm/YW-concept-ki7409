@@ -9,6 +9,21 @@ import os
 import sys
 import json
 from datetime import datetime, timezone, timedelta
+try:
+    from zoneinfo import ZoneInfo
+    NY_TZ = ZoneInfo("America/New_York")
+except ImportError:
+    NY_TZ = timezone(timedelta(hours=-5))
+
+def to_ny(iso_ts: str) -> str:
+    """Convert ISO ts to NY time string."""
+    try:
+        dt = datetime.fromisoformat(iso_ts.replace('Z', '+00:00'))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.astimezone(NY_TZ).strftime('%Y-%m-%d %H:%M %Z')
+    except Exception:
+        return str(iso_ts)
 from pathlib import Path
 
 import pandas as pd
@@ -281,12 +296,12 @@ def main():
                         f"\n"
                         f"📈 <b>Position Opened</b>\n"
                         f"  {t['direction'].upper()} BTC-USD @ ${t['entry']:,.2f}\n"
-                        f"  Time: {entry_time} UTC\n"
+                        f"  Time: {to_ny(entry_time)} (NY)\n"
                         f"  SL: ${t['sl']:,.2f} | T1: ${t['t1']:,.2f} | T5: ${t.get('t5', 0):,.2f}\n"
                         f"\n"
                         f"🎯 <b>Position Closed</b>\n"
                         f"  Exit: {t['exit_level']} @ ${t['exit_price']:,.2f}\n"
-                        f"  Time: {exit_time} UTC\n"
+                        f"  Time: {to_ny(exit_time)} (NY)\n"
                         f"  Held: {t['bars_held']} bars ({duration_str})\n"
                         f"\n"
                         f"💰 <b>P&L</b>\n"
