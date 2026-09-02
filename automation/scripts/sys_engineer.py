@@ -98,13 +98,14 @@ def count_signals_24h(agent_id: str) -> int:
 
 
 def count_signals_window(agent: str, hours: int) -> int:
-    """Count signals in a time window."""
+    """Count signals in a time window. Uses UTC to match signal.ts format."""
     if not LIVE_DIR.exists():
         return 0
     signals_file = LIVE_DIR / "signals.jsonl"
     if not signals_file.exists():
         return 0
-    now = datetime.now(HKT)
+    # Use UTC to match signals.jsonl timestamp format
+    now = datetime.now(timezone.utc)
     cutoff = now - timedelta(hours=hours)
     count = 0
     try:

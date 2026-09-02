@@ -8,6 +8,9 @@ name: System Engineer — Auto-Fix Supervisor Issues
 # 5. Send TG report
 
 on:
+  schedule:
+    # System Engineer runs every 30 min to detect lazy + bugs
+    - cron: '*/30* * * *'
   workflow_dispatch: {}
 
 permissions:
