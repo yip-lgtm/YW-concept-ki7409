@@ -276,8 +276,8 @@ def main():
                 for t in closed:
                     label = "WIN ✅" if t["R_multiple"] > 0 else "LOSS ❌"
                     emoji = "🟢" if t["R_multiple"] > 0 else "🔴"
-                    entry_time = t.get('entry_time', '?')[:19]
-                    exit_time = t.get('exit_time', '?')[:19]
+                    entry_time = to_ny(t.get('entry_time', '?'))
+                    exit_time = to_ny(t.get('exit_time', '?'))
                     try:
                         from datetime import datetime
                         et = datetime.fromisoformat(t['entry_time'].replace('Z', '+00:00') if t['entry_time'].endswith('Z') else t['entry_time'])
@@ -296,12 +296,12 @@ def main():
                         f"\n"
                         f"📈 <b>Position Opened</b>\n"
                         f"  {t['direction'].upper()} BTC-USD @ ${t['entry']:,.2f}\n"
-                        f"  Time: {to_ny(entry_time)} (NY)\n"
+                        f"  Time: {entry_time}\n"
                         f"  SL: ${t['sl']:,.2f} | T1: ${t['t1']:,.2f} | T5: ${t.get('t5', 0):,.2f}\n"
                         f"\n"
                         f"🎯 <b>Position Closed</b>\n"
                         f"  Exit: {t['exit_level']} @ ${t['exit_price']:,.2f}\n"
-                        f"  Time: {to_ny(exit_time)} (NY)\n"
+                        f"  Time: {exit_time}\n"
                         f"  Held: {t['bars_held']} bars ({duration_str})\n"
                         f"\n"
                         f"💰 <b>P&L</b>\n"
