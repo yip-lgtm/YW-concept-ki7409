@@ -31,6 +31,15 @@ import json
 import time
 import requests
 from datetime import datetime, timezone, timedelta
+try:
+    from zoneinfo import ZoneInfo
+    NY_TZ = ZoneInfo("America/New_York")
+except ImportError:
+    NY_TZ = timezone(timedelta(hours=-5))
+
+def to_ny_time() -> str:
+    """Current NY time as ISO string."""
+    return datetime.now(NY_TZ).isoformat()
 from pathlib import Path
 
 if "GITHUB_WORKSPACE" in os.environ:
@@ -61,7 +70,7 @@ def log_action(power: str, action: str, target: str, level: str, msg: str):
     audit_file = AUDIT_DIR / today / "actions.jsonl"
     audit_file.parent.mkdir(parents=True, exist_ok=True)
     entry = {
-        "ts": datetime.now(HKT).isoformat(),
+        "ts": to_ny_time(),
         "power": power,
         "action": action,
         "target": target,
@@ -288,7 +297,7 @@ def main():
     
     # Save state
     state = {
-        "ts": datetime.now(HKT).isoformat(),
+        "ts": to_ny_time(),
         "total_signals": len(signals),
         "signals_24h": len(last_24h),
         "signals_2h": len(recent),

@@ -43,6 +43,22 @@ import requests
 import numpy as np
 import pandas as pd
 from datetime import datetime, timezone, timedelta
+try:
+    from zoneinfo import ZoneInfo
+    NY_TZ = ZoneInfo("America/New_York")
+except ImportError:
+    NY_TZ = timezone(timedelta(hours=-5))  # EST fallback
+
+def to_ny_time(iso_ts: str) -> str:
+    """Convert ISO timestamp to NY time string."""
+    try:
+        dt = datetime.fromisoformat(iso_ts.replace('Z', '+00:00'))
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        ny_dt = dt.astimezone(NY_TZ)
+        return ny_dt.strftime('%Y-%m-%d %H:%M %Z')
+    except Exception:
+        return iso_ts
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -731,7 +747,7 @@ def main() -> int:
             msg += "\n\n✅ Position opened (auto-track)"
         msg += f"""
 
-⏰ {sig['ts'][:19]} UTC"""
+⏰ {to_ny_time(sig['ts'])} (NY)"""
         tg_code = send_telegram(msg)
         ai_code = publish_ai_trader({
             "symbol": sig["ticker"],

@@ -19,6 +19,15 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 from datetime import datetime, timezone, timedelta
+try:
+    from zoneinfo import ZoneInfo
+    NY_TZ = ZoneInfo("America/New_York")
+except ImportError:
+    NY_TZ = timezone(timedelta(hours=-5))
+
+def to_ny_time() -> str:
+    """Current NY time as ISO string."""
+    return datetime.now(NY_TZ).isoformat()
 from pathlib import Path
 
 if "GITHUB_WORKSPACE" in os.environ:
@@ -365,7 +374,7 @@ def main():
     if weekday == 0:
         print("  [skip] Monday (OSOK rule)")
         SIGNAL_FILE.write_text(json.dumps({
-            "ts": datetime.now(HKT).isoformat(), "ticker": TICKER,
+            "ts": to_ny_time(), "ticker": TICKER,
             "actionable": False, "reason": "Monday skip (OSOK rule)",
             "account_size": ACCOUNT_SIZE, "risk_amount": RISK_AMOUNT,
         }, indent=2, default=str))
@@ -394,7 +403,7 @@ def main():
     if swing is None:
         print("  [step1] No H4 C2/C3 closure")
         SIGNAL_FILE.write_text(json.dumps({
-            "ts": datetime.now(HKT).isoformat(), "ticker": TICKER,
+            "ts": to_ny_time(), "ticker": TICKER,
             "actionable": False, "reason": f"no H4 {swing_type} closure (Fractal quiet)",
             "weekly_profile": label_weekly_profile(weekly),
             "account_size": ACCOUNT_SIZE, "risk_amount": RISK_AMOUNT,
@@ -427,7 +436,7 @@ def main():
     
     # Build signal
     signal = {
-        "ts": datetime.now(HKT).isoformat(),
+        "ts": to_ny_time(),
         "ticker": TICKER,
         "strategy": "TTrades-Fractal",
         "swing_type": swing_type,

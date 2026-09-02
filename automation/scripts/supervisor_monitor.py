@@ -29,6 +29,15 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 HKT = timezone(timedelta(hours=8))
+try:
+    from zoneinfo import ZoneInfo
+    NY_TZ = ZoneInfo("America/New_York")
+except ImportError:
+    NY_TZ = timezone(timedelta(hours=-5))
+
+def to_ny_time() -> str:
+    """Current NY time as ISO string."""
+    return datetime.now(NY_TZ).isoformat()
 
 if "GITHUB_WORKSPACE" in os.environ:
     REPO = Path(os.environ["GITHUB_WORKSPACE"])
