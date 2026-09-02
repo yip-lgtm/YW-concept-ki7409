@@ -1,0 +1,229 @@
+{
+  "generated": "2026-09-03T02:46:27.403870+08:00",
+  "n_proposals": 9,
+  "n_high_priority": 6,
+  "proposals": [
+    {
+      "agent_id": "yw-h-pattern",
+      "strat_name": "H-Pattern",
+      "grade": "D",
+      "conf": 0,
+      "pf": 0.31,
+      "wr": 23.5,
+      "r": -13.673999999999998,
+      "suggestions": [
+        {
+          "param": "weight",
+          "current": 1.2,
+          "suggested": 0.6,
+          "reason": "WR=24.2% < 35%, reduce priority (was 1.2, try 0.6)"
+        },
+        {
+          "param": "trend_filter",
+          "current": "none",
+          "suggested": "EMA20_slope (only trade with trend)",
+          "reason": "Add trend filter to reduce counter-trend losses"
+        },
+        {
+          "param": "cooldown_bars",
+          "current": 0,
+          "suggested": 10,
+          "reason": "Add 10-bar cooldown to reduce over-trading after losses"
+        }
+      ],
+      "apply_now": true
+    },
+    {
+      "agent_id": "yw-3-pushes",
+      "strat_name": "3-Pushes",
+      "grade": "D",
+      "conf": 0,
+      "pf": 0.66,
+      "wr": 39.7,
+      "r": -1.5159999999999896,
+      "suggestions": [
+        {
+          "param": "weight",
+          "current": 1.0,
+          "suggested": 0.5,
+          "reason": "WR=34.9% < 35%, reduce priority (was 1.0, try 0.5)"
+        },
+        {
+          "param": "trend_filter",
+          "current": "none",
+          "suggested": "EMA20_slope (only trade with trend)",
+          "reason": "Add trend filter to reduce counter-trend losses"
+        },
+        {
+          "param": "cooldown_bars",
+          "current": 0,
+          "suggested": 10,
+          "reason": "Add 10-bar cooldown to reduce over-trading after losses"
+        }
+      ],
+      "apply_now": true
+    },
+    {
+      "agent_id": "yw-two-yang",
+      "strat_name": "Two-Yang",
+      "grade": "D",
+      "conf": 0,
+      "pf": 0.46,
+      "wr": 31.6,
+      "r": -11.111999999999995,
+      "suggestions": [
+        {
+          "param": "weight",
+          "current": 0.5,
+          "suggested": 0.3,
+          "reason": "WR=30.8% < 35%, reduce priority (was 0.5, try 0.3)"
+        }
+      ],
+      "apply_now": true
+    },
+    {
+      "agent_id": "yw-rsi-div",
+      "strat_name": "RSI-Div",
+      "grade": "B",
+      "conf": 65,
+      "pf": 1.05,
+      "wr": 51.1,
+      "r": 12.742000000000004,
+      "suggestions": [
+        {
+          "param": "cooldown_bars",
+          "current": 0,
+          "suggested": 10,
+          "reason": "Add 10-bar cooldown to reduce over-trading after losses"
+        }
+      ],
+      "apply_now": false
+    },
+    {
+      "agent_id": "yw-50-20-pullback",
+      "strat_name": "50-20-Pullback",
+      "grade": "C",
+      "conf": 50,
+      "pf": 0.9,
+      "wr": 47.4,
+      "r": 49.418000000000106,
+      "suggestions": [
+        {
+          "param": "trend_filter",
+          "current": "none",
+          "suggested": "EMA20_slope (only trade with trend)",
+          "reason": "Add trend filter to reduce counter-trend losses"
+        },
+        {
+          "param": "cooldown_bars",
+          "current": 0,
+          "suggested": 10,
+          "reason": "Add 10-bar cooldown to reduce over-trading after losses"
+        }
+      ],
+      "apply_now": false
+    },
+    {
+      "agent_id": "yw-stair-pattern",
+      "strat_name": "Stair",
+      "grade": "D",
+      "conf": 0,
+      "pf": 0.58,
+      "wr": 36.7,
+      "r": -7.459999999999992,
+      "suggestions": [
+        {
+          "param": "trend_filter",
+          "current": "none",
+          "suggested": "EMA20_slope (only trade with trend)",
+          "reason": "Add trend filter to reduce counter-trend losses"
+        },
+        {
+          "param": "cooldown_bars",
+          "current": 0,
+          "suggested": 10,
+          "reason": "Add 10-bar cooldown to reduce over-trading after losses"
+        }
+      ],
+      "apply_now": true
+    },
+    {
+      "agent_id": "yw-crt",
+      "strat_name": "CRT",
+      "grade": "D",
+      "conf": 0,
+      "pf": 0.77,
+      "wr": 43.5,
+      "r": 17.787999999999986,
+      "suggestions": [
+        {
+          "param": "grade_threshold",
+          "current": "A/B/C all",
+          "suggested": "A only (filter out B/C)",
+          "reason": "Grade A underperforms: -8.0R"
+        },
+        {
+          "param": "trend_filter",
+          "current": "none",
+          "suggested": "EMA20_slope (only trade with trend)",
+          "reason": "Add trend filter to reduce counter-trend losses"
+        },
+        {
+          "param": "cooldown_bars",
+          "current": 0,
+          "suggested": 10,
+          "reason": "Add 10-bar cooldown to reduce over-trading after losses"
+        }
+      ],
+      "apply_now": false
+    },
+    {
+      "agent_id": "yw-kell-cycle",
+      "strat_name": "Kell-Cycle",
+      "grade": "D",
+      "conf": 0,
+      "pf": 0.54,
+      "wr": 35.0,
+      "r": -5.640000000000006,
+      "suggestions": [
+        {
+          "param": "direction_filter",
+          "current": "both",
+          "suggested": "long only (if BTC downtrend) or short only",
+          "reason": "long: -4.1R (loss), short: +8.4R (win)"
+        },
+        {
+          "param": "trend_filter",
+          "current": "none",
+          "suggested": "EMA20_slope (only trade with trend)",
+          "reason": "Add trend filter to reduce counter-trend losses"
+        },
+        {
+          "param": "cooldown_bars",
+          "current": 0,
+          "suggested": 10,
+          "reason": "Add 10-bar cooldown to reduce over-trading after losses"
+        }
+      ],
+      "apply_now": true
+    },
+    {
+      "agent_id": "yw-b1",
+      "strat_name": "B1",
+      "grade": "D",
+      "conf": 0,
+      "pf": 0,
+      "wr": 0.0,
+      "r": -8.0,
+      "suggestions": [
+        {
+          "param": "r_multiples",
+          "current": "default",
+          "suggested": "widen T1 (T1=0.5R), tighten T2 close (T2=1.0R), reduce T3-T5 (skip if low conf)",
+          "reason": "avg_win_R=0.00 < |avg_loss_R|=1.00 (poor R:R)"
+        }
+      ],
+      "apply_now": true
+    }
+  ]
+}

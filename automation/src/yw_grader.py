@@ -41,7 +41,11 @@ STRATEGIES = {
         "doc": "docs/02-H-Pattern.md",
         "data_granularity": "5m",
         "data_period": "5d",
-        "weight": 1.2,
+        "weight": 0.6,  # LLM-iter 2026-09-03: 1.2→0.6 (PF 0.31, WR 24%)
+        "llm_optimized": True,
+        "llm_iteration_date": "2026-09-03",
+        "trend_filter": "EMA20_slope",  # add trend filter
+        "cooldown_bars": 10,  # add cooldown to reduce over-trading
     },
     "3-Pushes": {
         "name": "3 Pushes",
@@ -50,7 +54,11 @@ STRATEGIES = {
         "doc": "docs/03-Three-Pushes.md",
         "data_granularity": "15m",
         "data_period": "10d",
-        "weight": 1.0,
+        "weight": 0.5,  # LLM-iter 2026-09-03: 1.0→0.5 (PF 0.66, WR 35%)
+        "llm_optimized": True,
+        "llm_iteration_date": "2026-09-03",
+        "trend_filter": "EMA20_slope",  # add trend filter
+        "cooldown_bars": 10,  # add cooldown
     },
     "Two-Yang-One-Yin": {
         "name": "兩陽夾一陰",
@@ -59,9 +67,9 @@ STRATEGIES = {
         "doc": "docs/04-Two-Yang-One-Yin.md",
         "data_granularity": "5m",
         "data_period": "5d",
-        "weight": 0.5,  # LLM-iter 2026-08-25: 0.8→0.5 (PF 0.67 live)
+        "weight": 0.3,  # LLM-iter 2026-09-03: 0.5→0.3 (PF 0.46, WR 31.6%)
         "llm_optimized": True,
-        "llm_iteration_date": "2026-08-25",
+        "llm_iteration_date": "2026-09-03",
         "r_multiples": [1.5, 2.5, 4.0, 6.0, 8.0],  # LLM-iter v2: wider R-multiples (higher targets)
         "trend_filter": "EMA20_slope",
         "adx_filter": 20,
