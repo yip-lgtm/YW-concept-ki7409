@@ -1,0 +1,832 @@
+{
+  "date": "2026-09-03",
+  "weekday": "Thu",
+  "generated_hkt": "2026-09-03T03:17:22.206710+08:00",
+  "grades": [
+    {
+      "strategy": "H-Pattern",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "H-Pattern 未成立，pullback 達 145% 嚴重超標 (>50%)，形態破壞；雖 bearish candle + 跌破 low 出現，但 EMA20/SMA50 death cross、價格受壓 SMA50 下方，conf"
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "H-Pattern detector 明確 False，14:30 長上影後跌幅遠超 50% pullback 門檻，3-Pushes 雖窄化但形態結構唔吻合，EMA20/SMA50 死亡交叉逆向上方，session 已近收盤 lack o"
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "H-Pattern 形態齊全（長實體+30.2%頂wick+45.7%回撤+穿底），但逆HTF上升趨勢（站穩EMA20/SMA50、golden cross），且為下午時段動能轉弱區，胜率受限。"
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "H-Pattern detector 回傳 False，K 線無明顯長直 K ＋ 顯著 top wick 賣壓結構，價格貼 EMA20 橫行，RSI 70.7 過買但動能不足，唔符合 setup 條件，跳過。"
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "價格結構係 spike-and-fade（14:15 長上影後反轉），唔見三段乾淨推進同收窄，3-Pushes detector 亦確認 absent，skip。"
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "BTC-USD",
+      "grade": "B",
+      "confidence": 40,
+      "reason": "18:45 K線有 bullish long body (82.83) + upper wick 11.1% + 9.5% pullback，但 broke_low=False 形態未完成，且趨勢 sideways、價格站於 EMA20/S"
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "三推向某方向結構唔成立，近期 K 線係區間震盪而非清晰三推，收窄同等高/等低訊號缺失，detector 亦確認 absent，skip 等待更明確形態。"
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "三推向上結構隱約成形（高點 4427.5→4426.7→4422.5 逐步收窄），但缺乏明確等高/等低突破位，收窄亦未確認；價格站穩 EMA20 之上且 RSI 偏多提供部分 confluence，僅屬邊際 setup，建議觀察下一根能否突"
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "三推向上的推幅係擴張（7679.5→7680.75→7687.5 越推越大），唔符合「最後一推收窄」核心條件；探測器明確 present=False，回調後只有兩根細陽線，未形成第三推，且無明確等高/等低突破位，skip。"
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "末段 14:30-15:00 三根屬 consolidation 而非 narrowing push，detector 已 flag narrowing=False，且 RSI 72 overbought + wick% 67.5% 顯示上"
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "BTC-USD",
+      "grade": "B",
+      "confidence": 45,
+      "reason": "18:45 陽線/18:50 陰線/18:55 陽線有近似兩陽夾一陰形態，但第三根陽線實體(77336.87-77348.28)未能完全包夾陰線實體高點(77370.76)，形態不完整；50/20 顯示 sideways 趨勢，價格貼 EM"
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "14:50陽(4420.5-4421.1) / 14:55陰(4420.6-4421.3) / 15:00陽(4420.7-4421.7) 部分夾住陰線實體，但第一根陽線高點未涵蓋陰線高點，形態唔完整；EMA20之上、golden cros"
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "RSI 與價格同步上升（57.0 vs 55.4），無背離形態；雖 50/20 golden cross 趨勢向上，但 Divergence Setup 不成立，跳過。"
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MGC=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "偵測器回報無 RSI 背離形態，價格低點逐漸抬高（4410.9→4413→4415.7）無 Lower Low 結構，RSI 62.2 處中段無極值，背離條件完全不成立，跳過。"
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "形態勉強存在（14:45 陽線→14:50 陰線→15:00 陽線實體部分夾住），但第三根陽線未突破首根高點、無 bullish break，且 50/20 死亡交叉後趨勢偏空、價格僅在 EMA20 掙扎，加上 15:05 午後時段動能不足"
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MNQ=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "K線4-6近似兩陽夾一陰但右陽實體頂部29145.75未完全包夾陰線頂部29149.25，形態部分成立；惟50/20死亡交叉趨勢偏空、3-Pushes up收窄顯示動能衰竭，confluence不足。"
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "預偵測無 RSI 背離形態，最近低點 29130 高於前低 29125 形成 higher low（非 bullish divergence），bearish divergence 需明確 higher high 但 RSI 僅 54/52"
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 18,
+      "reason": "預偵測無 RSI 背離形態（type=none），價格於 EMA20 上方窄幅整理 0.30%，未見明確 Higher High/Lower Low 結構，confluence 不足，skip。"
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "RSI Divergence 形態完全未成立（價格微創新高但 RSI 同步走高非背離），且 RSI 71.9 處於超買區但無反轉結構，配合 sideways 趨勢無 clear bias，skip。"
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "LLM incomplete response (only thinking, retry failed)"
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "死亡交叉（EMA20 < SMA50）+ downtrend，與 50/20 Pullback 黃金交叉做多條件完全相反，逆大方向必須 skip。"
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "EMA20(29151)仍低於SMA50(29158.74)為死亡交叉非黃金交叉，趨勢向下且價格在SMA50下方，完全不符50/20 Pullback黃金交叉+順勢定義，應skip觀望。"
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "黃金交叉存在且價格貼近 EMA20（0.099%），但趨勢判定為 sideways 非上升趨勢，加上 RSI 71 已超買區，3-Pushes down 訊號浮現，confluence 不足，skip 觀望。"
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "BTC-USD",
+      "grade": "B",
+      "confidence": 45,
+      "reason": "EMA20>50SMA黃金交叉成立且價格回踩EMA20，但趨勢判為sideways、RSI由54.6跌至48.8動能轉弱、wick%高達64.5%顯示上影線沉重拒絕，confluence不足非高勝率 setup。"
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "無大陰啟動K線，上影階梯不明確，趨勢盤整，多空皆不明確，skip。"
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "MGC=F",
+      "grade": "C",
+      "confidence": 96,
+      "reason": "GRADE: C | CONFIDENCE: 96\nREASON: 未見「大陰啟動＋至少兩根上影階梯＋收破20EMA」，現價反而位於EMA20及SMA50上方且均線呈多頭，逆勢空方Setup應跳過。"
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 58,
+      "reason": "50/20黃金交叉成立(8bars前)、價格貼近EMA20(0.05%)且收復均線上，符合Pullback結構；但5bar區間僅0.12%、wick佔比64%顯示動能不足，H-Pattern出現broke_low信號與多頭矛盾，conflu"
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "大陰啟動（14:35）符合，但隨後5根K線高低點重疊、無明確下移階梯，15:05甚至創區間新高破壞形態，價格貼近EMA20（-0.4pt）缺乏跌破確認動能，skip。"
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "8根K線為higher high/higher low上升結構，無大陰啟動且未收破EMA20，形態完全不匹配，逆大方向做空skip。"
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "CRT偵測失效無形態，5min區間盤整無清晰掃高低收返，3-pushes雖見narrowing但缺MSS確認，加上50/20偏空壓EMA20，唔符合CRT進場條件。"
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "CRT 偵測報錯且 5min 結構僅見急跌後窄幅盤整，無明確 sweep CRT-L/H + MSS 反轉形態，順死亡交叉偏空，skip 觀望。"
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "CRT 偵測器報錯無確認 4H range，5min 價格夾喺 EMA20/50 之間橫行（0.15% range），冇明確 sweep CRT-L/H + MSS 結構，sideways 環境下 skip。"
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "CRT偵測器報錯且5min結構未見明確掃4H高低+收返+MSS確認，RSI 71過熱、3-Pushes下行narrowing與上行bias矛盾，無A/B級Setup條件。"
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "無大陰啟動純下影結構，價格僅貼 20EMA 掙扎未破，3-Pushes 向上反而逆空方 STAIR 邏輯，形態不符且無 bearish continuation 確認。"
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "5min 低點多次掃 4419.0 似 CRT-L sweep 進行中，但未見明確 MSS 反向上破確認，價格仍貼 EMA20 整理；50/20 golden cross + 回踩 EMA20 提供 bullish confluence 支"
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "3-Pushes 雖有 narrowing 但方向混亂，價格卡 EMA20/SMA50 之間呈無方向盤整，50/20 death cross 仍主導下行 bias，缺乏明確 Kell 形態觸發，skip 觀望。"
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "BTC-USD",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "LLM incomplete response (only thinking, retry failed)"
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "M2K=F",
+      "grade": "B",
+      "confidence": 58,
+      "reason": "5分圖形成3-Pushes向下且narrowing，搭配RSI 72.6超買，疑似Wedge Drop/Exhaustion雛形；惟價格緊貼EMA20橫行，HTF bias未確認突破方向，型態未完整理順，僅算partial Setup。"
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "MES=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "EMA Crossback 雛型浮現（dead cross 19 棒後價格回落至 EMA20 7676.45 附近），但仍處於 7672–7678 窄幅盤整區間，未見明確 rejection K 線確認，HTF 趨勢向下，confluenc"
+    },
+    {
+      "strategy": "B1",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "MES=F 非 B1 戰法指定標的（僅限 MNQ/MGC/BTC），且 50/20 死叉趨勢向下、無突破前高、J 坑未現，直接 skip。"
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 62,
+      "reason": "EMA Crossback 型態成形中——8 根前 golden cross、價格回測 EMA20（距離僅 0.05%）、趨勢向上且站穩 SMA50，符合條件；但尚缺明確反彈確認 K 棒，H-Pattern 偵測 broke_low 與 b"
+    },
+    {
+      "strategy": "B1",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "死亡交叉後趨勢向下，價格低於 SMA50，B1 條件全部不齊——無 J坑底<-5、無前高突破、3-Pushes 雖有但屬逆大方向，skip"
+    },
+    {
+      "strategy": "B1",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "M2K=F 非 B1 戰法適用標的（僅限 MNQ/MGC/BTC），且 RSI 72.1 超買、wick 80.9% 雜訊高、無 J 坑底< -5 結構，直接跳過。"
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "缺少 MGC 同 BTC 數據無法確認 3合1 combined setup，加上 MNQ 50/20 死叉趨勢向下、3-Pushes 形態矛盾，價格喺 EMA20 附近糾結，RSI 中性冇方向，唔符合 B1 條件。"
+    },
+    {
+      "strategy": "B1",
+      "ticker": "MGC=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "B1形態未成形—J坑底< -5無證據、近8根高點4424.9未突破、區間僅0.12%動能不足，雖然均線多頭排列但缺乏右側進場訊號，skip。"
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "此為 MES 而非 3合1 所需嘅 MNQ+MGC+BTC 跨資產組合，無法評估多資產 confluence；RSI 49.6 中性、50/20 死亡交叉後趨勢向下、價格僅貼 EMA20 無明確反彈形態，H-Pattern/3-Pushes"
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "MGC=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "僅有 MGC 單標的數據無法確認 3合1 多資產共振；H-Pattern 雖有但 broke_low=True 為看空信號，50/20 雖 golden cross 但 Range 僅 0.12% 動能不足，Wick 66% 顯示猶豫反轉，"
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "B1 3合1 僅適用 MNQ+MGC+BTC 三標的，M2K=F（Russell 2000）非目標標的，直接 skip；且 RSI 72.1 超買、3-Pushes 雖現但無 HTF 偏壓確認，不符合條件。"
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "H-Pattern、3-Pushes、RSI背離全部缺席，價格喺EMA20附近sideways且wick%高達63%，上週五bar收近全日低點明顯rejection，形態唔成立，skip。"
+    },
+    {
+      "strategy": "B1",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "末根K線收陰且收於最低，價格跌破EMA20於SMA50附近徘徊，sideways趨勢無BBI↑及J坑底反轉結構，B1右側形態完全不成立。"
+    }
+  ],
+  "candidates": [
+    {
+      "strategy": "CRT",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "5min 低點多次掃 4419.0 似 CRT-L sweep 進行中，但未見明確 MSS 反向上破確認，價格仍貼 EMA20 整理；50/20 golden cross + 回踩 EMA20 提供 bullish confluence 支",
+      "priority_score": 126.5,
+      "actionable": true
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 58,
+      "reason": "50/20黃金交叉成立(8bars前)、價格貼近EMA20(0.05%)且收復均線上，符合Pullback結構；但5bar區間僅0.12%、wick佔比64%顯示動能不足，H-Pattern出現broke_low信號與多頭矛盾，conflu",
+      "priority_score": 118.0,
+      "actionable": true
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 62,
+      "reason": "EMA Crossback 型態成形中——8 根前 golden cross、價格回測 EMA20（距離僅 0.05%）、趨勢向上且站穩 SMA50，符合條件；但尚缺明確反彈確認 K 棒，H-Pattern 偵測 broke_low 與 b",
+      "priority_score": 109.8,
+      "actionable": true
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "M2K=F",
+      "grade": "B",
+      "confidence": 58,
+      "reason": "5分圖形成3-Pushes向下且narrowing，搭配RSI 72.6超買，疑似Wedge Drop/Exhaustion雛形；惟價格緊貼EMA20橫行，HTF bias未確認突破方向，型態未完整理順，僅算partial Setup。",
+      "priority_score": 106.2,
+      "actionable": true
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "BTC-USD",
+      "grade": "B",
+      "confidence": 45,
+      "reason": "EMA20>50SMA黃金交叉成立且價格回踩EMA20，但趨勢判為sideways、RSI由54.6跌至48.8動能轉弱、wick%高達64.5%顯示上影線沉重拒絕，confluence不足非高勝率 setup。",
+      "priority_score": 105.0,
+      "actionable": true
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "MGC=F",
+      "grade": "C",
+      "confidence": 96,
+      "reason": "GRADE: C | CONFIDENCE: 96\nREASON: 未見「大陰啟動＋至少兩根上影階梯＋收破20EMA」，現價反而位於EMA20及SMA50上方且均線呈多頭，逆勢空方Setup應跳過。",
+      "priority_score": 104.4,
+      "actionable": false
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "MES=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "EMA Crossback 雛型浮現（dead cross 19 棒後價格回落至 EMA20 7676.45 附近），但仍處於 7672–7678 窄幅盤整區間，未見明確 rejection K 線確認，HTF 趨勢向下，confluenc",
+      "priority_score": 103.5,
+      "actionable": true
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "H-Pattern 形態齊全（長實體+30.2%頂wick+45.7%回撤+穿底），但逆HTF上升趨勢（站穩EMA20/SMA50、golden cross），且為下午時段動能轉弱區，胜率受限。",
+      "priority_score": 69.0,
+      "actionable": true
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "BTC-USD",
+      "grade": "B",
+      "confidence": 40,
+      "reason": "18:45 K線有 bullish long body (82.83) + upper wick 11.1% + 9.5% pullback，但 broke_low=False 形態未完成，且趨勢 sideways、價格站於 EMA20/S",
+      "priority_score": 60.0,
+      "actionable": true
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "三推向上結構隱約成形（高點 4427.5→4426.7→4422.5 逐步收窄），但缺乏明確等高/等低突破位，收窄亦未確認；價格站穩 EMA20 之上且 RSI 偏多提供部分 confluence，僅屬邊際 setup，建議觀察下一根能否突",
+      "priority_score": 57.5,
+      "actionable": true
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "CRT偵測失效無形態，5min區間盤整無清晰掃高低收返，3-pushes雖見narrowing但缺MSS確認，加上50/20偏空壓EMA20，唔符合CRT進場條件。",
+      "priority_score": 49.5,
+      "actionable": false
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "CRT 偵測報錯且 5min 結構僅見急跌後窄幅盤整，無明確 sweep CRT-L/H + MSS 反轉形態，順死亡交叉偏空，skip 觀望。",
+      "priority_score": 49.5,
+      "actionable": false
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "CRT 偵測器報錯無確認 4H range，5min 價格夾喺 EMA20/50 之間橫行（0.15% range），冇明確 sweep CRT-L/H + MSS 結構，sideways 環境下 skip。",
+      "priority_score": 49.5,
+      "actionable": false
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "CRT偵測器報錯且5min結構未見明確掃4H高低+收返+MSS確認，RSI 71過熱、3-Pushes下行narrowing與上行bias矛盾，無A/B級Setup條件。",
+      "priority_score": 49.5,
+      "actionable": false
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "黃金交叉存在且價格貼近 EMA20（0.099%），但趨勢判定為 sideways 非上升趨勢，加上 RSI 71 已超買區，3-Pushes down 訊號浮現，confluence 不足，skip 觀望。",
+      "priority_score": 45.0,
+      "actionable": false
+    },
+    {
+      "strategy": "B1",
+      "ticker": "MGC=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "B1形態未成形—J坑底< -5無證據、近8根高點4424.9未突破、區間僅0.12%動能不足，雖然均線多頭排列但缺乏右側進場訊號，skip。",
+      "priority_score": 45.0,
+      "actionable": false
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "MGC=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "僅有 MGC 單標的數據無法確認 3合1 多資產共振；H-Pattern 雖有但 broke_low=True 為看空信號，50/20 雖 golden cross 但 Range 僅 0.12% 動能不足，Wick 66% 顯示猶豫反轉，",
+      "priority_score": 45.0,
+      "actionable": false
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "H-Pattern、3-Pushes、RSI背離全部缺席，價格喺EMA20附近sideways且wick%高達63%，上週五bar收近全日低點明顯rejection，形態唔成立，skip。",
+      "priority_score": 45.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "大陰啟動（14:35）符合，但隨後5根K線高低點重疊、無明確下移階梯，15:05甚至創區間新高破壞形態，價格貼近EMA20（-0.4pt）缺乏跌破確認動能，skip。",
+      "priority_score": 40.5,
+      "actionable": false
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "3-Pushes 雖有 narrowing 但方向混亂，價格卡 EMA20/SMA50 之間呈無方向盤整，50/20 death cross 仍主導下行 bias，缺乏明確 Kell 形態觸發，skip 觀望。",
+      "priority_score": 40.5,
+      "actionable": false
+    },
+    {
+      "strategy": "B1",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "死亡交叉後趨勢向下，價格低於 SMA50，B1 條件全部不齊——無 J坑底<-5、無前高突破、3-Pushes 雖有但屬逆大方向，skip",
+      "priority_score": 40.0,
+      "actionable": false
+    },
+    {
+      "strategy": "B1",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "末根K線收陰且收於最低，價格跌破EMA20於SMA50附近徘徊，sideways趨勢無BBI↑及J坑底反轉結構，B1右側形態完全不成立。",
+      "priority_score": 40.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "無大陰啟動K線，上影階梯不明確，趨勢盤整，多空皆不明確，skip。",
+      "priority_score": 36.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "無大陰啟動純下影結構，價格僅貼 20EMA 掙扎未破，3-Pushes 向上反而逆空方 STAIR 邏輯，形態不符且無 bearish continuation 確認。",
+      "priority_score": 36.0,
+      "actionable": false
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "死亡交叉（EMA20 < SMA50）+ downtrend，與 50/20 Pullback 黃金交叉做多條件完全相反，逆大方向必須 skip。",
+      "priority_score": 35.0,
+      "actionable": false
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "EMA20(29151)仍低於SMA50(29158.74)為死亡交叉非黃金交叉，趨勢向下且價格在SMA50下方，完全不符50/20 Pullback黃金交叉+順勢定義，應skip觀望。",
+      "priority_score": 35.0,
+      "actionable": false
+    },
+    {
+      "strategy": "B1",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "MES=F 非 B1 戰法指定標的（僅限 MNQ/MGC/BTC），且 50/20 死叉趨勢向下、無突破前高、J 坑未現，直接 skip。",
+      "priority_score": 35.0,
+      "actionable": false
+    },
+    {
+      "strategy": "B1",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "M2K=F 非 B1 戰法適用標的（僅限 MNQ/MGC/BTC），且 RSI 72.1 超買、wick 80.9% 雜訊高、無 J 坑底< -5 結構，直接跳過。",
+      "priority_score": 35.0,
+      "actionable": false
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "缺少 MGC 同 BTC 數據無法確認 3合1 combined setup，加上 MNQ 50/20 死叉趨勢向下、3-Pushes 形態矛盾，價格喺 EMA20 附近糾結，RSI 中性冇方向，唔符合 B1 條件。",
+      "priority_score": 35.0,
+      "actionable": false
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "此為 MES 而非 3合1 所需嘅 MNQ+MGC+BTC 跨資產組合，無法評估多資產 confluence；RSI 49.6 中性、50/20 死亡交叉後趨勢向下、價格僅貼 EMA20 無明確反彈形態，H-Pattern/3-Pushes",
+      "priority_score": 35.0,
+      "actionable": false
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "B1 3合1 僅適用 MNQ+MGC+BTC 三標的，M2K=F（Russell 2000）非目標標的，直接 skip；且 RSI 72.1 超買、3-Pushes 雖現但無 HTF 偏壓確認，不符合條件。",
+      "priority_score": 35.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MGC=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "14:50陽(4420.5-4421.1) / 14:55陰(4420.6-4421.3) / 15:00陽(4420.7-4421.7) 部分夾住陰線實體，但第一根陽線高點未涵蓋陰線高點，形態唔完整；EMA20之上、golden cros",
+      "priority_score": 34.5,
+      "actionable": true
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MNQ=F",
+      "grade": "B",
+      "confidence": 55,
+      "reason": "K線4-6近似兩陽夾一陰但右陽實體頂部29145.75未完全包夾陰線頂部29149.25，形態部分成立；惟50/20死亡交叉趨勢偏空、3-Pushes up收窄顯示動能衰竭，confluence不足。",
+      "priority_score": 34.5,
+      "actionable": true
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "BTC-USD",
+      "grade": "B",
+      "confidence": 45,
+      "reason": "18:45 陽線/18:50 陰線/18:55 陽線有近似兩陽夾一陰形態，但第三根陽線實體(77336.87-77348.28)未能完全包夾陰線實體高點(77370.76)，形態不完整；50/20 顯示 sideways 趨勢，價格貼 EM",
+      "priority_score": 31.5,
+      "actionable": true
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "預偵測無 RSI 背離形態，最近低點 29130 高於前低 29125 形成 higher low（非 bullish divergence），bearish divergence 需明確 higher high 但 RSI 僅 54/52",
+      "priority_score": 31.5,
+      "actionable": false
+    },
+    {
+      "strategy": "Stair-Pattern",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "8根K線為higher high/higher low上升結構，無大陰啟動且未收破EMA20，形態完全不匹配，逆大方向做空skip。",
+      "priority_score": 31.5,
+      "actionable": false
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "H-Pattern 未成立，pullback 達 145% 嚴重超標 (>50%)，形態破壞；雖 bearish candle + 跌破 low 出現，但 EMA20/SMA50 death cross、價格受壓 SMA50 下方，conf",
+      "priority_score": 27.0,
+      "actionable": false
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "H-Pattern detector 明確 False，14:30 長上影後跌幅遠超 50% pullback 門檻，3-Pushes 雖窄化但形態結構唔吻合，EMA20/SMA50 死亡交叉逆向上方，session 已近收盤 lack o",
+      "priority_score": 27.0,
+      "actionable": false
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 18,
+      "reason": "預偵測無 RSI 背離形態（type=none），價格於 EMA20 上方窄幅整理 0.30%，未見明確 Higher High/Lower Low 結構，confluence 不足，skip。",
+      "priority_score": 26.6,
+      "actionable": false
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "RSI 與價格同步上升（57.0 vs 55.4），無背離形態；雖 50/20 golden cross 趨勢向上，但 Divergence Setup 不成立，跳過。",
+      "priority_score": 24.5,
+      "actionable": false
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "MGC=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "偵測器回報無 RSI 背離形態，價格低點逐漸抬高（4410.9→4413→4415.7）無 Lower Low 結構，RSI 62.2 處中段無極值，背離條件完全不成立，跳過。",
+      "priority_score": 24.5,
+      "actionable": false
+    },
+    {
+      "strategy": "RSI-Divergence",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 15,
+      "reason": "RSI Divergence 形態完全未成立（價格微創新高但 RSI 同步走高非背離），且 RSI 71.9 處於超買區但無反轉結構，配合 sideways 趨勢無 clear bias，skip。",
+      "priority_score": 24.5,
+      "actionable": false
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "H-Pattern detector 回傳 False，K 線無明顯長直 K ＋ 顯著 top wick 賣壓結構，價格貼 EMA20 橫行，RSI 70.7 過買但動能不足，唔符合 setup 條件，跳過。",
+      "priority_score": 24.0,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "BTC-USD",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "三推向某方向結構唔成立，近期 K 線係區間震盪而非清晰三推，收窄同等高/等低訊號缺失，detector 亦確認 absent，skip 等待更明確形態。",
+      "priority_score": 22.5,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "三推向上的推幅係擴張（7679.5→7680.75→7687.5 越推越大），唔符合「最後一推收窄」核心條件；探測器明確 present=False，回調後只有兩根細陽線，未形成第三推，且無明確等高/等低突破位，skip。",
+      "priority_score": 22.5,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "M2K=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "末段 14:30-15:00 三根屬 consolidation 而非 narrowing push，detector 已 flag narrowing=False，且 RSI 72 overbought + wick% 67.5% 顯示上",
+      "priority_score": 22.5,
+      "actionable": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "ticker": "MNQ=F",
+      "grade": "C",
+      "confidence": 20,
+      "reason": "價格結構係 spike-and-fade（14:15 長上影後反轉），唔見三段乾淨推進同收窄，3-Pushes detector 亦確認 absent，skip。",
+      "priority_score": 20.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "MES=F",
+      "grade": "C",
+      "confidence": 25,
+      "reason": "形態勉強存在（14:45 陽線→14:50 陰線→15:00 陽線實體部分夾住），但第三根陽線未突破首根高點、無 bullish break，且 50/20 死亡交叉後趨勢偏空、價格僅在 EMA20 掙扎，加上 15:05 午後時段動能不足",
+      "priority_score": 13.5,
+      "actionable": false
+    },
+    {
+      "strategy": "Two-Yang-One-Yin",
+      "ticker": "M2K=F",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "LLM incomplete response (only thinking, retry failed)",
+      "priority_score": 0.0,
+      "actionable": false
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "ticker": "BTC-USD",
+      "grade": "?",
+      "confidence": 0,
+      "reason": "LLM incomplete response (only thinking, retry failed)",
+      "priority_score": 0.0,
+      "actionable": false
+    }
+  ],
+  "snapshot": [
+    {
+      "tk": "MNQ=F",
+      "name": "Micro Nasdaq",
+      "last": 29156.25,
+      "chg": 30.75,
+      "pct": 0.10557758665087294
+    },
+    {
+      "tk": "MES=F",
+      "name": "Micro S&P",
+      "last": 7676.75,
+      "chg": 34.0,
+      "pct": 0.4448660495240587
+    },
+    {
+      "tk": "M2K=F",
+      "name": "Micro Russell",
+      "last": 2959.300048828125,
+      "chg": 34.60009765625,
+      "pct": 1.183030677809748
+    }
+  ]
+}
