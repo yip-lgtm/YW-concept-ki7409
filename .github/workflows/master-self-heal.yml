@@ -7,6 +7,8 @@ name: Master Self-Heal — 24/7 Pipeline Doctor
 # - Self-monitors: TG alert if THIS workflow missed 3+ runs
 
 on:
+  schedule:
+    - cron: '*/10 * * * *'  # Every 10 min
   workflow_dispatch: {}
 
 permissions:

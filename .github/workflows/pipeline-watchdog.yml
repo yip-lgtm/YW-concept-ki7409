@@ -4,6 +4,8 @@ name: Pipeline Watchdog — Auto-Trigger if Stalled
 # Self-healing mechanism for GHA scheduling issues
 
 on:
+  schedule:
+    - cron: '*/5 * * * *'  # Every 5 min (backup to pipeline-scheduler)
   workflow_dispatch: {}
 
 permissions:
@@ -16,7 +18,7 @@ jobs:
     steps:
       - name: Check pipeline health + re-trigger
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.APEX_PAT }}
         run: |
           # Last successful run time threshold (30 min)
           THRESHOLD_MIN=30
