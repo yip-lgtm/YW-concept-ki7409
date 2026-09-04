@@ -1,0 +1,319 @@
+{
+  "timestamp": "20260905_022522",
+  "n_agents": 11,
+  "n_ok": 11,
+  "n_warn": 0,
+  "n_bug": 0,
+  "results": [
+    {
+      "agent": "yw-3-pushes",
+      "id": "3-pushes",
+      "module": "yw_indicators",
+      "fn": "detect_3_pushes",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=0.5"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "yw-h-pattern",
+      "id": "h-pattern",
+      "module": "yw_indicators",
+      "fn": "detect_h_pattern",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK (no signal)"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=0.6"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "yw-two-yang",
+      "id": "two-yang",
+      "module": "yw_indicators",
+      "fn": "detect_two_yang_one_yin",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=0.3"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "yw-rsi-div",
+      "id": "rsi-div",
+      "module": "yw_indicators",
+      "fn": "detect_rsi_divergence",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK (custom)"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=0.7"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "yw-kell-cycle",
+      "id": "kell-cycle",
+      "module": "yw_indicators_extra",
+      "fn": "detect_kell_setups",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK (custom)"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=0.9"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "ocs-btc-5m",
+      "id": "ocs-btc",
+      "module": "ocs_btc_5m",
+      "fn": "compute_signal",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "SKIP"
+        ],
+        [
+          "output_fields",
+          "SKIP"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "yw-stair-pattern",
+      "id": "stair-pattern",
+      "module": "yw_indicators_extra",
+      "fn": "detect_stair_pattern",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK (no signal)"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=0.9"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "yw-b1",
+      "id": "b1",
+      "module": "yw_indicators_b1",
+      "fn": "detect_b1",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=1.0"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "yw-50-20-pullback",
+      "id": "50-20-pullback",
+      "module": "yw_indicators",
+      "fn": "detect_5020_pullback",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK (custom)"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=1.0"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "yw-crt",
+      "id": "crt",
+      "module": "yw_indicators_extra",
+      "fn": "detect_crt",
+      "checks": [
+        [
+          "import",
+          "OK"
+        ],
+        [
+          "smoke",
+          "OK"
+        ],
+        [
+          "output_fields",
+          "OK"
+        ],
+        [
+          "direction",
+          "OK"
+        ],
+        [
+          "grader_config",
+          "OK w=1.1"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    },
+    {
+      "agent": "sys-engineer",
+      "id": "sys-engineer",
+      "module": "sys_engineer",
+      "fn": "main",
+      "checks": [
+        [
+          "recency",
+          "OK (0.0h)"
+        ],
+        [
+          "content",
+          "OK bugs=0 lazy=0"
+        ]
+      ],
+      "bugs": [],
+      "warns": []
+    }
+  ]
+}
