@@ -221,8 +221,11 @@ def make_chart(signal: dict, output_path: Path) -> bool:
             bbox=dict(boxstyle='round,pad=0.5', facecolor='#000000', edgecolor='#10b981', alpha=0.95),
             verticalalignment='bottom', fontproperties=CJK_FONT)
     
-    # Legend (top-right, small)
-    leg = ax.legend(loc='upper right', fontsize=7, framealpha=0.85, ncol=1)
+    # Legend (TOP-LEFT, below SETUP box, compact 5 cols)
+    # SETUP box at (0.02, 0.98), legend at (0.02, 0.78)
+    leg = ax.legend(loc='upper left', bbox_to_anchor=(0.02, 0.78),
+                    fontsize=6, framealpha=0.85, ncol=5,
+                    handlelength=1.0, columnspacing=0.7, labelspacing=0.3)
     leg.get_frame().set_facecolor('#1e293b')
     leg.get_frame().set_edgecolor('#374151')
     for text in leg.get_texts():
