@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-05T05:46:13.850263+00:00",
+  "timestamp": "2026-09-05T12:37:37.909985+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -73,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 33948013366,
-          "conclusion": "success",
-          "created_at": "2026-09-05T05:45:05Z",
+          "id": 33966544207,
+          "conclusion": "running",
+          "created_at": "2026-09-05T12:36:57Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 33947452922,
+          "id": 33957901076,
           "conclusion": "success",
-          "created_at": "2026-09-05T05:31:58Z",
+          "created_at": "2026-09-05T09:24:35Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 33957523876,
+          "conclusion": "success",
+          "created_at": "2026-09-05T09:16:14Z",
           "event": "schedule"
-        },
-        {
-          "id": 33946110409,
-          "conclusion": "success",
-          "created_at": "2026-09-05T05:01:38Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -151,14 +151,14 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 11,
+    "n_open": 0,
     "n_stale_24h": 0,
     "issues": [
-      "High total risk: $970"
+      "positions.json parse error: Expecting property name enclosed in double quotes: line 83 column 1 (char 3217)"
     ],
-    "long_count": 3,
-    "short_count": 7,
-    "total_risk": 970.3457031250001,
+    "long_count": 0,
+    "short_count": 0,
+    "total_risk": 0.0,
     "deep_loss_positions": []
   }
 }
