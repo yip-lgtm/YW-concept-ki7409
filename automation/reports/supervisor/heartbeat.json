@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-05T16:00:08.830052+00:00",
+  "timestamp": "2026-09-05T18:11:39.708798+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -17,13 +17,20 @@
   "yw_daily_today": {
     "workflow": "yw-daily",
     "today": "2026-09-05",
-    "ran_today": false,
-    "success_today": false
+    "ran_today": true,
+    "success_today": true,
+    "last_id": 33982274912
   },
   "workflows": [
     {
       "workflow": "yw-daily.yml",
       "runs": [
+        {
+          "id": 33982274912,
+          "conclusion": "success",
+          "created_at": "2026-09-05T17:51:55Z",
+          "event": "schedule"
+        },
         {
           "id": 33908288263,
           "conclusion": "success",
@@ -34,12 +41,6 @@
           "id": 33794901028,
           "conclusion": "success",
           "created_at": "2026-09-03T19:10:47Z",
-          "event": "schedule"
-        },
-        {
-          "id": 33672340262,
-          "conclusion": "success",
-          "created_at": "2026-09-02T19:16:47Z",
           "event": "schedule"
         }
       ],
@@ -73,22 +74,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 33975456943,
-          "conclusion": "success",
-          "created_at": "2026-09-05T15:39:14Z",
+          "id": 33983250357,
+          "conclusion": "running",
+          "created_at": "2026-09-05T18:10:59Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 33975311357,
+          "id": 33981471734,
           "conclusion": "success",
-          "created_at": "2026-09-05T15:36:15Z",
+          "created_at": "2026-09-05T17:36:09Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 33981368597,
+          "conclusion": "success",
+          "created_at": "2026-09-05T17:34:12Z",
           "event": "schedule"
-        },
-        {
-          "id": 33975158593,
-          "conclusion": "success",
-          "created_at": "2026-09-05T15:33:21Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
