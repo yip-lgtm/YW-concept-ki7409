@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-04T22:58:29.378226+00:00",
+  "timestamp": "2026-09-05T00:50:12.560311+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -16,10 +16,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-09-04",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 33908288263
+    "today": "2026-09-05",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -74,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 33927646074,
+          "id": 33934229984,
           "conclusion": "running",
-          "created_at": "2026-09-04T22:57:48Z",
+          "created_at": "2026-09-05T00:49:28Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 33921803162,
+          "id": 33929531657,
           "conclusion": "success",
-          "created_at": "2026-09-04T21:35:31Z",
+          "created_at": "2026-09-04T23:26:50Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 33928814138,
+          "conclusion": "success",
+          "created_at": "2026-09-04T23:15:39Z",
           "event": "schedule"
-        },
-        {
-          "id": 33921683865,
-          "conclusion": "success",
-          "created_at": "2026-09-04T21:34:00Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -145,21 +144,21 @@
   ],
   "health": {
     "issues": [
-      "ranking stale: 10 days old"
+      "ranking stale: 11 days old"
     ],
     "status": "warning",
     "n_issues": 1
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 15,
+    "n_open": 19,
     "n_stale_24h": 0,
     "issues": [
-      "High total risk: $1814"
+      "High total risk: $2138"
     ],
-    "long_count": 5,
-    "short_count": 9,
-    "total_risk": 1813.5082031250004,
+    "long_count": 7,
+    "short_count": 11,
+    "total_risk": 2138.4457031250004,
     "deep_loss_positions": []
   }
 }
