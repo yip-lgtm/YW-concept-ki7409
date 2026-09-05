@@ -1,51 +1,51 @@
 {
-  "ts": "2026-09-01T12:25:02.124955+08:00",
+  "ts": "2026-09-04T20:26:26.552301-04:00",
   "ticker": "BTC-USD",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
-  "side": "bullish",
+  "side": "bearish",
   "swing": {
     "type": "c2_closure",
-    "side": "bullish",
-    "c2_high": 78880.4921875,
-    "c2_low": 78161.4765625,
-    "c2_close": 78653.9296875,
-    "c2_eq": 78520.984375,
-    "c3_close": 78778.8125,
-    "swing_level": 78161.4765625,
-    "direction": "long"
+    "side": "bearish",
+    "c2_high": 79884.78125,
+    "c2_low": 79544.4921875,
+    "c2_close": 79689.328125,
+    "c2_eq": 79714.63671875,
+    "c3_close": 79667.9765625,
+    "swing_level": 79884.78125,
+    "direction": "short"
   },
   "cisd": {
-    "confirmed": true,
-    "opposing_open": 78738.1484375,
-    "series_length": 2,
-    "last_close": 78778.8125,
-    "reason": "cisd_long"
+    "confirmed": false,
+    "opposing_open": 78008.34375,
+    "series_length": 1,
+    "last_close": 79667.9765625,
+    "reason": "no break"
   },
   "eq_respected": true,
   "d1_trend": {
-    "aligned": true,
+    "aligned": false,
     "trend": "uptrend",
-    "d1_close": 78778.8125,
-    "d1_ema50": 69681.82278538992,
-    "d1_ema20": 74047.87986578683,
-    "reason": "D1 uptrend"
+    "d1_close": 79667.9765625,
+    "d1_ema50": 71046.79407649684,
+    "d1_ema20": 75681.18089775713,
+    "reason": "D1 uptrend (counter-trend)"
   },
   "weekly_profile": {
-    "profile": "early_week",
+    "profile": "thursday_counter",
     "valid_for_signal": true,
-    "notes": "day 2 - too early, not blocking"
+    "notes": ""
   },
   "daily_profile": {
     "london_expanded": true,
-    "london_range": 1029.7734375,
+    "london_range": 2777.8046875,
     "skip_ny": true
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "London expanded (skip NY)",
+  "reason": "CISD not confirmed; D1 counter-trend (uptrend); London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
