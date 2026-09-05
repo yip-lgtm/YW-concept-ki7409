@@ -137,9 +137,11 @@ def find_lazy_agents() -> list[dict]:
     Truly lazy: had signals in 7d, none in 24h = conditions may have changed
     Always quiet: 0 in both = strategy may not match market
     """
+    # B1/B1-3in1 are STRUCTURAL (require BTC j<20). Skip from lazy check.
     agents = [
         "H-Pattern", "3-Pushes", "Two-Yang", "RSI-Div",
-        "50-20-Pullback", "Stair", "B1", "B1-3in1",
+        "50-20-Pullback", "Stair",
+        # "B1", "B1-3in1",  # STRUCTURAL: skipped
         "Kell-Cycle", "CRT"
     ]
     lazy = []

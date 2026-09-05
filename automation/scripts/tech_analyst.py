@@ -340,19 +340,72 @@ def main():
             log_action("tech_analyst", "auto_heal", "unified-pipeline", "INFO",
                       f"triggered due to coverage drop {last_coverage}% -> {current_coverage}%")
     
-    if charts_failed > charts_total * 0.5 or coverage_dropped:
-        msg = f"⚠️ Tech Analyst: {charts_failed}/{charts_total} charts failed"
-        if coverage_dropped:
-            msg += f" (coverage: {last_coverage}% → {current_coverage}%)"
-            msg += f"\n🔄 Auto-heal: unified-pipeline re-triggered"
-        if TG_TOKEN and TG_CHAT:
+    # De-dup: only send TG if NOT seen in last 30 min
+    is_real_failure = (
+        charts_failed > charts_total * 0.5 and charts_total > 10
+    )
+    
+    if is_real_failure or coverage_dropped:
+        # De-dup using last_alert file
+        last_alert_file = REPO / "automation/reports/tech_analyst/last_alert.json"
+        last_alert = None
+        if last_alert_file.exists():
             try:
-                requests.post(
-                    f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
-                    json={"chat_id": TG_CHAT, "text": msg}, timeout=10,
-                )
-            except Exception:
-                pass
+                with open(last_alert_file) as f:
+                    last_alert = json.load(f)
+            except: pass
+        
+        skip = False
+        if last_alert:
+            try:
+                last_ts = datetime.fromisoformat(last_alert["ts"].replace("Z", "+00:00"))
+                if (datetime.now(timezone.utc) - last_ts).total_seconds() < 1800:
+                    if last_alert.get("failed") == charts_failed and last_alert.get("total") == charts_total:
+                        skip = True
+            except: pass
+        
+        if not skip:
+            msg = f"⚠️ Tech Analyst: {charts_failed}/{charts_total} charts failed"
+            if coverage_dropped:
+                msg += f" (coverage: {last_coverage}% → {current_coverage}%)"
+                msg += f"\n🔄 Auto-heal: unified-pipeline re-triggered"
+            if TG_TOKEN and TG_CHAT:
+                try:
+                    requests.post(
+                        f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
+                        json={"chat_id": TG_CHAT, "text": msg}, timeout=10,
+                    )
+                except Exception:
+                    pass
+            try:
+                last_alert_file.write_text(json.dumps({
+                    "ts": datetime.now(timezone.utc).isoformat(),
+                    "failed": charts_failed,
+                    "total": charts_total,
+                    "coverage": current_coverage,
+                }, indent=2))
+            except: pass
+    
+    # Healthy status: only alert if 0 signals for 6+ hours
+    if charts_total == 0 and current_coverage == 0:
+        last_no_signal = REPO / "automation/reports/tech_analyst/last_no_signal.json"
+        should_alert = True
+        if last_no_signal.exists():
+            try:
+                with open(last_no_signal) as f:
+                    d = json.load(f)
+                    last = datetime.fromisoformat(d["ts"].replace("Z", "+00:00"))
+                    if (datetime.now(timezone.utc) - last).total_seconds() < 21600:
+                        should_alert = False
+            except: pass
+        if should_alert and TG_TOKEN and TG_CHAT:
+            requests.post(
+                f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
+                json={"chat_id": TG_CHAT, "text": "⚠️ Tech Analyst: 0 signals in 24h. Pipeline may be stalled."},
+                timeout=10,
+            )
+            last_no_signal.write_text(json.dumps({"ts": datetime.now(timezone.utc).isoformat()}))
+    
     save_last_coverage(current_coverage)
     
     return 0

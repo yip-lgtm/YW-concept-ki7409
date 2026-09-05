@@ -199,7 +199,9 @@ def check_agent(agent: dict) -> dict:
 def send_tg(results: list, bugs_only: bool = False):
     """Send TG report."""
     import requests
-    lines = ["🔍 Strategy Supervisor Report — 9 Agents\n"]
+    n_strat = sum(1 for r in results if r['agent'] != 'sys-engineer')
+    n_others = len(results) - n_strat
+    lines = [f"🔍 Strategy Supervisor Report — {n_strat} Strategies + {n_others} Power\n"]
     n_ok = sum(1 for r in results if not r["bugs"])
     n_bug = len([r for r in results if r["bugs"]])
     n_warn = len([r for r in results if r["warns"]])
