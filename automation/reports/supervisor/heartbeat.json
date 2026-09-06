@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-05T23:19:45.880883+00:00",
+  "timestamp": "2026-09-06T01:08:01.004596+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -16,10 +16,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-09-05",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 33982274912
+    "today": "2026-09-06",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -74,21 +73,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 33997663038,
+          "id": 34002333951,
           "conclusion": "success",
-          "created_at": "2026-09-05T23:04:24Z",
+          "created_at": "2026-09-06T00:50:23Z",
           "event": "schedule"
         },
         {
-          "id": 33997649918,
+          "id": 34002328713,
           "conclusion": "success",
-          "created_at": "2026-09-05T23:04:05Z",
+          "created_at": "2026-09-06T00:50:15Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 33995294981,
+          "id": 34000094097,
           "conclusion": "success",
-          "created_at": "2026-09-05T22:13:38Z",
+          "created_at": "2026-09-05T23:59:28Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -145,7 +144,7 @@
   ],
   "health": {
     "issues": [
-      "ranking stale: 11 days old"
+      "ranking stale: 12 days old"
     ],
     "status": "warning",
     "n_issues": 1
