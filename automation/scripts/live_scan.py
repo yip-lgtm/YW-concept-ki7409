@@ -299,7 +299,17 @@ def open_live_position(sig, atr):
     }
     # Load existing + dedupe
     if POSITIONS_FILE.exists():
-        positions = json.loads(POSITIONS_FILE.read_text())
+        try:
+            positions = json.loads(POSITIONS_FILE.read_text())
+        except json.JSONDecodeError as e:
+            # Corrupted positions.json (e.g., from git merge conflict markers)
+            print(f"[open] positions.json corrupt: {e}")
+            print(f"[open] Resetting to empty list (auto-recover)")
+            try:
+                POSITIONS_FILE.write_text("[]\n")
+            except Exception:
+                pass
+            positions = []
     else:
         positions = []
     # DEDUPE: skip if signal_id already in positions or trades
