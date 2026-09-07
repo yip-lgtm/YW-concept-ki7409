@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-07T12:28:40.520494+00:00",
+  "timestamp": "2026-09-07T17:53:40.130052+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -73,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 34121788296,
-          "conclusion": "success",
-          "created_at": "2026-09-07T12:25:31Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 34109758643,
-          "conclusion": "success",
-          "created_at": "2026-09-07T10:07:26Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 34089746377,
-          "conclusion": "success",
-          "created_at": "2026-09-07T06:11:42Z",
+          "id": 34149337066,
+          "conclusion": "running",
+          "created_at": "2026-09-07T17:52:01Z",
           "event": "schedule"
+        },
+        {
+          "id": 34149062779,
+          "conclusion": "success",
+          "created_at": "2026-09-07T17:47:50Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 34140353382,
+          "conclusion": "success",
+          "created_at": "2026-09-07T15:50:39Z",
+          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -97,21 +97,21 @@
       "workflow": "strategy-ranking.yml",
       "runs": [
         {
+          "id": 34140409387,
+          "conclusion": "success",
+          "created_at": "2026-09-07T15:51:20Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 34122071958,
+          "conclusion": "success",
+          "created_at": "2026-09-07T12:28:41Z",
+          "event": "workflow_dispatch"
+        },
+        {
           "id": 34109813135,
           "conclusion": "success",
           "created_at": "2026-09-07T10:08:02Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 34089402040,
-          "conclusion": "success",
-          "created_at": "2026-09-07T06:06:47Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 34085022414,
-          "conclusion": "success",
-          "created_at": "2026-09-07T04:57:47Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -151,14 +151,14 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 0,
+    "n_open": 16,
     "n_stale_24h": 0,
     "issues": [
-      "positions.json parse error: Expecting property name enclosed in double quotes: line 83 column 1 (char 3217)"
+      "High total risk: $560"
     ],
-    "long_count": 0,
-    "short_count": 0,
-    "total_risk": 0.0,
+    "long_count": 8,
+    "short_count": 6,
+    "total_risk": 560.4136718750001,
     "deep_loss_positions": []
   }
 }
