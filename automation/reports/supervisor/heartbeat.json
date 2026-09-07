@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-06T23:17:23.319365+00:00",
+  "timestamp": "2026-09-07T00:19:32.156937+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -16,10 +16,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-09-06",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 34050189569
+    "today": "2026-09-07",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -74,21 +73,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 34066432632,
-          "conclusion": "running",
-          "created_at": "2026-09-06T23:16:46Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 34063231400,
+          "id": 34068042895,
           "conclusion": "success",
-          "created_at": "2026-09-06T22:10:19Z",
+          "created_at": "2026-09-06T23:51:27Z",
           "event": "schedule"
         },
         {
-          "id": 34062988377,
+          "id": 34067873950,
           "conclusion": "success",
-          "created_at": "2026-09-06T22:05:30Z",
+          "created_at": "2026-09-06T23:47:39Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 34066432632,
+          "conclusion": "success",
+          "created_at": "2026-09-06T23:16:46Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -97,6 +96,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 34066463854,
+          "conclusion": "success",
+          "created_at": "2026-09-06T23:17:24Z",
+          "event": "workflow_dispatch"
+        },
         {
           "id": 34064352782,
           "conclusion": "success",
@@ -107,12 +112,6 @@
           "id": 34061959864,
           "conclusion": "success",
           "created_at": "2026-09-06T21:44:12Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 34059229100,
-          "conclusion": "success",
-          "created_at": "2026-09-06T20:50:31Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -145,7 +144,7 @@
   ],
   "health": {
     "issues": [
-      "ranking stale: 12 days old"
+      "ranking stale: 13 days old"
     ],
     "status": "warning",
     "n_issues": 1
