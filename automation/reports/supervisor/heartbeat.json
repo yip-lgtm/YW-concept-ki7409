@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-07T23:42:20.451165+00:00",
+  "timestamp": "2026-09-08T01:29:43.870027+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -16,10 +16,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-09-07",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 34156547008
+    "today": "2026-09-08",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -74,21 +73,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 34170885005,
+          "id": 34175529577,
           "conclusion": "success",
-          "created_at": "2026-09-07T23:41:37Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 34168635842,
-          "conclusion": "success",
-          "created_at": "2026-09-07T23:01:38Z",
+          "created_at": "2026-09-08T01:06:21Z",
           "event": "schedule"
         },
         {
-          "id": 34166001941,
+          "id": 34173500207,
           "conclusion": "success",
-          "created_at": "2026-09-07T22:14:51Z",
+          "created_at": "2026-09-08T00:29:54Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 34170885005,
+          "conclusion": "success",
+          "created_at": "2026-09-07T23:41:37Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -145,21 +144,21 @@
   ],
   "health": {
     "issues": [
-      "ranking stale: 13 days old"
+      "ranking stale: 14 days old"
     ],
     "status": "warning",
     "n_issues": 1
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 82,
+    "n_open": 114,
     "n_stale_24h": 0,
     "issues": [
-      "High total risk: $1403"
+      "High total risk: $1586"
     ],
-    "long_count": 38,
-    "short_count": 31,
-    "total_risk": 1402.9861328125,
+    "long_count": 54,
+    "short_count": 41,
+    "total_risk": 1586.4494698660708,
     "deep_loss_positions": []
   }
 }
