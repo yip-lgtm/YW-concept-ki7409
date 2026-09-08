@@ -7,10 +7,11 @@ name: 'Strategy Ranking & LLM Iteration'
 
 on:
   schedule:
-    # 13:30 UTC = 21:30 HKT (after 21:00 daily reminder)
-    - cron: '5 16 * * 1-5'
-    - cron: '5 12 * * 1-5'
-    - cron: '5 20 * * 1-5'
+    # HKT 00:00 = UTC 16:00 — 每日 auto rank + push + web publish
+    - cron: '0 16 * * *'   # 每日 00:00 HKT (primary)
+    # Backup: 12:00 UTC + 20:00 UTC (GHA cron 唔可靠, 3x coverage)
+    - cron: '0 12 * * *'   # 每日 20:00 HKT (backup)
+    - cron: '0 20 * * *'   # 每日 04:00 HKT (backup)
   workflow_dispatch:
   # NOTE: don't add on: push - GHA creates phantom "push" runs
   # when force-push happens, which fail because the workflow isn't designed for push events.
