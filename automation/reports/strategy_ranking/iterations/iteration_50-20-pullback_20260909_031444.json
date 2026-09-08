@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-09",
+  "agent": "yw-50-20-pullback",
+  "result": {
+    "grade": "D",
+    "confidence": 35,
+    "reason": "0 trades means strategy never fired; pullback signals too rare on 5min with slow EMA20/SMA50 combo.",
+    "weight": 0.3,
+    "timeframe": "15min",
+    "r_multiples": [
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      4.0
+    ],
+    "indicators": [
+      "ema9",
+      "ema20",
+      "sma50",
+      "pullback"
+    ],
+    "rationale": "5min too slow for EMA20/SMA50 pullbacks, 0 trades confirms dead. Upgrade to 15min + add fast EMA9 for more pullback triggers, lower weight until validated.",
+    "agent": "yw-50-20-pullback",
+    "strategy_id": "50-20-pullback",
+    "ticker": "MNQ=F",
+    "live_n": 0,
+    "live_pf": 1.0,
+    "live_wr": 50,
+    "live_R": 0,
+    "current_weight": 1.0,
+    "current_timeframe": "5min",
+    "response_raw": "<think>The user wants me to review the live performance of the yw-50-20-pullback sub-agent strategy. Let me analyze:\n\n- Backtest: 0 trades, WR 50%, PF 1.0, R +0\n- No ticker breakdown\n- Current config: weight 1.0, 5min, EMA20, SMA50, pullback\n\nThe strategy has zero trades in backtest. This is a critical issue - the pullback strategy on 5min with EMA20/SMA50 isn't generating any signals. The 5min timeframe with these slow-moving averages likely doesn't produce frequent enough crossovers/pullbacks to trigger trades.\n\nLet me grade this:\n- 0 trades means the strategy is essentially dead/non-functional\n- Grade should be D due to no trades\n- Confidence low-medium\n\nSuggested improvements:\n- Switch to 15min for more signals\n- Or use 5min/15min dual timeframe\n- Reduce weight since it's not producing anything\n- Could try faster indicators\n\nFormat requirement: must use exact format, no think tags.</think>\n\nGRADE: D | CONFIDENCE: 35 | REASON: 0 trades means strategy never fired; pullback signals too rare on 5min with slow EMA20/SMA50 combo.\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"ema9\", \"ema20\", \"sma50\", \"pullback\"],\n  \"r_multiples\": [1.5, 2.0, 2.5, 3.0, 4.0],\n  \"rationale\": \"5min too slow for EMA20/SMA50 pullbacks, 0 trades confirms dead. Upgrade to 15min + add fast EMA9 for more pullback triggers, lower weight until validated.\"\n}"
+  }
+}
