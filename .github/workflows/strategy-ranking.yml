@@ -79,6 +79,51 @@ jobs:
         run: |
           .venv/bin/python scripts/strategy_tg_summary.py
 
+
+      - name: "Auto-update dashboard data (web publish)"
+        if: always()
+        working-directory: automation
+        run: |
+          .venv/bin/python scripts/update_dashboard_data.py 2>&1 | tee /tmp/dashboard_log.txt || true
+
+      - name: "Auto-backup data (ranking + dashboard + state)"
+        if: always()
+        working-directory: automation
+        run: |
+          mkdir -p /tmp/daily_backup
+          cp -r reports/strategy_ranking /tmp/daily_backup/ 2>&1 || true
+          cp docs/dashboard-data.json /tmp/daily_backup/ 2>&1 || true
+          cp reports/llm_iteration/latest.json /tmp/daily_backup/llm_iteration_latest.json 2>&1 || true
+          tar czf /tmp/daily_backup_$(date -u +%Y%m%d).tar.gz -C /tmp daily_backup 2>&1 || true
+          echo "Backup size: $(ls -la /tmp/daily_backup_*.tar.gz 2>&1 | tail -1)"
+
+      - name: "Git push dashboard + iteration state"
+        if: always()
+        run: |
+          git config --global user.name "Mavis bot"
+          git config --global user.email "mavis@MiniMax"
+          git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
+          git add docs/dashboard-data.json automation/reports/llm_iteration/ || true
+          git commit -m "auto(dashboard): daily web data update $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          git push origin main || true
+
+      - name: "Send final completion TG"
+        if: always()
+        working-directory: automation
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          .venv/bin/python -c "
+import os, requests
+from datetime import datetime
+from zoneinfo import ZoneInfo
+hkt = datetime.now(ZoneInfo('Asia/Hong_Kong')).strftime('%Y-%m-%d %H:%M HKT')
+ny = datetime.now(ZoneInfo('America/New_York')).strftime('%Y-%m-%d %H:%M EDT')
+msg = f'✅ <b>Daily Auto-Pipeline Complete</b>%0A%0A🌐 Web: https://yip-lgtm.github.io/YW-concept-ki7409/%0A⏰ HKT: {hkt}%0A⏰ NY: {ny}%0A%0A📊 Rank + LLM iter + web + backup + push — all done.%0ANo manual needed.'
+r = requests.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage", json={'chat_id': os.environ['TELEGRAM_CHAT_ID'], 'text': msg, 'parse_mode': 'HTML'}, timeout=10)
+print(f'TG: {r.json().get("ok")}')"
+
       - name: Commit ranking + iteration
         if: always()
         run: |
