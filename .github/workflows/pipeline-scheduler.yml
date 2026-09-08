@@ -69,6 +69,38 @@ jobs:
             STALLED=true
           fi
           
+          # Check ranking freshness — auto-trigger strategy-ranking if stale > 30h
+          LATEST_RANK=$(curl -s "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/contents/automation/reports/strategy_ranking" \
+            -H "Authorization: token $GH_TOKEN" | python3 -c "
+import sys, json
+try:
+    d = json.load(sys.stdin)
+    rank_files = [x for x in d if x['name'].startswith('ranking_') and x['name'].endswith('.json')]
+    if not rank_files: print('none')
+    else:
+        latest = max(rank_files, key=lambda x: x['name'])
+        print(latest['name'])
+except: print('none')" 2>/dev/null)
+          echo "  Latest ranking file: $LATEST_RANK"
+          if [ "$LATEST_RANK" != "none" ] && [ "$LATEST_RANK" != "" ]; then
+            RANK_DATE=$(echo $LATEST_RANK | sed 's/ranking_//;s/.json//')
+            RANK_TS=$(date -u -d "$RANK_DATE" +%s 2>/dev/null || echo 0)
+            if [ $RANK_TS -gt 0 ]; then
+              RANK_AGE_HOURS=$(( (NOW - RANK_TS) / 3600 ))
+              echo "  Ranking age: ${RANK_AGE_HOURS}h"
+              if [ $RANK_AGE_HOURS -gt 30 ]; then
+                echo "⚠️ Ranking stale ${RANK_AGE_HOURS}h (> 30h threshold)"
+                curl -s -X POST -H "Authorization: token $GH_TOKEN" \
+                  "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/strategy-ranking.yml/dispatches" \
+                  -H "Content-Type: application/json" \
+                  -d "{\"ref\":\"main\"}" > /dev/null
+                echo "🔄 strategy-ranking auto-triggered"
+                curl -s -X POST "https://api.telegram.org/bot$TG_TOKEN/sendMessage" \
+                  -d "chat_id=$TG_CHAT&text=⚠️ Ranking stale ${RANK_AGE_HOURS}h — auto-triggered strategy-ranking" > /dev/null
+              fi
+            fi
+          fi
+          
           if [ "$STALLED" = "true" ]; then
             echo "🚨 Pipeline appears stalled, re-triggering..."
             for WF in "unified-pipeline.yml" "ocs-btc-5m.yml" "tech-analyst.yml" "sys-engineer.yml"; do
