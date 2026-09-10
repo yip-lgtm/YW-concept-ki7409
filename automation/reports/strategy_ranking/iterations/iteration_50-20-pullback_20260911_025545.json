@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-11",
+  "agent": "yw-50-20-pullback",
+  "result": {
+    "grade": "D",
+    "confidence": 72,
+    "reason": "0 trades backtest means strategy never triggered\u2014entry conditions too strict or misconfigured.",
+    "weight": 0.7,
+    "timeframe": "5min/15min",
+    "r_multiples": [
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "indicators": [
+      "ema20",
+      "sma50",
+      "pullback",
+      "rsi14"
+    ],
+    "rationale": "Zero trades = no edge captured. Add RSI for oversold pullback confirmation, dual-TF for noise filter, tighten R targets for mean-reversion pullback nature.",
+    "agent": "yw-50-20-pullback",
+    "strategy_id": "50-20-pullback",
+    "ticker": "MNQ=F",
+    "live_n": 0,
+    "live_pf": 1.0,
+    "live_wr": 50,
+    "live_R": 0,
+    "current_weight": 1.0,
+    "current_timeframe": "5min",
+    "response_raw": "<think>The user wants me to review my own live performance as a yw-50-20-pullback sub-agent. Let me analyze:\n\nBacktest results: 0 trades, WR 50%, PF 1.0, R +0\n\nThis is essentially a failed/empty backtest with no trades executed. With 0 trades, the statistics are meaningless defaults. This indicates the strategy isn't generating signals or there's a configuration issue.\n\nAs a pullback strategy using EMA20 and SMA50, I need to assess:\n1. Zero trades means the strategy never triggered\n2. This could be due to overly strict entry conditions\n3. Weight of 1.0 is fine but needs signals to work\n4. 5min timeframe with pullback indicators might be too noisy or too strict\n\nLet me grade this appropriately - D grade since 0 trades means no edge is being captured. I should suggest adjustments to actually generate trades while maintaining the pullback logic.\n\nSuggested improvements:\n- Lower the timeframe filter or add multiple timeframes for confirmation\n- Add momentum/RSI to help identify pullback entries\n- Adjust weight slightly\n- Consider r_multiples that fit pullback trading\n\nLet me provide a conservative but actionable response.</think>\n\nGRADE: D | CONFIDENCE: 72 | REASON: 0 trades backtest means strategy never triggered\u2014entry conditions too strict or misconfigured.\n\nsuggested_params = {\n  \"weight\": 0.7,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"ema20\", \"sma50\", \"pullback\", \"rsi14\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"Zero trades = no edge captured. Add RSI"
+  }
+}
