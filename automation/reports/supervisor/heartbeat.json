@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-12T12:54:28.888573+00:00",
+  "timestamp": "2026-09-12T18:19:30.711504+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -17,13 +17,20 @@
   "yw_daily_today": {
     "workflow": "yw-daily",
     "today": "2026-09-12",
-    "ran_today": false,
-    "success_today": false
+    "ran_today": true,
+    "success_today": true,
+    "last_id": 34709971380
   },
   "workflows": [
     {
       "workflow": "yw-daily.yml",
       "runs": [
+        {
+          "id": 34709971380,
+          "conclusion": "success",
+          "created_at": "2026-09-12T18:02:05Z",
+          "event": "schedule"
+        },
         {
           "id": 34636628313,
           "conclusion": "success",
@@ -34,12 +41,6 @@
           "id": 34517774778,
           "conclusion": "success",
           "created_at": "2026-09-10T19:00:21Z",
-          "event": "schedule"
-        },
-        {
-          "id": 34393303486,
-          "conclusion": "success",
-          "created_at": "2026-09-09T19:08:46Z",
           "event": "schedule"
         }
       ],
@@ -73,21 +74,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 34694929291,
+          "id": 34710812416,
           "conclusion": "running",
-          "created_at": "2026-09-12T12:53:53Z",
+          "created_at": "2026-09-12T18:18:58Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 34689980755,
+          "id": 34706563816,
           "conclusion": "success",
-          "created_at": "2026-09-12T11:02:03Z",
+          "created_at": "2026-09-12T16:52:55Z",
           "event": "schedule"
         },
         {
-          "id": 34685245036,
+          "id": 34704002325,
           "conclusion": "success",
-          "created_at": "2026-09-12T09:12:37Z",
+          "created_at": "2026-09-12T16:02:02Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -151,14 +152,12 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 7,
+    "n_open": 1,
     "n_stale_24h": 0,
-    "issues": [
-      "High total risk: $219"
-    ],
-    "long_count": 3,
-    "short_count": 3,
-    "total_risk": 218.82787388392862,
+    "issues": [],
+    "long_count": 0,
+    "short_count": 0,
+    "total_risk": 59.87678571428572,
     "deep_loss_positions": []
   }
 }
