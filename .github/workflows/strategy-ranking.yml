@@ -85,6 +85,7 @@ jobs:
         working-directory: automation
         run: |
           .venv/bin/python scripts/update_dashboard_data.py 2>&1 | tee /tmp/dashboard_log.txt || true
+          .venv/bin/python scripts/regen_review_manifests.py 2>&1 | tee /tmp/manifests_log.txt || true
 
       - name: "Auto-backup data (ranking + dashboard + state)"
         if: always()
@@ -103,7 +104,7 @@ jobs:
           git config --global user.name "Mavis bot"
           git config --global user.email "mavis@MiniMax"
           git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
-          git add docs/dashboard-data.json automation/reports/llm_iteration/ || true
+          git add docs/dashboard-data.json docs/charts-manifest.json docs/trades-manifest.json docs/rankings-manifest.json docs/llm-iterations-manifest.json docs/review.html automation/reports/llm_iteration/ || true
           git commit -m "auto(dashboard): daily web data update $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
           git push origin main || true
 

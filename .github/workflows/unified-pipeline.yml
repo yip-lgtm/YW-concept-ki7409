@@ -281,6 +281,7 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install -q -r requirements.txt
           .venv/bin/python scripts/update_dashboard_data.py 2>&1 || echo "dashboard done"
+          .venv/bin/python scripts/regen_review_manifests.py 2>&1 || echo "manifests done"
 
       - name: Commit dashboard data
         run: |
@@ -291,6 +292,6 @@ jobs:
           # Sync with origin (but keep our automation/reports/live_scan/ changes)
           git checkout origin/main -- .github/ docs/ automation/src/ automation/scripts/ automation/requirements.txt 2>&1 || echo "checkout failed, continuing"
           # Now our automation/reports/live_scan/ is preserved
-          git add docs/dashboard-data.json || true
+          git add docs/dashboard-data.json docs/charts-manifest.json docs/trades-manifest.json docs/rankings-manifest.json docs/llm-iterations-manifest.json docs/review.html || true
           git commit -m "auto(dashboard): update data $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
           git push --force-with-lease origin main || echo "push failed"

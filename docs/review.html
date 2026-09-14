@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YW Concept — Review Hub (All Charts, Trades, LLM Analysis)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0b0f17; color: #e6edf3; padding: 16px; }
+  h1 { color: #f0883e; margin-bottom: 8px; }
+  h2 { color: #58a6ff; margin: 24px 0 12px; border-bottom: 1px solid #21262d; padding-bottom: 6px; }
+  .sub { color: #8b949e; font-size: 13px; margin-bottom: 16px; }
+  .nav { background: #161b22; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #21262d; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .nav a { color: #58a6ff; text-decoration: none; padding: 6px 12px; border-radius: 6px; }
+  .nav a:hover { background: #21262d; }
+  .nav a.active { background: #f0883e; color: #0b0f17; font-weight: bold; }
+  .filters { background: #161b22; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #21262d; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .filters label { color: #8b949e; font-size: 12px; margin-right: 4px; }
+  .filters input, .filters select { background: #0b0f17; border: 1px solid #30363d; color: #e6edf3; padding: 6px 10px; border-radius: 6px; font-size: 13px; min-width: 100px; }
+  .filters button { background: #238636; color: white; border: none; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+  .filters button:hover { background: #2ea043; }
+  .filters button.clear { background: #6e7681; }
+  .filters button.clear:hover { background: #8b949e; }
+  .stats { background: #161b22; padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; border: 1px solid #21262d; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .stat { text-align: center; }
+  .stat .num { color: #f0883e; font-size: 24px; font-weight: bold; }
+  .stat .label { color: #8b949e; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-top: 16px; }
+  .card { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 12px; cursor: pointer; transition: all 0.15s; }
+  .card:hover { border-color: #f0883e; transform: translateY(-2px); }
+  .card img { width: 100%; height: auto; border-radius: 4px; margin-bottom: 8px; }
+  .card .meta { font-size: 12px; color: #8b949e; }
+  .card .meta strong { color: #e6edf3; }
+  .badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 10px; font-weight: bold; margin-right: 4px; }
+  .badge.A { background: #238636; color: white; }
+  .badge.B { background: #1f6feb; color: white; }
+  .badge.C { background: #9e6a03; color: white; }
+  .badge.D { background: #6e7681; color: white; }
+  .badge.win { background: #238636; color: white; }
+  .badge.loss { background: #da3633; color: white; }
+  .badge.llm { background: #8b5cf6; color: white; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #21262d; }
+  th { background: #161b22; color: #f0883e; font-weight: 600; font-size: 12px; text-transform: uppercase; }
+  tr:hover { background: #161b22; }
+  .pos { color: #3fb950; }
+  .neg { color: #f85149; }
+  .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; padding: 24px; }
+  .modal.active { display: flex; align-items: center; justify-content: center; }
+  .modal-content { background: #161b22; border: 1px solid #21262d; padding: 16px; border-radius: 8px; max-width: 90vw; max-height: 90vh; overflow: auto; }
+  .modal-content img { max-width: 100%; height: auto; }
+  .modal-close { background: #da3633; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; margin-bottom: 12px; }
+  .empty { color: #8b949e; padding: 32px; text-align: center; background: #161b22; border-radius: 8px; }
+  .ts { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; color: #8b949e; }
+  details { margin-bottom: 8px; }
+  summary { cursor: pointer; padding: 8px; background: #161b22; border-radius: 6px; font-weight: 600; }
+  details[open] summary { background: #21262d; }
+  .iter-card { background: #161b22; padding: 12px; border-radius: 6px; margin-bottom: 8px; border-left: 3px solid #8b5cf6; }
+  .iter-card .title { color: #58a6ff; font-weight: 600; }
+  .iter-card .reason { color: #c9d1d9; margin-top: 6px; font-size: 13px; }
+  .iter-card .param { display: inline-block; background: #0b0f17; padding: 2px 6px; border-radius: 3px; margin-right: 6px; font-family: monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>🗂️ YW Concept — Review Hub</h1>
+<div class="sub">
+  Browse all signal charts, trades, daily rankings, and LLM analysis. Auto-synced from GitHub.
+  Updated: <span id="last-updated">loading…</span>
+</div>
+
+<div class="nav">
+  <a href="index.html">📊 Dashboard</a>
+  <a href="review.html" class="active">🗂️ Review Hub</a>
+  <a href="strategy-dashboard.html">🎯 Strategy Dashboard</a>
+</div>
+
+<!-- ============== CHARTS TAB ============== -->
+<div id="tab-charts" class="tab-content">
+  <h2>🖼️ Signal Charts Gallery</h2>
+  <div class="filters">
+    <label>Strategy:</label>
+    <select id="filter-strategy"><option value="">All</option></select>
+    <label>Ticker:</label>
+    <select id="filter-ticker"><option value="">All</option></select>
+    <label>Date:</label>
+    <input type="date" id="filter-date">
+    <label>Sort:</label>
+    <select id="filter-sort">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+    </select>
+    <button onclick="applyChartFilter()">Apply</button>
+    <button class="clear" onclick="clearChartFilter()">Clear</button>
+  </div>
+  <div class="stats" id="charts-stats"></div>
+  <div class="grid" id="charts-grid"><div class="empty">Loading charts…</div></div>
+</div>
+
+<!-- ============== TRADES TAB ============== -->
+<div id="tab-trades" class="tab-content" style="display:none">
+  <h2>💼 Trade History (last 500)</h2>
+  <div class="filters">
+    <label>Strategy:</label>
+    <select id="trade-strategy"><option value="">All</option></select>
+    <label>Ticker:</label>
+    <select id="trade-ticker"><option value="">All</option></select>
+    <label>Result:</label>
+    <select id="trade-result">
+      <option value="">All</option>
+      <option value="win">Wins</option>
+      <option value="loss">Losses</option>
+    </select>
+    <label>Date:</label>
+    <input type="date" id="trade-date">
+    <button onclick="applyTradeFilter()">Apply</button>
+    <button class="clear" onclick="clearTradeFilter()">Clear</button>
+  </div>
+  <div class="stats" id="trades-stats"></div>
+  <div style="overflow-x:auto"><table id="trades-table"><thead><tr>
+    <th>Time</th><th>Strategy</th><th>Ticker</th><th>Dir</th><th>Entry</th><th>Exit</th>
+    <th>R</th><th>$</th><th>Grade</th><th>Result</th>
+  </tr></thead><tbody></tbody></table></div>
+</div>
+
+<!-- ============== RANKINGS TAB ============== -->
+<div id="tab-rankings" class="tab-content" style="display:none">
+  <h2>🏆 Daily Strategy Rankings</h2>
+  <div class="stats" id="rankings-stats"></div>
+  <div id="rankings-list"></div>
+</div>
+
+<!-- ============== LLM ANALYSIS TAB ============== -->
+<div id="tab-llm" class="tab-content" style="display:none">
+  <h2>🤖 LLM Iteration Analysis</h2>
+  <div class="filters">
+    <label>Strategy:</label>
+    <select id="llm-strategy"><option value="">All</option></select>
+    <button onclick="applyLlmFilter()">Apply</button>
+    <button class="clear" onclick="clearLlmFilter()">Clear</button>
+  </div>
+  <div class="stats" id="llm-stats"></div>
+  <div id="llm-list"></div>
+</div>
+
+<div class="sub" style="margin-top:32px;text-align:center">
+  🌐 <a href="https://yip-lgtm.github.io/YW-concept-ki7409/" style="color:#58a6ff">https://yip-lgtm.github.io/YW-concept-ki7409/</a>
+</div>
+
+<script>
+// ============ Data + State ============
+const state = {
+  charts: [],
+  trades: [],
+  rankings: [],
+  iterations: [],
+  activeTab: 'tab-charts',
+};
+
+const REPO_BASE = 'https://yip-lgtm.github.io/YW-concept-ki7409/';
+const RAW_BASE = 'https://raw.githubusercontent.com/yip-lgtm/YW-concept-ki7409/main/';
+
+// ============ Tab Switch ============
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-content').forEach(d => d.style.display = 'none');
+  document.getElementById(tabId).style.display = 'block';
+  document.querySelectorAll('.nav a').forEach(a => a.classList.remove('active'));
+  if (tabId === 'tab-charts') state.activeTab = 'charts';
+  else if (tabId === 'tab-trades') state.activeTab = 'trades';
+  else if (tabId === 'tab-rankings') state.activeTab = 'rankings';
+  else if (tabId === 'tab-llm') state.activeTab = 'llm';
+}
+
+// ============ Load Data ============
+async function loadAll() {
+  try {
+    const [c, t, r, l] = await Promise.all([
+      fetch(RAW_BASE + 'docs/charts-manifest.json?t=' + Date.now()).then(r => r.json()),
+      fetch(RAW_BASE + 'docs/trades-manifest.json?t=' + Date.now()).then(r => r.json()),
+      fetch(RAW_BASE + 'docs/rankings-manifest.json?t=' + Date.now()).then(r => r.json()),
+      fetch(RAW_BASE + 'docs/llm-iterations-manifest.json?t=' + Date.now()).then(r => r.json()),
+    ]);
+    state.charts = c.charts || [];
+    state.trades = t.trades || [];
+    state.rankings = r.rankings || [];
+    state.iterations = l.iterations || [];
+    document.getElementById('last-updated').textContent = new Date().toLocaleString();
+    initFilters();
+    renderAll();
+  } catch (e) {
+    document.body.insertAdjacentHTML('afterbegin',
+      `<div class="empty" style="color:#f85149">❌ Failed to load data: ${e.message}. Try refreshing in a moment.</div>`);
+  }
+}
+
+function initFilters() {
+  const strategies = [...new Set(state.charts.map(c => c.strategy))].sort();
+  const tickers = [...new Set(state.charts.map(c => c.ticker))].sort();
+  for (const sel of ['filter-strategy', 'trade-strategy', 'llm-strategy']) {
+    const s = document.getElementById(sel);
+    if (!s) continue;
+    for (const v of strategies) s.add(new Option(v, v));
+  }
+  for (const v of tickers) document.getElementById('filter-ticker').add(new Option(v, v));
+  document.getElementById('trade-ticker');
+  // Trade tickers from trades
+  const tT = [...new Set(state.trades.map(t => t.ticker))].sort();
+  for (const v of tT) document.getElementById('trade-ticker').add(new Option(v, v));
+}
+
+function renderAll() {
+  renderCharts();
+  renderTrades();
+  renderRankings();
+  renderLlm();
+}
+
+// ============ CHARTS ============
+function renderCharts(filtered) {
+  const list = filtered || state.charts;
+  const grid = document.getElementById('charts-grid');
+  if (!list.length) { grid.innerHTML = '<div class="empty">No charts match filter.</div>'; return; }
+  grid.innerHTML = list.slice(0, 200).map(c => {
+    // Try .png first, fall back to .jpg
+    const imgUrl = RAW_BASE + 'automation/reports/signal_charts/' + c.file;
+    return `<div class="card" onclick="openModal('${imgUrl}', '${c.strategy} ${c.ticker}')">
+      <img src="${imgUrl}" loading="lazy" alt="${c.strategy}"
+        onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22280%22 height=%22150%22%3E%3Crect fill=%22%23303030%22 width=%22280%22 height=%22150%22/%3E%3Ctext fill=%22%23aaa%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3EImage not available%3C/text%3E%3C/svg%3E'">
+      <div class="meta">
+        <strong>${c.strategy}</strong> <span class="badge ${c.strategy.includes('CRT') ? 'A' : 'B'}">${c.ticker}</span><br>
+        <span class="ts">${c.ts}</span>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('charts-stats').innerHTML = `
+    <div class="stat"><div class="num">${list.length}</div><div class="label">Showing</div></div>
+    <div class="stat"><div class="num">${state.charts.length}</div><div class="label">Total</div></div>
+  `;
+}
+
+function applyChartFilter() {
+  const strat = document.getElementById('filter-strategy').value;
+  const ticker = document.getElementById('filter-ticker').value;
+  const date = document.getElementById('filter-date').value;
+  const sort = document.getElementById('filter-sort').value;
+  let list = state.charts.slice();
+  if (strat) list = list.filter(c => c.strategy === strat);
+  if (ticker) list = list.filter(c => c.ticker === ticker);
+  if (date) list = list.filter(c => c.ts.startsWith(date));
+  list.sort((a, b) => sort === 'newest' ? b.ts.localeCompare(a.ts) : a.ts.localeCompare(b.ts));
+  renderCharts(list);
+}
+function clearChartFilter() {
+  document.getElementById('filter-strategy').value = '';
+  document.getElementById('filter-ticker').value = '';
+  document.getElementById('filter-date').value = '';
+  document.getElementById('filter-sort').value = 'newest';
+  renderCharts();
+}
+
+// ============ TRADES ============
+function renderTrades(filtered) {
+  const list = filtered || state.trades;
+  const totalR = list.reduce((s, t) => s + (t.R_multiple || 0), 0);
+  const totalP = list.reduce((s, t) => s + (t.pnl_usd || 0), 0);
+  const wins = list.filter(t => (t.R_multiple || 0) > 0).length;
+  document.getElementById('trades-stats').innerHTML = `
+    <div class="stat"><div class="num">${list.length}</div><div class="label">Trades</div></div>
+    <div class="stat"><div class="num">${(wins / list.length * 100 || 0).toFixed(1)}%</div><div class="label">WR</div></div>
+    <div class="stat"><div class="num ${totalR >= 0 ? 'pos' : 'neg'}">${totalR >= 0 ? '+' : ''}${totalR.toFixed(1)}R</div><div class="label">Total R</div></div>
+    <div class="stat"><div class="num ${totalP >= 0 ? 'pos' : 'neg'}">$${totalP.toFixed(0)}</div><div class="label">Total $</div></div>
+  `;
+  const tbody = document.querySelector('#trades-table tbody');
+  tbody.innerHTML = list.slice().reverse().slice(0, 200).map(t => {
+    const r = t.R_multiple || 0;
+    const result = r > 0 ? 'win' : r < 0 ? 'loss' : '';
+    return `<tr>
+      <td class="ts">${t.exit_time || ''}</td>
+      <td>${t.strategy || ''}</td>
+      <td>${t.ticker || ''}</td>
+      <td>${(t.direction || '').slice(0, 4)}</td>
+      <td>$${t.entry ? t.entry.toFixed(2) : '-'}</td>
+      <td>$${t.exit_price ? t.exit_price.toFixed(2) : '-'}</td>
+      <td class="${r > 0 ? 'pos' : r < 0 ? 'neg' : ''}">${r > 0 ? '+' : ''}${r.toFixed(2)}R</td>
+      <td class="${(t.pnl_usd || 0) > 0 ? 'pos' : 'neg'}">$${(t.pnl_usd || 0).toFixed(2)}</td>
+      <td>${t.grade ? `<span class="badge ${t.grade}">${t.grade}</span>` : ''}</td>
+      <td>${result ? `<span class="badge ${result}">${result.toUpperCase()}</span>` : ''}</td>
+    </tr>`;
+  }).join('');
+}
+
+function applyTradeFilter() {
+  const strat = document.getElementById('trade-strategy').value;
+  const ticker = document.getElementById('trade-ticker').value;
+  const result = document.getElementById('trade-result').value;
+  const date = document.getElementById('trade-date').value;
+  let list = state.trades.slice();
+  if (strat) list = list.filter(t => t.strategy === strat);
+  if (ticker) list = list.filter(t => t.ticker === ticker);
+  if (result === 'win') list = list.filter(t => (t.R_multiple || 0) > 0);
+  if (result === 'loss') list = list.filter(t => (t.R_multiple || 0) < 0);
+  if (date) list = list.filter(t => (t.exit_time || '').startsWith(date));
+  renderTrades(list);
+}
+function clearTradeFilter() {
+  document.getElementById('trade-strategy').value = '';
+  document.getElementById('trade-ticker').value = '';
+  document.getElementById('trade-result').value = '';
+  document.getElementById('trade-date').value = '';
+  renderTrades();
+}
+
+// ============ RANKINGS ============
+function renderRankings() {
+  document.getElementById('rankings-stats').innerHTML = `
+    <div class="stat"><div class="num">${state.rankings.length}</div><div class="label">Days</div></div>
+  `;
+  const list = document.getElementById('rankings-list');
+  list.innerHTML = state.rankings.map(r => {
+    const data = r.data || {};
+    const rows = (data.rankings || data.top_strategies || []).map(s => {
+      const pf = s.pf || s.profit_factor || 0;
+      const r2 = s.r || s.total_R || 0;
+      return `<tr>
+        <td>${s.strategy || s.name}</td>
+        <td>${s.trades || s.n_trades || 0}</td>
+        <td>${(s.wr || s.win_rate || 0).toFixed(1)}%</td>
+        <td class="${r2 > 0 ? 'pos' : 'neg'}">${r2 > 0 ? '+' : ''}${r2.toFixed(1)}R</td>
+        <td>${pf.toFixed(2)}</td>
+        <td>${(s.weight || 1.0).toFixed(1)}x</td>
+      </tr>`;
+    }).join('');
+    return `<details ${r === state.rankings[0] ? 'open' : ''}>
+      <summary>📅 ${r.date} — ${rows.length} strategies ranked</summary>
+      <table><thead><tr><th>Strategy</th><th>Trades</th><th>WR</th><th>R</th><th>PF</th><th>Weight</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div style="margin-top:8px">
+        📊 <a href="https://raw.githubusercontent.com/yip-lgtm/YW-concept-ki7409/main/automation/reports/strategy_ranking/ranking_${r.date}.png" target="_blank" style="color:#58a6ff">View chart</a> ·
+        📝 <a href="https://raw.githubusercontent.com/yip-lgtm/YW-concept-ki7409/main/automation/reports/strategy_ranking/ranking_${r.date}.md" target="_blank" style="color:#58a6ff">View markdown</a>
+      </div>
+    </details>`;
+  }).join('');
+}
+
+// ============ LLM ANALYSIS ============
+function renderLlm(filtered) {
+  const list = filtered || state.iterations;
+  document.getElementById('llm-stats').innerHTML = `
+    <div class="stat"><div class="num">${list.length}</div><div class="label">Iterations</div></div>
+  `;
+  const container = document.getElementById('llm-list');
+  container.innerHTML = list.slice(0, 100).map(it => {
+    const d = it.data || {};
+    const strategies = [];
+    if (d.strategy) strategies.push(d);
+    if (d.iterations) strategies.push(...(Array.isArray(d.iterations) ? d.iterations : Object.values(d.iterations)));
+    if (d.results) strategies.push(...(Array.isArray(d.results) ? d.results : Object.values(d.results)));
+    if (!strategies.length && d.grade) strategies.push(d);
+    return strategies.map(s => {
+      const params = s.params || s.changes || s.parameters || {};
+      const paramStr = Object.entries(params).map(([k, v]) =>
+        `<span class="param">${k}=${typeof v === 'object' ? JSON.stringify(v) : v}</span>`).join('');
+      return `<div class="iter-card">
+        <div class="title">${s.strategy || s.name || '?'} 
+          <span class="badge ${s.grade || 'D'}">${s.grade || '?'}</span>
+          <span class="badge llm">conf ${s.confidence || s.conf || 0}</span>
+        </div>
+        <div class="reason">${s.reason || s.reasoning || 'No analysis provided'}</div>
+        <div style="margin-top:6px">${paramStr}</div>
+        <div class="ts" style="margin-top:6px">📅 ${it.date}</div>
+      </div>`;
+    }).join('');
+  }).join('') || '<div class="empty">No LLM iterations yet.</div>';
+}
+
+function applyLlmFilter() {
+  const strat = document.getElementById('llm-strategy').value;
+  if (!strat) { renderLlm(); return; }
+  const filtered = state.iterations.filter(it => {
+    const d = it.data || {};
+    if ((d.strategy || '').includes(strat)) return true;
+    if (d.iterations) {
+      const iters = Array.isArray(d.iterations) ? d.iterations : Object.values(d.iterations);
+      return iters.some(x => (x.strategy || '').includes(strat));
+    }
+    if (d.results) {
+      const r = Array.isArray(d.results) ? d.results : Object.values(d.results);
+      return r.some(x => (x.strategy || '').includes(strat));
+    }
+    return false;
+  });
+  renderLlm(filtered);
+}
+function clearLlmFilter() {
+  document.getElementById('llm-strategy').value = '';
+  renderLlm();
+}
+
+// ============ Modal ============
+function openModal(imgUrl, title) {
+  let modal = document.getElementById('modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'modal';
+    modal.className = 'modal';
+    document.body.appendChild(modal);
+  }
+  modal.innerHTML = `<div class="modal-content">
+    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('active')">✕ Close</button>
+    <h3>${title}</h3>
+    <img src="${imgUrl}" alt="${title}">
+  </div>`;
+  modal.classList.add('active');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const m = document.getElementById('modal');
+    if (m) m.classList.remove('active');
+  }
+});
+
+// ============ Tab Nav Click ============
+document.querySelectorAll('.nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    if (a.getAttribute('href') === 'review.html') return; // active
+    if (a.getAttribute('href').startsWith('http')) return;
+    e.preventDefault();
+    const target = a.textContent.trim();
+    let tab = 'tab-charts';
+    if (target.includes('Strategy')) tab = 'tab-rankings';
+    else if (target.includes('Dashboard')) tab = 'tab-charts';
+    switchTab(tab);
+  });
+});
+
+loadAll();
+</script>
+</body>
+</html>
