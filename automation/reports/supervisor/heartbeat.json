@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-13T23:41:42.294513+00:00",
+  "timestamp": "2026-09-14T01:44:15.585432+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -16,10 +16,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-09-13",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 34774751853
+    "today": "2026-09-14",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -74,21 +73,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
+          "id": 34796243931,
+          "conclusion": "success",
+          "created_at": "2026-09-14T01:32:26Z",
+          "event": "schedule"
+        },
+        {
+          "id": 34791414540,
+          "conclusion": "success",
+          "created_at": "2026-09-14T00:02:39Z",
+          "event": "workflow_dispatch"
+        },
+        {
           "id": 34790046418,
           "conclusion": "success",
           "created_at": "2026-09-13T23:33:31Z",
-          "event": "schedule"
-        },
-        {
-          "id": 34784654286,
-          "conclusion": "success",
-          "created_at": "2026-09-13T21:43:05Z",
-          "event": "schedule"
-        },
-        {
-          "id": 34778508227,
-          "conclusion": "success",
-          "created_at": "2026-09-13T19:42:25Z",
           "event": "schedule"
         }
       ],
@@ -145,21 +144,21 @@
   ],
   "health": {
     "issues": [
-      "ranking stale: 19 days old"
+      "ranking stale: 20 days old"
     ],
     "status": "warning",
     "n_issues": 1
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 25,
+    "n_open": 31,
     "n_stale_24h": 0,
     "issues": [
-      "High total risk: $1205"
+      "High total risk: $2636"
     ],
-    "long_count": 4,
-    "short_count": 15,
-    "total_risk": 1205.1114397321426,
+    "long_count": 16,
+    "short_count": 11,
+    "total_risk": 2635.602232142858,
     "deep_loss_positions": []
   }
 }
