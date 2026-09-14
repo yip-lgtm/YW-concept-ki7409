@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-14T20:29:11.865800+00:00",
+  "timestamp": "2026-09-14T22:37:22.441788+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -74,8 +74,14 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
+          "id": 34902535177,
+          "conclusion": "success",
+          "created_at": "2026-09-14T22:07:59Z",
+          "event": "schedule"
+        },
+        {
           "id": 34893153407,
-          "conclusion": "running",
+          "conclusion": "success",
           "created_at": "2026-09-14T20:28:42Z",
           "event": "workflow_dispatch"
         },
@@ -84,12 +90,6 @@
           "conclusion": "success",
           "created_at": "2026-09-14T18:50:40Z",
           "event": "schedule"
-        },
-        {
-          "id": 34868921979,
-          "conclusion": "success",
-          "created_at": "2026-09-14T16:29:22Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
