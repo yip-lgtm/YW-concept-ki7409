@@ -128,13 +128,20 @@ all_trades = []
 if (LS / 'trades.jsonl').exists():
     with open(LS / 'trades.jsonl') as f:
         for line in f:
-            all_trades.append(json.loads(line))
+            line = line.strip()
+            if not line or line.startswith(('<', '=', '>')): continue
+            try: all_trades.append(json.loads(line))
+            except: pass
 if (OCS / 'trades.jsonl').exists():
     with open(OCS / 'trades.jsonl') as f:
         for line in f:
-            t = json.loads(line)
-            t['strategy'] = 'OCS BTC 5m'
-            all_trades.append(t)
+            line = line.strip()
+            if not line or line.startswith(('<', '=', '>')): continue
+            try:
+                t = json.loads(line)
+                t['strategy'] = 'OCS BTC 5m'
+                all_trades.append(t)
+            except: pass
 
 
 def is_in_last_24h(trade):
