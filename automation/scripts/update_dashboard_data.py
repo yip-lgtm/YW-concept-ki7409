@@ -43,7 +43,10 @@ def regenerate_24h_ranking():
         try:
             with open(path) as f:
                 for l in f:
-                    trades.append(json.loads(l))
+                    l = l.strip()
+                    if not l or l.startswith(("<", "=", ">")): continue
+                    try: trades.append(json.loads(l))
+                    except: pass
         except FileNotFoundError:
             pass
     
