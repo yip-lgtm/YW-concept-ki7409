@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-15T06:48:47.667591+00:00",
+  "timestamp": "2026-09-15T12:15:46.216020+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -10,9 +10,9 @@
   },
   "ranking": {
     "component": "strategy-ranking",
-    "issues": [
-      "read error: name 're' is not defined"
-    ]
+    "issues": [],
+    "latest_file": "ranking_2026-09-15.md",
+    "latest_date": "2026-09-15"
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
@@ -73,21 +73,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 34938581659,
+          "id": 34967772699,
           "conclusion": "running",
-          "created_at": "2026-09-15T06:48:03Z",
+          "created_at": "2026-09-15T12:15:07Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 34934801037,
+          "id": 34964099554,
           "conclusion": "success",
-          "created_at": "2026-09-15T05:56:42Z",
+          "created_at": "2026-09-15T11:35:23Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 34931962420,
+          "id": 34956160588,
           "conclusion": "success",
-          "created_at": "2026-09-15T05:14:49Z",
+          "created_at": "2026-09-15T10:06:28Z",
           "event": "schedule"
         }
       ],
@@ -97,21 +97,21 @@
       "workflow": "strategy-ranking.yml",
       "runs": [
         {
+          "id": 34965193652,
+          "conclusion": "failure",
+          "created_at": "2026-09-15T11:47:27Z",
+          "event": "push"
+        },
+        {
+          "id": 34965177011,
+          "conclusion": "failure",
+          "created_at": "2026-09-15T11:47:16Z",
+          "event": "push"
+        },
+        {
           "id": 34922802841,
           "conclusion": "failure",
           "created_at": "2026-09-15T02:51:58Z",
-          "event": "push"
-        },
-        {
-          "id": 34922768350,
-          "conclusion": "failure",
-          "created_at": "2026-09-15T02:51:25Z",
-          "event": "push"
-        },
-        {
-          "id": 34885971211,
-          "conclusion": "failure",
-          "created_at": "2026-09-14T19:17:18Z",
           "event": "push"
         }
       ],
