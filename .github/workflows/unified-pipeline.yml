@@ -54,6 +54,7 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/pip install -q -r requirements.txt
+          .venv/bin/python scripts/clean_state_files.py 2>&1 || echo "clean done"
           .venv/bin/python scripts/live_scan.py 2>&1 || echo "live_scan done"
 
       - name: Run position tracker (close positions, update stats)
