@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-14T23:23:50.912257+00:00",
+  "timestamp": "2026-09-15T05:57:15.012615+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -10,16 +10,15 @@
   },
   "ranking": {
     "component": "strategy-ranking",
-    "issues": [],
-    "latest_file": "ranking_today_2026-08-25.md",
-    "latest_date": "2026-08-25"
+    "issues": [
+      "read error: name 're' is not defined"
+    ]
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-09-14",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 34891425640
+    "today": "2026-09-15",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -74,21 +73,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 34908620399,
+          "id": 34934801037,
           "conclusion": "running",
-          "created_at": "2026-09-14T23:23:14Z",
+          "created_at": "2026-09-15T05:56:42Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 34902535177,
+          "id": 34931962420,
           "conclusion": "success",
-          "created_at": "2026-09-14T22:07:59Z",
+          "created_at": "2026-09-15T05:14:49Z",
           "event": "schedule"
         },
         {
-          "id": 34893153407,
+          "id": 34918669749,
           "conclusion": "success",
-          "created_at": "2026-09-14T20:28:42Z",
+          "created_at": "2026-09-15T01:47:40Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -98,21 +97,21 @@
       "workflow": "strategy-ranking.yml",
       "runs": [
         {
+          "id": 34922802841,
+          "conclusion": "failure",
+          "created_at": "2026-09-15T02:51:58Z",
+          "event": "push"
+        },
+        {
+          "id": 34922768350,
+          "conclusion": "failure",
+          "created_at": "2026-09-15T02:51:25Z",
+          "event": "push"
+        },
+        {
           "id": 34885971211,
           "conclusion": "failure",
           "created_at": "2026-09-14T19:17:18Z",
-          "event": "push"
-        },
-        {
-          "id": 34882699843,
-          "conclusion": "failure",
-          "created_at": "2026-09-14T18:45:01Z",
-          "event": "push"
-        },
-        {
-          "id": 34882023815,
-          "conclusion": "failure",
-          "created_at": "2026-09-14T18:38:22Z",
           "event": "push"
         }
       ],
@@ -144,11 +143,9 @@
     }
   ],
   "health": {
-    "issues": [
-      "ranking stale: 20 days old"
-    ],
-    "status": "warning",
-    "n_issues": 1
+    "issues": [],
+    "status": "ok",
+    "n_issues": 0
   },
   "live_scan_positions": {
     "source": "live_scan",
