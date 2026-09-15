@@ -193,6 +193,7 @@ jobs:
   tech-analyst:
     name: Technical Analyst
     runs-on: ubuntu-latest
+    needs: live-scan
     timeout-minutes: 5
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -264,6 +265,7 @@ jobs:
   update-dashboard:
     name: Update Dashboard
     runs-on: ubuntu-latest
+    needs: live-scan
     timeout-minutes: 2
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
