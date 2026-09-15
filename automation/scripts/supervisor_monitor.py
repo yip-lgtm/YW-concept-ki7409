@@ -172,25 +172,30 @@ def check_ocs_state() -> dict:
 
 
 def check_latest_ranking() -> dict:
-    """Check most recent strategy ranking file."""
+    """Check most recent strategy ranking file.
+
+    Only matches ranking_YYYY-MM-DD.{json,md,png} (NOT ranking_today_*, ranking_24h_*).
+    Sorted by date descending so newest is always first.
+    """
     state = {"component": "strategy-ranking", "issues": []}
     try:
         if not RANKING_DIR.exists():
             state["issues"].append("ranking dir missing")
             return state
-        # Find latest ranking_YYYY-MM-DD.md
-        rank_files = sorted(RANKING_DIR.glob("ranking_*.md"), reverse=True)
-        if rank_files:
-            latest = rank_files[0]
-            state["latest_file"] = latest.name
-            # Extract date from "ranking_today_2026-08-25" or "ranking_2026-08-25"
-            stem = latest.stem.replace("ranking_", "")
-            date_part = stem.split("_")[-1] if "_" in stem else stem
-            try:
-                datetime.strptime(date_part, "%Y-%m-%d")
-                state["latest_date"] = date_part
-            except ValueError:
-                state["latest_date"] = None
+        # Only match strict ranking_YYYY-MM-DD.{json,md,png} pattern
+        date_pattern = re.compile(r"ranking_(\d{4}-\d{2}-\d{2})\.(json|md|png)$")
+        candidates = []
+        for ext in ("md", "json", "png"):
+            for f in RANKING_DIR.glob(f"ranking_*.{ext}"):
+                m = date_pattern.match(f.name)
+                if m:
+                    candidates.append((m.group(1), f))
+        if candidates:
+            # Sort by date descending → newest first
+            candidates.sort(key=lambda x: x[0], reverse=True)
+            latest_date, latest_file = candidates[0]
+            state["latest_file"] = latest_file.name
+            state["latest_date"] = latest_date
         else:
             state["issues"].append("no ranking files")
     except Exception as e:
