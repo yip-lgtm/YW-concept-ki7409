@@ -316,7 +316,12 @@ def open_live_position(sig, atr):
     if any(p.get("signal_id") == pos["signal_id"] for p in positions):
         return None
     if TRADES_FILE.exists():
-        existing_trades = [json.loads(line) for line in TRADES_FILE.read_text().splitlines() if line.strip()]
+        existing_trades = []
+        for line in TRADES_FILE.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith(("<", "=", ">")): continue
+            try: existing_trades.append(json.loads(line))
+            except: pass
         if any(t.get("signal_id") == pos["signal_id"] for t in existing_trades):
             return None
     positions.append(pos)
