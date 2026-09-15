@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-15T12:15:46.216020+00:00",
+  "timestamp": "2026-09-15T15:41:24.524792+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -73,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 34967772699,
+          "id": 34990044970,
           "conclusion": "running",
+          "created_at": "2026-09-15T15:40:42Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 34985024259,
+          "conclusion": "success",
+          "created_at": "2026-09-15T14:56:21Z",
+          "event": "schedule"
+        },
+        {
+          "id": 34967772699,
+          "conclusion": "success",
           "created_at": "2026-09-15T12:15:07Z",
           "event": "workflow_dispatch"
-        },
-        {
-          "id": 34964099554,
-          "conclusion": "success",
-          "created_at": "2026-09-15T11:35:23Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 34956160588,
-          "conclusion": "success",
-          "created_at": "2026-09-15T10:06:28Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -143,9 +143,11 @@
     }
   ],
   "health": {
-    "issues": [],
-    "status": "ok",
-    "n_issues": 0
+    "issues": [
+      "yw-daily not run today (2026-09-15 HKT)"
+    ],
+    "status": "warning",
+    "n_issues": 1
   },
   "live_scan_positions": {
     "source": "live_scan",
