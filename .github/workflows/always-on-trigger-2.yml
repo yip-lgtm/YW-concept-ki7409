@@ -6,7 +6,7 @@ name: Always-On Trigger 2 — Stall Detector Backup
 on:
   schedule:
     # Different offsets from always-on-trigger (2,7,12,17,22,...)
-    - cron: '4,9,14,19,24,29,34,39,44,49,54,59 * * * *'
+    - cron: '8,23,38,53 * * * *'  # Every 15 min (offset 8min), backup to always-on-trigger
   workflow_dispatch: {}
 
 permissions:

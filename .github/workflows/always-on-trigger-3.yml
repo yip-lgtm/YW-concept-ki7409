@@ -6,7 +6,7 @@ name: Always-On Trigger 3 — Stall Detector (3rd Backup)
 
 on:
   schedule:
-    - cron: '1,6,11,16,21,26,31,36,41,46,51,56 * * * *'
+    - cron: '13,28,43,58 * * * *'  # Every 15 min (offset 13min), 3rd backup; combined with -1/-2 = 5min stall latency
   workflow_dispatch: {}
 
 permissions:

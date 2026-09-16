@@ -10,7 +10,7 @@ name: System Engineer — Auto-Fix Supervisor Issues
 on:
   schedule:
     # System Engineer runs every 30 min to detect lazy + bugs
-    - cron: '*/30* * * *'
+    - cron: '0 * * * *'  # Every hour on the hour (was */30, quota reduction 2026-09-16)
   workflow_dispatch: {}
 
 permissions:
