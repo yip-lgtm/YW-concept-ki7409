@@ -295,8 +295,21 @@ def main() -> int:
                 f"  Total R: {stats['total_R']:+.1f} | Avg R: {stats['avg_R']:+.2f}\n"
                 f"  Profit Factor: {stats['profit_factor']:.2f}"
             )
-            send_tg("\n".join(lines))
-            print(f"[live-tracker] TG: {len(closed)} new close(s) with full journey")
+            # De-dup: only send if we haven't sent this exact batch recently
+            sent_key = f"{stats['n_trades']}_{len(closed)}"
+            dedup_file = Path(__file__).parent.parent / "reports/live_scan/last_journey_tg.txt"
+            last_sent = ""
+            try:
+                if dedup_file.exists():
+                    last_sent = dedup_file.read_text().strip()
+            except: pass
+            if last_sent != sent_key:
+                send_tg("\n".join(lines))
+                try: dedup_file.write_text(sent_key)
+                except: pass
+                print(f"[live-tracker] TG: {len(closed)} new close(s) with full journey")
+            else:
+                print(f"[live-tracker] TG dedup: same batch already sent")
 
     return 0
 

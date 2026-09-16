@@ -312,8 +312,19 @@ def open_live_position(sig, atr):
             positions = []
     else:
         positions = []
-    # DEDUPE: skip if signal_id already in positions or trades
+    # === MULTI-LAYER DEDUP ===
+    ticker = pos["ticker"]
+    sig_direction = pos["direction"]
+    
+    # Rule 1: Same signal_id → skip
     if any(p.get("signal_id") == pos["signal_id"] for p in positions):
+        return None
+    
+    # Rule 2: One position per ticker max
+    same_ticker_open = [p for p in positions if p.get("ticker") == ticker and p.get("status") == "open"]
+    if same_ticker_open:
+        existing = same_ticker_open[0]
+        print(f"[open] SKIP {pos['strategy']} {ticker} {sig_direction}: already have open {existing['strategy']} {existing.get('direction')} @ {existing['entry']}")
         return None
     if TRADES_FILE.exists():
         existing_trades = []
@@ -630,6 +641,31 @@ def generate_signal_chart(sig: dict) -> str:
         print(f"  [chart] Error: {e}")
     return ""
 
+def is_strategy_allowed_now(strategy: str, ticker: str) -> bool:
+    """Check if strategy is allowed to fire based on NY time.
+    
+    1H/15m-based strategies require RTH (09:30-16:00 ET Mon-Fri).
+    """
+    try:
+        from zoneinfo import ZoneInfo
+        NY = ZoneInfo("America/New_York")
+        now_ny = datetime.now(NY)
+    except ImportError:
+        now_ny = datetime.now(timezone(timedelta(hours=-5)))
+    
+    if ticker == "BTC-USD":
+        return True
+    
+    is_weekday = now_ny.weekday() < 5
+    in_rth = is_weekday and (9 < now_ny.hour or (now_ny.hour == 9 and now_ny.minute >= 30)) and now_ny.hour < 16
+    
+    h1_based = {"H-Pattern", "Two-Yang", "50-20-Pullback", "3-Pushes", "Kell-Cycle"}
+    if strategy in h1_based:
+        return in_rth
+    
+    return True
+
+
 def main() -> int:
     t_start = time.time()
     ts_now = datetime.now(timezone.utc).isoformat()
@@ -724,7 +760,17 @@ def main() -> int:
         log_action("strategy-agent", "signal", f"{det['strategy']} {det['ticker']}", grade,
                   f"conf={conf}% dir={signal.get('direction', '?')}", "Power 3 (Strategy Agent)")
     print(f"[live_scan] LLM-confirmed signals: {len(fired)}")
-    # Step 4: Fire each signal — compute SL/TP, open position, send TG
+    # Time-of-day filter
+    filtered = []
+    for sig in fired:
+        strat = sig.get("strategy", "?")
+        ticker = sig.get("ticker", "?")
+        if not is_strategy_allowed_now(strat, ticker):
+            print(f"  ⏰ SKIP {strat} {ticker}: outside RTH")
+            continue
+        filtered.append(sig)
+    fired = filtered
+    
     for sig in fired:
         # Get ATR from the most recent data fetch
         ticker_data = data_map.get(sig["ticker"], {})
