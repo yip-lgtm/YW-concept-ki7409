@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-16T17:47:57.152806+00:00",
+  "timestamp": "2026-09-16T20:32:48.788475+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -17,13 +17,20 @@
   "yw_daily_today": {
     "workflow": "yw-daily",
     "today": "2026-09-16",
-    "ran_today": false,
-    "success_today": false
+    "ran_today": true,
+    "success_today": true,
+    "last_id": 35140523764
   },
   "workflows": [
     {
       "workflow": "yw-daily.yml",
       "runs": [
+        {
+          "id": 35140523764,
+          "conclusion": "success",
+          "created_at": "2026-09-16T19:26:00Z",
+          "event": "schedule"
+        },
         {
           "id": 35014424934,
           "conclusion": "success",
@@ -35,12 +42,6 @@
           "conclusion": "success",
           "created_at": "2026-09-14T20:11:42Z",
           "event": "schedule"
-        },
-        {
-          "id": 34774751853,
-          "conclusion": "success",
-          "created_at": "2026-09-13T18:28:57Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -48,6 +49,12 @@
     {
       "workflow": "yw-publish-signal.yml",
       "runs": [
+        {
+          "id": 35141008807,
+          "conclusion": "success",
+          "created_at": "2026-09-16T19:30:53Z",
+          "event": "schedule"
+        },
         {
           "id": 35014962007,
           "conclusion": "success",
@@ -59,12 +66,6 @@
           "conclusion": "success",
           "created_at": "2026-09-14T20:16:36Z",
           "event": "schedule"
-        },
-        {
-          "id": 34775915220,
-          "conclusion": "success",
-          "created_at": "2026-09-13T18:51:29Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -73,21 +74,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 35130339501,
+          "id": 35147131226,
           "conclusion": "running",
-          "created_at": "2026-09-16T17:47:17Z",
+          "created_at": "2026-09-16T20:32:12Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 35105238034,
+          "id": 35131496947,
           "conclusion": "success",
-          "created_at": "2026-09-16T13:57:07Z",
+          "created_at": "2026-09-16T17:58:43Z",
           "event": "schedule"
         },
         {
-          "id": 35104289604,
+          "id": 35130339501,
           "conclusion": "success",
-          "created_at": "2026-09-16T13:48:22Z",
+          "created_at": "2026-09-16T17:47:17Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -121,6 +122,12 @@
       "workflow": "strategy-reward.yml",
       "runs": [
         {
+          "id": 35141111085,
+          "conclusion": "success",
+          "created_at": "2026-09-16T19:31:55Z",
+          "event": "schedule"
+        },
+        {
           "id": 35015064860,
           "conclusion": "success",
           "created_at": "2026-09-15T19:40:54Z",
@@ -131,12 +138,6 @@
           "conclusion": "success",
           "created_at": "2026-09-14T20:17:27Z",
           "event": "schedule"
-        },
-        {
-          "id": 34775914105,
-          "conclusion": "success",
-          "created_at": "2026-09-13T18:51:28Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -150,13 +151,14 @@
   "live_scan_positions": {
     "source": "live_scan",
     "n_open": 2,
-    "n_stale_24h": 0,
+    "n_stale_24h": 1,
     "issues": [
-      "High total risk: $678"
+      "Stale: 3-Pushes BTC-USD open 25h",
+      "High total risk: $691"
     ],
     "long_count": 1,
     "short_count": 0,
-    "total_risk": 678.1247767857143,
+    "total_risk": 691.1075892857143,
     "deep_loss_positions": []
   }
 }
