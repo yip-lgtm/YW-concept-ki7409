@@ -8,7 +8,7 @@ name: Pipeline Scheduler — 5min Git-based Watchdog
 on:
   schedule:
     # Every 5 min, 24/7
-    - cron: '*/5 * * * *'
+    - cron: '*/15 * * * *'  # Every 15 min (was */5, quota reduction 2026-09-16)
   workflow_dispatch: {}
 
 permissions:

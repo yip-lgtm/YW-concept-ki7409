@@ -12,7 +12,7 @@ name: Always-On Trigger — Stall Detector
 
 on:
   schedule:
-    - cron: '3,8,13,18,23,28,33,38,43,48,53,58 * * * *'
+    - cron: '3,18,33,48 * * * *'  # Every 15 min (offset 3min), paired with -2/-3 for 5min stall latency
   workflow_dispatch: {}
 
 permissions:
