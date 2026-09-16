@@ -190,23 +190,55 @@ ACCEPTABLE_GRADES = ("A", "B", "C")
 
 # H-Pattern pullback must be <50% per YW playbook. Above that, H-formation has fully
 # collapsed and the signal is structurally invalid (was previously fired as Grade C).
+# Apply abs() so -99 (down-trend exhaustion) and +99 (up-trend exhaustion) are both caught.
 H_PATTERN_PULLBACK_MAX_PCT = 50.0
 
 # Grade C: keep paper-grade logging for LLM data, but DO NOT auto-open real positions.
 # (Paper mode is for testing strategies, not for testing C-grade noise.)
 BLOCK_GRADE_C_OPEN = True
 
+# P0.5: same ticker + same direction = stacking. Cap at 1 signal per ticker per direction
+# to prevent 4 strategies × 1 ticker on the same SL/TP template.
+BLOCK_STACKING_PER_TICKER = True
+
+# Grade ranking for stacking resolution: lower = stronger. A wins, B second, others unknown.
+GRADE_RANK = {"A": 0, "B": 1}
+
+
+def _normalize_direction(direction: str) -> str:
+    """Normalize detector / LLM direction strings to long/short/unknown.
+
+    Without normalization, 3-Pushes 'up' would NOT conflict with Stair 'short' (string
+    mismatch). All detectors should report direction in {long, short} but the reality
+    is that several detectors use {up, down, bullish, bearish, buy, sell} interchangeably.
+    Unknown = fail-closed for conflict detection (treated as own class, won't trigger
+    conflict against long OR short, but won't stack either).
+    """
+    if not direction:
+        return "unknown"
+    d = str(direction).strip().lower()
+    if d in ("long", "buy", "up", "bullish", "l"):
+        return "long"
+    if d in ("short", "sell", "down", "bearish", "s"):
+        return "short"
+    return "unknown"
+
 
 def _apply_open_gates(fired_signals: list) -> tuple:
-    """Apply P0 hard gates to fired signals. Returns (kept, gated_out).
+    """Apply P0 + P0.5 hard gates to fired signals. Returns (kept, gated_out).
 
-    Hard rules (override any LLM grading):
-      1. H-Pattern: pullback_pct >= 50% → invalid (YW rule, BTC relaxes to 70% detector-level
-         but we hard-stop at 50% for opening — if BTC detector gave us 50-70% pullback, it
-         means setup already deteriorated beyond what real money should chase).
-      2. Grade C: no auto-open. Log to signals.jsonl only.
-      3. Direction conflict: if same ticker has BOTH long + short in this batch, both
-         are skipped (don't pick a side, don't open — it's contradictory signal noise).
+    Hard rules (override any LLM grading, numeric — never parse prompt text):
+      1. Grade C: no auto-open. Log to signals.jsonl only. (P0)
+      2. H-Pattern:
+           - pullback_pct missing  → reject (fail-closed)
+           - abs(pullback_pct) > 50 → reject (YW invalid; -99 and +99 both treated)
+      3. Direction conflict (per-ticker): if NORMALIZED direction set has BOTH
+         long + short in this batch, skip ALL of that ticker. Don't pick a side.
+      4. P0.5 Stacking (per-ticker, per-direction): if same ticker has ≥2 strategies
+         pointing same direction, keep only the strongest (A > B; ties broken by
+         confidence). Prevents 4 strategies × 1 BTC on shared ATR.
+
+    Order matters: C → H-Pattern → conflict → stacking.
 
     Returns:
         kept: signals that should open positions + send chart + publish AI-Trader
@@ -217,44 +249,92 @@ def _apply_open_gates(fired_signals: list) -> tuple:
     gated = []
     for sig in fired_signals:
         strat = sig.get("strategy", "?")
-        ticker = sig.get("ticker", "?")
-        # === Gate 1: H-Pattern pullback hard limit ===
-        if strat == "H-Pattern":
-            pb = sig.get("pullback_pct", 0)
-            if pb is None:
-                pb = 0
-            try:
-                pb_f = float(pb)
-            except (TypeError, ValueError):
-                pb_f = 0.0
-            if pb_f >= H_PATTERN_PULLBACK_MAX_PCT:
-                sig["gate_skip"] = f"H-Pattern pullback {pb_f:.1f}% >= {H_PATTERN_PULLBACK_MAX_PCT:.0f}% (YW invalid)"
-                gated.append(sig)
-                continue
-        # === Gate 2: Grade C no auto-open ===
+        # === Gate 1: Grade C no auto-open (P0) ===
         if BLOCK_GRADE_C_OPEN and sig.get("grade") == "C":
             sig["gate_skip"] = "Grade C: no auto-open (logged for LLM data only)"
             gated.append(sig)
             continue
+        # === Gate 2: H-Pattern pullback (P0) ===
+        #   - Missing pullback_pct → fail-closed (reject)
+        #   - abs(pullback_pct) > 50 → reject (-99 and +99 both caught)
+        if strat == "H-Pattern":
+            if "pullback_pct" not in sig or sig.get("pullback_pct") is None:
+                sig["gate_skip"] = "H-Pattern missing pullback_pct (fail-closed)"
+                gated.append(sig)
+                continue
+            try:
+                pb_f = float(sig["pullback_pct"])
+            except (TypeError, ValueError):
+                sig["gate_skip"] = "H-Pattern pullback_pct non-numeric (fail-closed)"
+                gated.append(sig)
+                continue
+            if abs(pb_f) >= H_PATTERN_PULLBACK_MAX_PCT:
+                sig["gate_skip"] = (
+                    f"H-Pattern |pullback| {abs(pb_f):.1f}% >= {H_PATTERN_PULLBACK_MAX_PCT:.0f}% (YW invalid)"
+                )
+                gated.append(sig)
+                continue
         kept.append(sig)
-    # === Gate 3: Direction conflict on same ticker ===
+
+    # === Gate 3: Direction conflict (per-ticker, normalized) ===
+    # After C + H-Pattern filter, group remaining signals by ticker. If any ticker has
+    # NORMALIZED directions covering BOTH 'long' and 'short', skip ALL of that ticker.
     by_ticker = {}
     for sig in kept:
+        sig["_normalized_dir"] = _normalize_direction(sig.get("direction", ""))
         by_ticker.setdefault(sig.get("ticker", "?"), []).append(sig)
-    final_kept = []
+    post_conflict_kept = []
     for ticker, sigs in by_ticker.items():
-        if len(sigs) <= 1:
-            final_kept.extend(sigs)
-            continue
-        directions = sorted({s.get("direction", "?") for s in sigs})
-        if len(directions) > 1:
-            # Conflict: both long + short fired on same ticker. Skip ALL.
+        dirs = {s["_normalized_dir"] for s in sigs if s["_normalized_dir"] in ("long", "short")}
+        if len(dirs) > 1:
+            # Conflict: long + short on same ticker. Skip ALL.
+            raw_dirs = sorted({s.get("direction", "?") for s in sigs})
             for s in sigs:
-                s["gate_skip"] = f"Direction conflict on {ticker}: {directions} both fired — skip both"
+                s["gate_skip"] = (
+                    f"Direction conflict on {ticker}: normalized {{{','.join(sorted(dirs))}}} "
+                    f"raw {raw_dirs} both fired — skip both"
+                )
             gated.extend(sigs)
-            print(f"[gate] ⚠️  {ticker}: direction conflict {directions} → skipped both ({len(sigs)} signals)")
+            print(f"[gate] ⚠️  {ticker}: direction conflict {sorted(dirs)} → skipped both ({len(sigs)} signals)")
         else:
-            final_kept.extend(sigs)
+            post_conflict_kept.extend(sigs)
+
+    # === Gate 4: Stacking (per-ticker, per-direction) (P0.5) ===
+    # If same ticker + same direction has ≥2 strategies, keep only the strongest grade.
+    # Ties (e.g. two B's) broken by confidence desc. Prevents 4 strategies × 1 ticker
+    # from sharing one ATR/SL/TP template.
+    final_kept = []
+    if BLOCK_STACKING_PER_TICKER:
+        stack_by_key = {}
+        for sig in post_conflict_kept:
+            key = (sig.get("ticker", "?"), sig.get("_normalized_dir", "unknown"))
+            stack_by_key.setdefault(key, []).append(sig)
+        for (ticker, ndir), sigs in stack_by_key.items():
+            if len(sigs) <= 1:
+                final_kept.extend(sigs)
+                continue
+            # Sort: best grade first (A=0, B=1, others=2), then confidence desc
+            def _stack_key(s):
+                return (GRADE_RANK.get(s.get("grade", "?"), 2), -int(s.get("confidence", 0)))
+            sigs_sorted = sorted(sigs, key=_stack_key)
+            winner = sigs_sorted[0]
+            losers = sigs_sorted[1:]
+            for s in losers:
+                s["gate_skip"] = (
+                    f"Stacking on {ticker} {ndir}: kept strongest {winner['strategy']} "
+                    f"[{winner.get('grade')}] conf={winner.get('confidence')}; "
+                    f"this {s['strategy']} [{s.get('grade')}] conf={s.get('confidence')}"
+                )
+            gated.extend(losers)
+            print(
+                f"[gate] ⚖️  {ticker} {ndir}: {len(sigs)} stacked strategies → "
+                f"kept {winner['strategy']} [{winner.get('grade')}] "
+                f"(skipped {len(losers)}): {[l['strategy'] for l in losers]}"
+            )
+            final_kept.append(winner)
+    else:
+        final_kept = post_conflict_kept
+
     return final_kept, gated
 # BTC-USD: all 10 strategies must scan it 24/7
 BTC_FORCE_MODE = True
