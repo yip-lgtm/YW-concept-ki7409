@@ -174,8 +174,88 @@ LLM_MIN_CONF = 40
 LLM_MIN_CONF_BTC = 30  # Lower threshold for BTC (more volatile, fewer A/B signals)
 # Min detector strength to invoke LLM
 DETECTOR_MIN_PRESENT = True
-# Acceptable grades (A=strong, B=actionable, C=marginal but still fire with low conf)
+# Acceptable grades (A=strong, B=actionable, C=marginal but still fire with low conf).
+# P0 gate (2026-09-16): Grade C is auto-skipped for OPENING positions (logged to signals.jsonl only).
 ACCEPTABLE_GRADES = ("A", "B", "C")
+
+# ===========================================================================================
+# P0 OPEN-POSITION GATES (2026-09-16)
+# ===========================================================================================
+# These are post-LLM-grade hard gates that override LLM accept/dismiss decisions.
+# Reason: LLM grading + detector output alone produced too many unviable positions:
+#   - H-Pattern firing at pullback 98% ("結構失效 / 似 noise" → still opened C-grade LONG)
+#   - Same ticker opening BOTH long + short simultaneously on conflicting setups
+#   - Grade C noise piling up with same SL/TP template
+# Hard rules win over LLM judgement. Numeric gates, not prompt parsing.
+
+# H-Pattern pullback must be <50% per YW playbook. Above that, H-formation has fully
+# collapsed and the signal is structurally invalid (was previously fired as Grade C).
+H_PATTERN_PULLBACK_MAX_PCT = 50.0
+
+# Grade C: keep paper-grade logging for LLM data, but DO NOT auto-open real positions.
+# (Paper mode is for testing strategies, not for testing C-grade noise.)
+BLOCK_GRADE_C_OPEN = True
+
+
+def _apply_open_gates(fired_signals: list) -> tuple:
+    """Apply P0 hard gates to fired signals. Returns (kept, gated_out).
+
+    Hard rules (override any LLM grading):
+      1. H-Pattern: pullback_pct >= 50% → invalid (YW rule, BTC relaxes to 70% detector-level
+         but we hard-stop at 50% for opening — if BTC detector gave us 50-70% pullback, it
+         means setup already deteriorated beyond what real money should chase).
+      2. Grade C: no auto-open. Log to signals.jsonl only.
+      3. Direction conflict: if same ticker has BOTH long + short in this batch, both
+         are skipped (don't pick a side, don't open — it's contradictory signal noise).
+
+    Returns:
+        kept: signals that should open positions + send chart + publish AI-Trader
+        gated_out: signals that were rejected; still logged to signals.jsonl with
+                   gate_skip field set for LLM data collection
+    """
+    kept = []
+    gated = []
+    for sig in fired_signals:
+        strat = sig.get("strategy", "?")
+        ticker = sig.get("ticker", "?")
+        # === Gate 1: H-Pattern pullback hard limit ===
+        if strat == "H-Pattern":
+            pb = sig.get("pullback_pct", 0)
+            if pb is None:
+                pb = 0
+            try:
+                pb_f = float(pb)
+            except (TypeError, ValueError):
+                pb_f = 0.0
+            if pb_f >= H_PATTERN_PULLBACK_MAX_PCT:
+                sig["gate_skip"] = f"H-Pattern pullback {pb_f:.1f}% >= {H_PATTERN_PULLBACK_MAX_PCT:.0f}% (YW invalid)"
+                gated.append(sig)
+                continue
+        # === Gate 2: Grade C no auto-open ===
+        if BLOCK_GRADE_C_OPEN and sig.get("grade") == "C":
+            sig["gate_skip"] = "Grade C: no auto-open (logged for LLM data only)"
+            gated.append(sig)
+            continue
+        kept.append(sig)
+    # === Gate 3: Direction conflict on same ticker ===
+    by_ticker = {}
+    for sig in kept:
+        by_ticker.setdefault(sig.get("ticker", "?"), []).append(sig)
+    final_kept = []
+    for ticker, sigs in by_ticker.items():
+        if len(sigs) <= 1:
+            final_kept.extend(sigs)
+            continue
+        directions = sorted({s.get("direction", "?") for s in sigs})
+        if len(directions) > 1:
+            # Conflict: both long + short fired on same ticker. Skip ALL.
+            for s in sigs:
+                s["gate_skip"] = f"Direction conflict on {ticker}: {directions} both fired — skip both"
+            gated.extend(sigs)
+            print(f"[gate] ⚠️  {ticker}: direction conflict {directions} → skipped both ({len(sigs)} signals)")
+        else:
+            final_kept.extend(sigs)
+    return final_kept, gated
 # BTC-USD: all 10 strategies must scan it 24/7
 BTC_FORCE_MODE = True
 # BTC-only detectors (don't restrict other tickers)
@@ -770,6 +850,15 @@ def main() -> int:
             continue
         filtered.append(sig)
     fired = filtered
+
+    # === P0 OPEN-POSITION GATES (2026-09-16) ===
+    # Hard rules that override LLM grading. See _apply_open_gates() docstring.
+    pre_gate = fired
+    fired, gated_out = _apply_open_gates(fired)
+    if gated_out:
+        print(f"[live_scan] 🚧 Gate-skipped {len(gated_out)} signals (logged only, no position):")
+        for g in gated_out:
+            print(f"    - {g['strategy']} [{g['grade']}] {g['ticker']} {g.get('direction', '?')}: {g.get('gate_skip', '?')}")
     
     for sig in fired:
         # Get ATR from the most recent data fetch
@@ -831,6 +920,18 @@ def main() -> int:
             print(f"  ✓ {sig['strategy']} {sig['ticker']} [{sig['grade']}] TG={tg_code} AI={ai_code} CHART={chart_path} PHOTO={photo_code}")
         else:
             print(f"  ✓ {sig['strategy']} {sig['ticker']} [{sig['grade']}] TG={tg_code} AI={ai_code}")
+
+    # === Step 4.5: Log gated-out signals to signals.jsonl (for LLM data only) ===
+    if gated_out:
+        with SIGNALS_FILE.open("a") as f:
+            for g in gated_out:
+                # Mark these so dashboard/strategy_ranking can distinguish "actually fired"
+                # from "LLM-graded but gate-skipped" without polluting open-position metrics.
+                g["gate_blocked"] = True
+                g["position_opened"] = False
+                f.write(json.dumps(g, default=str) + "\n")
+        print(f"[live_scan] ✓ {len(gated_out)} gated signals logged to signals.jsonl (gate_blocked=True)")
+
     # Step 5: Heartbeat
     heartbeat = {
         "timestamp": ts_now,
@@ -838,6 +939,8 @@ def main() -> int:
         "n_signals": n_signals,
         "n_errors": n_errors,
         "n_fired": len(fired),
+        "n_gated": len(gated_out) if 'gated_out' in locals() else 0,
+        "n_pre_gate": len(pre_gate) if 'pre_gate' in locals() else 0,
         "elapsed_sec": round(time.time() - t_start, 1),
         "tickers": list(data_map.keys()),
     }
