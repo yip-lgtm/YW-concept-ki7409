@@ -59,4 +59,9 @@ jobs:
           git pull --rebase --autostash origin main 2>&1 || echo "pull failed, continuing"
           git add automation/reports/supervisor/ || true
           git commit -m "auto(supervisor): health check $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
-          git push --force-with-lease origin main || echo "push failed"
+          git stash --include-untracked 2>&1 || echo "no stash needed"
+          git pull --rebase origin main 2>&1 || echo "rebase failed"
+          git stash pop 2>&1 || echo "no stash to pop"
+          git add automation/reports/supervisor/ || true
+          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
+          git push origin main 2>&1 || echo "push failed"

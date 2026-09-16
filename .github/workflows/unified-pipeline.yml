@@ -118,7 +118,14 @@ jobs:
           # Now our automation/reports/live_scan/ is preserved
           git add automation/reports/ocs_btc_5m/ || true
           git commit -m "auto(ocs-btc): signal log $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
-          git push --force-with-lease origin main || echo "push failed"
+          git stash --include-untracked 2>&1 || echo "no stash needed"
+          git pull --rebase origin main 2>&1 || echo "rebase failed"
+          git stash pop 2>&1 || echo "no stash to pop"
+          # Re-add our state files after rebase
+          git add automation/reports/ 2>/dev/null || true
+          git add docs/ 2>/dev/null || true
+          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
+          git push origin main 2>&1 || echo "push failed"
 
   # Job 3: Supervisor (health check)
   supervisor:
@@ -156,7 +163,14 @@ jobs:
           # Now our automation/reports/live_scan/ is preserved
           git add automation/reports/supervisor/ automation/reports/audit/ 2>/dev/null || true
           git commit -m "auto(supervisor): health check $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
-          git push --force-with-lease origin main || echo "push failed"
+          git stash --include-untracked 2>&1 || echo "no stash needed"
+          git pull --rebase origin main 2>&1 || echo "rebase failed"
+          git stash pop 2>&1 || echo "no stash to pop"
+          # Re-add our state files after rebase
+          git add automation/reports/ 2>/dev/null || true
+          git add docs/ 2>/dev/null || true
+          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
+          git push origin main 2>&1 || echo "push failed"
 
   # Job 4: System Engineer
   sys-engineer:
@@ -194,7 +208,14 @@ jobs:
           # Now our automation/reports/live_scan/ is preserved
           git add automation/reports/sys_engineer/ automation/reports/audit/ 2>/dev/null || true
           git commit -m "auto(sys-eng): report $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
-          git push --force-with-lease origin main || echo "push failed"
+          git stash --include-untracked 2>&1 || echo "no stash needed"
+          git pull --rebase origin main 2>&1 || echo "rebase failed"
+          git stash pop 2>&1 || echo "no stash to pop"
+          # Re-add our state files after rebase
+          git add automation/reports/ 2>/dev/null || true
+          git add docs/ 2>/dev/null || true
+          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
+          git push origin main 2>&1 || echo "push failed"
 
   # Job 4b: Technical Analyst (4th Power: chart + entry plan for every signal)
   tech-analyst:
@@ -232,7 +253,14 @@ jobs:
           # Commit tech_analyst output
           git add automation/reports/tech_analyst/ automation/reports/signal_charts/ automation/reports/audit/ 2>/dev/null || true
           git commit -m "auto(tech-analyst): chart coverage $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
-          git push --force-with-lease origin main || echo "push failed"
+          git stash --include-untracked 2>&1 || echo "no stash needed"
+          git pull --rebase origin main 2>&1 || echo "rebase failed"
+          git stash pop 2>&1 || echo "no stash to pop"
+          # Re-add our state files after rebase
+          git add automation/reports/ 2>/dev/null || true
+          git add docs/ 2>/dev/null || true
+          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
+          git push origin main 2>&1 || echo "push failed"
 
   # Job 4c: TTrades BTC (5th Power: ICT Fractal Model on $247K BTC)
   ttrades-btc:
@@ -266,7 +294,14 @@ jobs:
           git checkout origin/main -- .github/ docs/ automation/src/ automation/scripts/ automation/requirements.txt 2>&1 || echo "checkout failed, continuing"
           git add automation/reports/ttrades_btc/ 2>/dev/null || true
           git commit -m "auto(ttrades-btc): ICT fractal $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
-          git push --force-with-lease origin main || echo "push failed"
+          git stash --include-untracked 2>&1 || echo "no stash needed"
+          git pull --rebase origin main 2>&1 || echo "rebase failed"
+          git stash pop 2>&1 || echo "no stash to pop"
+          # Re-add our state files after rebase
+          git add automation/reports/ 2>/dev/null || true
+          git add docs/ 2>/dev/null || true
+          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
+          git push origin main 2>&1 || echo "push failed"
 
   # Job 5: Update Dashboard
   update-dashboard:
@@ -303,4 +338,11 @@ jobs:
           # Now our automation/reports/live_scan/ is preserved
           git add docs/dashboard-data.json docs/charts-manifest.json docs/trades-manifest.json docs/rankings-manifest.json docs/llm-iterations-manifest.json docs/review.html || true
           git commit -m "auto(dashboard): update data $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
-          git push --force-with-lease origin main || echo "push failed"
+          git stash --include-untracked 2>&1 || echo "no stash needed"
+          git pull --rebase origin main 2>&1 || echo "rebase failed"
+          git stash pop 2>&1 || echo "no stash to pop"
+          # Re-add our state files after rebase
+          git add automation/reports/ 2>/dev/null || true
+          git add docs/ 2>/dev/null || true
+          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
+          git push origin main 2>&1 || echo "push failed"

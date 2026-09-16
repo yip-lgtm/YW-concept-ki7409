@@ -53,4 +53,9 @@ jobs:
           git add docs/dashboard-data.json
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M")
           git commit -m "auto(dashboard): update data ${TIMESTAMP}" || true
-          git push --force-with-lease origin main || echo "push failed"
+          git stash --include-untracked 2>&1 || echo "no stash needed"
+          git pull --rebase origin main 2>&1 || echo "rebase failed"
+          git stash pop 2>&1 || echo "no stash to pop"
+          git add docs/dashboard-data.json || true
+          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
+          git push origin main 2>&1 || echo "push failed"

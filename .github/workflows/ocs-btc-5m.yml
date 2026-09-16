@@ -81,5 +81,10 @@ jobs:
           # Only commit OCS data files (not workflow files which may have manual updates)
           git add automation/reports/ocs_btc_5m/ || true
           git commit -m "auto(ocs-btc): signal log $(date -u +%Y-%m-%dT%H:%M) trades=$(jq -r .n_trades automation/reports/ocs_btc_5m/stats.json 2>/dev/null || echo 0)" --allow-empty || true
-          # Try push with lease to detect remote changes
-          git push --force-with-lease origin main || echo "push failed, will retry next run"
+          # Stash + rebase + amend + plain push (avoid --force-with-lease silent fail)
+          git stash --include-untracked 2>&1 || echo "no stash needed"
+          git pull --rebase origin main 2>&1 || echo "rebase failed"
+          git stash pop 2>&1 || echo "no stash to pop"
+          git add automation/reports/ocs_btc_5m/ || true
+          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
+          git push origin main 2>&1 || echo "push failed, will retry next run"
