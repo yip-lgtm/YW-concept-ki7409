@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-17T01:25:51.578404+00:00",
+  "timestamp": "2026-09-17T05:13:12.367054+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -73,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
+          "id": 35184834774,
+          "conclusion": "success",
+          "created_at": "2026-09-17T05:12:31Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 35171537057,
+          "conclusion": "success",
+          "created_at": "2026-09-17T01:41:37Z",
+          "event": "schedule"
+        },
+        {
           "id": 35170484695,
-          "conclusion": "running",
+          "conclusion": "success",
           "created_at": "2026-09-17T01:25:17Z",
           "event": "workflow_dispatch"
-        },
-        {
-          "id": 35165885633,
-          "conclusion": "success",
-          "created_at": "2026-09-17T00:16:34Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 35163195221,
-          "conclusion": "success",
-          "created_at": "2026-09-16T23:38:39Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -97,21 +97,21 @@
       "workflow": "strategy-ranking.yml",
       "runs": [
         {
-          "id": 35126388993,
+          "id": 35180929656,
           "conclusion": "failure",
-          "created_at": "2026-09-16T17:09:13Z",
+          "created_at": "2026-09-17T04:10:46Z",
           "event": "push"
         },
         {
-          "id": 35126384593,
+          "id": 35180926123,
           "conclusion": "failure",
-          "created_at": "2026-09-16T17:09:11Z",
+          "created_at": "2026-09-17T04:10:43Z",
           "event": "push"
         },
         {
-          "id": 35125184910,
+          "id": 35180921949,
           "conclusion": "failure",
-          "created_at": "2026-09-16T16:57:43Z",
+          "created_at": "2026-09-17T04:10:39Z",
           "event": "push"
         }
       ],
@@ -149,15 +149,12 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 2,
-    "n_stale_24h": 1,
-    "issues": [
-      "Stale: 3-Pushes BTC-USD open 30h",
-      "High total risk: $691"
-    ],
+    "n_open": 1,
+    "n_stale_24h": 0,
+    "issues": [],
     "long_count": 1,
     "short_count": 0,
-    "total_risk": 691.1075892857143,
+    "total_risk": 32.34285714285715,
     "deep_loss_positions": []
   }
 }
