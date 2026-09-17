@@ -327,6 +327,41 @@ def main():
     
     log_action("tech_analyst", "run_complete", "all", "INFO",
               f"total={charts_total}, present={charts_present}, generated={charts_generated}, failed={charts_failed}, photos={photos_sent}")
+
+    # === v3 circuit-breaker state update (2026-09-17) ===
+    # Write shared state file so live_scan.py can short-circuit when Analyst degraded.
+    # Trip condition: charts_total ≥ 5 AND failure_rate > 0.5 (≥50% chart generation failed).
+    # Recovery: charts_failed/charts_total < 0.2 increments counter; ≥3 consecutive clears.
+    from datetime import datetime, timezone, timedelta
+    breaker_path = Path(__file__).parent.parent / "reports/live_scan/circuit_breaker.json"
+    cb_state = {}
+    try:
+        if breaker_path.exists():
+            cb_state = json.loads(breaker_path.read_text() or "{}")
+    except Exception:
+        pass
+    fail_rate = (charts_failed / charts_total) if charts_total > 0 else 0
+    now_iso = datetime.now(timezone.utc).isoformat()
+    if charts_total >= 5 and fail_rate > 0.5:
+        # Trip (or extend) the breaker
+        cb_state.update({
+            "open": True,
+            "opened_at": cb_state.get("opened_at", now_iso),
+            "until": (datetime.now(timezone.utc) + timedelta(hours=2)).isoformat(),
+            "reason": f"analyst charts_failed/charts_total = {charts_failed}/{charts_total} = {fail_rate:.0%}",
+            "consecutive_good_scans": 0,
+        })
+    else:
+        # Increment recovery counter
+        cb_state["consecutive_good_scans"] = int(cb_state.get("consecutive_good_scans", 0)) + 1
+        if cb_state.get("open"):
+            cb_state["last_good_scan"] = now_iso
+    try:
+        breaker_path.write_text(json.dumps(cb_state, indent=2, default=str))
+    except Exception:
+        pass
+    if cb_state.get("open"):
+        print(f"[tech-analyst] ⚠️ Circuit breaker OPEN ({fail_rate:.0%} fail) — live_scan will gate all opens until recovery")
     
     # Send TG alert only if coverage DEGRADED from last run
     last_coverage = load_last_coverage()

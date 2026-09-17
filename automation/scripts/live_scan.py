@@ -197,6 +197,29 @@ H_PATTERN_PULLBACK_MAX_PCT = 50.0
 # (Paper mode is for testing strategies, not for testing C-grade noise.)
 BLOCK_GRADE_C_OPEN = True
 
+# CRT distance_from_mss gate (v3 — 2026-09-17 user review):
+#   "文案已寫 MSS 未確認、價仍在雙均線下。Partial CRT ≠ 開倉"
+#   "CRT B 級追價係而家最大漏油"
+# CRT signal must be within 0.3×range of MSS confirmation. Beyond that = price has
+# already traveled past the structure-confirmation level; this is the classic
+# "追空 RR 差、等 MSS" pattern (16:32 NY 9/16 cost us −$128 across MES/MNQ CRT shorts).
+# CRT detector may emit present=True when raid + MSS are technically satisfied, but
+# if last_close has run > 0.3×range past MSS, the entry is chasing, not confirming.
+CRT_MSS_DISTANCE_MAX_RATIO = 0.3
+
+# Analyst circuit breaker (v3 — 2026-09-17 user review):
+#   "Analyst >50% fail → 理論全停"
+#   "Analyst 78/78 failed 仍開倉"
+# If Tech Analyst chart generation failure rate > threshold for THIS scan's batch
+# (computed live, not 24h cumulative), ALL open positions halt. Persistent state file
+# survives concurrent runs. TTL 2h auto-recover; but N consecutive successful scans
+# (charts_failed < 20% of charts_total) are required to re-arm.
+ANALYST_BREAKER_FAIL_THRESHOLD = 0.50
+ANALYST_BREAKER_TTL_HOURS = 2
+ANALYST_BREAKER_RECOVERY_SCANS = 3  # need 3 consecutive scans with <20% fail to clear
+ANALYST_BREAKER_MIN_SAMPLE = 5      # need ≥5 attempted charts to even consider tripping
+ANALYST_BREAKER_STATE_FILE = LIVE_DIR / "circuit_breaker.json"
+
 # P0.5: same ticker + same direction = stacking. Cap at 1 signal per ticker per direction
 # to prevent 4 strategies × 1 ticker on the same SL/TP template.
 BLOCK_STACKING_PER_TICKER = True
@@ -224,6 +247,61 @@ def _normalize_direction(direction: str) -> str:
     return "unknown"
 
 
+def _read_circuit_breaker() -> dict:
+    """Read analyst circuit-breaker state file. Returns {} if absent/invalid."""
+    try:
+        if ANALYST_BREAKER_STATE_FILE.exists():
+            return json.loads(ANALYST_BREAKER_STATE_FILE.read_text() or "{}")
+    except Exception:
+        pass
+    return {}
+
+
+def _check_circuit_breaker() -> tuple:
+    """Check analyst circuit breaker state. Returns (allow_open: bool, reason: str).
+
+    State file schema (automation/state/live_scan/circuit_breaker.json):
+      {
+        "open": bool,
+        "opened_at": iso-utc,
+        "until": iso-utc,            # TTL expiry
+        "reason": str,
+        "consecutive_good_scans": int # increments each scan with fail<20%; clears when ≥N
+      }
+
+    Returns:
+      (True, "ok") — circuit closed or expired; allow opens
+      (False, "<why>") — circuit OPEN; reject all opens
+    """
+    state = _read_circuit_breaker()
+    if not state.get("open"):
+        return True, "circuit closed (or uninitialized)"
+    # Check TTL
+    until_str = state.get("until")
+    if until_str:
+        try:
+            from datetime import datetime, timezone
+            until = datetime.fromisoformat(until_str.replace('Z', '+00:00'))
+            now = datetime.now(timezone.utc)
+            if now >= until:
+                # TTL expired — try to auto-clear if recovery counter sufficient
+                good = int(state.get("consecutive_good_scans", 0))
+                if good >= ANALYST_BREAKER_RECOVERY_SCANS:
+                    state["open"] = False
+                    state["consecutive_good_scans"] = 0
+                    state["cleared_at"] = now.isoformat()
+                    state["cleared_reason"] = "TTL expired + N-success recovery"
+                    try:
+                        ANALYST_BREAKER_STATE_FILE.write_text(json.dumps(state, indent=2))
+                    except Exception:
+                        pass
+                    return True, f"circuit auto-cleared (TTL + {good} good scans)"
+                return False, f"circuit open (TTL expired but only {good}/{ANALYST_BREAKER_RECOVERY_SCANS} good scans)"
+        except Exception:
+            pass
+    return False, f"circuit open: {state.get('reason', 'unknown')}"
+
+
 def _apply_open_gates(fired_signals: list) -> tuple:
     """Apply P0 + P0.5 hard gates to fired signals. Returns (kept, gated_out).
 
@@ -245,8 +323,19 @@ def _apply_open_gates(fired_signals: list) -> tuple:
         gated_out: signals that were rejected; still logged to signals.jsonl with
                    gate_skip field set for LLM data collection
     """
+    # === PRE-CHECK: Analyst circuit breaker (v3) ===
+    # If Tech Analyst charts are mostly failing, ALL opens halt regardless of LLM grade.
+    # Reading circuit state file is shared with tech_analyst.py — see _read_circuit_breaker().
     kept = []
     gated = []
+    allow_open, breaker_reason = _check_circuit_breaker()
+    if not allow_open:
+        for sig in fired_signals:
+            sig["gate_skip"] = f"CIRCUIT BREAKER: {breaker_reason} — no auto-open while Analyst degraded"
+            gated.append(sig)
+        print(f"[gate] 🛑 CIRCUIT BREAKER OPEN: {breaker_reason} → {len(fired_signals)} signals gated")
+        return [], gated
+
     for sig in fired_signals:
         strat = sig.get("strategy", "?")
         # === Gate 1: Grade C no auto-open (P0) ===
@@ -274,6 +363,38 @@ def _apply_open_gates(fired_signals: list) -> tuple:
                 )
                 gated.append(sig)
                 continue
+        # === Gate 2.5: CRT distance_from_mss (v3 — 2026-09-17) ===
+        # "Partial CRT ≠ 開倉" — if price has run > 0.3×range past MSS confirmation,
+        # the entry is chasing, not confirming. CRT detector may emit present=True
+        # when raid+MSS are technically satisfied, but the chase risk breaks R:R.
+        # Numeric: distance_from_mss = |last_close - mss| / range
+        # range = raid_size (CRTHigh - CRTLow for bullish, or vice versa).
+        if strat == "CRT":
+            mss = sig.get("mss_price") or sig.get("mss") or sig.get("MSS")
+            last = sig.get("last_close", 0)
+            raid_high = sig.get("raid_high") or sig.get("CRTHigh") or sig.get("crt_high")
+            raid_low = sig.get("raid_low") or sig.get("CRTLow") or sig.get("crt_low")
+            if mss is not None and raid_high is not None and raid_low is not None:
+                try:
+                    mss_f = float(mss)
+                    high_f = float(raid_high)
+                    low_f = float(raid_low)
+                    last_f = float(last) if last else 0
+                    rng = abs(high_f - low_f)
+                    if rng > 0 and last_f > 0:
+                        dist = abs(last_f - mss_f) / rng
+                        if dist > CRT_MSS_DISTANCE_MAX_RATIO:
+                            sig["gate_skip"] = (
+                                f"CRT chasing: distance_from_mss={dist:.2f}×range "
+                                f"(> {CRT_MSS_DISTANCE_MAX_RATIO:.1f}); entry too far from MSS"
+                            )
+                            gated.append(sig)
+                            print(f"[gate] CRT chasing {sig.get('ticker','?')} dist={dist:.2f} → SKIP")
+                            continue
+                except (TypeError, ValueError):
+                    pass  # missing/bad data → don't block on this gate (other gates still apply)
+        # === Gate 2.6: Stacking (per-ticker, per-direction) (P0.5) ===
+        # already handled below; placeholder removed
         kept.append(sig)
 
     # === Gate 3: Direction conflict (per-ticker, normalized) ===
@@ -1021,6 +1142,7 @@ def main() -> int:
         "n_fired": len(fired),
         "n_gated": len(gated_out) if 'gated_out' in locals() else 0,
         "n_pre_gate": len(pre_gate) if 'pre_gate' in locals() else 0,
+        "circuit_breaker": _read_circuit_breaker(),
         "elapsed_sec": round(time.time() - t_start, 1),
         "tickers": list(data_map.keys()),
     }
