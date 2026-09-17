@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-18",
+  "agent": "yw-50-20-pullback",
+  "result": {
+    "grade": "D",
+    "confidence": 35,
+    "reason": "0 trades indicates pullback criteria too strict for 5min; no live data to validate edge.",
+    "weight": 0.5,
+    "timeframe": "15min",
+    "r_multiples": [
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "indicators": [
+      "ema20",
+      "sma50",
+      "pullback",
+      "rsi"
+    ],
+    "rationale": "5min\u566a\u97f3\u5927\u7121\u6210\u4ea4\uff1b\u5347\u81f315min\u4ee4pullback\u8a0a\u865f\u66f4\u6e05\u6670\uff0c\u52a0RSI\u78ba\u8a8d\u8d85\u8ce3\u56de\u5347\uff1b\u964dweight\u56e0\u7121\u5be6\u6230\u6578\u64da",
+    "agent": "yw-50-20-pullback",
+    "strategy_id": "50-20-pullback",
+    "ticker": "MNQ=F",
+    "live_n": 0,
+    "live_pf": 1.0,
+    "live_wr": 50,
+    "live_R": 0,
+    "current_weight": 1.0,
+    "current_timeframe": "5min",
+    "response_raw": "<think>The user wants me to review my live performance for the yw-50-20-pullback strategy and provide suggestions in a specific format.\n\nLet me analyze:\n- Backtest shows 0 trades, WR 50%, PF 1.0, R +0\n- No ticker breakdown\n- Current config: weight 1.0, timeframe 5min, indicators ema20, sma50, pullback\n- Strategy name suggests: yw = ?, 50/20 = SMA50/EMA20, pullback\n\nThe backtest shows 0 trades with the current settings. This is concerning - the strategy hasn't generated any signals. With 50% WR and 1.0 PF, if there were trades they'd be break-even. But 0 trades means the pullback criteria are too strict for 5min timeframe.\n\nFor a pullback strategy using EMA20 and SMA50 on 5min:\n- 5min is quite fast, pullbacks on 5min might be too noisy\n- The EMA20/SMA50 alignment filter might rarely occur on 5min\n- Need to either widen timeframe or relax entry criteria\n\nGrade: This is poor performance. 0 trades means no edge is being captured. I'd grade this D since there's no live data to validate.\n\nSuggestions:\n- Increase timeframe to 15min for cleaner pullback signals\n- Keep EMA20/SMA50 as trend filter\n- Consider adding RSI for oversold pullback confirmation\n- Lower weight since we have no validation\n\nR multiples: For pullback strategy, typically T1=1, T2=2, T3=3 are reasonable.</think>\n\nGRADE: D | CONFIDENCE: 35 | REASON: 0 trades indicates pullback criteria too strict for 5min; no live data to validate edge.\n\nsuggested_params = {\n  \"weight\": 0.5,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\""
+  }
+}
