@@ -1,27 +1,39 @@
 {
-  "generated_at": "2026-09-18 19:00 HKT",
-  "hkt_timestamp": "2026-09-18T19:00:19.573092+08:00",
+  "generated_at": "2026-09-18 22:56 HKT",
+  "hkt_timestamp": "2026-09-18T22:56:25.833602+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 23,
-    "trades_today": 21,
-    "wins_24h": 10,
-    "R_24h": 3.19,
-    "signals_24h": 84,
-    "wr_24h": 43.5
+    "trades_24h": 27,
+    "trades_today": 25,
+    "wins_24h": 13,
+    "R_24h": 7.04,
+    "signals_24h": 93,
+    "wr_24h": 48.1
   },
   "ranking_24h": [
     {
       "strategy": "CRT",
-      "n_trades": 14,
-      "n_wins": 6,
-      "n_losses": 8,
-      "win_rate": 42.9,
-      "total_R": 1.71,
-      "avg_R": 0.122,
-      "total_pnl_usd": -82.27,
-      "profit_factor": 1.21,
+      "n_trades": 18,
+      "n_wins": 9,
+      "n_losses": 9,
+      "win_rate": 50.0,
+      "total_R": 5.56,
+      "avg_R": 0.309,
+      "total_pnl_usd": 233.46,
+      "profit_factor": 1.62,
       "rank": 1
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "n_trades": 6,
+      "n_wins": 3,
+      "n_losses": 3,
+      "win_rate": 50.0,
+      "total_R": 1.85,
+      "avg_R": 0.309,
+      "total_pnl_usd": 234.09,
+      "profit_factor": 1.62,
+      "rank": 2
     },
     {
       "strategy": "B1",
@@ -33,18 +45,6 @@
       "avg_R": 1.618,
       "total_pnl_usd": 9.49,
       "profit_factor": 10.0,
-      "rank": 2
-    },
-    {
-      "strategy": "50-20-Pullback",
-      "n_trades": 5,
-      "n_wins": 2,
-      "n_losses": 3,
-      "win_rate": 40.0,
-      "total_R": 0.24,
-      "avg_R": 0.047,
-      "total_pnl_usd": -59.26,
-      "profit_factor": 1.08,
       "rank": 3
     },
     {
@@ -60,6 +60,18 @@
       "rank": 4
     },
     {
+      "strategy": "RSI-Div",
+      "n_trades": 1,
+      "n_wins": 0,
+      "n_losses": 1,
+      "win_rate": 0.0,
+      "total_R": -1.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -374.2,
+      "profit_factor": 0.0,
+      "rank": 5
+    },
+    {
       "strategy": "3-Pushes",
       "n_trades": 2,
       "n_wins": 0,
@@ -69,7 +81,7 @@
       "avg_R": -1.0,
       "total_pnl_usd": -65.74,
       "profit_factor": 0.0,
-      "rank": 5
+      "rank": 6
     },
     {
       "strategy": "Stair",
@@ -81,17 +93,17 @@
       "avg_R": -1.0,
       "total_pnl_usd": -37.66,
       "profit_factor": 0.0,
-      "rank": 6
+      "rank": 7
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 26,
-    "n_wins": 9,
-    "win_rate": 34.6,
-    "total_R": -2.43,
-    "total_pnl_usd": -232.33
+    "n_trades": 32,
+    "n_wins": 13,
+    "win_rate": 40.6,
+    "total_R": 2.03,
+    "total_pnl_usd": 2.55
   },
-  "ranking_24h_updated": "2026-09-18T11:00:19.573115+00:00",
+  "ranking_24h_updated": "2026-09-18T14:56:25.833619+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -230,7 +242,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 7,
+      "signals_24h": 8,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -438,7 +450,7 @@
         "pf": 0.0,
         "pnl": -37.66
       },
-      "signals_24h": 14,
+      "signals_24h": 15,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -473,24 +485,24 @@
         5
       ],
       "live_24h": {
-        "n": 14,
-        "wins": 6,
-        "losses": 8,
-        "wr": 42.9,
-        "R": 1.71,
-        "pf": 1.21,
-        "pnl": -82.27
+        "n": 18,
+        "wins": 9,
+        "losses": 9,
+        "wr": 50.0,
+        "R": 5.56,
+        "pf": 1.62,
+        "pnl": 233.46
       },
       "live_today": {
-        "n": 14,
-        "wins": 6,
-        "losses": 8,
-        "wr": 42.9,
-        "R": 1.71,
-        "pf": 1.21,
-        "pnl": -82.27
+        "n": 18,
+        "wins": 9,
+        "losses": 9,
+        "wr": 50.0,
+        "R": 5.56,
+        "pf": 1.62,
+        "pnl": 233.46
       },
-      "signals_24h": 41,
+      "signals_24h": 48,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
