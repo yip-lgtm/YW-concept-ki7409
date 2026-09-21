@@ -1,0 +1,784 @@
+{
+  "title": "YW-concept strategies under live Apex-monitor constraints",
+  "generated_at_hkt": "2026-09-22T01:55:44.928931+08:00",
+  "window": {
+    "start": "2026-08-25",
+    "end": "2026-09-21",
+    "note": "max available live_scan attribution (~28 calendar days); yfinance 5m ~60d cap"
+  },
+  "constraints": {
+    "grades": "A/B only (skip C)",
+    "contracts": "1 Micro",
+    "point_values": {
+      "MNQ=F": 2.0,
+      "MES=F": 5.0,
+      "M2K=F": 5.0,
+      "MGC=F": 10.0,
+      "BTC-USD": 0.1,
+      "MBT=F": 0.1
+    },
+    "daily_kill_usd": -100.0,
+    "daily_tp_cap_usd": 300.0,
+    "brackets": true,
+    "no_scale_average": true,
+    "skip_chase_past_t1": true,
+    "sessions_tagged": "LDLZ 02-05 NY, NYKZ 08:30-11 NY, else other",
+    "btc_note": "BTC-USD proxy for MBT @ $0.10/pt; 24h tagged other/LDLZ/NYKZ when in window"
+  },
+  "gates": {
+    "keep": "net>=$3000 OR (qual_days>=3 AND n>=20)",
+    "tweak": "net>0 but shy of keep",
+    "drop": "flat/negative OR n\u22480/overfit (n<5 and |net|<500)",
+    "qual_day_usd": 250.0
+  },
+  "strategies_from_live_scan_dict": [
+    "H-Pattern",
+    "3-Pushes",
+    "Two-Yang",
+    "RSI-Div",
+    "50-20-Pullback",
+    "Stair",
+    "B1",
+    "B1-3in1",
+    "Kell-Cycle",
+    "CRT",
+    "OCS-BTC-5m"
+  ],
+  "strategy_tickers": {
+    "H-Pattern": [
+      "MNQ=F",
+      "MES=F",
+      "M2K=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "3-Pushes": [
+      "MNQ=F",
+      "MES=F",
+      "M2K=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "Two-Yang": [
+      "MNQ=F",
+      "MES=F",
+      "M2K=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "RSI-Div": [
+      "MNQ=F",
+      "MES=F",
+      "M2K=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "50-20-Pullback": [
+      "MNQ=F",
+      "MES=F",
+      "M2K=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "Stair": [
+      "MNQ=F",
+      "MES=F",
+      "M2K=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "B1": [
+      "MNQ=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "B1-3in1": [
+      "MNQ=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "Kell-Cycle": [
+      "MNQ=F",
+      "MES=F",
+      "M2K=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "CRT": [
+      "MNQ=F",
+      "MES=F",
+      "M2K=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "OCS-BTC-5m": [
+      "BTC-USD"
+    ]
+  },
+  "rank_order": [
+    {
+      "rank": 1,
+      "strategy": "CRT",
+      "net_pnl": 1221.86,
+      "max_dd": 379.65,
+      "win_rate_pct": 41.3,
+      "n_trades": 121,
+      "qual_days_ge_250": 6,
+      "ldlz_vs_nykz": "LDLZ n=14 $+350 | NYKZ n=12 $+39 | other n=95 $+832",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD",
+        "M2K=F",
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)",
+      "verdict": "keep",
+      "skip_counts": {
+        "chase_past_t1": 1,
+        "grade_C_or_other": 12,
+        "overlap_no_scale": 218,
+        "daily_envelope_block": 245
+      },
+      "session": {
+        "LDLZ": {
+          "n": 14,
+          "pnl": 350.34,
+          "wins": 8,
+          "win_rate": 57.1
+        },
+        "NYKZ": {
+          "n": 12,
+          "pnl": 39.17,
+          "wins": 5,
+          "win_rate": 41.7
+        },
+        "other": {
+          "n": 95,
+          "pnl": 832.35,
+          "wins": 37,
+          "win_rate": 38.9
+        }
+      },
+      "best_day": {
+        "date": "2026-09-02",
+        "pnl": 300.0
+      },
+      "worst_day": {
+        "date": "2026-08-26",
+        "pnl": -100.0
+      }
+    },
+    {
+      "rank": 2,
+      "strategy": "Stair",
+      "net_pnl": 405.79,
+      "max_dd": 293.32,
+      "win_rate_pct": 40.6,
+      "n_trades": 101,
+      "qual_days_ge_250": 1,
+      "ldlz_vs_nykz": "LDLZ n=7 $+219 | NYKZ n=8 $-265 | other n=86 $+452",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD",
+        "M2K=F",
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)",
+      "verdict": "tweak",
+      "skip_counts": {
+        "overlap_no_scale": 127,
+        "daily_envelope_block": 27
+      },
+      "session": {
+        "LDLZ": {
+          "n": 7,
+          "pnl": 218.51,
+          "wins": 6,
+          "win_rate": 85.7
+        },
+        "NYKZ": {
+          "n": 8,
+          "pnl": -264.93,
+          "wins": 0,
+          "win_rate": 0.0
+        },
+        "other": {
+          "n": 86,
+          "pnl": 452.21,
+          "wins": 35,
+          "win_rate": 40.7
+        }
+      },
+      "best_day": {
+        "date": "2026-09-08",
+        "pnl": 300.0
+      },
+      "worst_day": {
+        "date": "2026-09-02",
+        "pnl": -100.0
+      }
+    },
+    {
+      "rank": 3,
+      "strategy": "Kell-Cycle",
+      "net_pnl": 292.52,
+      "max_dd": 406.42,
+      "win_rate_pct": 40.6,
+      "n_trades": 32,
+      "qual_days_ge_250": 2,
+      "ldlz_vs_nykz": "LDLZ n=1 $+32 | NYKZ n=2 $-30 | other n=29 $+290",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD",
+        "M2K=F",
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)",
+      "verdict": "tweak",
+      "skip_counts": {
+        "grade_C_or_other": 147,
+        "overlap_no_scale": 8,
+        "daily_envelope_block": 2
+      },
+      "session": {
+        "LDLZ": {
+          "n": 1,
+          "pnl": 32.15,
+          "wins": 1,
+          "win_rate": 100.0
+        },
+        "NYKZ": {
+          "n": 2,
+          "pnl": -30.03,
+          "wins": 1,
+          "win_rate": 50.0
+        },
+        "other": {
+          "n": 29,
+          "pnl": 290.4,
+          "wins": 11,
+          "win_rate": 37.9
+        }
+      },
+      "best_day": {
+        "date": "2026-09-01",
+        "pnl": 300.0
+      },
+      "worst_day": {
+        "date": "2026-08-31",
+        "pnl": -100.0
+      }
+    },
+    {
+      "rank": 4,
+      "strategy": "B1",
+      "net_pnl": 272.0,
+      "max_dd": 105.33,
+      "win_rate_pct": 44.4,
+      "n_trades": 9,
+      "qual_days_ge_250": 0,
+      "ldlz_vs_nykz": "LDLZ n=1 $-15 | NYKZ n=3 $+288 | other n=5 $-1",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)",
+      "verdict": "tweak",
+      "skip_counts": {},
+      "session": {
+        "LDLZ": {
+          "n": 1,
+          "pnl": -15.11,
+          "wins": 0,
+          "win_rate": 0.0
+        },
+        "NYKZ": {
+          "n": 3,
+          "pnl": 287.93,
+          "wins": 2,
+          "win_rate": 66.7
+        },
+        "other": {
+          "n": 5,
+          "pnl": -0.82,
+          "wins": 2,
+          "win_rate": 40.0
+        }
+      },
+      "best_day": {
+        "date": "2026-09-03",
+        "pnl": 164.3
+      },
+      "worst_day": {
+        "date": "2026-09-16",
+        "pnl": -100.0
+      }
+    },
+    {
+      "rank": 5,
+      "strategy": "Two-Yang",
+      "net_pnl": 236.07,
+      "max_dd": 409.59,
+      "win_rate_pct": 35.4,
+      "n_trades": 48,
+      "qual_days_ge_250": 2,
+      "ldlz_vs_nykz": "LDLZ n=3 $-44 | NYKZ n=10 $+243 | other n=35 $+36",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD",
+        "M2K=F",
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)",
+      "verdict": "tweak",
+      "skip_counts": {
+        "grade_C_or_other": 90,
+        "overlap_no_scale": 27,
+        "daily_envelope_block": 29
+      },
+      "session": {
+        "LDLZ": {
+          "n": 3,
+          "pnl": -43.72,
+          "wins": 1,
+          "win_rate": 33.3
+        },
+        "NYKZ": {
+          "n": 10,
+          "pnl": 243.49,
+          "wins": 5,
+          "win_rate": 50.0
+        },
+        "other": {
+          "n": 35,
+          "pnl": 36.3,
+          "wins": 11,
+          "win_rate": 31.4
+        }
+      },
+      "best_day": {
+        "date": "2026-09-02",
+        "pnl": 300.0
+      },
+      "worst_day": {
+        "date": "2026-09-01",
+        "pnl": -100.0
+      }
+    },
+    {
+      "rank": 6,
+      "strategy": "B1-3in1",
+      "net_pnl": 179.45,
+      "max_dd": 0.0,
+      "win_rate_pct": 100.0,
+      "n_trades": 8,
+      "qual_days_ge_250": 0,
+      "ldlz_vs_nykz": "LDLZ n=1 $+16 | NYKZ n=0 $+0 | other n=7 $+164",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD",
+        "MES=F",
+        "MGC=F"
+      ],
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)",
+      "verdict": "tweak",
+      "skip_counts": {
+        "grade_C_or_other": 5,
+        "overlap_no_scale": 3
+      },
+      "session": {
+        "LDLZ": {
+          "n": 1,
+          "pnl": 15.55,
+          "wins": 1,
+          "win_rate": 100.0
+        },
+        "NYKZ": {
+          "n": 0,
+          "pnl": 0.0,
+          "wins": 0,
+          "win_rate": 0.0
+        },
+        "other": {
+          "n": 7,
+          "pnl": 163.9,
+          "wins": 7,
+          "win_rate": 100.0
+        }
+      },
+      "best_day": {
+        "date": "2026-09-03",
+        "pnl": 68.7
+      },
+      "worst_day": {
+        "date": "2026-08-29",
+        "pnl": 11.2
+      }
+    },
+    {
+      "rank": 7,
+      "strategy": "50-20-Pullback",
+      "net_pnl": 41.98,
+      "max_dd": 552.66,
+      "win_rate_pct": 35.9,
+      "n_trades": 167,
+      "qual_days_ge_250": 1,
+      "ldlz_vs_nykz": "LDLZ n=18 $+183 | NYKZ n=13 $+40 | other n=136 $-181",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD",
+        "M2K=F",
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)",
+      "verdict": "tweak",
+      "skip_counts": {
+        "grade_C_or_other": 52,
+        "overlap_no_scale": 341,
+        "daily_envelope_block": 273
+      },
+      "session": {
+        "LDLZ": {
+          "n": 18,
+          "pnl": 182.57,
+          "wins": 9,
+          "win_rate": 50.0
+        },
+        "NYKZ": {
+          "n": 13,
+          "pnl": 40.48,
+          "wins": 5,
+          "win_rate": 38.5
+        },
+        "other": {
+          "n": 136,
+          "pnl": -181.07,
+          "wins": 46,
+          "win_rate": 33.8
+        }
+      },
+      "best_day": {
+        "date": "2026-08-31",
+        "pnl": 300.0
+      },
+      "worst_day": {
+        "date": "2026-08-30",
+        "pnl": -100.0
+      }
+    },
+    {
+      "rank": 8,
+      "strategy": "H-Pattern",
+      "net_pnl": 8.11,
+      "max_dd": 174.85,
+      "win_rate_pct": 36.4,
+      "n_trades": 22,
+      "qual_days_ge_250": 0,
+      "ldlz_vs_nykz": "BTC 24h \u2014 LDLZ n=0 $+0 | NYKZ n=5 $+79 | other n=17 $-71",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD"
+      ],
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)",
+      "verdict": "tweak",
+      "skip_counts": {
+        "grade_C_or_other": 92,
+        "overlap_no_scale": 6
+      },
+      "session": {
+        "LDLZ": {
+          "n": 0,
+          "pnl": 0.0,
+          "wins": 0,
+          "win_rate": 0.0
+        },
+        "NYKZ": {
+          "n": 5,
+          "pnl": 78.96,
+          "wins": 3,
+          "win_rate": 60.0
+        },
+        "other": {
+          "n": 17,
+          "pnl": -70.85,
+          "wins": 5,
+          "win_rate": 29.4
+        }
+      },
+      "best_day": {
+        "date": "2026-09-21",
+        "pnl": 69.57
+      },
+      "worst_day": {
+        "date": "2026-09-02",
+        "pnl": -69.29
+      }
+    },
+    {
+      "rank": 9,
+      "strategy": "OCS-BTC-5m",
+      "net_pnl": 2.97,
+      "max_dd": 413.25,
+      "win_rate_pct": 48.4,
+      "n_trades": 397,
+      "qual_days_ge_250": 0,
+      "ldlz_vs_nykz": "BTC 24h \u2014 LDLZ n=55 $+170 | NYKZ n=66 $+9 | other n=276 $-176",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD"
+      ],
+      "data_source": "re-sim:trades_60d_20260921_175536.json (OCS own gates, graded as B accept)",
+      "verdict": "tweak",
+      "skip_counts": {
+        "daily_envelope_block": 11
+      },
+      "session": {
+        "LDLZ": {
+          "n": 55,
+          "pnl": 169.98,
+          "wins": 33,
+          "win_rate": 60.0
+        },
+        "NYKZ": {
+          "n": 66,
+          "pnl": 9.25,
+          "wins": 32,
+          "win_rate": 48.5
+        },
+        "other": {
+          "n": 276,
+          "pnl": -176.26,
+          "wins": 127,
+          "win_rate": 46.0
+        }
+      },
+      "best_day": {
+        "date": "2026-09-21",
+        "pnl": 131.89
+      },
+      "worst_day": {
+        "date": "2026-09-10",
+        "pnl": -100.0
+      }
+    },
+    {
+      "rank": 10,
+      "strategy": "3-Pushes",
+      "net_pnl": -304.67,
+      "max_dd": 517.98,
+      "win_rate_pct": 35.4,
+      "n_trades": 82,
+      "qual_days_ge_250": 0,
+      "ldlz_vs_nykz": "LDLZ n=9 $-115 | NYKZ n=9 $+74 | other n=64 $-264",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD",
+        "M2K=F",
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)",
+      "verdict": "drop",
+      "skip_counts": {
+        "grade_C_or_other": 24,
+        "overlap_no_scale": 92,
+        "daily_envelope_block": 189
+      },
+      "session": {
+        "LDLZ": {
+          "n": 9,
+          "pnl": -114.83,
+          "wins": 4,
+          "win_rate": 44.4
+        },
+        "NYKZ": {
+          "n": 9,
+          "pnl": 74.47,
+          "wins": 2,
+          "win_rate": 22.2
+        },
+        "other": {
+          "n": 64,
+          "pnl": -264.31,
+          "wins": 23,
+          "win_rate": 35.9
+        }
+      },
+      "best_day": {
+        "date": "2026-08-25",
+        "pnl": 172.73
+      },
+      "worst_day": {
+        "date": "2026-08-31",
+        "pnl": -100.0
+      }
+    },
+    {
+      "rank": 11,
+      "strategy": "RSI-Div",
+      "net_pnl": -392.94,
+      "max_dd": 430.3,
+      "win_rate_pct": 25.0,
+      "n_trades": 16,
+      "qual_days_ge_250": 0,
+      "ldlz_vs_nykz": "LDLZ n=1 $-21 | NYKZ n=8 $-263 | other n=7 $-109",
+      "instruments_traded": [
+        "MBT\u2248BTC-USD",
+        "M2K=F",
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)",
+      "verdict": "drop",
+      "skip_counts": {
+        "grade_C_or_other": 148,
+        "overlap_no_scale": 2,
+        "daily_envelope_block": 7
+      },
+      "session": {
+        "LDLZ": {
+          "n": 1,
+          "pnl": -21.3,
+          "wins": 0,
+          "win_rate": 0.0
+        },
+        "NYKZ": {
+          "n": 8,
+          "pnl": -263.07,
+          "wins": 2,
+          "win_rate": 25.0
+        },
+        "other": {
+          "n": 7,
+          "pnl": -108.57,
+          "wins": 2,
+          "win_rate": 28.6
+        }
+      },
+      "best_day": {
+        "date": "2026-09-03",
+        "pnl": 47.4
+      },
+      "worst_day": {
+        "date": "2026-09-08",
+        "pnl": -100.0
+      }
+    }
+  ],
+  "side_by_side": [
+    {
+      "strategy": "CRT",
+      "net_pnl": 1221.86,
+      "max_dd": 379.65,
+      "WR": 41.3,
+      "n": 121,
+      "qual_days": 6,
+      "verdict": "keep",
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)"
+    },
+    {
+      "strategy": "Stair",
+      "net_pnl": 405.79,
+      "max_dd": 293.32,
+      "WR": 40.6,
+      "n": 101,
+      "qual_days": 1,
+      "verdict": "tweak",
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)"
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "net_pnl": 292.52,
+      "max_dd": 406.42,
+      "WR": 40.6,
+      "n": 32,
+      "qual_days": 2,
+      "verdict": "tweak",
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)"
+    },
+    {
+      "strategy": "B1",
+      "net_pnl": 272.0,
+      "max_dd": 105.33,
+      "WR": 44.4,
+      "n": 9,
+      "qual_days": 0,
+      "verdict": "tweak",
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)"
+    },
+    {
+      "strategy": "Two-Yang",
+      "net_pnl": 236.07,
+      "max_dd": 409.59,
+      "WR": 35.4,
+      "n": 48,
+      "qual_days": 2,
+      "verdict": "tweak",
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)"
+    },
+    {
+      "strategy": "B1-3in1",
+      "net_pnl": 179.45,
+      "max_dd": 0.0,
+      "WR": 100.0,
+      "n": 8,
+      "qual_days": 0,
+      "verdict": "tweak",
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)"
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "net_pnl": 41.98,
+      "max_dd": 552.66,
+      "WR": 35.9,
+      "n": 167,
+      "qual_days": 1,
+      "verdict": "tweak",
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)"
+    },
+    {
+      "strategy": "H-Pattern",
+      "net_pnl": 8.11,
+      "max_dd": 174.85,
+      "WR": 36.4,
+      "n": 22,
+      "qual_days": 0,
+      "verdict": "tweak",
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)"
+    },
+    {
+      "strategy": "OCS-BTC-5m",
+      "net_pnl": 2.97,
+      "max_dd": 413.25,
+      "WR": 48.4,
+      "n": 397,
+      "qual_days": 0,
+      "verdict": "tweak",
+      "data_source": "re-sim:trades_60d_20260921_175536.json (OCS own gates, graded as B accept)"
+    },
+    {
+      "strategy": "3-Pushes",
+      "net_pnl": -304.67,
+      "max_dd": 517.98,
+      "WR": 35.4,
+      "n": 82,
+      "qual_days": 0,
+      "verdict": "drop",
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)"
+    },
+    {
+      "strategy": "RSI-Div",
+      "net_pnl": -392.94,
+      "max_dd": 430.3,
+      "WR": 25.0,
+      "n": 16,
+      "qual_days": 0,
+      "verdict": "drop",
+      "data_source": "live_scan trades.jsonl (A/B replay under Apex envelope)"
+    }
+  ]
+}
