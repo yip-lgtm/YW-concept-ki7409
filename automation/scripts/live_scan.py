@@ -370,10 +370,17 @@ def _apply_open_gates(fired_signals: list) -> tuple:
         # Numeric: distance_from_mss = |last_close - mss| / range
         # range = raid_size (CRTHigh - CRTLow for bullish, or vice versa).
         if strat == "CRT":
-            mss = sig.get("mss_price") or sig.get("mss") or sig.get("MSS")
+            # CRT detector returns mss_confirm (not mss_price/MSS) — try all keys
+            mss = (sig.get("mss_confirm") or sig.get("mss_price")
+                   or sig.get("mss") or sig.get("MSS"))
             last = sig.get("last_close", 0)
-            raid_high = sig.get("raid_high") or sig.get("CRTHigh") or sig.get("crt_high")
-            raid_low = sig.get("raid_low") or sig.get("CRTLow") or sig.get("crt_low")
+            # For bullish CRT, raid_high = CRTHigh (above market); raid_low = CRTLow (sweep below)
+            # For bearish CRT, raid_high = sweep-above-high; raid_low = CRTLow
+            # Either way, range = max(raid_high, crt_high) − min(raid_low, crt_low)
+            raid_high = (sig.get("raid_high") or sig.get("CRTHigh")
+                         or sig.get("crt_high"))
+            raid_low = (sig.get("raid_low") or sig.get("CRTLow")
+                        or sig.get("crt_low"))
             if mss is not None and raid_high is not None and raid_low is not None:
                 try:
                     mss_f = float(mss)
@@ -1024,7 +1031,10 @@ def main() -> int:
             else:
                 print(f"    [skip] grade {grade} not in {ACCEPTABLE_GRADES}")
                 continue
-        # Accept: build signal
+        # Accept: build signal — copy detector-specific fields so _apply_open_gates
+        # can read them (CRT mss_confirm/crt_high, H-Pattern pullback_pct, etc.).
+        # Without this passthrough, v3 gates couldn't see the detector's numeric
+        # structure data → CRT chase gate silently never fired.
         signal = {
             "strategy": det["strategy"],
             "ticker": det["ticker"],
@@ -1034,6 +1044,16 @@ def main() -> int:
             "direction": det.get("direction", "long" if det.get("signal") == "buy" else "short"),
             "last_close": det.get("last_close", 0),
             "ts": ts_now,
+            # Detector raw fields (only the ones v3 gates need)
+            "mss_confirm": det.get("mss_confirm"),
+            "mss_price": det.get("mss_price"),
+            "crt_high": det.get("crt_high"),
+            "crt_low": det.get("crt_low"),
+            "raid_low": det.get("raid_low"),
+            "raid_high": det.get("raid_high"),
+            "pullback_pct": det.get("pullback_pct"),
+            "strength": det.get("strength"),
+            "crt_range_pct": det.get("crt_range_pct"),
         }
         fired.append(signal)
         print(f"    [FIRED] {grade} {det['ticker']}")
