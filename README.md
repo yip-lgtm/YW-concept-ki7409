@@ -349,4 +349,4 @@ YW 核心定義來自 Discord 原始訊息。YW Indicator 說明整理自《YW�
 
 ---
 
-最後更新：**2026-09-21** (manual refresh — v4.1 patches documented)
+最後更新：**2026-09-21** (v4.2 doc refresh — Last Reviewed Day + Live Ops Hub + Workflows/Secrets)
