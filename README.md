@@ -203,6 +203,116 @@
 
 ---
 
+## 📋 Last Reviewed Trading Day (2026-09-20, Sun, BTC focus)
+
+> 來源：用戶盤後 review 原始 message，summarized 入 README 方便事後 audit。
+
+### 週末 BTC 價格路徑 (EDT)
+07:50 80,446 → 11:28 80,687 → 14:16 81,183 → 19:30 81,135 → 21:27 81,513
+
+走勢：早段假跌 → 午市推上 81.1–81.5，回撤淺、金叉／均線多頭有效。**空倉全部係 5m 噪音**。
+
+### 損益 (有結算)
+| Time | Strat | Direction | R | Cash |
+|------|-------|-----------|---|------|
+| 07:50 | 50-20 多 (金叉 5 根) | Long | −1.00 | −$93 |
+| 11:28 | 50-20 多 (0.06% 貼) | Long | +1.62 | +$259 |
+| 14:16 | CRT 多 (離 MSS 687 點) | Long | −1.00 | −$197 ← **v4 已 skip** |
+| 19:30 | 50-20 多 (conf 80) | Long | +1.62 | +$237 |
+| **BTC 小計** | | | **+1.24R** | **+$206** |
+
+### 結構結論
+- ✅ 週末有效邊：20/50 多頭排列 + 回踩 EMA20
+- ❌ 死叉空 / Stair 空 / OCS 空 / 三推空：全部逆住 80.4 → 81.5 trend
+- ❌ CRT BTC 追 MSS 687 點：典型 chase，v3 patch 之前漏，**v4 已修**
+- ⚠️ 兩張 50-20 BTC 同方向 (conf 80 + 72) — P0.5 stacking 之前漏，**v4 已修**
+
+### 種田日限反思
+> 兩張刮均線多賺約 $496，一張 CRT 追同早盤淺回踩食返 $290。種田日限 $100 規矩：單 BTC 一張 −$197 **已穿日限**，淨賺靠後面兩張刮返。
+
+### 9/21 開盤前守則（user directive + v4.1 自動 gate）
+
+| 守則 | 自動 gate | Manual |
+|------|----------|--------|
+| 唔追 81.5 之上 50-20 多 | ✅ **Gate 2.7** (drift > 0.1% skip) | — |
+| 唔做 Stair / 三推 / OCS 空 接高位逆勢 | — | ✅ System Eng daily alert |
+| CRT BTC skip (晨報已 C) | ✅ Grade C gate | — |
+| H1 EMA20 站穩收陽先 0.5µ | — | ✅ Manual macro filter |
+| B1 全表 http 429 (模組當死) | ✅ Grade C gate (if degrade) | — |
+| MNQ 50-20 觀察 (16:55 長陰破 EMA) | — | ✅ Manual review |
+| 金 CRT / Kell #1#3 要 4H range 確認 | ✅ CRT chase gate (dist > 0.3) | ✅ 4H range manual |
+
+**一句**：週末 BTC 賺在兩次均線多、蝕在 CRT 追同過早金叉；淨 +$206 但過程把 $100 日限當無。星期一唔好把 Score 115 當成繼續加倉許可。
+
+---
+
+## 🛰️ Live Operations Hub
+
+所有 live state 統一去 👉 **[docs/review.html](docs/review.html)** (每 cycle auto-regen)
+
+### Quick links
+| 用途 | URL |
+|------|-----|
+| 📊 Web Review Hub (charts + trade history + rankings + LLM analysis) | `docs/review.html` |
+| 📈 Strategy Dashboard (charts gallery) | `docs/strategy-dashboard.html` |
+| 🔢 Dashboard JSON (raw data) | `automation/reports/dashboard-data.json` |
+| 🩺 Live heartbeat (latest run) | `automation/reports/live_scan/heartbeat.json` |
+| 🚧 Gated signals log | `automation/reports/live_scan/signals.jsonl` |
+| 📜 24h audit trail | `automation/reports/audit/{YYYY-MM-DD}/actions.jsonl` |
+
+### Today's heartbeat (latest)
+```
+n_fired=0 n_pre_gate=4 n_gated=4 n_signals=13 elapsed=47.9s
+Circuit breaker: open=False
+```
+
+> Last update: auto-regenerated every cycle. 4 signals gated today = Grade C × 2 +
+> per-ticker dedup × 1 + (CRT/50-20 drift pending fresh cross).
+
+---
+
+## 🔑 Workflows + Secrets Quick Ref
+
+### 21 Active Workflows
+
+| File | Cron (UTC) | HKT equivalent | 職責 |
+|------|------------|----------------|------|
+| `9-strategy-live-scan.yml` | `workflow_dispatch` only | manual | Power 3 — 9 路 detector + LLM grade |
+| `ocs-btc-5m.yml` | `*/15 * * * *` | :00/:15/:30/:45 | OCS BTC 5m 24/7 |
+| `unified-pipeline.yml` | `0,15,30,45 + 8,23,38,53` | :08/:23/:38/:53 etc | Master 6-job (OCS/Supervisor/SysEng/TechAnalyst/TTrades/Dashboard) |
+| `always-on-trigger-1.yml` | `3,18,33,48 * * * *` | :03/:18/:33/:48 | Stall detector backup #1 |
+| `always-on-trigger-2.yml` | `8,23,38,53 * * * *` | :08/:23/:38/:53 | Stall detector backup #2 |
+| `always-on-trigger-3.yml` | `13,28,43,58 * * * *` | :13/:28/:43/:58 | Stall detector backup #3 (5min latency combined) |
+| `pipeline-scheduler.yml` | `*/15 * * * *` | :00/:15/:30/:45 | Git-based watchdog |
+| `pipeline-watchdog.yml` | `*/15 * * * *` | :00/:15/:30/:45 | Auto-trigger if stalled |
+| `master-self-heal.yml` | `*/30 * * * *` | :00/:30 | 24/7 pipeline doctor |
+| `sys-engineer.yml` | `0 * * * *` | hourly | Power 2 auto-fix |
+| `supervisor-monitor.yml` | `workflow_dispatch` | manual / pipeline-triggered | Power 1 health check |
+| `update-dashboard-data.yml` | `workflow_dispatch` | triggered | Web dashboard JSON |
+| `daily-watchdog.yml` | `30 16 * * *` (daily) | 00:30 HKT | Auto-trigger daily if stalled |
+| `llm-iteration-scientist.yml` | `0 16 * * 1-5` | 00:00 HKT weekdays | Per-agent LLM self-optimize |
+| `per-agent-iteration.yml` | `0 16 * * 1-5` | 00:00 HKT weekdays | 10 agents iteration |
+| `strategy-ranking.yml` | `0 16 * * 0` + `12,20 UTC Sun` | 00:00 + 20:00 + 04:00 HKT Sun | Ranking + LLM iter (3× daily) |
+| `strategy-reward.yml` | `10 16 * * 1-5` | 00:10 HKT weekdays | Top 3 PnL daily reward |
+| `yw-daily.yml` | `0 16 * * 1-5` + `0 16 * * 6,0` | 00:00 HKT every day | Daily LLM reminder + 4-Chart |
+| `yw-publish-signal.yml` | `5 16 * * 1-5` | 00:05 HKT weekdays | Push top signal to AI-Trader |
+| `weekly-readme.yml` | `0 13 * * 0` | 21:00 HKT Sun | README auto-update |
+
+### Required Secrets (7 total)
+| Secret | 用途 | Required by |
+|--------|------|------------|
+| `GITHUB_TOKEN` / `APEX_PAT` | git push 自動 commit | All workflows |
+| `TELEGRAM_BOT_TOKEN` | TG 推送信號 | most workflows |
+| `TELEGRAM_CHAT_ID` | TG chat target | most workflows |
+| `MINIMAX_API_KEY` | LLM grading + iteration | live-scan, llm-scientist, per-agent, yw-daily |
+| `POLYGON_API_KEY` | BTC/USD fallback data source | ocs-btc, live-scan |
+| `AI_TRADER_TOKEN` | HKUDS AI-Trader platform signal push | yw-publish-signal, live-scan |
+
+> **Note**: Multi-source data fallback: yfinance → polygon → coingecko (2026-09-16)
+> — single-source outage no longer kills the pipeline.
+
+---
+
 ## 📅 本週策略報告 (2026-09-13 ~ 2026-09-20)
 
 _由 `strategy-supervisor` 每週日 21:00 HKT 自動生成_
