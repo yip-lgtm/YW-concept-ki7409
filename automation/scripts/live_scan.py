@@ -224,6 +224,17 @@ ANALYST_BREAKER_STATE_FILE = LIVE_DIR / "circuit_breaker.json"
 # to prevent 4 strategies × 1 ticker on the same SL/TP template.
 BLOCK_STACKING_PER_TICKER = True
 
+# 50-20 Pullback EMA-distance gate (v4.1 — 2026-09-21 user review):
+#   "已離開早段回踩" / "再貼 EMA 0.06% 係延續單, 唔係新金叉"
+#   "唔追 81.5 之上嘅 50-20 多"
+# A 50-20 pullback is only valid when price is genuinely pulling back to EMA20.
+# Detector emits `distance_to_ema20_pct` in percent; threshold 0.1% (i.e. raw decimal
+# 0.001). Past that, the price has drifted too far from the moving average for the
+# setup to be a "pullback" — it's a chase into a one-sided trend, identical to the
+# CRT chase problem. 9/20 evidence: BTC distance 0.06% (11:28) was the boundary case
+# (kept), 21:27 onward price ramped to 81.5 → distance > 0.1% (skipped).
+PULLBACK_5020_EMA_DISTANCE_MAX_PCT = 0.1  # percent; detector returns 0.08 = 0.08%
+
 # Grade ranking for stacking resolution: lower = stronger. A wins, B second, others unknown.
 GRADE_RANK = {"A": 0, "B": 1}
 
@@ -400,6 +411,29 @@ def _apply_open_gates(fired_signals: list) -> tuple:
                             continue
                 except (TypeError, ValueError):
                     pass  # missing/bad data → don't block on this gate (other gates still apply)
+        # === Gate 2.7: 50-20 Pullback EMA-distance (v4.1 — 2026-09-21) ===
+        # If price has drifted >0.1% from EMA20, this is no longer a real pullback —
+        # it's a chase into a one-sided trend. Detector already classifies >0.5% as
+        # "above_ema20" (single-direction), but the 0.1% threshold is a stricter
+        # user-defined edge that catches earlier drift (e.g. 21:27 BTC cases where
+        # price had ramped past the original pullback window).
+        if strat == "50-20-Pullback":
+            dist_pct = sig.get("distance_to_ema20_pct")
+            if dist_pct is not None:
+                try:
+                    dist_f = float(dist_pct)
+                    # Use abs() — long/short can both drift away from EMA20
+                    if abs(dist_f) > PULLBACK_5020_EMA_DISTANCE_MAX_PCT:
+                        sig["gate_skip"] = (
+                            f"50-20 drift: distance_to_ema20={dist_f:+.3f}% "
+                            f"|{abs(dist_f):.3f}% > {PULLBACK_5020_EMA_DISTANCE_MAX_PCT:.3f}%; "
+                            f"not a real pullback — price has run past EMA20"
+                        )
+                        gated.append(sig)
+                        print(f"[gate] 50-20 drift {sig.get('ticker','?')} dist={dist_f:+.3f}% → SKIP")
+                        continue
+                except (TypeError, ValueError):
+                    pass  # missing/bad data → don't block (other gates still apply)
         # === Gate 2.6: Stacking (per-ticker, per-direction) (P0.5) ===
         # already handled below; placeholder removed
         kept.append(sig)
@@ -1054,6 +1088,13 @@ def main() -> int:
             "pullback_pct": det.get("pullback_pct"),
             "strength": det.get("strength"),
             "crt_range_pct": det.get("crt_range_pct"),
+            # 50-20 Pullback detector fields (v4.1 — for Gate 2.7 EMA-distance check)
+            "distance_to_ema20_pct": det.get("distance_to_ema20_pct"),
+            "ema20": det.get("ema20"),
+            "sma50": det.get("sma50"),
+            "cross_type": det.get("cross_type"),
+            "cross_bars_ago": det.get("cross_bars_ago"),
+            "pullback_state": det.get("pullback"),
         }
         fired.append(signal)
         print(f"    [FIRED] {grade} {det['ticker']}")
