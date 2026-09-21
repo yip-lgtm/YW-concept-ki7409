@@ -30,7 +30,14 @@ plt.rcParams['axes.unicode_minus'] = False
 from matplotlib.font_manager import FontProperties
 CJK_FONT = FontProperties(family='Noto Sans CJK SC')
 
-REPO = Path("/workspace/YW-concept-ki7409")
+# Prefer GITHUB_WORKSPACE (Actions), else this repo root — never hardcode /workspace
+# (mkdir on /workspace fails with EACCES on GHA runners → charts silently skipped)
+_REPO_CANDIDATES = [
+    Path(os.environ["GITHUB_WORKSPACE"]) if "GITHUB_WORKSPACE" in os.environ else None,
+    Path(__file__).resolve().parents[2],
+    Path("/workspace/YW-concept-ki7409"),
+]
+REPO = next(c for c in _REPO_CANDIDATES if c is not None and (c / "automation").is_dir())
 SIGNALS_FILE = REPO / "automation/reports/live_scan/signals.jsonl"
 CHARTS_DIR = REPO / "automation/reports/signal_charts"
 CHARTS_DIR.mkdir(parents=True, exist_ok=True)

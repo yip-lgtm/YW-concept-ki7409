@@ -65,7 +65,9 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 if "GITHUB_WORKSPACE" in os.environ:
     REPO = Path(os.environ["GITHUB_WORKSPACE"])
 else:
-    REPO = Path("/workspace/YW-concept-ki7409")
+    # Prefer real checkout (box: /home/box/repos/...); fall back to legacy sandbox path
+    _here = Path(__file__).resolve().parents[2]
+    REPO = _here if (_here / "automation").is_dir() else Path("/workspace/YW-concept-ki7409")
 
 sys.path.insert(0, str(REPO / "automation" / "src"))
 

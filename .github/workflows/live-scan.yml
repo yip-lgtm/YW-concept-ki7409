@@ -11,6 +11,10 @@ name: '9 Strategy Live Scan — 24/7 Detector Sweep'
 # Schedule offsets 1 min after OCS scan (which runs */5).
 
 on:
+  schedule:
+    # Restored 2026-09-22: was dispatch-only (comments still claimed 288/day) → HB went stale
+    # Match quota-reduced cadence used by unified-pipeline / ocs-btc (*/15)
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:
