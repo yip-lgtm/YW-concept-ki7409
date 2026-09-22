@@ -1,13 +1,69 @@
 {
-  "ts": "2026-09-22T03:01:21.911414-04:00",
+  "ts": "2026-09-22T06:51:25.445159-04:00",
   "ticker": "BTC-USD",
-  "actionable": false,
-  "reason": "no H4 C3 closure (Fractal quiet)",
+  "strategy": "TTrades-Fractal",
+  "swing_type": "C2",
+  "side": "bullish",
+  "swing": {
+    "type": "c2_closure",
+    "side": "bullish",
+    "c2_high": 85716.25,
+    "c2_low": 85086.21875,
+    "c2_close": 85332.59375,
+    "c2_eq": 85401.234375,
+    "c3_close": 85835.5703125,
+    "swing_level": 85086.21875,
+    "direction": "long"
+  },
+  "cisd": {
+    "confirmed": true,
+    "opposing_open": 75803.953125,
+    "series_length": 3,
+    "last_close": 85835.5703125,
+    "reason": "cisd_long"
+  },
+  "eq_respected": true,
+  "d1_trend": {
+    "aligned": true,
+    "trend": "uptrend",
+    "d1_close": 85835.5703125,
+    "d1_ema50": 75414.24358088861,
+    "d1_ema20": 79448.3032511071,
+    "reason": "D1 uptrend"
+  },
   "weekly_profile": {
     "profile": "early_week",
     "valid_for_signal": true,
     "notes": "day 2 - too early, not blocking"
   },
+  "daily_profile": {
+    "london_expanded": false,
+    "london_range": 1013.5859375,
+    "skip_ny": false
+  },
   "account_size": 247000,
-  "risk_amount": 617.5
+  "risk_pct": 0.0025,
+  "risk_amount": 617.5,
+  "entry": 85835.5703125,
+  "sl": 85010.13752790178,
+  "t1": 86661.00309709822,
+  "t2_close": 87156.26276785714,
+  "t3": 87981.69555245536,
+  "t4": 88807.12833705358,
+  "t5": 89962.7342354911,
+  "risk_per_unit": 825.4327845982189,
+  "units": 0.7480924086393896,
+  "notional": 64212.93854201381,
+  "manipulation_pivot": 85086.21875,
+  "projection_neg2": 86584.921875,
+  "projection_neg4": 87334.2734375,
+  "sl_buffer_atr": 76.08122209821428,
+  "actionable": true,
+  "direction": "long",
+  "grade": "B",
+  "confidence": 72,
+  "reason": "TTrades Fractal: H4 C2 closure (bullish) + M15 CISD (3-bar series) + EQ respected",
+  "paper_mode": true,
+  "trade_mode": "paper",
+  "paper_reason": "no paper trade history (default paper)"
 }
