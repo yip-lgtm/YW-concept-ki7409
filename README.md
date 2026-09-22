@@ -316,6 +316,72 @@ replay 喺 [docs/STRATEGY-SETUP.md](docs/STRATEGY-SETUP.md)，detail per-strateg
 
 ---
 
+## 📈 7-Day Rolling Ranking (live closed trades)
+
+> 來源：`automation/reports/live_scan/trades.jsonl`，filter `exit_time ∈ [now-7d, now]` + `status=closed`。
+> Window: **2026-09-15 16:17 UTC → 2026-09-22 16:17 UTC** (135 closed trades, +3.8R, +$993 net)。
+
+| Rank | Strategy | n | W/L | WR | Total R | Avg R | Total $ | PF | Avg Bars |
+|------|----------|--:|----:|----:|--------:|------:|--------:|---:|---------:|
+| 🥇 | **CRT** | **49** | 21/28 | 42.9% | +6.0 | +0.122 | +$234.66 | 1.13 | 11.7 |
+| 🥈 | **50-20-Pullback** | 28 | 12/16 | 42.9% | +3.4 | +0.122 | **+$1,066.01** | **1.84** | 11.8 |
+| 🥉 | H-Pattern | 2 | 2/0 | 100.0% | +3.2 | +1.618 | +$1,137.10 | ∞ | 9.5 |
+| 4 | Kell-Cycle | 4 | 2/2 | 50.0% | +1.2 | +0.309 | +$148.67 | 1.92 | 12.2 |
+| 5 | B1 | 2 | 1/1 | 50.0% | +0.6 | +0.309 | −$3.10 | 0.75 | 4.5 |
+| 6 | Two-Yang | 5 | 2/3 | 40.0% | +0.2 | +0.047 | +$37.22 | **2.80** | 9.0 |
+| 7 | B1-3in1 | 1 | 0/1 | 0.0% | −1.0 | −1.000 | +$3.11 | ∞ | 1.0 |
+| 8 | Stair | 21 | 7/14 | 33.3% | −2.7 | −0.127 | +$19.38 | 1.04 | 11.5 |
+| 9 | RSI-Div | 6 | 1/5 | 16.7% | −3.4 | −0.564 | **−$1,000.33** | 0.23 | 13.2 |
+| 10 | 3-Pushes | 17 | 5/12 | 29.4% | −3.9 | −0.230 | −$649.59 | 0.48 | **34.6** |
+| | **Σ Total** | **135** | **54/81** | **40.0%** | **+3.8** | **+0.028** | **+$993.13** | — | — |
+
+### Reliability split
+- **Robust (n ≥ 30)**: CRT only (n=49) — only statistical signal we can trust for the week
+- **Small sample (n < 30)**: 50-20-Pullback n=28, Stair n=21, 3-Pushes n=17, RSI-Div n=6, Two-Yang n=5, Kell-Cycle n=4, H-Pattern n=2, B1 n=2, B1-3in1 n=1
+
+### 🎯 Robust PF ranking (n ≥ 30 only)
+| Rank | Strategy | PF | Total R | WR | n |
+|------|----------|---:|--------:|----:|--:|
+| 🥇 | CRT | 1.13 | +6.0 | 42.9% | 49 |
+
+### 對比 9/22 LLM iteration (Apex re-sim)
+
+| Strategy | LLM iter verdict | LLM iter filter | Live 7d | 一致? |
+|----------|-----------------|-----------------|---------|------|
+| CRT | **keep** | baseline | +6.0R, n=49, PF 1.13 | ✅ aligned |
+| 50-20-Pullback | **keep ↑** | skip MGC | +3.4R, n=28, PF 1.84 | ✅ aligned |
+| Stair | tweak | skip NYKZ+MES+BTC | **−2.7R, n=21, PF 1.04** | ⚠️ filter NOT applied live |
+| 3-Pushes | tweak ↑ from drop | MNQ+BTC up only | **−3.9R, n=17, PF 0.48** | ⚠️ filter NOT applied live |
+| RSI-Div | tweak ↑ from drop | skip MNQ+MGC+MES | **−3.4R, n=6, PF 0.23** | ⚠️ filter NOT applied live |
+| Two-Yang | tweak | skip MNQ+MES+LDLZ | +0.2R, n=5, PF 2.80 | ⚠️ n too small |
+| Kell-Cycle | tweak | MGC short only | +1.2R, n=4, PF 1.92 | ⚠️ n too small |
+| H-Pattern | tweak | NYKZ only | +3.2R, n=2, PF ∞ | ⚠️ n too small |
+| B1 | tweak | baseline | +0.6R, n=2 | ⚠️ n too small |
+| B1-3in1 | tweak | skip MES | −1.0R, n=1 | ⚠️ n too small |
+
+### Critical gap — LLM iter filter 仍未 deploy 到 live_scan.py
+
+9/22 嘅 LLM iteration paper 結果 (Apex envelope re-sim) 同 live closed trades **4 個 strategy 唔對齊**:
+
+- **Stair**: LLM paper #1 ($+1,363) but live −2.7R → 必須 apply `skip NYKZ+MES+BTC` filter 去 live_scan.py
+- **3-Pushes**: LLM saved from drop ($+623 paper) but live −3.9R → 必須 apply `MNQ+BTC up only` filter
+- **RSI-Div**: LLM saved from drop ($+47 paper) but live −$1k → 必須 apply `skip MNQ+MGC+MES` filter
+- 3 個策略加埋 live 虧損 −$2,017 / −10.0R，**filter 套用後預計可避免絕大部分**
+
+### Action items
+
+| Priority | Action | Expected saving |
+|----------|--------|-----------------|
+| **P0** | Apply Stair filter `skip NYKZ+MES+BTC` to live_scan.py | ~$400/wk |
+| **P0** | Apply 3-Pushes filter `MNQ+BTC up only` to live_scan.py | ~$650/wk |
+| **P0** | Apply RSI-Div filter `skip MNQ+MGC+MES` to live_scan.py | ~$1,000/wk |
+| **P1** | Wait for more samples on H-Pattern / Kell-Cycle / B1-3in1 (n < 5) | n/a |
+| **P2** | Track CRT PF 1.13 (modest) — LLM iter suggests baseline OK, monitor WR | n/a |
+
+**Total expected savings**: ~$2,000/wk if all 3 filters applied.
+
+---
+
 ## 🛰️ Live Operations Hub
 
 所有 live state 統一去 👉 **[docs/review.html](docs/review.html)** (每 cycle auto-regen)
@@ -419,4 +485,4 @@ YW 核心定義來自 Discord 原始訊息。YW Indicator 說明整理自《YW�
 
 ---
 
-最後更新：**2026-09-22** (v4.3 doc refresh — Strategy Setup & Iteration section added, 11 strategies / CRT as primary per 9/22 LLM iter)
+最後更新：**2026-09-23** (v4.4 doc refresh — 7-Day Rolling Ranking section added, +$993 net / 135 trades, 4 filters pending deploy)
