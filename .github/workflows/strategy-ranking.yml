@@ -115,15 +115,30 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          .venv/bin/python -c "
-import os, requests
-from datetime import datetime
-from zoneinfo import ZoneInfo
-hkt = datetime.now(ZoneInfo('Asia/Hong_Kong')).strftime('%Y-%m-%d %H:%M HKT')
-ny = datetime.now(ZoneInfo('America/New_York')).strftime('%Y-%m-%d %H:%M EDT')
-msg = f'✅ <b>Daily Auto-Pipeline Complete</b>%0A%0A🌐 Web: https://yip-lgtm.github.io/YW-concept-ki7409/%0A⏰ HKT: {hkt}%0A⏰ NY: {ny}%0A%0A📊 Rank + LLM iter + web + backup + push — all done.%0ANo manual needed.'
-r = requests.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage", json={'chat_id': os.environ['TELEGRAM_CHAT_ID'], 'text': msg, 'parse_mode': 'HTML'}, timeout=10)
-print(f'TG: {r.json().get("ok")}')"
+          cat > /tmp/tg_done.py <<'EOF'
+          import os, requests
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          hkt = datetime.now(ZoneInfo("Asia/Hong_Kong")).strftime("%Y-%m-%d %H:%M HKT")
+          ny = datetime.now(ZoneInfo("America/New_York")).strftime("%Y-%m-%d %H:%M EDT")
+          msg = (
+              "✅ <b>Daily Auto-Pipeline Complete</b>\n\n"
+              "🌐 Web: https://yip-lgtm.github.io/YW-concept-ki7409/\n"
+              f"⏰ HKT: {hkt}\n⏰ NY: {ny}\n\n"
+              "📊 Rank + LLM iter + web + backup + push — all done.\n"
+              "No manual needed."
+          )
+          url = "https://api.telegram.org/bot" + os.environ["TELEGRAM_BOT_TOKEN"] + "/sendMessage"
+          r = requests.post(
+              url,
+              json={"chat_id": os.environ["TELEGRAM_CHAT_ID"], "text": msg, "parse_mode": "HTML"},
+              timeout=10,
+          )
+          print("TG:", r.json().get("ok"))
+          EOF
+          # strip leading indent from heredoc body
+          sed -i 's/^          //' /tmp/tg_done.py
+          .venv/bin/python /tmp/tg_done.py
 
       - name: Commit ranking + iteration
         if: always()
