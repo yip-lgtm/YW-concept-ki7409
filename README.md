@@ -62,7 +62,7 @@
 
 | Workflow | Schedule | 職責 (Power) |
 |----------|----------|-------------|
-| `9-strategy-live-scan.yml` | 15min | Power 3 — 9 路 detector + LLM grading + open-position gates |
+| `9-strategy-live-scan.yml` | 15min | Power 3 — **11 路 detector + LLM grading + open-position gates** |
 | `ocs-btc-5m.yml` | 15min | Power 3 — OCS BTC 5m 24/7 |
 | `unified-pipeline.yml` | 15min (4 offsets) | Power 3 — 6 job master (OCS + Supervisor + SysEng + TechAnalyst + TTrades + Dashboard) |
 | `always-on-trigger-1/2/3.yml` | 15min (3 offsets) | Stall detector backup |
@@ -246,6 +246,76 @@
 
 ---
 
+## 📊 Strategy Setup & Iteration
+
+11 路 detector (10 unique + B1 3合1 multi-asset split)，全部已經 iterate 過。Apex envelope
+replay 喺 [docs/STRATEGY-SETUP.md](docs/STRATEGY-SETUP.md)，detail per-strategy LLM analysis
+喺 `automation/reports/yw_setups_bt/iteration/per_strategy/` (11 份 .md)。
+
+### 11 Strategies (current config)
+
+| # | Strategy | Ticker | Weight | LLM Iter |
+|---|----------|--------|--------|----------|
+| 1 | OCS BTC 5m | BTC-USD | 1.0 | — |
+| 2 | H-Pattern | MNQ=F | 1.2 | — |
+| 3 | 3-Pushes | MNQ=F | 1.0 | — |
+| 4 | 兩陽夾一陰 (Two-Yang) | MNQ=F | 0.8 | v2 2026-08-25 |
+| 5 | RSI Divergence | MNQ=F | 0.7 | v1 2026-08-25 |
+| 6 | 50/20 Pullback | MNQ=F | 1.0 | — |
+| 7 | Stair Pattern | MNQ=F | 0.9 | v3 2026-08-25 |
+| 8 | CRT | MNQ=F | 1.1 | v5 2026-08-26 |
+| 9 | Kell Cycle | MNQ=F | 0.9 | v4 2026-08-26 |
+| 10 | B1 战法 (MNQ/MGC/BTC) | multi | 1.0 | v6 2026-08-27 |
+| 11 | B1 3合1 (multi-asset) | multi | 1.0 | v6 2026-08-27 |
+
+### Latest Iteration (2026-09-22 02:08 HKT) — Apex envelope re-sim
+
+11 strategies 全 iterate。Verdict 統計：**keep 2 / tweak 9 / drop 0**。
+
+| Rank | Strategy | Filter | Net AFTER | MaxDD | WR | n | Verdict |
+|------|----------|--------|----------:|------:|---:|---:|---------|
+| 🥇 | **Stair** | skip NYKZ + skip BTC + skip MES | **$+1,363.54** | $290.55 | 52.6% | 57 | tweak |
+| 🥈 | **CRT** | no change (baseline best) | **$+1,221.86** | $379.65 | 41.3% | 121 | **keep** |
+| 🥉 | **50-20-Pullback** | skip MGC + keep MNQ all sessions | **$+696.19** | $400.00 | 50.8% | 65 | **keep** ↑ |
+| 4 | 3-Pushes | MNQ+BTC up only | $+623.17 | $195.26 | 40.0% | 50 | tweak ↑ from drop |
+| 5 | Two-Yang | skip MNQ + skip MES + skip LDLZ | $+476.77 | $216.43 | 47.1% | 34 | tweak |
+| 6 | Kell-Cycle | MGC short only | $+387.50 | $132.60 | 55.6% | 9 | tweak |
+| 7 | B1 | no change (baseline best) | $+272.00 | $105.33 | 44.4% | 9 | tweak |
+| 8 | OCS-BTC-5m | LDLZ + NYKZ long | $+254.50 | $195.98 | 58.6% | 87 | tweak |
+| 9 | B1-3in1 | skip MES (keep MGC+BTC) | $+196.93 | $0.00 | 100.0% | 7 | tweak |
+| 10 | H-Pattern | NYKZ only | $+78.96 | $32.95 | 60.0% | 5 | tweak |
+| 11 | RSI-Div | skip MNQ+MGC+MES | $+46.94 | $101.05 | 50.0% | 12 | tweak ↑ from drop |
+
+### Live arm recommendation (Tradovate MNQ + MGCZ6)
+- **Arm CRT live** (unfiltered, qual=6, n=121, net $+1,221.86)
+- **Paper Stair** with skip-NYKZ+skip-BTC+skip-MES (AFTER $+1,363.54, qual=2)
+- **Optional 2nd book 50-20-Pullback** with skip-MGC + MNQ-all / others-LDLZ|NYKZ only (keep $+696.19, qual=3)
+- ❌ Do NOT arm 3-Pushes/RSI-Div (drop-to-tweak salvages) live
+
+### CRT deep analysis (LLM-validated)
+- 121 accepted Apex trades, **net +$1,221.86**（WR 41.3%, 50W/71L）
+- **B grade carried the book** (92 trades, $+1,131.82, WR 43.5%) — A underperformed (29 trades, $+90.04, WR 34.5%)
+- **MGC=F best ticker** (n=13, WR 61.5%, $+736.14); MNQ=F (n=31, WR 45.2%, $+486.41)
+- **BTC-USD worst** (n=40, WR 30.0%, **−$79.49**) — drives v4 chase gate
+- **LDLZ session best expectancy** (02-05 NY: n=14, WR 57.1%, +$25.02/trade)
+- LLM verdict: **do NOT tighten** — all tested filters (skip BTC, MGC+MNQ allowlist, skip NYKZ bearish)
+  remain keep but **lower re-sim net** ($667–$910 vs $1,222) because removing losing BTC/NYKZ cells
+  reshuffles Apex overlap/daily envelope onto weaker replacements
+- 詳見 `automation/reports/yw_setups_bt/crt_llm_analysis.md`
+
+### Files (artifacts)
+| File | 用途 |
+|------|------|
+| [docs/STRATEGY-SETUP.md](docs/STRATEGY-SETUP.md) | Auto-regenerated, top-level 11 strategies config table |
+| `automation/reports/yw_setups_bt/report.md` | Master Apex-envelope re-sim constraints + verdict gates |
+| `automation/reports/yw_setups_bt/iteration/report.md` | Latest per-strategy filter iteration (BEFORE/AFTER) |
+| `automation/reports/yw_setups_bt/iteration/per_strategy/*.md` | 11 份 strategy-specific LLM analysis |
+| `automation/reports/yw_setups_bt/crt_llm_analysis.md` | CRT deep-dive (ticker / session / grade mix) |
+| `automation/reports/yw_setups_bt/replay_apex_yw.py` | Apex-envelope replay engine (553 lines) |
+| `automation/reports/yw_setups_bt/ranking.json` | Raw ranking data (post-iter) |
+
+---
+
 ## 🛰️ Live Operations Hub
 
 所有 live state 統一去 👉 **[docs/review.html](docs/review.html)** (每 cycle auto-regen)
@@ -262,7 +332,7 @@
 
 ### Today's heartbeat (latest)
 ```
-n_fired=0 n_pre_gate=4 n_gated=4 n_signals=13 elapsed=47.9s
+n_fired=1 n_pre_gate=3 n_gated=2 n_signals=10 n_detections=55
 Circuit breaker: open=False
 ```
 
@@ -277,7 +347,7 @@ Circuit breaker: open=False
 
 | File | Cron (UTC) | HKT equivalent | 職責 |
 |------|------------|----------------|------|
-| `9-strategy-live-scan.yml` | `workflow_dispatch` only | manual | Power 3 — 9 路 detector + LLM grade |
+| `9-strategy-live-scan.yml` | `workflow_dispatch` only | manual | Power 3 — 11 路 detector + LLM grade |
 | `ocs-btc-5m.yml` | `*/15 * * * *` | :00/:15/:30/:45 | OCS BTC 5m 24/7 |
 | `unified-pipeline.yml` | `0,15,30,45 + 8,23,38,53` | :08/:23/:38/:53 etc | Master 6-job (OCS/Supervisor/SysEng/TechAnalyst/TTrades/Dashboard) |
 | `always-on-trigger-1.yml` | `3,18,33,48 * * * *` | :03/:18/:33/:48 | Stall detector backup #1 |
@@ -349,4 +419,4 @@ YW 核心定義來自 Discord 原始訊息。YW Indicator 說明整理自《YW�
 
 ---
 
-最後更新：**2026-09-21** (v4.2 doc refresh — Last Reviewed Day + Live Ops Hub + Workflows/Secrets)
+最後更新：**2026-09-22** (v4.3 doc refresh — Strategy Setup & Iteration section added, 11 strategies / CRT as primary per 9/22 LLM iter)
