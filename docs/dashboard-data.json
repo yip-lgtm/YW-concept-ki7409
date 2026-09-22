@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-09-22 09:46 HKT",
-  "hkt_timestamp": "2026-09-22T09:46:20.676286+08:00",
+  "generated_at": "2026-09-22 15:36 HKT",
+  "hkt_timestamp": "2026-09-22T15:36:52.349244+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 20,
-    "trades_today": 14,
+    "trades_24h": 21,
+    "trades_today": 17,
     "wins_24h": 6,
-    "R_24h": -4.29,
-    "signals_24h": 108,
-    "wr_24h": 30.0
+    "R_24h": -5.29,
+    "signals_24h": 124,
+    "wr_24h": 28.6
   },
   "ranking_24h": [
     {
@@ -37,26 +37,26 @@
     },
     {
       "strategy": "50-20-Pullback",
-      "n_trades": 8,
+      "n_trades": 7,
       "n_wins": 3,
-      "n_losses": 5,
-      "win_rate": 37.5,
-      "total_R": -0.15,
-      "avg_R": -0.018,
-      "total_pnl_usd": 484.56,
-      "profit_factor": 0.97,
+      "n_losses": 4,
+      "win_rate": 42.9,
+      "total_R": 0.85,
+      "avg_R": 0.122,
+      "total_pnl_usd": 754.77,
+      "profit_factor": 1.21,
       "rank": 3
     },
     {
       "strategy": "CRT",
-      "n_trades": 3,
-      "n_wins": 1,
-      "n_losses": 2,
-      "win_rate": 33.3,
-      "total_R": -0.38,
-      "avg_R": -0.127,
-      "total_pnl_usd": 44.75,
-      "profit_factor": 0.81,
+      "n_trades": 1,
+      "n_wins": 0,
+      "n_losses": 1,
+      "win_rate": 0.0,
+      "total_R": -1.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -1.07,
+      "profit_factor": 0.0,
       "rank": 4
     },
     {
@@ -73,37 +73,37 @@
     },
     {
       "strategy": "3-Pushes",
-      "n_trades": 5,
+      "n_trades": 4,
       "n_wins": 1,
-      "n_losses": 4,
-      "win_rate": 20.0,
-      "total_R": -2.38,
-      "avg_R": -0.476,
-      "total_pnl_usd": -222.24,
-      "profit_factor": 0.4,
+      "n_losses": 3,
+      "win_rate": 25.0,
+      "total_R": -1.38,
+      "avg_R": -0.345,
+      "total_pnl_usd": -9.19,
+      "profit_factor": 0.54,
       "rank": 6
     },
     {
       "strategy": "Stair",
-      "n_trades": 12,
-      "n_wins": 3,
-      "n_losses": 9,
-      "win_rate": 25.0,
-      "total_R": -4.15,
-      "avg_R": -0.345,
-      "total_pnl_usd": 154.6,
-      "profit_factor": 0.54,
+      "n_trades": 15,
+      "n_wins": 4,
+      "n_losses": 11,
+      "win_rate": 26.7,
+      "total_R": -4.53,
+      "avg_R": -0.302,
+      "total_pnl_usd": 164.2,
+      "profit_factor": 0.59,
       "rank": 7
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 32,
+    "n_trades": 31,
     "n_wins": 11,
-    "win_rate": 34.4,
-    "total_R": -3.2,
-    "total_pnl_usd": 1637.84
+    "win_rate": 35.5,
+    "total_R": -2.2,
+    "total_pnl_usd": 2084.88
   },
-  "ranking_24h_updated": "2026-09-22T01:46:20.676306+00:00",
+  "ranking_24h_updated": "2026-09-22T07:36:52.349262+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -190,7 +190,7 @@
         "pf": 10.0,
         "pnl": 441.37
       },
-      "signals_24h": 8,
+      "signals_24h": 13,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -204,9 +204,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 35,
-        "reason": "0\u4ea4\u6613\u986f\u793a\u8a0a\u865f\u689d\u4ef6\u904e\u56b4\u6216\u6642\u6846\u592a\u77ed\u672a\u89f8\u767c\uff0c\u9700\u653e\u5bec\u6355\u6349\u6a5f\u6703\u3002"
+        "grade": "D",
+        "confidence": 25,
+        "reason": "0 trades \u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u8a0a\u865f\u672a\u89f8\u767c\uff0c\u9700\u653e\u5bec\u689d\u4ef6\u6216\u8f49\u63db\u6642\u9593\u6846\u67b6\u4ee5\u7522\u751f\u53ef\u5206\u6790\u6a23\u672c"
       }
     },
     {
@@ -225,13 +225,13 @@
         5
       ],
       "live_24h": {
-        "n": 5,
+        "n": 4,
         "wins": 1,
-        "losses": 4,
-        "wr": 20.0,
-        "R": -2.38,
-        "pf": 0.4,
-        "pnl": -222.24
+        "losses": 3,
+        "wr": 25.0,
+        "R": -1.38,
+        "pf": 0.54,
+        "pnl": -9.19
       },
       "live_today": {
         "n": 4,
@@ -242,7 +242,7 @@
         "pf": 0.54,
         "pnl": -9.19
       },
-      "signals_24h": 18,
+      "signals_24h": 16,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -257,8 +257,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 15,
-        "reason": "\u96f6\u4ea4\u6613\u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u7b56\u7565\u5f9e\u672a\u89f8\u767c\uff0c\u7121\u6cd5\u9a57\u8b49\u6709\u6548\u6027"
+        "confidence": 75,
+        "reason": "0 trades generated, strategy\u5b8c\u5168\u4e0d\u89f8\u767c\uff0cpush_count\u9580\u6abb\u904e\u56b4\u6216trend filter\u904e\u6ffe\u6240\u6709\u4fe1\u865f"
       }
     },
     {
@@ -309,8 +309,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 78,
-        "reason": "0 trades\u5b8c\u5168\u7121\u4fe1\u865f\uff0c\u689d\u4ef6\u904e\u56b4\u6216\u6307\u6a19\u4e92\u76f8\u77db\u76fe\uff0c\u672a\u80fd\u7522\u751f\u4efb\u4f55\u4ea4\u6613\u6a5f\u6703"
+        "confidence": 62,
+        "reason": "0 trades\u5168\u7121\u6210\u4ea4=\u8a0a\u865f\u904e\u56b4\u6216\u908f\u8f2f\u932f\u8aa4\uff0c\u9700\u5927\u5e45\u8abf\u6574"
       }
     },
     {
@@ -360,9 +360,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 45,
-        "reason": "0 trades\u8868\u793a\u7121\u8a0a\u865f\u89f8\u767c\u6216\u689d\u4ef6\u904e\u56b4\uff0c\u9700\u964d\u4f4eRSI\u95be\u503c\u3001\u653e\u5becdivergence\u5bb9\u5fcd\u5ea6\u4ee5\u7522\u751f\u53ef\u9a57\u8b49\u6a23\u672c"
+        "grade": "D",
+        "confidence": 35,
+        "reason": "0 trades, \u5b8c\u5168\u7121\u4fe1\u865f\u7522\u751f, \u689d\u4ef6\u904e\u56b4\u6216\u914d\u7f6e\u932f\u8aa4, \u7121\u6cd5\u8a55\u4f30\u771f\u5be6\u8868\u73fe"
       }
     },
     {
@@ -413,8 +413,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "0 trades = no validated edge; entry conditions likely too restrictive on 5min with slow SMA50."
+        "confidence": 15,
+        "reason": "\u96f6\u4ea4\u6613\u6578\u64da\uff0c\u7b56\u7565\u672a\u88ab\u9a57\u8b49\uff0c\u7121\u6cd5\u8a55\u4f30\u8868\u73fe"
       }
     },
     {
@@ -433,24 +433,24 @@
         5
       ],
       "live_24h": {
-        "n": 12,
+        "n": 14,
         "wins": 3,
-        "losses": 9,
-        "wr": 25.0,
-        "R": -4.15,
-        "pf": 0.54,
-        "pnl": 154.6
+        "losses": 11,
+        "wr": 21.4,
+        "R": -6.15,
+        "pf": 0.44,
+        "pnl": 153.14
       },
       "live_today": {
-        "n": 8,
-        "wins": 2,
-        "losses": 6,
-        "wr": 25.0,
-        "R": -2.76,
-        "pf": 0.54,
-        "pnl": 167.57
+        "n": 11,
+        "wins": 3,
+        "losses": 8,
+        "wr": 27.3,
+        "R": -3.15,
+        "pf": 0.61,
+        "pnl": 177.17
       },
-      "signals_24h": 30,
+      "signals_24h": 35,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -465,8 +465,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "0 trades\u53cd\u6620step_pattern\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0c\u55ae\u4e00\u6307\u6a19+\u55ae\u6642\u9593\u6846\u904e\u65bc\u56b4\u82db\uff0c\u7121\u6cd5\u9a57\u8b49edge\u3002"
+        "confidence": 85,
+        "reason": "0 trades generated, strategy dead. No edge validated. Need signal diversification."
       }
     },
     {
@@ -502,7 +502,7 @@
         "pf": 0.0,
         "pnl": -1.07
       },
-      "signals_24h": 52,
+      "signals_24h": 60,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -516,9 +516,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "D",
-        "confidence": 38,
-        "reason": "PF 1.01 \u52c9\u5f37\u6536\u652f\u5e73\u8861\uff1bBTC\u7368\u6490+11.25\uff0c\u5176\u99183\u500b\u671f\u8ca8\u5168\u8755\uff0cWR 39%\u904e\u4f4e"
+        "grade": "B",
+        "confidence": 62,
+        "reason": "\u6574\u9ad4PF 1.09\u5c6c\u8584\u5229\uff0cMNQ\u56b4\u91cd\u62d6\u7d2f-20.52R\u9700\u904e\u6ffe\uff0cMES/BTC\u8868\u73fe\u7a69\u5b9a\u53ef\u4fdd\u7559"
       }
     },
     {
@@ -570,7 +570,7 @@
       "iteration": {
         "grade": "D",
         "confidence": 25,
-        "reason": "\u96f6\u4ea4\u6613\u5373\u7121\u5be6\u8b49edge\uff0c5min\u5468\u671f\u5075\u6e2c\u96dc\u8a0a\u904e\u9ad8\uff0c\u914d\u7f6e\u672a\u9a57\u8b49\u3002"
+        "reason": "\u96f6\u4ea4\u6613\u7121\u6a23\u672c\uff0c5min\u9031\u671f\u8a0a\u865f\u904e\u6ffe\u592a\u56b4\uff0c\u7121\u5be6\u969bedge\u53ef\u8a00"
       }
     },
     {
