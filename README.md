@@ -89,6 +89,11 @@
 | 2 | H-Pattern pullback | **P0** | `abs(pullback_pct) ≥ 50%` → SKIP | `9698d36` |
 | 2.5 | CRT distance_from_mss | **P1** | `|last - mss_confirm| / range > 0.3` → SKIP | `8fd2140` (v3) |
 | 2.7 | 50-20 EMA drift | **P1** | `abs(distance_to_ema20_pct) > 0.1%` → SKIP | `70750671` (v4.1) |
+| 2.10 | Stair ticker+session ban | **P1** | ticker ∈ {BTC,MES} OR session ∈ {RTH_Close,AsiaLate,Lunch} → SKIP | `f805506b` (v5) |
+| 2.11 | 3-Pushes ticker+session ban | **P1** | ticker == BTC OR session ∈ {RTH_Close,AsiaLate} → SKIP | `f805506b` (v5) |
+| 2.12 | 50-20 ticker ban | **P1** | ticker == MGC → SKIP | `f805506b` (v5) |
+| 2.13 | RSI-Div paper-only | **P1** | grade ≠ A OR ticker == BTC → SKIP | `f805506b` (v5) |
+| 5 | Stair 4h re-entry cooldown | **P0.5** | prior Stair same-ticker-same-dir closed <4h ago → SKIP | `f805506b` (v5) |
 | 3 | Direction conflict | **P0** | same ticker `long + short` 兩個 direction → 兩個都 SKIP | `9698d36` |
 | 4 | Stacking | **P0.5** | same ticker + same direction ≥ 2 strategies → 留最強 grade (A>B)，ties conf desc | `9698d36` |
 | 1× | Circuit breaker | **P1** | Tech Analyst >50% fail rate (TTL 2h, recover after 3 OK scans) → BLOCK all | `8fd2140` (v3) |
@@ -100,25 +105,30 @@
 | **v3** | `8fd2140` | CRT chase gate + Analyst circuit breaker | Chase 0.43×range 直接 SL −$197 |
 | **v4** | `599c7bf8` | Signal dict 入 detector raw fields (`mss_confirm`, `crt_high`, ...) | **v3 patch 之前 0% trigger 因為 gate 讀唔到 detector fields** |
 | **v4.1** | `70750671` | Gate 2.7 — 50-20 Pullback EMA drift > 0.1% skip | 9/21 「唔追 81.5 之上嘅 50-20 多」 |
+| **v5** | `f805506b` | 6 gates (Stair/3-Pushes/50-20/RSI-Div/cooldown) + 3-Pushes direction fix + TTrades size cap | 9/21-22 trade review: BTC 單筆決定全日、Stair 同 ticker 同方向 4h 內重開、3-Pushes `Dir:up` 文案寫衰竭但開多 |
 
-### Live evidence (sha=`1609575` 9/21 03:36 UTC cycle)
+### Live evidence (sha=`f805506b` 9/23 06:57 UTC cycle)
 
 ```
-[live_scan] 🚧 Gate-skipped 2 signals (logged only, no position):
-    - Kell-Cycle [C] BTC-USD long: Grade C: no auto-open
-    - RSI-Div [C] BTC-USD bearish: Grade C: no auto-open
-[open] SKIP 3-Pushes BTC-USD down: already have open 3-Pushes down @ 81511
-[live_scan] ✓ 2 gated signals logged to signals.jsonl
+[live_scan] LLM-confirmed signals: 2
+⏰ SKIP 50-20-Pullback MNQ=F: outside RTH
+⏰ SKIP 50-20-Pullback MGC=F: outside RTH
+[live_scan] ✓ Heartbeat saved (15.7s)
 ```
 
-**Real-trade avoidance (9/20 retrospective)**:
+**Real-trade avoidance (9/21-22 retrospective)**:
 
-| Time | Trade | Without gates | With v4.1 |
-|------|-------|---------------|-----------|
-| 14:16 CRT BTC chase 687pt | SL −$197 | opened | **SKIP** (dist 0.43) |
-| 18:09 CRT MNQ chase 141pt | T2 +$60 | opened | **SKIP** (dist 0.504) |
-| 19:30 CRT MNQ chase 241pt | T2 +$40 | opened | **SKIP** (dist 0.86) |
-| 19:30 50-20 BTC × 2 | +$237 | both opened | **1 SKIP** (P0.5 stacking) |
+| Time | Trade | v4.1 outcome | v5 outcome |
+|------|-------|--------------|------------|
+| 9/21 17:51 Stair BTC short A | −$224 SL | opened | **SKIP** (BTC ticker) |
+| 9/21 21:00 Stair MES A | −$5 SL | opened | **SKIP** (MES ticker) |
+| 9/21 21:26 Stair BTC short B | **−$323 / 87 bars** | opened | **SKIP** (BTC ticker) |
+| 9/22 01:00 Stair MNQ+MGC A | −$11/+11 | opened | MGC SKIP (AsiaLate) ; MNQ keep |
+| 9/22 10:50 3-Pushes MGC `Dir:up` | −$4 SL | **opened LONG** | **now SHORT** (direction fix) + skip if AsiaLate |
+| 9/21 13:52 RSI-Div BTC A | −$374 SL | opened | **SKIP** (paper-only) |
+| 9/22 TTrades 0.75 BTC / $64k | — | fired | **CAP at 0.5 BTC / $43k** |
+| 9/21 18:42 50-20 MGC A | −$5 SL | opened | **SKIP** (MGC ticker) |
+| 9/21 17:30 3-Pushes BTC down | −$119 SL | opened | **SKIP** (BTC ticker) |
 
 ---
 
@@ -485,4 +495,4 @@ YW 核心定義來自 Discord 原始訊息。YW Indicator 說明整理自《YW�
 
 ---
 
-最後更新：**2026-09-23** (v4.4 doc refresh — 7-Day Rolling Ranking section added, +$993 net / 135 trades, 4 filters pending deploy)
+最後更新：**2026-09-23** (v4.5 doc refresh — v5 patch deployed: 6 gates + 3-Pushes direction fix + TTrades 0.5 BTC cap + Stair 4h cooldown, per 9/21-22 user review)
