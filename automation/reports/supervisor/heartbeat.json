@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-23T18:34:28.055186+00:00",
+  "timestamp": "2026-09-23T22:10:56.187788+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -17,13 +17,20 @@
   "yw_daily_today": {
     "workflow": "yw-daily",
     "today": "2026-09-23",
-    "ran_today": false,
-    "success_today": false
+    "ran_today": true,
+    "success_today": true,
+    "last_id": 35910086677
   },
   "workflows": [
     {
       "workflow": "yw-daily.yml",
       "runs": [
+        {
+          "id": 35910086677,
+          "conclusion": "success",
+          "created_at": "2026-09-23T19:33:11Z",
+          "event": "schedule"
+        },
         {
           "id": 35774955431,
           "conclusion": "success",
@@ -35,12 +42,6 @@
           "conclusion": "success",
           "created_at": "2026-09-21T20:18:25Z",
           "event": "schedule"
-        },
-        {
-          "id": 35529052117,
-          "conclusion": "success",
-          "created_at": "2026-09-20T18:26:17Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -48,6 +49,12 @@
     {
       "workflow": "yw-publish-signal.yml",
       "runs": [
+        {
+          "id": 35910618010,
+          "conclusion": "success",
+          "created_at": "2026-09-23T19:37:59Z",
+          "event": "schedule"
+        },
         {
           "id": 35775496598,
           "conclusion": "success",
@@ -59,12 +66,6 @@
           "conclusion": "success",
           "created_at": "2026-09-21T20:23:38Z",
           "event": "schedule"
-        },
-        {
-          "id": 35530632167,
-          "conclusion": "success",
-          "created_at": "2026-09-20T18:55:54Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -73,21 +74,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 35903346795,
-          "conclusion": "running",
-          "created_at": "2026-09-23T18:33:55Z",
+          "id": 35926810886,
+          "conclusion": "success",
+          "created_at": "2026-09-23T22:10:18Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 35891963583,
+          "id": 35912553709,
           "conclusion": "success",
-          "created_at": "2026-09-23T16:54:19Z",
+          "created_at": "2026-09-23T19:55:43Z",
           "event": "schedule"
         },
         {
-          "id": 35879195205,
+          "id": 35903346795,
           "conclusion": "success",
-          "created_at": "2026-09-23T15:07:04Z",
+          "created_at": "2026-09-23T18:33:55Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -96,6 +97,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 35909337479,
+          "conclusion": "success",
+          "created_at": "2026-09-23T19:26:33Z",
+          "event": "schedule"
+        },
         {
           "id": 35886517755,
           "conclusion": "success",
@@ -107,12 +114,6 @@
           "conclusion": "success",
           "created_at": "2026-09-22T22:45:11Z",
           "event": "schedule"
-        },
-        {
-          "id": 35774644360,
-          "conclusion": "success",
-          "created_at": "2026-09-22T19:34:18Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -120,6 +121,12 @@
     {
       "workflow": "strategy-reward.yml",
       "runs": [
+        {
+          "id": 35910785289,
+          "conclusion": "success",
+          "created_at": "2026-09-23T19:39:30Z",
+          "event": "schedule"
+        },
         {
           "id": 35775614121,
           "conclusion": "success",
@@ -131,12 +138,6 @@
           "conclusion": "success",
           "created_at": "2026-09-21T20:24:31Z",
           "event": "schedule"
-        },
-        {
-          "id": 35530631102,
-          "conclusion": "success",
-          "created_at": "2026-09-20T18:55:52Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -153,8 +154,8 @@
     "n_stale_24h": 0,
     "issues": [],
     "long_count": 0,
-    "short_count": 0,
-    "total_risk": 69.08571428571429,
+    "short_count": 1,
+    "total_risk": 60.57142857142858,
     "deep_loss_positions": []
   }
 }
