@@ -296,6 +296,17 @@ def detect_3_pushes(df: pd.DataFrame, ticker: str = "") -> dict:
       1. Three pushes (3 swing highs or lows in same direction)
       2. Last push narrowing (range < previous)
       3. Equal high/low exists to break
+
+    v5 — direction fix (2026-09-23):
+      Three LOWER highs (price made 3 successively lower swing highs, narrowing)
+      = price pushing UP into resistance with each push getting smaller = BEARISH
+      exhaustion pattern. Setup expects breakdown SHORT.
+      Three HIGHER lows (price made 3 successively higher swing lows, narrowing)
+      = price pushing DOWN into support with each push getting smaller = BULLISH
+      exhaustion pattern. Setup expects breakout LONG.
+      Earlier code had the direction strings inverted (returned "up" for the bearish
+      setup), which made live_scan open LONG positions on bearish patterns
+      (e.g. 9/22 10:50 MGC: text said 衰竭, position was long → wrong).
     """
     if df.empty or len(df) < 15:
         return {"present": False, "direction": "none"}
@@ -315,19 +326,18 @@ def detect_3_pushes(df: pd.DataFrame, ticker: str = "") -> dict:
     # Look for 3 swing highs (downtrend exhaustion) or 3 swing lows (uptrend exhaustion)
     if len(highs) >= 3:
         last3 = [h[1] for h in highs[-3:]]
-        if last3[2] < last3[1] < last3[0]:  # Lower highs
-            narrowing = abs(last3[2] - last3[1]) < abs(last3[1] - last3[0])
-            return {"present": narrowing, "direction": "up", "count": 3, "narrowing": narrowing}
-        # Looser: just lower highs without strict narrowing
-        if last3[2] < last3[1] < last3[0]:
-            return {"present": True, "direction": "up", "count": 3, "narrowing": False, "loose": True}
-    if len(lows) >= 3:
-        last3 = [l[1] for l in lows[-3:]]
-        if last3[2] > last3[1] > last3[0]:  # Higher lows (uptrend)
+        if last3[2] < last3[1] < last3[0]:  # Lower highs (BEARISH exhaustion)
             narrowing = abs(last3[2] - last3[1]) < abs(last3[1] - last3[0])
             return {"present": narrowing, "direction": "down", "count": 3, "narrowing": narrowing}
-        if last3[2] > last3[1] > last3[0]:
+        if last3[2] < last3[1] < last3[0]:
             return {"present": True, "direction": "down", "count": 3, "narrowing": False, "loose": True}
+    if len(lows) >= 3:
+        last3 = [l[1] for l in lows[-3:]]
+        if last3[2] > last3[1] > last3[0]:  # Higher lows (BULLISH exhaustion)
+            narrowing = abs(last3[2] - last3[1]) < abs(last3[1] - last3[0])
+            return {"present": narrowing, "direction": "up", "count": 3, "narrowing": narrowing}
+        if last3[2] > last3[1] > last3[0]:
+            return {"present": True, "direction": "up", "count": 3, "narrowing": False, "loose": True}
 
     return {"present": False, "direction": "none"}
 

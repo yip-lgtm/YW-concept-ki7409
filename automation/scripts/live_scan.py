@@ -226,6 +226,39 @@ ANALYST_BREAKER_STATE_FILE = LIVE_DIR / "circuit_breaker.json"
 # to prevent 4 strategies × 1 ticker on the same SL/TP template.
 BLOCK_STACKING_PER_TICKER = True
 
+# v5 — Ticker/session-based gates (2026-09-23 user review of 9/21-9/22 trades)
+# EVIDENCE (from 7-day rolling, 135 closed trades):
+#   Stair BTC: 4 trades -$210 net (1 outlier +$444); 87-bar SL 22:01 = over-night hold
+#   Stair MES: 5 trades -$11, no winners
+#   Stair RTH Close (14-16 ET): n=1 small; Asia/Late (20-02 ET): n=8 mixed
+#   3-Pushes BTC: 7 trades, avg 63.7 bars hold, -$541 — BTC overnight bleed
+#   3-Pushes RTH Close (14-16 ET): n=7 -$526, biggest session drag
+#   50-20 MGC: 2 trades 0/2 wins, -$8
+#   RSI-Div BTC: 4 trades, 25% WR, -$989 — paper filter, not real risk
+#
+# Hard rules per user directive 2026-09-23:
+#   1. Stair: ban BTC + MES tickers entirely; ban RTH Close + Asia/Late + Lunch sessions
+#   2. 3-Pushes: ban BTC ticker; ban RTH Close + Asia/Late sessions
+#   3. 50-20-Pullback: ban MGC ticker (0/2 wins, low cost)
+#   4. RSI-Div: paper-only default; allow Grade A + non-BTC live only
+#   5. TTrades: cap units at 0.5 BTC / $43k notional
+#   6. Stair: time-windowed stacking (no second same-ticker-same-direction within 4h)
+
+# Tickers to fully ban per strategy (v5)
+STAIR_BAN_TICKERS = {"BTC-USD", "MES=F"}
+PUSHES_BAN_TICKERS = {"BTC-USD"}
+PULLBACK_5020_BAN_TICKERS = {"MGC=F"}
+
+# Session tags to ban per strategy (v5)
+STAIR_BAN_SESSIONS = {"RTH_Close", "AsiaLate", "Lunch"}
+PUSHES_BAN_SESSIONS = {"RTH_Close", "AsiaLate"}
+
+# RSI-Div paper-only default (v5) — live only when Grade A + non-BTC
+RSI_DIV_PAPER_ONLY = True
+
+# Stair time-windowed stacking (v5) — second same-ticker-same-direction within 4h blocks
+STAIR_REENTRY_COOLDOWN_HOURS = 4
+
 # 50-20 Pullback EMA-distance gate (v4.1 — 2026-09-21 user review):
 #   "已離開早段回踩" / "再貼 EMA 0.06% 係延續單, 唔係新金叉"
 #   "唔追 81.5 之上嘅 50-20 多"
@@ -239,6 +272,59 @@ PULLBACK_5020_EMA_DISTANCE_MAX_PCT = 0.1  # percent; detector returns 0.08 = 0.0
 
 # Grade ranking for stacking resolution: lower = stronger. A wins, B second, others unknown.
 GRADE_RANK = {"A": 0, "B": 1}
+
+
+def parse_dt_any(ts):
+    """Robustly parse an ISO timestamp string to a tz-aware datetime (UTC).
+
+    Accepts trailing 'Z' as UTC. Returns None on failure.
+    """
+    if ts is None:
+        return None
+    if isinstance(ts, datetime):
+        return ts if ts.tzinfo else ts.replace(tzinfo=timezone.utc)
+    if not isinstance(ts, str):
+        return None
+    s = ts.strip()
+    if not s:
+        return None
+    try:
+        if s.endswith("Z"):
+            s = s[:-1] + "+00:00"
+        return datetime.fromisoformat(s)
+    except Exception:
+        return None
+
+
+def _ny_session_of(dt_utc) -> str:
+    """Classify a UTC datetime into an NY session bucket.
+    Used by v5 ticker/session gates. Returns one of:
+      LDLZ, AsiaPreMkt, NYKZ_Open, NYKZ_Mid, Lunch, RTH_Close, PostMkt, AsiaLate
+    """
+    if dt_utc is None:
+        return ""
+    if dt_utc.tzinfo is None:
+        dt_utc = dt_utc.replace(tzinfo=timezone.utc)
+    try:
+        ny = dt_utc.astimezone(NY_TZ)
+    except Exception:
+        ny = dt_utc
+    h, m = ny.hour, ny.minute
+    if 2 <= h < 5:
+        return "LDLZ"
+    if 5 <= h < 8 or (h == 8 and m < 30):
+        return "AsiaPreMkt"
+    if (h == 8 and m >= 30) or h == 9:
+        return "NYKZ_Open"
+    if 10 <= h < 11:
+        return "NYKZ_Mid"
+    if 11 <= h < 14:
+        return "Lunch"
+    if 14 <= h < 16:
+        return "RTH_Close"
+    if 16 <= h < 20:
+        return "PostMkt"
+    return "AsiaLate"
 
 
 def _normalize_direction(direction: str) -> str:
@@ -413,6 +499,81 @@ def _apply_open_gates(fired_signals: list) -> tuple:
                             continue
                 except (TypeError, ValueError):
                     pass  # missing/bad data → don't block on this gate (other gates still apply)
+        # === Gate 2.10: Stair ticker + session ban (v5 — 2026-09-23) ===
+        # 7-day evidence: BTC Stair 4 trades net -$210 + 87-bar overnight; MES 5 trades no
+        # winners; RTH_Close/AsiaLate/Lunch sessions net losers. Direction is "short" only.
+        if strat == "Stair":
+            tk = sig.get("ticker", "")
+            if tk in STAIR_BAN_TICKERS:
+                sig["gate_skip"] = (
+                    f"Stair ban ticker {tk}: 7-day live loss "
+                    f"(BTC -$210 net + overnight; MES -$11 no winners)"
+                )
+                gated.append(sig)
+                print(f"[gate] Stair ban ticker {tk} → SKIP")
+                continue
+            try:
+                sess = _ny_session_of(parse_dt_any(sig.get("ts")))
+            except Exception:
+                sess = ""
+            if sess in STAIR_BAN_SESSIONS:
+                sig["gate_skip"] = (
+                    f"Stair ban session {sess}: 7-day net loss "
+                    f"(RTH Close / AsiaLate / Lunch all drag)"
+                )
+                gated.append(sig)
+                print(f"[gate] Stair ban session {sess} → SKIP")
+                continue
+        # === Gate 2.11: 3-Pushes ticker + session ban (v5 — 2026-09-23) ===
+        # 7-day evidence: BTC 3-Pushes 7 trades avg 63.7 bars hold -$541 (overnight bleed);
+        # RTH Close 14-16 ET n=7 -$526 (worst session); direction normalize bug fixed in
+        # detect_3_pushes but session/ticker still block.
+        if strat == "3-Pushes":
+            tk = sig.get("ticker", "")
+            if tk in PUSHES_BAN_TICKERS:
+                sig["gate_skip"] = (
+                    f"3-Pushes ban ticker {tk}: 7-day BTC avg 63.7 bars hold, -$541 net"
+                )
+                gated.append(sig)
+                print(f"[gate] 3-Pushes ban ticker {tk} → SKIP")
+                continue
+            try:
+                sess = _ny_session_of(parse_dt_any(sig.get("ts")))
+            except Exception:
+                sess = ""
+            if sess in PUSHES_BAN_SESSIONS:
+                sig["gate_skip"] = (
+                    f"3-Pushes ban session {sess}: RTH_Close -$526 + AsiaLate bleed"
+                )
+                gated.append(sig)
+                print(f"[gate] 3-Pushes ban session {sess} → SKIP")
+                continue
+        # === Gate 2.12: 50-20-Pullback ticker ban (v5 — 2026-09-23) ===
+        # MGC 2 trades 0/2 wins, low cost ban. Doesn't affect BTC/MNQ engine (+$1066).
+        if strat == "50-20-Pullback":
+            tk = sig.get("ticker", "")
+            if tk in PULLBACK_5020_BAN_TICKERS:
+                sig["gate_skip"] = (
+                    f"50-20-Pullback ban ticker {tk}: 7-day 0/2 wins, -$8 net"
+                )
+                gated.append(sig)
+                print(f"[gate] 50-20-Pullback ban ticker {tk} → SKIP")
+                continue
+        # === Gate 2.13: RSI-Div paper-only default (v5 — 2026-09-23) ===
+        # 7-day: 6 trades -$1000 (4 BTC + 2 MGC); all 4 BTC losses. Until LLM dumps the
+        # actual ticket reasons for the BTC losses, default to paper-only. Allow live only
+        # if Grade A AND ticker is non-BTC.
+        if RSI_DIV_PAPER_ONLY and strat == "RSI-Div":
+            tk = sig.get("ticker", "")
+            gr = sig.get("grade", "?")
+            if gr != "A" or tk == "BTC-USD":
+                sig["gate_skip"] = (
+                    f"RSI-Div paper-only (grade={gr}, ticker={tk}); "
+                    f"7-day live -$1000; live requires Grade A AND non-BTC"
+                )
+                gated.append(sig)
+                print(f"[gate] RSI-Div paper-only grade={gr} {tk} → SKIP")
+                continue
         # === Gate 2.7: 50-20 Pullback EMA-distance (v4.1 — 2026-09-21) ===
         # If price has drifted >0.1% from EMA20, this is no longer a real pullback —
         # it's a chase into a one-sided trend. Detector already classifies >0.5% as
@@ -1119,6 +1280,56 @@ def main() -> int:
     # Hard rules that override LLM grading. See _apply_open_gates() docstring.
     pre_gate = fired
     fired, gated_out = _apply_open_gates(fired)
+
+    # === v5: TIME-WINDOWED STAIR RE-ENTRY STACKING (2026-09-23) ===
+    # Per-batch P0.5 stacking only catches same-batch dupes. The 9/21-22 evidence
+    # showed Stair BTC 21:00 SL then 22:01 SL (2nd trade 87 bars / 7h later) — first
+    # already hit T2 but didn't stop a second same-ticker-same-direction entry.
+    # Read positions.json, block new same-(ticker,strategy,normalized_dir) if last
+    # closed/closing trade on that combo was within STAIR_REENTRY_COOLDOWN_HOURS.
+    if fired:
+        try:
+            if POSITIONS_FILE.exists():
+                _positions_state = json.loads(POSITIONS_FILE.read_text())
+            else:
+                _positions_state = []
+        except Exception:
+            _positions_state = []
+        now_dt = parse_dt_any(datetime.now(timezone.utc).isoformat())
+        cd_filtered = []
+        for sig in fired:
+            strat = sig.get("strategy", "?")
+            if strat != "Stair":
+                cd_filtered.append(sig)
+                continue
+            tk = sig.get("ticker", "")
+            ndir = _normalize_direction(sig.get("direction", ""))
+            cd_hours = STAIR_REENTRY_COOLDOWN_HOURS
+            blocked = False
+            for p in _positions_state:
+                if p.get("strategy") != "Stair":
+                    continue
+                if p.get("ticker") != tk:
+                    continue
+                if _normalize_direction(p.get("direction", "")) != ndir:
+                    continue
+                # Look at exit_time OR entry_time
+                ref_dt = parse_dt_any(p.get("exit_time")) or parse_dt_any(p.get("entry_time"))
+                if ref_dt is None or now_dt is None:
+                    continue
+                age_h = (now_dt - ref_dt).total_seconds() / 3600.0
+                if 0 <= age_h <= cd_hours:
+                    sig["gate_skip"] = (
+                        f"Stair re-entry cooldown: prior Stair {tk} {ndir} closed {age_h:.1f}h ago "
+                        f"(cooldown {cd_hours}h); user directive 9/21 'first hit T2 should stop'"
+                    )
+                    gated_out.append(sig)
+                    print(f"[gate] Stair cooldown {tk} {ndir} last {age_h:.1f}h ago → SKIP")
+                    blocked = True
+                    break
+            if not blocked:
+                cd_filtered.append(sig)
+        fired = cd_filtered
     if gated_out:
         print(f"[live_scan] 🚧 Gate-skipped {len(gated_out)} signals (logged only, no position):")
         for g in gated_out:

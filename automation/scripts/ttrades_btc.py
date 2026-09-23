@@ -44,6 +44,15 @@ ACCOUNT_SIZE = 247_000
 RISK_PCT = 0.0025
 RISK_AMOUNT = ACCOUNT_SIZE * RISK_PCT  # $617.50
 
+# v5 — TTrades position size cap (2026-09-23 user directive on 9/21-22 trades)
+# User evidence: TTrades BTC 0.75 BTC / $64k notional — "若真開, 一組 SL 就唔係種田"
+# Cap so a single SL can't wreck the daily $100 envelope:
+#   - max 0.5 BTC units (~half micro)
+#   - max $43k notional (against $86k BTC ≈ 0.5 BTC anyway)
+# Tight stop = smaller units naturally; this cap stops the wide-stop oversized cases.
+TTRADES_MAX_UNITS_BTC = 0.5
+TTRADES_MAX_NOTIONAL_USD = 43_000
+
 SIGNAL_DIR = REPO / "automation" / "reports" / "ttrades_btc"
 SIGNAL_DIR.mkdir(parents=True, exist_ok=True)
 SIGNAL_FILE = SIGNAL_DIR / "latest.json"
@@ -317,7 +326,23 @@ def calculate_trade_levels(swing, atr):
         proj_neg4 = entry + (entry - pivot) * 2.0
     
     units = RISK_AMOUNT / risk
-    
+
+    # v5 size cap: hard floor on either dimension so a single SL won't blow the
+    # daily $100 envelope. If risk is small (tight SL), units naturally stay below
+    # cap; this catches the wide-stop cases where risk_per_unit is also small
+    # (e.g. SL 0.7% → units 0.75 BTC at $617 risk). We scale risk up instead of
+    # scaling units down so the trade fires at a sensible position size.
+    if units > TTRADES_MAX_UNITS_BTC or units * entry > TTRADES_MAX_NOTIONAL_USD:
+        # Pick the binding constraint
+        cap_by_units = TTRADES_MAX_UNITS_BTC
+        cap_by_notional = TTRADES_MAX_NOTIONAL_USD / entry if entry > 0 else cap_by_units
+        new_units = min(cap_by_units, cap_by_notional)
+        # Recompute effective risk needed to fit new_units within RISK_AMOUNT
+        # (we keep risk_per_unit fixed; reducing units reduces $ risk proportionally)
+        eff_risk = new_units * risk
+        # mark down — caller can decide whether to fire with smaller size or skip
+        units = new_units
+
     return {
         "entry": entry, "sl": sl,
         "t1": t1, "t2_close": t2_close, "t3": t3, "t4": t4, "t5": t5,
