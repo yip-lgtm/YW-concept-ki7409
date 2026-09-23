@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-23T15:07:47.134698+00:00",
+  "timestamp": "2026-09-23T18:34:28.055186+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -11,8 +11,8 @@
   "ranking": {
     "component": "strategy-ranking",
     "issues": [],
-    "latest_file": "ranking_2026-09-23.md",
-    "latest_date": "2026-09-23"
+    "latest_file": "ranking_2026-09-24.md",
+    "latest_date": "2026-09-24"
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
@@ -73,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 35879195205,
+          "id": 35903346795,
           "conclusion": "running",
+          "created_at": "2026-09-23T18:33:55Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 35891963583,
+          "conclusion": "success",
+          "created_at": "2026-09-23T16:54:19Z",
+          "event": "schedule"
+        },
+        {
+          "id": 35879195205,
+          "conclusion": "success",
           "created_at": "2026-09-23T15:07:04Z",
           "event": "workflow_dispatch"
-        },
-        {
-          "id": 35873798022,
-          "conclusion": "success",
-          "created_at": "2026-09-23T14:23:17Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 35857813632,
-          "conclusion": "success",
-          "created_at": "2026-09-23T12:00:20Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -96,6 +96,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 35886517755,
+          "conclusion": "success",
+          "created_at": "2026-09-23T16:07:17Z",
+          "event": "schedule"
+        },
         {
           "id": 35794025227,
           "conclusion": "success",
@@ -106,12 +112,6 @@
           "id": 35774644360,
           "conclusion": "success",
           "created_at": "2026-09-22T19:34:18Z",
-          "event": "schedule"
-        },
-        {
-          "id": 35753126678,
-          "conclusion": "success",
-          "created_at": "2026-09-22T16:17:28Z",
           "event": "schedule"
         }
       ],
@@ -143,20 +143,18 @@
     }
   ],
   "health": {
-    "issues": [
-      "yw-daily not run today (2026-09-23 HKT)"
-    ],
-    "status": "warning",
-    "n_issues": 1
+    "issues": [],
+    "status": "ok",
+    "n_issues": 0
   },
   "live_scan_positions": {
     "source": "live_scan",
     "n_open": 2,
     "n_stale_24h": 0,
     "issues": [],
-    "long_count": 2,
+    "long_count": 0,
     "short_count": 0,
-    "total_risk": 27.005691964285717,
+    "total_risk": 69.08571428571429,
     "deep_loss_positions": []
   }
 }
