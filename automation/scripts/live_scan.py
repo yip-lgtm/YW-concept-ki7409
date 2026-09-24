@@ -270,6 +270,28 @@ STAIR_REENTRY_COOLDOWN_HOURS = 4
 # (kept), 21:27 onward price ramped to 81.5 → distance > 0.1% (skipped).
 PULLBACK_5020_EMA_DISTANCE_MAX_PCT = 0.1  # percent; detector returns 0.08 = 0.08%
 
+# v5.2 — CRT min SL distance + cross-batch dedup cooldown (2026-09-24 user review)
+# EVIDENCE (9/24 pipeline activity):
+#   Bug 1: 50-20 BTC opened 2 LONG positions 13 min apart (conf 82 + 80) at 9/24
+#          01:38 + 01:51 EDT. Same ticker + same direction + same strategy. The
+#          per-batch P0.5 stacking (Gate 4) only catches same-batch duplicates.
+#          Cross-batch (i.e. next live_scan cycle) re-entries slip through.
+#   Bug 2: CRT MGC bearish @ 4,323.70 opened 9/24 01:00 EDT with SL distance
+#          5.09 pts = 0.118% of entry. SL hit in 1 bar / 4 min. Two consecutive
+#          CRT MGC trades both failed this way; LLM text said "止損距窄需嚴控倉位"
+#          but the system accepted. Tickers like MGC have ~$5 typical 5m bar noise,
+#          so SL must be at least 0.15% of entry (≈ $6.50 on MGC @ $4,300) to
+#          survive 1 standard tick-noise bar.
+
+# Strategies subject to cross-batch cooldown (per-ticker-per-direction-per-strategy).
+# Stair has its own Gate 5 (4h cooldown) since v5. 50-20 / 3-Pushes / CRT did NOT,
+# allowing cross-batch dupes through.
+COOLDOWN_STRATEGIES = {"50-20-Pullback", "3-Pushes", "CRT"}
+COOLDOWN_HOURS = 4  # block re-entry of same (strategy, ticker, normalized_direction)
+
+# CRT min SL distance as % of entry. Below this → SKIP. 0.15% covers MGC tick noise.
+CRT_MIN_SL_DISTANCE_PCT = 0.15
+
 # Grade ranking for stacking resolution: lower = stronger. A wins, B second, others unknown.
 GRADE_RANK = {"A": 0, "B": 1}
 
@@ -574,6 +596,28 @@ def _apply_open_gates(fired_signals: list) -> tuple:
                 gated.append(sig)
                 print(f"[gate] RSI-Div paper-only grade={gr} {tk} → SKIP")
                 continue
+        # === Gate 2.8: CRT min SL distance (v5.2 — 2026-09-24) ===
+        # 7-day + 9/24 evidence: CRT MGC opened @ 4,323.70 with SL=4,328.07 →
+        # 5.09 pts = 0.118% of entry. SL hit in 1 bar / 4 min because MGC 5m noise
+        # routinely moves $5+. LLM text flagged the issue but the gate accepted.
+        # Hard floor: sl_dist / entry must be >= CRT_MIN_SL_DISTANCE_PCT.
+        if strat == "CRT":
+            try:
+                entry_f = float(sig.get("last_close", 0) or 0)
+                sl_f = float(sig.get("sl", 0) or 0)
+                if entry_f > 0 and sl_f > 0:
+                    dist_pct = abs(entry_f - sl_f) / entry_f * 100
+                    if dist_pct < CRT_MIN_SL_DISTANCE_PCT:
+                        sig["gate_skip"] = (
+                            f"CRT SL too tight: dist={dist_pct:.3f}% "
+                            f"< {CRT_MIN_SL_DISTANCE_PCT:.2f}%; "
+                            f"ticker 5m noise routinely exceeds this → 1-bar stop-out"
+                        )
+                        gated.append(sig)
+                        print(f"[gate] CRT SL too tight {sig.get('ticker','?')} dist={dist_pct:.3f}% → SKIP")
+                        continue
+            except (TypeError, ValueError):
+                pass  # missing/bad data → don't block (other gates still apply)
         # === Gate 2.7: 50-20 Pullback EMA-distance (v4.1 — 2026-09-21) ===
         # If price has drifted >0.1% from EMA20, this is no longer a real pullback —
         # it's a chase into a one-sided trend. Detector already classifies >0.5% as
@@ -1287,6 +1331,10 @@ def main() -> int:
     # already hit T2 but didn't stop a second same-ticker-same-direction entry.
     # Read positions.json, block new same-(ticker,strategy,normalized_dir) if last
     # closed/closing trade on that combo was within STAIR_REENTRY_COOLDOWN_HOURS.
+    #
+    # v5.2 (2026-09-24): extended to 50-20 / 3-Pushes / CRT (COOLDOWN_STRATEGIES).
+    # Evidence: 9/24 01:38 + 01:51 EDT — 50-20 BTC LONG × 2 conf 82+80 fired 13 min
+    # apart in different batches. P0.5 didn't catch. Cooldown blocks both.
     if fired:
         try:
             if POSITIONS_FILE.exists():
@@ -1299,15 +1347,16 @@ def main() -> int:
         cd_filtered = []
         for sig in fired:
             strat = sig.get("strategy", "?")
-            if strat != "Stair":
+            # Stair has its own gate in v5; v5.2 extended to 50-20/3-Pushes/CRT.
+            if strat not in COOLDOWN_STRATEGIES and strat != "Stair":
                 cd_filtered.append(sig)
                 continue
             tk = sig.get("ticker", "")
             ndir = _normalize_direction(sig.get("direction", ""))
-            cd_hours = STAIR_REENTRY_COOLDOWN_HOURS
+            cd_hours = STAIR_REENTRY_COOLDOWN_HOURS if strat == "Stair" else COOLDOWN_HOURS
             blocked = False
             for p in _positions_state:
-                if p.get("strategy") != "Stair":
+                if p.get("strategy") != strat:
                     continue
                 if p.get("ticker") != tk:
                     continue
@@ -1320,11 +1369,12 @@ def main() -> int:
                 age_h = (now_dt - ref_dt).total_seconds() / 3600.0
                 if 0 <= age_h <= cd_hours:
                     sig["gate_skip"] = (
-                        f"Stair re-entry cooldown: prior Stair {tk} {ndir} closed {age_h:.1f}h ago "
-                        f"(cooldown {cd_hours}h); user directive 9/21 'first hit T2 should stop'"
+                        f"{strat} re-entry cooldown: prior {strat} {tk} {ndir} "
+                        f"{'closed' if p.get('exit_time') else 'opened'} {age_h:.1f}h ago "
+                        f"(cooldown {cd_hours}h); v5.2 cross-batch dedup"
                     )
                     gated_out.append(sig)
-                    print(f"[gate] Stair cooldown {tk} {ndir} last {age_h:.1f}h ago → SKIP")
+                    print(f"[gate] {strat} cooldown {tk} {ndir} last {age_h:.1f}h ago → SKIP")
                     blocked = True
                     break
             if not blocked:
