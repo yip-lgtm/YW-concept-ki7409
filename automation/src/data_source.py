@@ -23,6 +23,9 @@ from pathlib import Path
 import time as _time
 from typing import Optional
 
+# Longbridge token location for in-process detection (no import side-effects)
+_TOKEN_FILE = Path("/workspace/secrets/longbridge_token.json")
+
 import requests
 import pandas as pd
 
@@ -249,6 +252,19 @@ def fetch_bars(symbol: str = "BTC-USD", days: int = 5, interval_min: int = 5,
                 return df
         except Exception as e:
             log.warning(f"[data_source] Polygon also failed: {e}")
+
+    # Auto-try Longbridge MCP if token is available (regardless of LBP env presence)
+    if (os.environ.get("LBP_ACCESS_TOKEN") or os.environ.get("LONGBRIDGE_ACCESS_TOKEN")
+            or _TOKEN_FILE.exists()):
+        log.warning("[data_source] yfinance/Polygon empty, trying Longbridge MCP...")
+        try:
+            from data_source_longbridge import fetch_longbridge
+            df = fetch_longbridge(symbol, days=days, interval_min=interval_min)
+            if not df.empty:
+                _CACHE[cache_key] = (df, _time.time())
+                return df
+        except Exception as e:
+            log.warning(f"[data_source] Longbridge also failed: {e}")
 
     # Last resort: CoinGecko (only BTC/ETH, 1h granularity)
     if symbol.upper().startswith(("BTC", "ETH")):
