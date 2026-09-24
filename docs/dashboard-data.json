@@ -1,26 +1,26 @@
 {
-  "generated_at": "2026-09-25 04:44 HKT",
-  "hkt_timestamp": "2026-09-25T04:44:20.893675+08:00",
+  "generated_at": "2026-09-25 07:49 HKT",
+  "hkt_timestamp": "2026-09-25T07:49:58.941585+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 14,
-    "trades_today": 2,
-    "wins_24h": 4,
-    "R_24h": -3.53,
-    "signals_24h": 98,
-    "wr_24h": 28.6
+    "trades_24h": 12,
+    "trades_today": 3,
+    "wins_24h": 3,
+    "R_24h": -4.14,
+    "signals_24h": 87,
+    "wr_24h": 25.0
   },
   "ranking_24h": [
     {
-      "strategy": "CRT",
-      "n_trades": 8,
-      "n_wins": 3,
-      "n_losses": 5,
-      "win_rate": 37.5,
-      "total_R": -0.15,
-      "avg_R": -0.018,
-      "total_pnl_usd": -160.42,
-      "profit_factor": 0.97,
+      "strategy": "Stair",
+      "n_trades": 3,
+      "n_wins": 1,
+      "n_losses": 2,
+      "win_rate": 33.3,
+      "total_R": -0.38,
+      "avg_R": -0.127,
+      "total_pnl_usd": 19.53,
+      "profit_factor": 0.81,
       "rank": 1
     },
     {
@@ -36,28 +36,16 @@
       "rank": 2
     },
     {
-      "strategy": "Stair",
-      "n_trades": 5,
-      "n_wins": 1,
-      "n_losses": 4,
-      "win_rate": 20.0,
-      "total_R": -2.38,
-      "avg_R": -0.476,
-      "total_pnl_usd": 47.48,
-      "profit_factor": 0.4,
-      "rank": 3
-    },
-    {
-      "strategy": "50-20-Pullback",
+      "strategy": "CRT",
       "n_trades": 6,
-      "n_wins": 1,
-      "n_losses": 5,
-      "win_rate": 16.7,
-      "total_R": -3.38,
-      "avg_R": -0.564,
-      "total_pnl_usd": -742.64,
-      "profit_factor": 0.32,
-      "rank": 4
+      "n_wins": 2,
+      "n_losses": 4,
+      "win_rate": 33.3,
+      "total_R": -0.76,
+      "avg_R": -0.127,
+      "total_pnl_usd": -159.11,
+      "profit_factor": 0.81,
+      "rank": 3
     },
     {
       "strategy": "3-Pushes",
@@ -69,17 +57,29 @@
       "avg_R": -1.0,
       "total_pnl_usd": -150.31,
       "profit_factor": 0.0,
+      "rank": 4
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "n_trades": 7,
+      "n_wins": 1,
+      "n_losses": 6,
+      "win_rate": 14.3,
+      "total_R": -4.38,
+      "avg_R": -0.626,
+      "total_pnl_usd": -937.46,
+      "profit_factor": 0.27,
       "rank": 5
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 26,
-    "n_wins": 6,
-    "win_rate": 23.1,
-    "total_R": -10.29,
-    "total_pnl_usd": -538.5
+    "n_trades": 23,
+    "n_wins": 5,
+    "win_rate": 21.7,
+    "total_R": -9.9,
+    "total_pnl_usd": -759.96
   },
-  "ranking_24h_updated": "2026-09-24T20:44:20.893694+00:00",
+  "ranking_24h_updated": "2026-09-24T23:49:58.941603+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -166,7 +166,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 11,
+      "signals_24h": 6,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -182,7 +182,7 @@
       "iteration": {
         "grade": "D",
         "confidence": 25,
-        "reason": "\u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7121\u6cd5\u9a57\u8b49\u7b56\u7565\u512a\u52e2\uff1b\u7576\u524d\u6b0a\u91cd\u904e\u9ad8\uff0c\u5efa\u8b70\u964d\u7d1a\u4fdd\u5b88\u904b\u884c\u3002"
+        "reason": "\u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7121\u6cd5\u9a57\u8b49\u7b56\u7565\u512a\u52e2\uff1b\u7576\u524d\u914d\u7f6e\u7121\u5be6\u8b49\u652f\u6490\uff0c\u9700\u4fdd\u5b88\u91cd\u7f6e\u3002"
       }
     },
     {
@@ -232,9 +232,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
+        "grade": "D",
         "confidence": 25,
-        "reason": "0 trades\u7121\u6cd5\u9a57\u8b49\u7b56\u7565\u6709\u6548\u6027\uff0cbacktest\u6578\u64da\u70ba\u9ed8\u8a8d\u503c\u7121\u7d71\u8a08\u610f\u7fa9"
+        "reason": "\u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7b56\u7565\u5f9e\u672a\u89f8\u767c\uff0c\u7121\u6cd5\u8a55\u4f30\u6709\u6548\u6027\uff0c\u9700\u8abf\u6574\u4ee5\u7522\u751f\u8a0a\u865f"
       }
     },
     {
@@ -285,8 +285,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 75,
-        "reason": "0 trades = strategy\u5b8c\u5168\u7121signal\uff0cindicators\u7d44\u5408\u592a\u56b4\u82db\u6216timeframe\u4e0d\u5339\u914d\uff0c\u9700\u5927\u5e45\u8abf\u6574"
+        "confidence": 72,
+        "reason": "0 trades \u5b8c\u5168\u7121\u4fe1\u865f\u7522\u751f\uff0c\u7b56\u7565\u904e\u56b4\u6216\u689d\u4ef6\u4e0d\u7b26\uff0c\u9700\u653e\u5bec\u89f8\u767c\u689d\u4ef6\u4ee5\u6fc0\u6d3b\u4ea4\u6613"
       }
     },
     {
@@ -337,8 +337,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 28,
-        "reason": "0 trades\u7b56\u7565\u5b8c\u5168\u6c92\u4fe1\u865f\uff0c\u689d\u4ef6\u592a\u56b4\u683c\u9700\u653e\u5bec"
+        "confidence": 78,
+        "reason": "0 trades\u4ee3\u8868\u8a0a\u865f\u689d\u4ef6\u592a\u56b4\u683c\u6216\u6307\u6a19\u885d\u7a81\uff0c\u7b56\u7565\u5b8c\u5168\u7121\u904b\u4f5c\uff0c\u9700\u8981\u653e\u5bec\u5165\u5834\u689d\u4ef6\u3002"
       }
     },
     {
@@ -389,8 +389,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "\u96f6\u4ea4\u6613\u5373\u7121\u9a57\u8b49edge\uff0c5min EMA20/SMA50 pullback\u689d\u4ef6\u904e\u56b4\u6216\u592a\u566a\uff0c\u96e3\u4ee5\u7522\u751f\u8a0a\u865f\u3002"
+        "confidence": 30,
+        "reason": "\u96f6\u4ea4\u6613\u7b49\u65bc\u7121\u6cd5\u9a57\u8b49edge\uff0c5min pullback\u689d\u4ef6\u904e\u56b4\u6216\u904e\u6ffe\u592a\u591a\u8a0a\u865f\uff0c\u9700\u653e\u5bec\u6216\u8f49\u6642\u6846\u6e2c\u8a66"
       }
     },
     {
@@ -415,18 +415,18 @@
         "wr": 33.3,
         "R": -0.38,
         "pf": 0.81,
-        "pnl": 55.22
+        "pnl": 19.53
       },
       "live_today": {
-        "n": 0,
+        "n": 1,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -40.46
       },
-      "signals_24h": 18,
+      "signals_24h": 19,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -441,8 +441,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 65,
-        "reason": "0 trades means step_pattern never triggered on 5min; strategy\u5b8c\u5168\u7121\u904b\u4f5c\uff0c\u9700\u8abf\u6574"
+        "confidence": 45,
+        "reason": "0 trades\u5168\u7121\u4fe1\u865f\uff0cstep_pattern\u5075\u6e2c\u689d\u4ef6\u904e\u56b4\uff0c5min\u96dc\u8a0a\u5927\u96e3\u5f62\u6210\u660e\u78ba\u968e\u68af"
       }
     },
     {
@@ -461,13 +461,13 @@
         5
       ],
       "live_24h": {
-        "n": 8,
-        "wins": 3,
-        "losses": 5,
-        "wr": 37.5,
-        "R": -0.15,
-        "pf": 0.97,
-        "pnl": -160.42
+        "n": 6,
+        "wins": 2,
+        "losses": 4,
+        "wr": 33.3,
+        "R": -0.76,
+        "pf": 0.81,
+        "pnl": -159.11
       },
       "live_today": {
         "n": 0,
@@ -478,7 +478,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 52,
+      "signals_24h": 45,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -493,8 +493,8 @@
       },
       "iteration": {
         "grade": "C",
-        "confidence": 72,
-        "reason": "\u6574\u9ad4PF 1.08\u504f\u4f4e\uff0cMNQ\u62d6-22.5R\u56b4\u91cd\uff0c\u50c5MES\u771f\u6b63\u7a81\u51fa(WR49%)\u3002MES+4H\u78ba\u8a8d\u6709\u6548\uff0c\u4f465min\u566a\u8072\u5728MNQ\u5931\u6548\uff0c\u9700\u904e\u6ffe\u3002"
+        "confidence": 62,
+        "reason": "\u7e3d\u9ad4\u5fae\u5229\u4f46MNQ\u62d6\u6cb9(-22.52R)\uff0cMES/BTC\u8ca2\u737b\u4e3b\u529b\uff0c\u9700\u7cbe\u9078\u6a19\u7684\u964dweight"
       }
     },
     {
@@ -545,8 +545,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 30,
-        "reason": "0 trades\u8868\u793a\u7b56\u7565\u5b8c\u5168\u7121\u89f8\u767c\u8a0a\u865f,\u689d\u4ef6\u904e\u56b4\u6216timeframe\u4e0d\u5339\u914d,\u7121\u4efb\u4f55performance\u53ef\u8a55\u4f30"
+        "confidence": 35,
+        "reason": "0 trades\u4ee3\u8868\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0ccycle+5 subdetectors\u7d44\u5408\u904e\u5ea6\u56b4\u683c\uff0c5min\u9031\u671f\u96dc\u8a0a\u904e\u591a\u3002"
       }
     },
     {
