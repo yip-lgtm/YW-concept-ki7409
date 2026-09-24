@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-24T12:07:08.661686+00:00",
+  "timestamp": "2026-09-24T19:06:44.635961+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -11,8 +11,8 @@
   "ranking": {
     "component": "strategy-ranking",
     "issues": [],
-    "latest_file": "ranking_2026-09-24.md",
-    "latest_date": "2026-09-24"
+    "latest_file": "ranking_2026-09-25.md",
+    "latest_date": "2026-09-25"
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
@@ -73,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 35996996592,
+          "id": 36045828319,
           "conclusion": "running",
-          "created_at": "2026-09-24T12:06:32Z",
+          "created_at": "2026-09-24T19:06:07Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 35987702382,
+          "id": 36034640568,
           "conclusion": "success",
-          "created_at": "2026-09-24T10:31:15Z",
+          "created_at": "2026-09-24T17:29:19Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 36020623093,
+          "conclusion": "success",
+          "created_at": "2026-09-24T15:29:54Z",
           "event": "schedule"
-        },
-        {
-          "id": 35986157235,
-          "conclusion": "success",
-          "created_at": "2026-09-24T10:15:24Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -96,6 +96,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 36027872792,
+          "conclusion": "success",
+          "created_at": "2026-09-24T16:30:42Z",
+          "event": "schedule"
+        },
         {
           "id": 35929891083,
           "conclusion": "success",
@@ -106,12 +112,6 @@
           "id": 35909337479,
           "conclusion": "success",
           "created_at": "2026-09-23T19:26:33Z",
-          "event": "schedule"
-        },
-        {
-          "id": 35886517755,
-          "conclusion": "success",
-          "created_at": "2026-09-23T16:07:17Z",
           "event": "schedule"
         }
       ],
@@ -149,12 +149,14 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 0,
+    "n_open": 5,
     "n_stale_24h": 0,
-    "issues": [],
-    "long_count": 0,
+    "issues": [
+      "High total risk: $498"
+    ],
+    "long_count": 2,
     "short_count": 0,
-    "total_risk": 0.0,
+    "total_risk": 497.86981026785725,
     "deep_loss_positions": []
   }
 }
