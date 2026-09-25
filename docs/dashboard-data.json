@@ -1,51 +1,39 @@
 {
-  "generated_at": "2026-09-25 23:28 HKT",
-  "hkt_timestamp": "2026-09-25T23:28:41.517276+08:00",
+  "generated_at": "2026-09-26 06:46 HKT",
+  "hkt_timestamp": "2026-09-26T06:46:59.018074+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 12,
-    "trades_today": 11,
-    "wins_24h": 5,
-    "R_24h": 1.09,
-    "signals_24h": 79,
-    "wr_24h": 41.7
+    "trades_24h": 9,
+    "trades_today": 2,
+    "wins_24h": 6,
+    "R_24h": 6.71,
+    "signals_24h": 59,
+    "wr_24h": 66.7
   },
   "ranking_24h": [
     {
       "strategy": "CRT",
-      "n_trades": 5,
-      "n_wins": 3,
-      "n_losses": 2,
-      "win_rate": 60.0,
-      "total_R": 2.85,
-      "avg_R": 0.571,
-      "total_pnl_usd": 201.54,
-      "profit_factor": 2.43,
+      "n_trades": 7,
+      "n_wins": 4,
+      "n_losses": 3,
+      "win_rate": 57.1,
+      "total_R": 3.47,
+      "avg_R": 0.496,
+      "total_pnl_usd": 169.71,
+      "profit_factor": 2.16,
       "rank": 1
     },
     {
       "strategy": "Stair",
-      "n_trades": 3,
+      "n_trades": 2,
       "n_wins": 2,
-      "n_losses": 1,
-      "win_rate": 66.7,
-      "total_R": 2.24,
-      "avg_R": 0.745,
-      "total_pnl_usd": 32.79,
-      "profit_factor": 3.24,
-      "rank": 2
-    },
-    {
-      "strategy": "Kell-Cycle",
-      "n_trades": 1,
-      "n_wins": 1,
       "n_losses": 0,
       "win_rate": 100.0,
-      "total_R": 1.62,
+      "total_R": 3.24,
       "avg_R": 1.618,
-      "total_pnl_usd": 272.87,
+      "total_pnl_usd": 73.25,
       "profit_factor": 10.0,
-      "rank": 3
+      "rank": 2
     },
     {
       "strategy": "RSI-Div",
@@ -57,53 +45,53 @@
       "avg_R": 1.618,
       "total_pnl_usd": 7.26,
       "profit_factor": 10.0,
+      "rank": 3
+    },
+    {
+      "strategy": "3-Pushes",
+      "n_trades": 2,
+      "n_wins": 1,
+      "n_losses": 1,
+      "win_rate": 50.0,
+      "total_R": 0.62,
+      "avg_R": 0.309,
+      "total_pnl_usd": 8.6,
+      "profit_factor": 1.62,
       "rank": 4
     },
     {
-      "strategy": "Two-Yang",
+      "strategy": "Kell-Cycle",
       "n_trades": 2,
-      "n_wins": 0,
-      "n_losses": 2,
-      "win_rate": 0.0,
-      "total_R": -2.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -109.28,
-      "profit_factor": 0.0,
+      "n_wins": 1,
+      "n_losses": 1,
+      "win_rate": 50.0,
+      "total_R": 0.62,
+      "avg_R": 0.309,
+      "total_pnl_usd": 262.14,
+      "profit_factor": 1.62,
       "rank": 5
     },
     {
       "strategy": "50-20-Pullback",
-      "n_trades": 9,
+      "n_trades": 7,
       "n_wins": 2,
-      "n_losses": 7,
-      "win_rate": 22.2,
-      "total_R": -3.76,
-      "avg_R": -0.418,
-      "total_pnl_usd": -700.14,
-      "profit_factor": 0.46,
+      "n_losses": 5,
+      "win_rate": 28.6,
+      "total_R": -1.76,
+      "avg_R": -0.252,
+      "total_pnl_usd": 14.07,
+      "profit_factor": 0.65,
       "rank": 6
-    },
-    {
-      "strategy": "3-Pushes",
-      "n_trades": 4,
-      "n_wins": 0,
-      "n_losses": 4,
-      "win_rate": 0.0,
-      "total_R": -4.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -106.28,
-      "profit_factor": 0.0,
-      "rank": 7
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 25,
-    "n_wins": 9,
-    "win_rate": 36.0,
-    "total_R": -1.43,
-    "total_pnl_usd": -401.24
+    "n_trades": 21,
+    "n_wins": 11,
+    "win_rate": 52.4,
+    "total_R": 7.81,
+    "total_pnl_usd": 535.03
   },
-  "ranking_24h_updated": "2026-09-25T15:28:41.517298+00:00",
+  "ranking_24h_updated": "2026-09-25T22:46:59.018094+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -190,7 +178,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 1,
+      "signals_24h": 3,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -206,7 +194,7 @@
       "iteration": {
         "grade": "D",
         "confidence": 25,
-        "reason": "\u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7121\u6cd5\u9a57\u8b49\u7b56\u7565\u512a\u52e2\uff1b\u7576\u524d\u914d\u7f6e\u7121\u5be6\u8b49\u652f\u6490\uff0c\u9700\u4fdd\u5b88\u91cd\u7f6e\u3002"
+        "reason": "0 trades = no edge validated. Strategy \u5b8c\u5168\u5187 firing\uff0cbacktest metrics \u7d14\u5c6c placeholder\u3002\u9700\u8981\u653e\u5bec\u689d\u4ef6\u5148\u6709 signal\u3002"
       }
     },
     {
@@ -225,24 +213,24 @@
         5
       ],
       "live_24h": {
-        "n": 4,
-        "wins": 0,
-        "losses": 4,
-        "wr": 0.0,
-        "R": -4.0,
-        "pf": 0.0,
-        "pnl": -106.28
+        "n": 1,
+        "wins": 1,
+        "losses": 0,
+        "wr": 100.0,
+        "R": 1.62,
+        "pf": 10.0,
+        "pnl": 22.51
       },
       "live_today": {
-        "n": 3,
+        "n": 0,
         "wins": 0,
-        "losses": 3,
-        "wr": 0.0,
-        "R": -3.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": -41.88
+        "pnl": 0
       },
-      "signals_24h": 23,
+      "signals_24h": 12,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -258,7 +246,7 @@
       "iteration": {
         "grade": "D",
         "confidence": 25,
-        "reason": "\u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7b56\u7565\u5f9e\u672a\u89f8\u767c\uff0c\u7121\u6cd5\u8a55\u4f30\u6709\u6548\u6027\uff0c\u9700\u8abf\u6574\u4ee5\u7522\u751f\u8a0a\u865f"
+        "reason": "0\u4ea4\u6613\u4ee3\u8868\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u9808\u5148\u6fc0\u6d3b\u7b56\u7565"
       }
     },
     {
@@ -309,8 +297,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 72,
-        "reason": "0 trades \u5b8c\u5168\u7121\u4fe1\u865f\u7522\u751f\uff0c\u7b56\u7565\u904e\u56b4\u6216\u689d\u4ef6\u4e0d\u7b26\uff0c\u9700\u653e\u5bec\u89f8\u767c\u689d\u4ef6\u4ee5\u6fc0\u6d3b\u4ea4\u6613"
+        "confidence": 25,
+        "reason": "0 trades = \u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u7121\u6cd5\u8a55\u4f30\uff0c\u9700\u5148\u7522\u751f\u4fe1\u865f\u6536\u96c6\u6578\u64da"
       }
     },
     {
@@ -361,8 +349,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 78,
-        "reason": "0 trades\u4ee3\u8868\u8a0a\u865f\u689d\u4ef6\u592a\u56b4\u683c\u6216\u6307\u6a19\u885d\u7a81\uff0c\u7b56\u7565\u5b8c\u5168\u7121\u904b\u4f5c\uff0c\u9700\u8981\u653e\u5bec\u5165\u5834\u689d\u4ef6\u3002"
+        "confidence": 65,
+        "reason": "\u96f6\u4ea4\u6613\u4ee3\u8868\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0c\u7b56\u7565\u5b8c\u5168\u5931\u6548\uff0c\u9700\u653e\u5bec\u9032\u5834\u689d\u4ef6\u3002"
       }
     },
     {
@@ -413,8 +401,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 30,
-        "reason": "\u96f6\u4ea4\u6613\u7b49\u65bc\u7121\u6cd5\u9a57\u8b49edge\uff0c5min pullback\u689d\u4ef6\u904e\u56b4\u6216\u904e\u6ffe\u592a\u591a\u8a0a\u865f\uff0c\u9700\u653e\u5bec\u6216\u8f49\u6642\u6846\u6e2c\u8a66"
+        "confidence": 35,
+        "reason": "0 trades\u8868\u793a\u689d\u4ef6\u5f9e\u672a\u89f8\u767c\uff0c\u7b56\u7565\u5b8c\u5168\u4f11\u7720\uff0cpullback\u908f\u8f2f\u904e\u56b4\u6216EMA/SMA\u689d\u4ef6\u4e0d\u5339\u914d\u3002"
       }
     },
     {
@@ -433,24 +421,24 @@
         5
       ],
       "live_24h": {
-        "n": 3,
+        "n": 2,
         "wins": 2,
-        "losses": 1,
-        "wr": 66.7,
-        "R": 2.24,
-        "pf": 3.24,
-        "pnl": 32.79
+        "losses": 0,
+        "wr": 100.0,
+        "R": 3.24,
+        "pf": 10.0,
+        "pnl": 73.25
       },
       "live_today": {
-        "n": 3,
-        "wins": 2,
-        "losses": 1,
-        "wr": 66.7,
-        "R": 2.24,
-        "pf": 3.24,
-        "pnl": 32.79
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
       },
-      "signals_24h": 16,
+      "signals_24h": 11,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -465,8 +453,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 45,
-        "reason": "0 trades\u5168\u7121\u4fe1\u865f\uff0cstep_pattern\u5075\u6e2c\u689d\u4ef6\u904e\u56b4\uff0c5min\u96dc\u8a0a\u5927\u96e3\u5f62\u6210\u660e\u78ba\u968e\u68af"
+        "confidence": 32,
+        "reason": "\u96f6\u4ea4\u6613\u4ee3\u8868\u8a0a\u865f\u672a\u89f8\u767c\uff0cstep_pattern\u9580\u6abb\u904e\u56b4\u6216\u6642\u6846\u592a\u96dc\u8a0a"
       }
     },
     {
@@ -485,24 +473,24 @@
         5
       ],
       "live_24h": {
-        "n": 5,
+        "n": 6,
         "wins": 3,
-        "losses": 2,
-        "wr": 60.0,
-        "R": 2.85,
-        "pf": 2.43,
-        "pnl": 201.54
+        "losses": 3,
+        "wr": 50.0,
+        "R": 1.85,
+        "pf": 1.62,
+        "pnl": 160.51
       },
       "live_today": {
-        "n": 5,
-        "wins": 3,
-        "losses": 2,
-        "wr": 60.0,
-        "R": 2.85,
-        "pf": 2.43,
-        "pnl": 201.54
+        "n": 2,
+        "wins": 1,
+        "losses": 1,
+        "wr": 50.0,
+        "R": 0.62,
+        "pf": 1.62,
+        "pnl": -31.83
       },
-      "signals_24h": 35,
+      "signals_24h": 29,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -518,7 +506,7 @@
       "iteration": {
         "grade": "C",
         "confidence": 62,
-        "reason": "\u7e3d\u9ad4\u5fae\u5229\u4f46MNQ\u62d6\u6cb9(-22.52R)\uff0cMES/BTC\u8ca2\u737b\u4e3b\u529b\uff0c\u9700\u7cbe\u9078\u6a19\u7684\u964dweight"
+        "reason": "PF 1.09 \u908a\u7de3\u5229\u6f64\uff0cMNQ \u62d6\u5f8c\u817f(-22.5R)\uff0c41% WR \u904e\u4f4e\uff0c\u6574\u9ad4\u8106\u5f31"
       }
     },
     {
@@ -570,7 +558,7 @@
       "iteration": {
         "grade": "D",
         "confidence": 35,
-        "reason": "0 trades\u4ee3\u8868\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0ccycle+5 subdetectors\u7d44\u5408\u904e\u5ea6\u56b4\u683c\uff0c5min\u9031\u671f\u96dc\u8a0a\u904e\u591a\u3002"
+        "reason": "0 trades\u4ee3\u8868\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0c\u914d\u7f6e\u5b8c\u5168\u5931\u6548\uff0c\u7121\u6cd5\u8a55\u4f30\u771f\u5be6\u8868\u73fe\uff0c\u9700\u5148\u8b93\u7b56\u7565\u80fd\u958b\u5009\u3002"
       }
     },
     {
