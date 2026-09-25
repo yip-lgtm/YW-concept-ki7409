@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-26",
+  "worst_strategy": {
+    "strategy_id": "b1-mnq",
+    "name": "B1 \u6218\u6cd5 (MNQ)",
+    "rank": 10,
+    "pf": 0,
+    "total_R": 0,
+    "pnl_usd": 0,
+    "win_rate": 0,
+    "n_trades": 0,
+    "avg_pf": 0.0
+  },
+  "llm_response": "<think>The strategy \"b1-mnq\" has zero trades, zero performance metrics across all 7 days. Current parameters are empty. This is essentially a non-functional or unconfigured strategy. I need to suggest parameters to bootstrap it into something that can generate trades.\n\nLet me think about MNQ (Micro E-mini Nasdaq-100) trading:\n- MNQ is volatile, benefits from momentum strategies\n- \"B1\" likely refers to a specific Chinese trading methodology\n- Since there are zero trades, we need to make the strategy more active while still maintaining quality\n\nFor MNQ, appropriate timeframes would be intraday: 1min, 5min, 15min. The 5min is a good balance for MNQ day trading.\n\nFor indicators, a B1-style breakout/breakdown strategy on MNQ typically uses:\n- EMA for trend direction (9/21)\n- VWAP for institutional levels\n- RSI for momentum\n- ATR for volatility-based stops\n- Volume for confirmation\n\nR-multiples for MNQ should be realistic - MNQ moves well but we don't want to be too greedy:\n- T1: 1R (quick scalp)\n- T2: 2R (standard target)\n- T3: 3R (extended)\n- T4: 4R\n- T5: 5R\n\nWeight should be moderate since we're starting from zero. I'd suggest 0.7-0.8 to start, then increase if performance improves. Actually, given the zero trades, let's give it a chance at 1.0 weight but with very specific parameters to ensure it activates.\n\nRationale: Strategy has zero activity - need to activate with proven MNQ day-trading parameters. Using 5min timeframe with EMA crossover, VWAP, and volume confirmation. Con",
+  "suggested_params": {
+    "weight": 0.7,
+    "timeframe": "5min",
+    "indicators": [
+      "ema_9",
+      "ema_21",
+      "vwap",
+      "rsi_14",
+      "atr_14",
+      "volume_sma_20"
+    ],
+    "r_multiples": [
+      1.0,
+      1.5,
+      2.0,
+      3.0,
+      4.0
+    ],
+    "rationale": "Strategy has zero trades over 7 days with empty parameters \u2014 effectively dormant and ranked #10 by default. Bootstrap activation needed with a battle-tested MNQ intraday framework: 5min candles balance signal quality vs noise for MNQ's ~30pt average daily range. EMA 9/21 crossover captures short-term trend shifts; VWAP anchors entries to institutional fair value (critical for Nasdaq futures); RSI 14 filters overbought/oversold entries; ATR 14 sets adaptive stops relative to current volatility; volume SMA 20 confirms breakout validity. Conservative R-multiples [1, 1.5, 2, 3, 4] target realistic MNQ moves \u2014 partial exits at 1R/1.5R lock profits, 2R covers typical swing, 3R-4R captures trend extensions. Starting weight at 0.7 (below 1.0) reflects unproven status; once the strategy generates >10 trades with PF>1.2, scale weight toward 1.2-1.4. Entry trigger: EMA9 cross EMA21 with price above VWAP, RSI between 40-70, volume >1.2x average. Stop: 1.5x ATR from entry."
+  }
+}
