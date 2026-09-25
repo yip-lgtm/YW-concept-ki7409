@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-25T15:22:33.791486+00:00",
+  "timestamp": "2026-09-25T19:22:19.356169+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -11,8 +11,8 @@
   "ranking": {
     "component": "strategy-ranking",
     "issues": [],
-    "latest_file": "ranking_2026-09-25.md",
-    "latest_date": "2026-09-25"
+    "latest_file": "ranking_2026-09-26.md",
+    "latest_date": "2026-09-26"
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
@@ -73,21 +73,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 36153657569,
+          "id": 36179205729,
           "conclusion": "running",
-          "created_at": "2026-09-25T15:21:52Z",
+          "created_at": "2026-09-25T19:21:47Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 36124659105,
+          "id": 36154984233,
           "conclusion": "success",
-          "created_at": "2026-09-25T10:33:51Z",
+          "created_at": "2026-09-25T15:33:34Z",
           "event": "schedule"
         },
         {
-          "id": 36122120274,
+          "id": 36153657569,
           "conclusion": "success",
-          "created_at": "2026-09-25T10:06:04Z",
+          "created_at": "2026-09-25T15:21:52Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -96,6 +96,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 36161490085,
+          "conclusion": "success",
+          "created_at": "2026-09-25T16:33:13Z",
+          "event": "schedule"
+        },
         {
           "id": 36070628976,
           "conclusion": "success",
@@ -106,12 +112,6 @@
           "id": 36050564683,
           "conclusion": "success",
           "created_at": "2026-09-24T19:47:53Z",
-          "event": "schedule"
-        },
-        {
-          "id": 36027872792,
-          "conclusion": "success",
-          "created_at": "2026-09-24T16:30:42Z",
           "event": "schedule"
         }
       ],
@@ -143,22 +143,18 @@
     }
   ],
   "health": {
-    "issues": [
-      "yw-daily not run today (2026-09-25 HKT)"
-    ],
-    "status": "warning",
-    "n_issues": 1
+    "issues": [],
+    "status": "ok",
+    "n_issues": 0
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 3,
+    "n_open": 0,
     "n_stale_24h": 0,
-    "issues": [
-      "High total risk: $345"
-    ],
+    "issues": [],
     "long_count": 0,
-    "short_count": 3,
-    "total_risk": 344.6020647321429,
+    "short_count": 0,
+    "total_risk": 0.0,
     "deep_loss_positions": []
   }
 }
