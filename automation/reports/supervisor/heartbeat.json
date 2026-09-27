@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-27T12:57:38.073888+00:00",
+  "timestamp": "2026-09-27T17:40:33.565185+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -11,8 +11,8 @@
   "ranking": {
     "component": "strategy-ranking",
     "issues": [],
-    "latest_file": "ranking_2026-09-27.md",
-    "latest_date": "2026-09-27"
+    "latest_file": "ranking_2026-09-28.md",
+    "latest_date": "2026-09-28"
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
@@ -73,21 +73,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 36320710732,
+          "id": 36337779536,
           "conclusion": "running",
-          "created_at": "2026-09-27T12:57:08Z",
+          "created_at": "2026-09-27T17:39:56Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 36318929593,
+          "id": 36335655526,
           "conclusion": "success",
-          "created_at": "2026-09-27T12:25:22Z",
+          "created_at": "2026-09-27T17:05:51Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 36308135771,
+          "id": 36326791832,
           "conclusion": "success",
-          "created_at": "2026-09-27T09:03:09Z",
+          "created_at": "2026-09-27T14:40:52Z",
           "event": "schedule"
         }
       ],
@@ -96,6 +96,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 36333138900,
+          "conclusion": "success",
+          "created_at": "2026-09-27T16:24:42Z",
+          "event": "schedule"
+        },
         {
           "id": 36276152118,
           "conclusion": "success",
@@ -106,12 +112,6 @@
           "id": 36264573199,
           "conclusion": "success",
           "created_at": "2026-09-26T19:01:09Z",
-          "event": "schedule"
-        },
-        {
-          "id": 36253168682,
-          "conclusion": "success",
-          "created_at": "2026-09-26T15:47:36Z",
           "event": "schedule"
         }
       ],
@@ -151,10 +151,12 @@
     "source": "live_scan",
     "n_open": 1,
     "n_stale_24h": 0,
-    "issues": [],
-    "long_count": 1,
-    "short_count": 0,
-    "total_risk": 83.83482142857144,
+    "issues": [
+      "High total risk: $205"
+    ],
+    "long_count": 0,
+    "short_count": 1,
+    "total_risk": 205.16428571428574,
     "deep_loss_positions": []
   }
 }
