@@ -1,5 +1,5 @@
 {
-  "ts": "2026-09-26T22:16:09.092957-04:00",
+  "ts": "2026-09-26T23:19:35.793349-04:00",
   "ticker": "BTC-USD",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
@@ -7,28 +7,28 @@
   "swing": {
     "type": "c2_closure",
     "side": "bullish",
-    "c2_high": 84428.203125,
-    "c2_low": 83818.0078125,
-    "c2_close": 84400.0703125,
-    "c2_eq": 84123.10546875,
-    "c3_close": 84465.78125,
-    "swing_level": 83818.0078125,
+    "c2_high": 84394.65625,
+    "c2_low": 83814.0703125,
+    "c2_close": 84301.0234375,
+    "c2_eq": 84104.36328125,
+    "c3_close": 84442.2109375,
+    "swing_level": 83814.0703125,
     "direction": "long"
   },
   "cisd": {
     "confirmed": true,
     "opposing_open": 81445.3125,
     "series_length": 1,
-    "last_close": 84465.78125,
+    "last_close": 84442.2109375,
     "reason": "cisd_long"
   },
   "eq_respected": true,
   "d1_trend": {
     "aligned": true,
     "trend": "uptrend",
-    "d1_close": 84465.78125,
-    "d1_ema50": 76741.73400201788,
-    "d1_ema20": 81075.35076277818,
+    "d1_close": 84442.21875,
+    "d1_ema50": 76740.80998241004,
+    "d1_ema20": 81073.10671515913,
     "reason": "D1 uptrend"
   },
   "weekly_profile": {
@@ -37,32 +37,15 @@
     "notes": ""
   },
   "daily_profile": {
-    "london_expanded": false,
-    "london_range": 348.46875,
-    "skip_ny": false
+    "london_expanded": true,
+    "london_range": 356.53125,
+    "skip_ny": true
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
-  "entry": 84465.78125,
-  "sl": 83790.4908482143,
-  "t1": 85141.0716517857,
-  "t2_close": 85546.24589285713,
-  "t3": 86221.53629464284,
-  "t4": 86896.82669642854,
-  "t5": 87842.23325892854,
-  "risk_per_unit": 675.2904017857072,
-  "units": 0.5,
-  "notional": 42232.890625,
-  "manipulation_pivot": 83818.0078125,
-  "projection_neg2": 85113.5546875,
-  "projection_neg4": 85761.328125,
-  "sl_buffer_atr": 27.516964285714288,
-  "actionable": true,
-  "direction": "long",
-  "grade": "B",
-  "confidence": 72,
-  "reason": "TTrades Fractal: H4 C2 closure (bullish) + M15 CISD (1-bar series) + EQ respected",
+  "actionable": false,
+  "reason": "London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
