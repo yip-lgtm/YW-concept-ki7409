@@ -1,0 +1,16 @@
+{
+  "date": "2026-09-29",
+  "worst_strategy": {
+    "strategy_id": "b1-mnq",
+    "name": "B1 \u6218\u6cd5 (MNQ)",
+    "rank": 10,
+    "pf": 0,
+    "total_R": 0,
+    "pnl_usd": 0,
+    "win_rate": 0,
+    "n_trades": 0,
+    "avg_pf": 0.0
+  },
+  "llm_response": "<think>The strategy \"b1-mnq (B1 \u6218\u6cd5 (MNQ))\" has zero trades, zero profit factor, zero total R, and zero win rate over the past 7 days. This means the strategy parameters are empty ({}) and no trades are being generated. The strategy needs fundamental parameter initialization to start generating trades.\n\nSince this is a strategy based on MNQ (Micro E-mini Nasdaq-100 futures) and appears to be a \"B1\" battle plan style strategy, I need to suggest reasonable starting parameters that would generate trades on MNQ.\n\nLet me think about what's appropriate:\n\n1. **Weight**: Since the strategy has 0 trades and 0 performance, it needs a low weight initially (0.5) until it proves itself. We don't want to push a strategy with no track record to the top of the ranking.\n\n2. **Timeframe**: MNQ is a volatile instrument. Common timeframes that work well for intraday strategies are 5min or 15min. Given that no parameters exist yet, we need to pick a reasonable starting timeframe. 5min is good for more frequent signals.\n\n3. **Indicators**: For a B1-style breakout/momentum strategy on MNQ (Nasdaq), we should use indicators that capture momentum and trend:\n   - EMA (trend direction)\n   - RSI (momentum/overbought-oversold)\n   - VWAP (institutional level - critical for MNQ)\n   - Volume (confirmation)\n   - ATR (volatility for stops/targets)\n\n4. **R multiples**: For a breakout/momentum strategy on MNQ:\n   - T1: 1.0R (quick profit take)\n   - T2: 1.5R\n   - T3: 2.0R (standard target)\n   - T4: 3.0R (extended",
+  "suggested_params": {}
+}
