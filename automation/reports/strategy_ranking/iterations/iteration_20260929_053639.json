@@ -1,0 +1,16 @@
+{
+  "date": "2026-09-29",
+  "worst_strategy": {
+    "strategy_id": "b1-mnq",
+    "name": "B1 \u6218\u6cd5 (MNQ)",
+    "rank": 10,
+    "pf": 0,
+    "total_R": 0,
+    "pnl_usd": 0,
+    "win_rate": 0,
+    "n_trades": 0,
+    "avg_pf": 0.0
+  },
+  "llm_response": "<think>The strategy \"b1-mnq (B1 \u6218\u6cd5 (MNQ))\" has zero trades, zero profit factor, zero R, and zero win rate over 7 days. This means the strategy isn't generating any signals at all. The current parameters are empty {}.\n\nSince this is a strategy for MNQ (Micro E-mini Nasdaq-100), I need to suggest parameters that would actually generate trades. The strategy appears to be completely inactive or unconfigured.\n\nLet me think about what would make sense:\n1. Weight should be lower since it's not performing, but since it has no trades, it's neutral\n2. Timeframe - MNQ is typically traded on shorter timeframes, 5min or 15min are common\n3. Indicators - need some momentum/volatility indicators to generate signals\n4. R multiples - need defined targets\n\nSince the strategy has zero trades, it's not really losing money but also not making money. The priority should be to actually get it generating trades. A reasonable approach would be to suggest a baseline configuration that could work for MNQ.\n\nFor MNQ (Nasdaq futures), common approaches:\n- 5min timeframe for intraday\n- RSI for overbought/oversold\n- EMA for trend direction\n- VWAP for institutional levels\n- ATR for volatility-based stops\n\nR multiples for MNQ scalping/intraday: typically tighter, like [1.0, 1.5, 2.0, 2.5, 3.0]\n\nWeight: Since it's not trading at all, I'd give it a modest weight like 0.8 - not lowest priority but not high since we don't know if it works yet.\n\nRationale should focus on initializing the strategy with reasonable MN",
+  "suggested_params": {}
+}
