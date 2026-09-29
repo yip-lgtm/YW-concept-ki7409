@@ -1,0 +1,34 @@
+{
+  "date": "2026-09-29",
+  "worst_strategy": {
+    "strategy_id": "b1-mnq",
+    "name": "B1 \u6218\u6cd5 (MNQ)",
+    "rank": 10,
+    "pf": 0,
+    "total_R": 0,
+    "pnl_usd": 0,
+    "win_rate": 0,
+    "n_trades": 0,
+    "avg_pf": 0.0
+  },
+  "llm_response": "<think>The strategy has zero trades, zero profit factor, zero win rate across 7 days. It's completely inactive with empty parameters. This is a strategy that needs to be activated from scratch with sensible defaults for MNQ (Micro E-mini Nasdaq-100) futures trading.\n\nLet me think about what makes sense for MNQ day trading:\n\n1. **Weight**: Since the strategy is completely dead (PF 0, 0 trades), I should give it a moderate weight - not too high since we don't know if it will work, but enough to test it. Maybe 0.8-1.0.\n\n2. **Timeframe**: MNQ is best traded on shorter timeframes. 5min is good for intraday, 1min for scalping. Given it's labeled \"B1 \u6218\u6cd5\" which seems like a structured approach, 5min is a reasonable starting point.\n\n3. **Indicators**: For MNQ momentum/breakout strategies, common combinations:\n   - EMA (9, 21) for trend\n   - VWAP for institutional level\n   - RSI for overbought/oversold\n   - ATR for volatility-based stops\n   - Volume for confirmation\n\n4. **R multiples**: For MNQ scalping/day trading, tighter targets are better initially:\n   - [1.0, 1.5, 2.0, 2.5, 3.0] is reasonable\n\nSince there are NO parameters set and NO trades, this strategy needs fundamental initialization. The rationale should explain that this is a fresh strategy that needs baseline parameters to start generating signals.</think>\n\n```json\n{\n  \"weight\": 0.8,\n  \"timeframe\": \"5min\",\n  \"indicators\": [\"ema_9\", \"ema_21\", \"vwap\", \"rsi_14\", \"atr_14\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationa",
+  "suggested_params": {
+    "weight": 0.8,
+    "timeframe": "5min",
+    "indicators": [
+      "ema_9",
+      "ema_21",
+      "vwap",
+      "rsi_14",
+      "atr_14"
+    ],
+    "r_multiples": [
+      1.0,
+      1.5,
+      2.0,
+      2.5,
+      3.0
+    ],
+    "rationale": "Strategy is completely inactive with zero trades over 7 days and no parameters defined. Initializing baseline parameters for MNQ intraday momentum/mean-reversion hybrid: EMA 9/21 crossover for trend direction, VWAP as institutional anchor level, RSI 14 for overbought/oversold filter (>70/<30), and ATR 14 for dynamic stop-loss placement. Weight set conservatively at 0.8 since performance is unvalidated. 5min timeframe balances signal quality with intraday opportunity frequency for MNQ. R-multiples start tight (1-3R) to establish a track record before scaling targets wider. Suggest adding volume confirmation once baseline signals are generating trades."
+  }
+}
