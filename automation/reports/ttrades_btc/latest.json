@@ -1,13 +1,51 @@
 {
-  "ts": "2026-09-30T03:59:48.188174-04:00",
+  "ts": "2026-09-30T04:32:44.713804-04:00",
   "ticker": "BTC-USD",
-  "actionable": false,
-  "reason": "no H4 C3 closure (Fractal quiet)",
+  "strategy": "TTrades-Fractal",
+  "swing_type": "C2",
+  "side": "bullish",
+  "swing": {
+    "type": "c2_closure",
+    "side": "bullish",
+    "c2_high": 83468.3671875,
+    "c2_low": 82918.96875,
+    "c2_close": 83271.3828125,
+    "c2_eq": 83193.66796875,
+    "c3_close": 82974.25,
+    "swing_level": 82918.96875,
+    "direction": "long"
+  },
+  "cisd": {
+    "confirmed": false,
+    "opposing_open": 84123.7890625,
+    "series_length": 1,
+    "last_close": 82974.25,
+    "reason": "no break"
+  },
+  "eq_respected": false,
+  "d1_trend": {
+    "aligned": true,
+    "trend": "uptrend",
+    "d1_close": 82974.25,
+    "d1_ema50": 77756.53847863225,
+    "d1_ema20": 81899.72673812612,
+    "reason": "D1 uptrend"
+  },
   "weekly_profile": {
     "profile": "unknown",
     "valid_for_signal": true,
     "notes": ""
   },
+  "daily_profile": {
+    "london_expanded": false,
+    "skip_ny": false
+  },
   "account_size": 247000,
-  "risk_amount": 617.5
+  "risk_pct": 0.0025,
+  "risk_amount": 617.5,
+  "actionable": false,
+  "reason": "CISD not confirmed; EQ not respected",
+  "paper_mode": true,
+  "trade_mode": "paper",
+  "paper_reason": "no paper trade history (default paper)"
 }
