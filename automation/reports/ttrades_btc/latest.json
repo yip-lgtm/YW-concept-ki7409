@@ -1,5 +1,5 @@
 {
-  "ts": "2026-10-01T02:11:27.687275-04:00",
+  "ts": "2026-10-01T08:00:55.325788-04:00",
   "ticker": "BTC-USD",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
@@ -7,28 +7,28 @@
   "swing": {
     "type": "c2_closure",
     "side": "bullish",
-    "c2_high": 83724.7109375,
-    "c2_low": 83351.609375,
-    "c2_close": 83695.5390625,
-    "c2_eq": 83538.16015625,
-    "c3_close": 84294.0234375,
-    "swing_level": 83351.609375,
+    "c2_high": 84047.7109375,
+    "c2_low": 83130.7578125,
+    "c2_close": 83882.0234375,
+    "c2_eq": 83589.234375,
+    "c3_close": 83934.9296875,
+    "swing_level": 83130.7578125,
     "direction": "long"
   },
   "cisd": {
     "confirmed": false,
-    "opposing_open": 84689.09375,
-    "series_length": 1,
-    "last_close": 84294.0234375,
+    "opposing_open": 84523.6796875,
+    "series_length": 2,
+    "last_close": 83934.9296875,
     "reason": "no break"
   },
   "eq_respected": true,
   "d1_trend": {
     "aligned": true,
     "trend": "uptrend",
-    "d1_close": 84294.0234375,
-    "d1_ema50": 77808.29429971018,
-    "d1_ema20": 82025.41944645945,
+    "d1_close": 83934.9296875,
+    "d1_ema50": 78020.66645111525,
+    "d1_ema20": 82143.49858222749,
     "reason": "D1 uptrend"
   },
   "weekly_profile": {
@@ -37,14 +37,15 @@
     "notes": ""
   },
   "daily_profile": {
-    "london_expanded": false,
-    "skip_ny": false
+    "london_expanded": true,
+    "london_range": 916.953125,
+    "skip_ny": true
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "CISD not confirmed",
+  "reason": "CISD not confirmed; London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
