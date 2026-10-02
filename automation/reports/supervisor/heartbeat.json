@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-02T20:54:11.713787+00:00",
+  "timestamp": "2026-10-02T23:34:58.376657+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -74,21 +74,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 37063457393,
-          "conclusion": "running",
-          "created_at": "2026-10-02T20:53:30Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 37056698136,
+          "id": 37077772104,
           "conclusion": "success",
-          "created_at": "2026-10-02T19:50:18Z",
+          "created_at": "2026-10-02T23:28:53Z",
           "event": "schedule"
         },
         {
-          "id": 37047001409,
+          "id": 37072281716,
           "conclusion": "success",
-          "created_at": "2026-10-02T18:22:34Z",
+          "created_at": "2026-10-02T22:24:04Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 37063457393,
+          "conclusion": "success",
+          "created_at": "2026-10-02T20:53:30Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -97,6 +97,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 37078187294,
+          "conclusion": "running",
+          "created_at": "2026-10-02T23:34:01Z",
+          "event": "schedule"
+        },
         {
           "id": 37060101748,
           "conclusion": "success",
@@ -107,12 +113,6 @@
           "id": 37040929106,
           "conclusion": "success",
           "created_at": "2026-10-02T17:28:21Z",
-          "event": "schedule"
-        },
-        {
-          "id": 36942212288,
-          "conclusion": "success",
-          "created_at": "2026-10-01T23:42:25Z",
           "event": "schedule"
         }
       ],
@@ -153,9 +153,9 @@
     "n_open": 1,
     "n_stale_24h": 0,
     "issues": [],
-    "long_count": 0,
-    "short_count": 1,
-    "total_risk": 194.9232142857143,
+    "long_count": 1,
+    "short_count": 0,
+    "total_risk": 81.61875,
     "deep_loss_positions": []
   }
 }
