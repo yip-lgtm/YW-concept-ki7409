@@ -1,0 +1,35 @@
+{
+  "date": "2026-10-06",
+  "agent": "yw-50-20-pullback",
+  "result": {
+    "grade": "D",
+    "confidence": 15,
+    "reason": "0 trades\u6a23\u672c\u4e0d\u8db3\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\uff0cpullback\u7b56\u7565\u57285min\u566a\u97f3\u5927\u96e3\u4ee5\u57f7\u884c",
+    "weight": 0.3,
+    "timeframe": "15min",
+    "r_multiples": [
+      1.5,
+      2.0,
+      3.0,
+      4.0,
+      5.0
+    ],
+    "indicators": [
+      "ema20",
+      "sma50",
+      "pullback",
+      "rsi"
+    ],
+    "rationale": "0 trades\u53cd\u66205min\u592a\u77ed\u7121\u8a0a\u865f\uff0c\u534715min\u904e\u6ffe\u566a\u97f3\uff0c\u52a0RSI\u78ba\u8a8d\u8d85\u8ce3\u53cd\u8f49\uff0c\u964d\u4f4eweight\u63a7\u5236\u98a8\u96aa",
+    "agent": "yw-50-20-pullback",
+    "strategy_id": "50-20-pullback",
+    "ticker": "MNQ=F",
+    "live_n": 0,
+    "live_pf": 1.0,
+    "live_wr": 50,
+    "live_R": 0,
+    "current_weight": 1.0,
+    "current_timeframe": "5min",
+    "response_raw": "<think>\nThe user wants me to review my live performance as a yw-50-20-pullback sub-agent. Let me analyze:\n\n- Backtest: 0 trades, WR 50%, PF 1.0, R +0\n- No ticker breakdown\n- Current config: weight 1.0, timeframe 5min, indicators ema20/sma50/pullback\n\nWith 0 trades, there's no real performance data to grade. The backtest is essentially meaningless - 0 trades means no statistical significance. I should grade low confidence and suggest conservative parameters.\n\nLet me provide a reasonable response.\n</think>\nGRADE: D | CONFIDENCE: 15 | REASON: 0 trades\u6a23\u672c\u4e0d\u8db3\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\uff0cpullback\u7b56\u7565\u57285min\u566a\u97f3\u5927\u96e3\u4ee5\u57f7\u884c\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"ema20\", \"sma50\", \"pullback\", \"rsi\"],\n  \"r_multiples\": [1.5, 2.0, 3.0, 4.0, 5.0],\n  \"rationale\": \"0 trades\u53cd\u66205min\u592a\u77ed\u7121\u8a0a\u865f\uff0c\u534715min\u904e\u6ffe\u566a\u97f3\uff0c\u52a0RSI\u78ba\u8a8d\u8d85\u8ce3\u53cd\u8f49\uff0c\u964d\u4f4eweight\u63a7\u5236\u98a8\u96aa\"\n}"
+  }
+}
