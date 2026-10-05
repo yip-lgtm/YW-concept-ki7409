@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-05",
+  "account": "PAAPEX…091",
+  "equity_start": 50559.0,
+  "equity_end": 50451.0,
+  "session_high_equity": 50559.0,
+  "day_pnl": -108.0,
+  "open_pl": 0.0,
+  "working_count": 0,
+  "qty_policy": "QTY=1 Bracket",
+  "last_handoff": "50-20 BTC B long — MUST be QTY=1 Bracket (NOT Group QTY20)",
+  "false_out_of_gate": "MBT stale Order Ticket Limit 83660 treated as sim last → false OUT_OF_GATE",
+  "ops_notes": [
+    "Daily Profit +$200 and −$100 DD both triggered on sim day",
+    "Bracket attach: flag fill-anchored vs paper-anchored drift when fill ≠ paper",
+    "Never re-handoff gated CRT chase / null-position detections"
+  ],
+  "fills": [
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "BTC-USD",
+      "side": "long",
+      "qty": 1,
+      "pnl_usd": -194.86,
+      "exit_level": "SL",
+      "paper_sl": null,
+      "fill_sl": null,
+      "note": "paper close ~11:20 HKT; Ops sim day net −$108 after other legs/stops"
+    }
+  ]
+}

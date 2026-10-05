@@ -1,0 +1,150 @@
+name: Daily Settlement + $100 DD + LLM Opt
+
+# Weekday evening settlement for Tradovate sim book (PAAPEX…091).
+# Cron 57 14 * * 1-5 = 22:57 HKT — AFTER cash session / Ops book drop,
+# BEFORE native LLM Iteration Scientist (00:00 HKT / 16:00 UTC).
+#
+# Coherence with Scientist:
+#   - This workflow runs settlement + DD always.
+#   - Then invokes llm_iteration_scientist.py when MINIMAX_API_KEY is set
+#     (unless inputs.skip_llm=true). If key missing → llm_blocked in report;
+#     settlement still succeeds.
+#   - Native llm-iteration-scientist.yml cron at 00:00 HKT remains as backup.
+#     Weekdays may see Scientist twice (~22:57 via this chain + 00:00 native);
+#     prefer this path when DD hold needs same-evening optimize.
+
+on:
+  schedule:
+    - cron: '57 14 * * 1-5'  # 22:57 HKT weekdays
+  workflow_dispatch:
+    inputs:
+      date:
+        description: 'Settlement date YYYY-MM-DD (HKT). Empty = today HKT.'
+        required: false
+        default: ''
+      skip_llm:
+        description: 'Skip Scientist invoke (settlement+DD only)'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+      clear_hold:
+        description: 'Force clear DD hold state'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+      book_path:
+        description: 'Optional path to Ops book JSON in repo (e.g. automation/reports/daily_settlement/book_YYYYMMDD.json)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  daily-settlement:
+    name: 日落算 + DD + LLM
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
+
+      - name: Install deps
+        run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
+
+      - name: Resolve settlement date (HKT)
+        id: meta
+        run: |
+          if [ -n "${{ github.event.inputs.date }}" ]; then
+            DATE="${{ github.event.inputs.date }}"
+          else
+            DATE=$(TZ=Asia/Hong_Kong date +%Y-%m-%d)
+          fi
+          echo "date=$DATE" >> "$GITHUB_OUTPUT"
+          echo "Settlement date HKT: $DATE"
+          if [ -n "${{ github.event.inputs.book_path }}" ] && [ -f "${{ github.event.inputs.book_path }}" ]; then
+            echo "book=${{ github.event.inputs.book_path }}" >> "$GITHUB_OUTPUT"
+          elif [ -f "automation/reports/daily_settlement/book_${DATE//-/}.json" ]; then
+            echo "book=automation/reports/daily_settlement/book_${DATE//-/}.json" >> "$GITHUB_OUTPUT"
+          else
+            echo "book=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run daily settlement (+ optional LLM)
+        run: |
+          ARGS=(--date "${{ steps.meta.outputs.date }}")
+          if [ -n "${{ steps.meta.outputs.book }}" ]; then
+            ARGS+=(--book "${{ steps.meta.outputs.book }}")
+          fi
+          if [ "${{ github.event.inputs.skip_llm }}" = "true" ]; then
+            ARGS+=(--skip-llm)
+          fi
+          if [ "${{ github.event.inputs.clear_hold }}" = "true" ]; then
+            ARGS+=(--clear-hold)
+          fi
+          # On schedule (no inputs), do NOT skip LLM — degrade to llm_blocked if no key
+          .venv/bin/python automation/scripts/daily_settlement_llm_opt.py "${ARGS[@]}"
+
+      - name: Commit settlement + DD state (+ scientist artifacts if any)
+        run: |
+          git config user.name "daily-settlement-bot"
+          git config user.email "settle@yw.local"
+          git add automation/reports/daily_settlement/ || true
+          git add automation/state/ops_dd_hold.json || true
+          git add automation/reports/strategy_ranking/iterations/ || true
+          git add automation/src/ || true
+          git commit -m "auto(settle): daily settlement ${{ steps.meta.outputs.date }} HKT" || echo "no commit"
+          git pull --rebase origin main 2>&1 || echo "rebase soft-fail"
+          git push origin main 2>&1 || echo "push soft-fail"
+
+      - name: Optional Telegram ping (DD hold or llm_blocked only)
+        if: always()
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "TG secrets absent — skip ping"
+            exit 0
+          fi
+          YMD=$(echo "${{ steps.meta.outputs.date }}" | tr -d '-')
+          REP="automation/reports/daily_settlement/${YMD}_settlement.json"
+          if [ ! -f "$REP" ]; then
+            echo "no report — skip"
+            exit 0
+          fi
+          python3 - <<'PY'
+          import json, os, urllib.request
+          from pathlib import Path
+          date = os.environ.get("DATE") or ""
+          ymd = date.replace("-", "")
+          rep = Path(f"automation/reports/daily_settlement/{ymd}_settlement.json")
+          d = json.loads(rep.read_text())
+          hold = d.get("dd_hold")
+          llm = (d.get("llm") or {}).get("llm_status")
+          if not hold and llm not in ("llm_blocked", "llm_error"):
+              print("quiet — no TG")
+              raise SystemExit(0)
+          bullets = d.get("ops_briefing") or []
+          text = "YW settle " + date + " HKT\n" + "\n".join(bullets[:6])
+          token = os.environ["TELEGRAM_BOT_TOKEN"]
+          chat = os.environ["TELEGRAM_CHAT_ID"]
+          body = json.dumps({"chat_id": chat, "text": text[:3500]}).encode()
+          req = urllib.request.Request(
+              f"https://api.telegram.org/bot{token}/sendMessage",
+              data=body,
+              headers={"Content-Type": "application/json"},
+          )
+          urllib.request.urlopen(req, timeout=30)
+          print("TG sent")
+          PY
+        env:
+          DATE: ${{ steps.meta.outputs.date }}
