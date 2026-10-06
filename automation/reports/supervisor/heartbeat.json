@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-06T14:33:35.899898+00:00",
+  "timestamp": "2026-10-06T16:12:10.297887+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -73,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
+          "id": 37492657420,
+          "conclusion": "success",
+          "created_at": "2026-10-06T16:03:31Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 37484777800,
+          "conclusion": "success",
+          "created_at": "2026-10-06T15:07:52Z",
+          "event": "schedule"
+        },
+        {
           "id": 37479882948,
-          "conclusion": "running",
+          "conclusion": "success",
           "created_at": "2026-10-06T14:32:55Z",
           "event": "workflow_dispatch"
-        },
-        {
-          "id": 37442237600,
-          "conclusion": "success",
-          "created_at": "2026-10-06T09:20:11Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 37434029408,
-          "conclusion": "success",
-          "created_at": "2026-10-06T08:07:32Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -143,20 +143,18 @@
     }
   ],
   "health": {
-    "issues": [
-      "yw-daily not run today (2026-10-06 HKT)"
-    ],
-    "status": "warning",
-    "n_issues": 1
+    "issues": [],
+    "status": "ok",
+    "n_issues": 0
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 2,
+    "n_open": 1,
     "n_stale_24h": 0,
     "issues": [],
-    "long_count": 1,
+    "long_count": 0,
     "short_count": 1,
-    "total_risk": 65.71417410714287,
+    "total_risk": 5.0856863839285715,
     "deep_loss_positions": []
   }
 }
