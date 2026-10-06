@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-07",
+  "worst_strategy": {
+    "strategy_id": "b1-mnq",
+    "name": "B1 \u6218\u6cd5 (MNQ)",
+    "rank": 10,
+    "pf": 0,
+    "total_R": 0,
+    "pnl_usd": 0,
+    "win_rate": 0,
+    "n_trades": 0,
+    "avg_pf": 0.0
+  },
+  "llm_response": "<think>\nThe strategy \"b1-mnq\" has zero performance across all metrics - no trades, no profit factor, no wins. Current parameters are empty `{}`, meaning the strategy has no defined configuration. I need to suggest a reasonable starting parameter set for an MNQ (Micro E-mini Nasdaq-100) futures strategy.\n\nSince there are no parameters at all, I need to bootstrap this strategy with sensible defaults. For MNQ (Nasdaq futures), which is a volatile instrument, a 5-minute timeframe is popular for intraday trading. Common indicators for trend/momentum include EMA, RSI, VWAP, and ATR for stop management.\n\nFor R-multiples, a standard approach would be scaling out at 1R, 1.5R, 2R, 3R, 4R for partial profit taking.\n\nGiven the complete absence of performance, I should be conservative with weight (around 0.7-0.8) since we have no evidence of edge yet, but not too low since the strategy is essentially unconfigured.\n</think>\n```json\n{\n  \"weight\": 0.7,\n  \"timeframe\": \"5min\",\n  \"indicators\": [\"ema_9\", \"ema_21\", \"vwap\", \"rsi_14\", \"atr_14\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 3.0, 4.0],\n  \"rationale\": \"Strategy has zero trades and empty parameters \u2014 it is unconfigured, not failing. Bootstrap with a standard MNQ intraday trend-following setup: 5min candles balance signal frequency and noise for Nasdaq futures. EMA 9/21 crossover captures short-term momentum, VWAP anchors entries to institutional fair value (critical for MNQ), RSI 14 filters overbought/oversized extremes, and ATR 14 sets the 1R sto",
+  "suggested_params": {}
+}
