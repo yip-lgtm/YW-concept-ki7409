@@ -1,28 +1,16 @@
 {
-  "generated_at": "2026-10-06 06:28 HKT",
-  "hkt_timestamp": "2026-10-06T06:28:49.135138+08:00",
+  "generated_at": "2026-10-06 10:28 HKT",
+  "hkt_timestamp": "2026-10-06T10:28:20.981642+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 9,
-    "trades_today": 1,
-    "wins_24h": 2,
-    "R_24h": -3.76,
-    "signals_24h": 55,
-    "wr_24h": 22.2
+    "trades_24h": 4,
+    "trades_today": 2,
+    "wins_24h": 1,
+    "R_24h": -1.38,
+    "signals_24h": 46,
+    "wr_24h": 25.0
   },
   "ranking_24h": [
-    {
-      "strategy": "H-Pattern",
-      "n_trades": 1,
-      "n_wins": 1,
-      "n_losses": 0,
-      "win_rate": 100.0,
-      "total_R": 1.62,
-      "avg_R": 1.618,
-      "total_pnl_usd": 483.44,
-      "profit_factor": 10.0,
-      "rank": 1
-    },
     {
       "strategy": "CRT",
       "n_trades": 2,
@@ -31,9 +19,9 @@
       "win_rate": 50.0,
       "total_R": 0.62,
       "avg_R": 0.309,
-      "total_pnl_usd": 1.22,
+      "total_pnl_usd": 30.43,
       "profit_factor": 1.62,
-      "rank": 2
+      "rank": 1
     },
     {
       "strategy": "Two-Yang",
@@ -45,7 +33,7 @@
       "avg_R": 0.309,
       "total_pnl_usd": 4.99,
       "profit_factor": 1.62,
-      "rank": 3
+      "rank": 2
     },
     {
       "strategy": "B1",
@@ -57,19 +45,7 @@
       "avg_R": -1.0,
       "total_pnl_usd": -5.87,
       "profit_factor": 0.0,
-      "rank": 4
-    },
-    {
-      "strategy": "50-20-Pullback",
-      "n_trades": 1,
-      "n_wins": 0,
-      "n_losses": 1,
-      "win_rate": 0.0,
-      "total_R": -1.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -194.86,
-      "profit_factor": 0.0,
-      "rank": 5
+      "rank": 3
     },
     {
       "strategy": "Stair",
@@ -81,7 +57,7 @@
       "avg_R": -1.0,
       "total_pnl_usd": -40.2,
       "profit_factor": 0.0,
-      "rank": 6
+      "rank": 4
     },
     {
       "strategy": "3-Pushes",
@@ -93,7 +69,19 @@
       "avg_R": -1.0,
       "total_pnl_usd": -5.11,
       "profit_factor": 0.0,
-      "rank": 7
+      "rank": 5
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "n_trades": 2,
+      "n_wins": 0,
+      "n_losses": 2,
+      "win_rate": 0.0,
+      "total_R": -2.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -296.27,
+      "profit_factor": 0.0,
+      "rank": 6
     },
     {
       "strategy": "B1-3in1",
@@ -105,17 +93,17 @@
       "avg_R": -1.0,
       "total_pnl_usd": 200.13,
       "profit_factor": 0.0,
-      "rank": 8
+      "rank": 7
     }
   ],
   "ranking_24h_aggregate": {
     "n_trades": 13,
-    "n_wins": 3,
-    "win_rate": 23.1,
-    "total_R": -5.14,
-    "total_pnl_usd": 443.74
+    "n_wins": 2,
+    "win_rate": 15.4,
+    "total_R": -7.76,
+    "total_pnl_usd": -111.9
   },
-  "ranking_24h_updated": "2026-10-05T22:28:49.135156+00:00",
+  "ranking_24h_updated": "2026-10-06T02:28:20.981658+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -185,13 +173,13 @@
         5
       ],
       "live_24h": {
-        "n": 1,
-        "wins": 1,
+        "n": 0,
+        "wins": 0,
         "losses": 0,
-        "wr": 100.0,
-        "R": 1.62,
-        "pf": 10.0,
-        "pnl": 483.44
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
       },
       "live_today": {
         "n": 0,
@@ -202,7 +190,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 4,
+      "signals_24h": 3,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -217,8 +205,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 35,
-        "reason": "0 trades\u8b49\u660e\u7121\u4fe1\u865f\u89f8\u767c,\u77ed\u6642\u9593\u6846\u592a\u566a,\u9700\u8abf\u6574\u53c3\u6578\u6fc0\u6d3b\u7b56\u7565"
+        "confidence": 30,
+        "reason": "0 trades means strategy never triggered. Can't validate. Need to relax entry conditions to generate signal activity for evaluation."
       }
     },
     {
@@ -254,7 +242,7 @@
         "pf": 0.0,
         "pnl": -5.11
       },
-      "signals_24h": 10,
+      "signals_24h": 9,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -269,8 +257,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "0 trades\u8b49\u660e\u7121\u4fe1\u865f\u751f\u6210\uff0c3-push\u9580\u6abb\u904e\u9ad8\uff0c\u7121ticker\u6578\u64da\u9a57\u8b49\uff0c\u7121\u6cd5\u78ba\u8a8dedge\u5b58\u5728"
+        "confidence": 20,
+        "reason": "0 trades\u8868\u793a\u4fe1\u865f\u89f8\u767c\u689d\u4ef6\u904e\u56b4\uff0c\u7121\u5be6\u969bedge\u53ef\u9a57\u8b49\uff1b\u9700\u653e\u5bec\u53c3\u6578\u4ee5\u7522\u751f\u53ef\u5206\u6790\u6578\u64da"
       }
     },
     {
@@ -322,7 +310,7 @@
       "iteration": {
         "grade": "D",
         "confidence": 25,
-        "reason": "0 trades means no signal generation at all, cannot evaluate edge"
+        "reason": "0 trades \u5b8c\u5168\u7121\u6a23\u672c\uff0cPF 1.0/WR 50% \u70ba\u9ed8\u8a8d\u503c\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u7b56\u7565\u53ef\u80fd\u904e\u56b4\u672a\u89f8\u767c"
       }
     },
     {
@@ -373,8 +361,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "0 trades backtested = \u5b8c\u5168\u7121\u8a0a\u865f\uff0cRSI divergence on 15min \u592a\u7a00\u6709\uff0c\u9700\u653e\u5bec\u689d\u4ef6"
+        "confidence": 35,
+        "reason": "0 trades\u5b8c\u5168\u7121signal\uff0c\u689d\u4ef6\u904e\u56b4\u9700\u653e\u5bec\uff0c\u7121ticker breakdown\u5931\u53bb\u8a3a\u65b7\u57fa\u790e"
       }
     },
     {
@@ -425,8 +413,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 15,
-        "reason": "0 trades means pullback signal too rare on 5min, cannot evaluate. Need to loosen conditions to generate data."
+        "confidence": 25,
+        "reason": "0 trades backtest = no statistical edge proven; pullback conditions too strict to fire any signals."
       }
     },
     {
@@ -462,7 +450,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 10,
+      "signals_24h": 9,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -477,8 +465,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 72,
-        "reason": "0 trades\u8868\u793a\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0cstep_pattern\u57285min\u592a\u56b4\u683c\uff0c\u9700\u653e\u5bec\u689d\u4ef6\u4e26\u52a0\u5165\u8f14\u52a9\u6307\u6a19"
+        "confidence": 18,
+        "reason": "0 trades = strategy never triggers; step_pattern detection on 5min likely too strict, no signal generation"
       }
     },
     {
@@ -503,18 +491,18 @@
         "wr": 50.0,
         "R": 0.62,
         "pf": 1.62,
-        "pnl": 1.22
+        "pnl": 30.43
       },
       "live_today": {
-        "n": 0,
-        "wins": 0,
+        "n": 1,
+        "wins": 1,
         "losses": 0,
-        "wr": 0,
-        "R": 0,
-        "pf": 0.0,
-        "pnl": 0
+        "wr": 100.0,
+        "R": 1.62,
+        "pf": 10.0,
+        "pnl": 32.91
       },
-      "signals_24h": 27,
+      "signals_24h": 25,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -529,8 +517,8 @@
       },
       "iteration": {
         "grade": "C",
-        "confidence": 62,
-        "reason": "\u6574\u9ad4R\u5fae\u5229\u4f46PF 1.08\u504f\u5f31\uff0cMNQ\u56b4\u91cd\u8667\u640d\u62d6\u7d2f\uff0cM2K\u6301\u5e73\uff0c\u50c5MES/BTC\u76c8\u5229\u3002\u9700\u964d\u6b0a+\u512a\u5316\u914d\u7f6e\u3002"
+        "confidence": 72,
+        "reason": "PF 1.08\u52c9\u5f37\u53ca\u683c\uff1bMNQ 32.8% WR\u56b4\u91cd\u62d6\u7d2fR-20\uff1b\u9700\u964d\u6b0a\u91cd+\u52a0\u8da8\u52e2\u6ffe\u7db2\u63a7\u640d\u3002"
       }
     },
     {
@@ -581,8 +569,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 72,
-        "reason": "\u96f6\u4ea4\u6613\u4ee3\u8868\u8a0a\u865f\u904e\u56b4\u6216\u9031\u671f\u5075\u6e2c\u5931\u6548\uff0c5_subdetectors\u5168\u78ba\u8a8d\u6975\u96e3\u89f8\u767c\uff0c\u9700\u653e\u5bec\u5165\u5834\u3002"
+        "confidence": 35,
+        "reason": "0 trades means strategy never fires; cycle + 5 subdetectors likely conflict/cancel signals on 5min."
       }
     },
     {
@@ -601,13 +589,13 @@
         5
       ],
       "live_24h": {
-        "n": 1,
+        "n": 0,
         "wins": 0,
-        "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": -5.87
+        "pnl": 0
       },
       "live_today": {
         "n": 0,
@@ -618,7 +606,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 1,
+      "signals_24h": 0,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -653,13 +641,13 @@
         5
       ],
       "live_24h": {
-        "n": 1,
+        "n": 0,
         "wins": 0,
-        "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": -5.87
+        "pnl": 0
       },
       "live_today": {
         "n": 0,
@@ -670,7 +658,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 1,
+      "signals_24h": 0,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -705,13 +693,13 @@
         5
       ],
       "live_24h": {
-        "n": 1,
+        "n": 0,
         "wins": 0,
-        "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": -5.87
+        "pnl": 0
       },
       "live_today": {
         "n": 0,
@@ -722,7 +710,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 1,
+      "signals_24h": 0,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -757,13 +745,13 @@
         5
       ],
       "live_24h": {
-        "n": 1,
+        "n": 0,
         "wins": 0,
-        "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": -5.87
+        "pnl": 0
       },
       "live_today": {
         "n": 0,
@@ -774,7 +762,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 1,
+      "signals_24h": 0,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
