@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-10-07 00:12 HKT",
-  "hkt_timestamp": "2026-10-07T00:12:04.943712+08:00",
+  "generated_at": "2026-10-07 05:09 HKT",
+  "hkt_timestamp": "2026-10-07T05:09:53.694381+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 8,
-    "trades_today": 0,
-    "wins_24h": 4,
-    "R_24h": 2.47,
-    "signals_24h": 42,
-    "wr_24h": 50.0
+    "trades_24h": 9,
+    "trades_today": 2,
+    "wins_24h": 6,
+    "R_24h": 6.71,
+    "signals_24h": 51,
+    "wr_24h": 66.7
   },
   "ranking_24h": [
     {
@@ -24,27 +24,27 @@
       "rank": 1
     },
     {
-      "strategy": "Two-Yang",
-      "n_trades": 3,
-      "n_wins": 1,
-      "n_losses": 2,
-      "win_rate": 33.3,
-      "total_R": -0.38,
-      "avg_R": -0.127,
-      "total_pnl_usd": -51.7,
-      "profit_factor": 0.81,
+      "strategy": "3-Pushes",
+      "n_trades": 2,
+      "n_wins": 2,
+      "n_losses": 0,
+      "win_rate": 100.0,
+      "total_R": 3.24,
+      "avg_R": 1.618,
+      "total_pnl_usd": 54.59,
+      "profit_factor": 10.0,
       "rank": 2
     },
     {
       "strategy": "50-20-Pullback",
-      "n_trades": 3,
-      "n_wins": 1,
+      "n_trades": 4,
+      "n_wins": 2,
       "n_losses": 2,
-      "win_rate": 33.3,
-      "total_R": -0.38,
-      "avg_R": -0.127,
-      "total_pnl_usd": 66.29,
-      "profit_factor": 0.81,
+      "win_rate": 50.0,
+      "total_R": 1.24,
+      "avg_R": 0.309,
+      "total_pnl_usd": 62.07,
+      "profit_factor": 1.62,
       "rank": 3
     },
     {
@@ -60,26 +60,38 @@
       "rank": 4
     },
     {
-      "strategy": "3-Pushes",
+      "strategy": "Two-Yang",
       "n_trades": 1,
       "n_wins": 0,
       "n_losses": 1,
       "win_rate": 0.0,
       "total_R": -1.0,
       "avg_R": -1.0,
-      "total_pnl_usd": -5.11,
+      "total_pnl_usd": -56.69,
       "profit_factor": 0.0,
       "rank": 5
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "n_trades": 1,
+      "n_wins": 0,
+      "n_losses": 1,
+      "win_rate": 0.0,
+      "total_R": -1.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -6.75,
+      "profit_factor": 0.0,
+      "rank": 6
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 14,
-    "n_wins": 6,
-    "win_rate": 42.9,
-    "total_R": 1.71,
-    "total_pnl_usd": 97.2
+    "n_trades": 15,
+    "n_wins": 8,
+    "win_rate": 53.3,
+    "total_R": 5.95,
+    "total_pnl_usd": 140.94
   },
-  "ranking_24h_updated": "2026-10-06T16:12:04.943732+00:00",
+  "ranking_24h_updated": "2026-10-06T21:09:53.694399+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -166,7 +178,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 5,
+      "signals_24h": 4,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -181,8 +193,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 30,
-        "reason": "0 trades means strategy never triggered. Can't validate. Need to relax entry conditions to generate signal activity for evaluation."
+        "confidence": 25,
+        "reason": "0 trades \u5b8c\u5168\u7121\u4fe1\u865f\u751f\u6210\uff0c\u7b56\u7565\u904e\u56b4\u6216\u689d\u4ef6\u4e0d\u89f8\u767c\uff0c\u7121\u7d71\u8a08\u610f\u7fa9"
       }
     },
     {
@@ -201,24 +213,24 @@
         5
       ],
       "live_24h": {
-        "n": 1,
-        "wins": 0,
-        "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
-        "pf": 0.0,
-        "pnl": -5.11
+        "n": 2,
+        "wins": 2,
+        "losses": 0,
+        "wr": 100.0,
+        "R": 3.24,
+        "pf": 10.0,
+        "pnl": 54.59
       },
       "live_today": {
-        "n": 0,
-        "wins": 0,
+        "n": 2,
+        "wins": 2,
         "losses": 0,
-        "wr": 0,
-        "R": 0,
-        "pf": 0.0,
-        "pnl": 0
+        "wr": 100.0,
+        "R": 3.24,
+        "pf": 10.0,
+        "pnl": 54.59
       },
-      "signals_24h": 7,
+      "signals_24h": 8,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -233,8 +245,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 20,
-        "reason": "0 trades\u8868\u793a\u4fe1\u865f\u89f8\u767c\u689d\u4ef6\u904e\u56b4\uff0c\u7121\u5be6\u969bedge\u53ef\u9a57\u8b49\uff1b\u9700\u653e\u5bec\u53c3\u6578\u4ee5\u7522\u751f\u53ef\u5206\u6790\u6578\u64da"
+        "confidence": 25,
+        "reason": "0 trades \u6a23\u672c\u4e0d\u8db3\uff0c\u7b56\u7565\u7121\u89f8\u767c\u6216\u689d\u4ef6\u904e\u56b4\uff0c\u9700\u8abf\u6574\u654f\u611f\u5ea6"
       }
     },
     {
@@ -285,8 +297,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "0 trades \u5b8c\u5168\u7121\u6a23\u672c\uff0cPF 1.0/WR 50% \u70ba\u9ed8\u8a8d\u503c\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u7b56\u7565\u53ef\u80fd\u904e\u56b4\u672a\u89f8\u767c"
+        "confidence": 35,
+        "reason": "0 trades\u8868\u793a\u8a0a\u865f\u689d\u4ef6\u904e\u56b4\u6216\u6307\u6a19\u7121\u5171\u9cf4\uff0c\u7b56\u7565\u5b8c\u5168\u5931\u6548\uff0c\u9700\u5927\u5e45\u8abf\u6574"
       }
     },
     {
@@ -337,8 +349,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 35,
-        "reason": "0 trades\u5b8c\u5168\u7121signal\uff0c\u689d\u4ef6\u904e\u56b4\u9700\u653e\u5bec\uff0c\u7121ticker breakdown\u5931\u53bb\u8a3a\u65b7\u57fa\u790e"
+        "confidence": 20,
+        "reason": "\u96f6\u4ea4\u6613=\u7b56\u7565\u5f9e\u672a\u89f8\u767c\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\u3002RSI\u80cc\u96e2\u8a0a\u865f\u672c\u8eab\u7a00\u6709\uff0c15min\u7c92\u5ea6\u52a0\u4e0a0.7\u6b0a\u91cd\u53ef\u80fd\u4ee4\u8a0a\u865f\u88ab\u904e\u6ffe\u3002"
       }
     },
     {
@@ -389,8 +401,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "0 trades backtest = no statistical edge proven; pullback conditions too strict to fire any signals."
+        "confidence": 35,
+        "reason": "0 trades means strategy never triggers - no edge can be validated. Need to relax entry conditions to generate signals."
       }
     },
     {
@@ -426,7 +438,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 6,
+      "signals_24h": 11,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -441,8 +453,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 18,
-        "reason": "0 trades = strategy never triggers; step_pattern detection on 5min likely too strict, no signal generation"
+        "confidence": 15,
+        "reason": "0 trades = \u7121\u4fe1\u865f\u7522\u751f\uff0c\u7121\u6cd5\u9a57\u8b49 edge\uff0c\u689d\u4ef6\u592a\u56b4\u6216\u6307\u6a19\u4e0d\u8db3"
       }
     },
     {
@@ -478,7 +490,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 24,
+      "signals_24h": 28,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -494,7 +506,7 @@
       "iteration": {
         "grade": "C",
         "confidence": 72,
-        "reason": "PF 1.08\u52c9\u5f37\u53ca\u683c\uff1bMNQ 32.8% WR\u56b4\u91cd\u62d6\u7d2fR-20\uff1b\u9700\u964d\u6b0a\u91cd+\u52a0\u8da8\u52e2\u6ffe\u7db2\u63a7\u640d\u3002"
+        "reason": "PF 1.08\u504f\u5f31\uff0cMNQ\u62d6\u6cb9\u56b4\u91cd(-18.66R)\uff0c\u9700\u91cd\u6574\u914d\u7f6e"
       }
     },
     {
@@ -545,8 +557,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 35,
-        "reason": "0 trades means strategy never fires; cycle + 5 subdetectors likely conflict/cancel signals on 5min."
+        "confidence": 15,
+        "reason": "0 trades\uff0c\u7121\u5be6\u969b\u8868\u73fe\u6578\u64da\uff0c\u73fe\u6709\u7d71\u8a08\u70ba\u9810\u8a2d\u503c\uff0c\u7121\u6cd5\u9a57\u8b49\u7b56\u7565\u6709\u6548\u6027"
       }
     },
     {
