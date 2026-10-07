@@ -67,6 +67,7 @@ jobs:
 
       - name: Send TG summary (always)
         if: always()
+        working-directory: automation
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -105,7 +106,7 @@ jobs:
           EOF
           # strip leading indent
           sed -i 's/^          //' /tmp/tg.py
-          python3 /tmp/tg.py
+          .venv/bin/python /tmp/tg.py
 
       - name: Upload log artifact (debug)
         if: failure()
