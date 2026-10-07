@@ -22,9 +22,12 @@ WORKFLOW = 'unified-pipeline.yml'
 BRANCH = 'main'
 INTERVAL_SEC = 300  # 5 min
 
-# TG alerts
-TG_TOKEN = '8976341017:AAFWVF7HX0rpMJJtd3qzmGqqWY-l3olwOaU'
-TG_CHAT = '8475453959'
+# TG alerts -- read from env / GHA secrets, NEVER hardcode.
+# Historical note: prior versions hardcoded a real bot token here; that token
+# is now considered compromised and must be rotated via @BotFather.
+# 2026-10-07: removed hardcoded credentials (commit security/hardcoded-tg-token).
+TG_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+TG_CHAT = os.environ.get('TELEGRAM_CHAT_ID', '')
 
 HKT = timezone(timedelta(hours=8))
 

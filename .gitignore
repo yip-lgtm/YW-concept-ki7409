@@ -3,4 +3,34 @@ __pycache__/
 *.pyc
 *.log
 .env
+.env.*
 automation/.venv
+
+# Secrets — never commit any of these file patterns
+*.pem
+*.key
+*.p12
+*.pfx
+*id_rsa*
+*id_dsa*
+*id_ed25519*
+*known_hosts*
+*secrets/
+/workspace/secrets/
+.credentials/
+secrets.json
+secrets.yaml
+secrets.toml
+
+# Tooling
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local state
+*.local
+*.bak
+*.tmp
+.audit/
