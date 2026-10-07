@@ -156,3 +156,12 @@ jobs:
           git add automation/reports/strategy_ranking/ || true
           git commit -m "auto(ranking): daily strategy PnL ranking + LLM iteration $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
           git push origin main || true
+
+      - name: "Daily auto-push (catch-all: settlement + config + missing reports)"
+        if: always()
+        working-directory: automation
+        env:
+          GITHUB_PAT: ${{ secrets.APEX_PAT }}
+        run: |
+          .venv/bin/python scripts/daily_auto_push.py 2>&1 | tee /tmp/auto_push_log.txt || true
+          echo "auto-push-step:exit=$?" >> /tmp/auto_push_log.txt

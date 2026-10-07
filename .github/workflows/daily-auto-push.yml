@@ -1,0 +1,102 @@
+name: 'Daily Auto-Push Reports'
+
+# Purpose — "每日自動git push report" (user directive 2026-10-07).
+# This workflow is the dedicated daily-push safety net. It runs at 02:00 HKT,
+# AFTER all the morning workflows (00:00 HKT ranking + 01:00 HKT iteration)
+# have had their chance to commit, and ensures ALL daily files land on main.
+#
+# Watched paths (mirrors automation/scripts/daily_auto_push.py):
+#   - automation/reports/strategy_ranking/      (incl. 24h/, history.jsonl)
+#   - automation/reports/strategy_settlement/   (per-agent levels)
+#   - automation/reports/llm_iteration/        (LLM iter outputs)
+#   - automation/reports/live_scan/             (live trade state)
+#   - automation/reports/ocs_btc_5m/           (OCS BTC state)
+#   - automation/config/strategy_levels.json   (level state)
+#   - automation/config/ranking_settings.json  (ranking config)
+#   - docs/dashboard-data.json + manifests + review.html
+#
+# Idempotent: exits 0 with no commit if no changes.
+# On push failure: writes /tmp/daily_push_error.log + sends TG alert.
+
+on:
+  schedule:
+    # HKT 02:00 = UTC 18:00 — after 00:00 HKT ranking + 01:00 HKT iter
+    - cron: '0 18 * * *'   # 每日 02:00 HKT
+  workflow_dispatch:
+  # NOTE: don't add on: push - GHA creates phantom "push" runs
+
+permissions:
+  contents: write
+
+jobs:
+  daily-push:
+    name: Daily auto-push (02:00 HKT)
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 50
+          token: ${{ secrets.APEX_PAT }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run daily auto-push
+        id: push
+        working-directory: automation
+        run: |
+          .venv/bin/python scripts/daily_auto_push.py 2>&1 | tee /tmp/daily_push_log.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> /tmp/daily_push_log.txt
+
+      - name: Send TG summary (always)
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          # Extract last 5 lines + exit code
+          tail -5 /tmp/daily_push_log.txt > /tmp/summary.txt
+          exit_code=$(grep -oE "exit_code=[0-9]+" /tmp/daily_push_log.txt | tail -1 || echo "exit_code=?")
+          cat > /tmp/tg.py <<'EOF'
+          import os, sys, requests
+          from pathlib import Path
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          hkt = datetime.now(ZoneInfo("Asia/Hong_Kong")).strftime("%Y-%m-%d %H:%M HKT")
+          summary = Path("/tmp/summary.txt").read_text().strip() if Path("/tmp/summary.txt").exists() else "(no log)"
+          exit_code = "$(cat /tmp/daily_push_log.txt | grep -oE 'exit_code=[0-9]+' | tail -1)"
+          ok = exit_code == "exit_code=0"
+          emoji = "✅" if ok else "❌"
+          msg = (
+              f"{emoji} <b>Daily Auto-Push</b> {hkt}\n\n"
+              f"<pre>{summary[:600]}</pre>\n\n"
+              f"{exit_code}"
+          )
+          url = "https://api.telegram.org/bot" + os.environ["TELEGRAM_BOT_TOKEN"] + "/sendMessage"
+          r = requests.post(
+              url,
+              json={"chat_id": os.environ["TELEGRAM_CHAT_ID"], "text": msg, "parse_mode": "HTML"},
+              timeout=10,
+          )
+          print("TG:", r.json().get("ok"))
+          EOF
+          # strip leading indent
+          sed -i 's/^          //' /tmp/tg.py
+          python3 /tmp/tg.py
+
+      - name: Upload log artifact (debug)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-auto-push-log
+          path: /tmp/daily_push_log.txt
+          retention-days: 14
