@@ -164,6 +164,30 @@ STRATEGIES = {
     "OCS-BTC-5m":    {"fn": "ocs",           "args": {"needs_btc": True}, "weight": 1.0, "tf": "5m"},
 }
 
+# === LLM auto-optimization overrides (param_optimizer.py writes this) ===
+# Before 2026-10-07 `weight` above was DEAD CONFIG — written but never read, so
+# every "LLM iteration" since August had zero runtime effect. This loader makes
+# weight/min_strength live, and confidence is scaled by weight at signal build.
+try:
+    _ov_path = Path(__file__).resolve().parents[1] / "config" / "strategy_overrides.json"
+    _ov_data = json.loads(_ov_path.read_text()) if _ov_path.exists() else {}
+except Exception:
+    _ov_data = {}
+
+for _sname, _cfg in STRATEGIES.items():
+    _ov = _ov_data.get(_sname)
+    if not isinstance(_ov, dict):
+        continue
+    if isinstance(_ov.get("weight"), (int, float)):
+        _cfg["weight"] = float(_ov["weight"])
+        _cfg["llm_optimized"] = True
+    if isinstance(_ov.get("min_strength"), int):
+        _cfg["min_strength"] = int(_ov["min_strength"])
+    if _ov.get("resample_tf"):
+        _cfg.setdefault("args", {})["resample_tf"] = _ov["resample_tf"]
+
+STRATEGY_WEIGHT = {k: v.get("weight", 1.0) for k, v in STRATEGIES.items()}
+
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID")
 AI_TOKEN = os.environ.get("AI_TRADER_TOKEN")
@@ -1276,11 +1300,20 @@ def main() -> int:
         # can read them (CRT mss_confirm/crt_high, H-Pattern pullback_pct, etc.).
         # Without this passthrough, v3 gates couldn't see the detector's numeric
         # structure data → CRT chase gate silently never fired.
+        #
+        # weight (LLM auto-optimization, 2026-10-07): scales confidence so a
+        # strategy the LLM has down-weighted (0.7) fires less often / needs more
+        # confluence, and an up-weighted one (1.2) fires more readily. Before
+        # this, weight was dead config and every LLM iteration had no effect.
+        _w = STRATEGY_WEIGHT.get(det["strategy"], 1.0)
+        conf = int(round(conf * _w))
         signal = {
             "strategy": det["strategy"],
             "ticker": det["ticker"],
             "grade": grade,
             "confidence": conf,
+            "raw_confidence": int(conf / _w) if _w else conf,
+            "weight": _w,
             "reason": reason,
             "direction": det.get("direction", "long" if det.get("signal") == "buy" else "short"),
             "last_close": det.get("last_close", 0),

@@ -80,6 +80,15 @@ jobs:
         run: |
           .venv/bin/python scripts/llm_iterate_all.py 2>&1 | tee /tmp/iterate_all_log.txt
 
+      - name: Apply LLM param suggestions (auto-optimize)
+        id: param-apply
+        if: always()
+        working-directory: automation
+        run: |
+          .venv/bin/python scripts/param_optimizer.py 2>&1 | tee /tmp/param_apply_log.txt || true
+          echo "--- strategy_overrides.json ---"
+          cat automation/config/strategy_overrides.json 2>/dev/null | head -80 || true
+
       - name: "LLM iteration (legacy: worst strategy)"
         id: iterate
         working-directory: automation

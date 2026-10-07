@@ -57,6 +57,7 @@ WATCHED_PATHS = [
     "automation/config/strategy_levels.json",
     "automation/config/ranking_settings.json",
     "automation/config/settlement_overrides.json",
+    "automation/config/strategy_overrides.json",
     # Web dashboard
     "docs/dashboard-data.json",
     "docs/charts-manifest.json",
