@@ -101,37 +101,111 @@ def run_yw_backtest(strategy_id: str, days: int = 20) -> dict:
                                          "profit_factor": 0, "total_pnl_usd": 0})
 
 
-def compute_ranking(results: list[dict]) -> list[dict]:
-    """Sort by profit factor, then total R, then win rate."""
-    return sorted(results, key=lambda r: (r["profit_factor"], r["total_R"], r["win_rate"]),
-                  reverse=True)
+def load_ranking_settings():
+    """Load ranking settings from config/ranking_settings.json.
+
+    Falls back to defaults if file missing (graceful degradation).
+    """
+    cfg_path = REPO / "automation" / "config" / "ranking_settings.json"
+    if not cfg_path.exists():
+        return _DEFAULT_RANKING_SETTINGS
+    try:
+        return json.loads(cfg_path.read_text())
+    except Exception as e:
+        print(f"[ranking] WARN: failed to load {cfg_path}: {e}; using defaults", file=sys.stderr)
+        return _DEFAULT_RANKING_SETTINGS
 
 
-def make_ranking_markdown(ranking: list[dict], date_str: str) -> str:
-    """Generate markdown ranking report."""
+_DEFAULT_RANKING_SETTINGS = {
+    "sort_criteria": {
+        "primary": ["total_pnl_usd"],
+        "secondary": ["profit_factor"],
+        "tertiary": ["win_rate"],
+        "r_role": "footnote",
+    },
+    "award_eligibility": {
+        "min_trades_for_medal": 10,
+    },
+    "ticker_split": {"enabled": True, "display_column": True},
+    "lookback": {"default_days": 20},
+}
+
+
+def compute_ranking(results: list[dict], settings: dict | None = None) -> list[dict]:
+    """Sort by total_pnl_usd (primary) + PF (secondary) + WR (tertiary).
+
+    9/22 user feedback: "Total $ + PF 排行，R 只作附註".
+    R is excluded from sort key entirely — it's an efficiency metric,
+    not a cash-flow metric. 種田要睇$同單筆風險.
+    """
+    s = settings or load_ranking_settings()
+    primary = s["sort_criteria"]["primary"]
+    secondary = s["sort_criteria"].get("secondary", [])
+    tertiary = s["sort_criteria"].get("tertiary", [])
+
+    def sort_key(r):
+        return tuple(-float(r.get(k, 0)) for k in (primary + secondary + tertiary))
+
+    return sorted(results, key=sort_key)
+
+
+def make_ranking_markdown(ranking: list[dict], date_str: str, settings: dict | None = None) -> str:
+    """Generate markdown ranking report using 9/22 收緊版 settings.
+
+    Columns: Rank | Ticker | Strategy | Trades | WR | PF | P&L (USD)
+    Footnote column: Total R
+    n<10 don't get medals.
+    """
+    s = settings or load_ranking_settings()
+    min_medal = s["award_eligibility"]["min_trades_for_medal"]
+    show_ticker = s.get("ticker_split", {}).get("display_column", False)
+    n_disqualified = sum(1 for r in ranking if r.get("n_trades", 0) < min_medal)
+
+    # Build header
+    ticker_header = "Ticker |" if show_ticker else ""
+    ticker_sep    = "--------|" if show_ticker else ""
     md = f"""# Strategy Ranking — {date_str}
 
 ## Summary
-**9 strategies** compared on 20-day backtest window. Ranking by Profit Factor.
+**{len(ranking)} strategies** ranked by **Total P&L (USD)**, tie-broken by **Profit Factor**.
+Sort key: Total $ → PF → Win Rate. Total R is a footnote (efficiency, not cash flow).
 
-| Rank | Strategy | Trades | WR | Total R | PF | P&L (USD) | Weight |
-|------|----------|--------|----|---------|-----|-----------|--------|
+| Rank | {ticker_header} Strategy | Trades | WR | PF | P&L (USD) |
+|------|{ticker_sep}----------|--------|----|-----|-----------|
 """
     for i, r in enumerate(ranking, 1):
-        s = r["strategy"]
-        emoji = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "  "
-        md += f"| {i} {emoji} | {s['name']} | {r['n_trades']} | {r['win_rate']:.1f}% | {r['total_R']:+.0f}R | {r['profit_factor']:.2f} | ${r['total_pnl_usd']:+,.0f} | {s['weight']}x |\n"
+        rs = r["strategy"]
+        n = r.get("n_trades", 0)
+        # n<10 唔入獎 — no medal, just position
+        if n >= min_medal:
+            emoji = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "  "
+        else:
+            emoji = "  "  # disqualified from medal
+        tk = f" {rs['ticker']} |" if show_ticker else ""
+        md += f"| {i} {emoji} |{tk} {rs['name']} | {n} | {r['win_rate']:.1f}% | {r['profit_factor']:.2f} | ${r['total_pnl_usd']:+,.0f} |\n"
 
-    # Top 3 + Bottom 3
-    md += "\n## Top 3 (best PF)\n"
-    for i, r in enumerate(ranking[:3], 1):
-        s = r["strategy"]
-        md += f"{i}. **{s['name']}** — PF {r['profit_factor']:.2f}, +{r['total_R']:.0f}R, {r['win_rate']:.1f}% WR\n"
+    # Top 3 / Bottom 3 from ELIGIBLE strategies only
+    eligible = [r for r in ranking if r.get("n_trades", 0) >= min_medal]
+    md += "\n## Top 3 (eligible, n≥10)\n"
+    for i, r in enumerate(eligible[:3], 1):
+        rs = r["strategy"]
+        tk = f" ({rs['ticker']})" if show_ticker else ""
+        md += f"{i}. **{rs['name']}**{tk} — P&L ${r['total_pnl_usd']:+,.0f}, PF {r['profit_factor']:.2f}, {r['win_rate']:.1f}% WR (n={r.get('n_trades', 0)})\n"
 
-    md += "\n## Bottom 3 (worst PF)\n"
-    for i, r in enumerate(ranking[-3:], len(ranking) - 2):
-        s = r["strategy"]
-        md += f"{i}. **{s['name']}** — PF {r['profit_factor']:.2f}, {r['total_R']:+.0f}R, {r['win_rate']:.1f}% WR\n"
+    md += "\n## Bottom 3 (eligible, n≥10)\n"
+    for j, r in enumerate(eligible[-3:], len(eligible) - 2):
+        if j <= 3:  # don't double-list the top if small N
+            continue
+        rs = r["strategy"]
+        tk = f" ({rs['ticker']})" if show_ticker else ""
+        md += f"{j}. **{rs['name']}**{tk} — P&L ${r['total_pnl_usd']:+,.0f}, PF {r['profit_factor']:.2f}, {r['win_rate']:.1f}% WR (n={r.get('n_trades', 0)})\n"
+
+    # Footnote — Total R as supplementary info
+    md += "\n## Footnote — Total R (efficiency, not in sort)\n"
+    md += "| Strategy | Total R | n |\n|----------|---------|---|\n"
+    for r in ranking:
+        rs = r["strategy"]
+        md += f"| {rs['name']} | {r['total_R']:+.0f}R | {r.get('n_trades', 0)} |\n"
 
     # Aggregate
     total_pnl = sum(r["total_pnl_usd"] for r in ranking)
@@ -141,6 +215,7 @@ def make_ranking_markdown(ranking: list[dict], date_str: str) -> str:
     md += f"- **Total P&L**: ${total_pnl:+,.0f}\n"
     md += f"- **Total R**: {total_r:+.0f}R\n"
     md += f"- **Avg Profit Factor**: {avg_pf:.2f}\n"
+    md += f"- **Disqualified (n<{min_medal})**: {n_disqualified}/{len(ranking)} strategies\n"
 
     return md
 
@@ -179,9 +254,18 @@ def make_ranking_chart(ranking: list[dict], date_str: str, out_path: Path):
 def main():
     HKT = timezone(timedelta(hours=8))
     today_hkt = datetime.now(HKT).strftime("%Y-%m-%d")
-    days = 20  # Backtest window
+
+    # Load settings
+    settings = load_ranking_settings()
+    days = settings.get("lookback", {}).get("default_days", 20)
+    sort_desc = " + ".join(
+        settings["sort_criteria"]["primary"]
+        + settings["sort_criteria"].get("secondary", [])
+    )
 
     print(f"[ranking] Computing daily strategy ranking for {today_hkt} ({days}d backtest)...")
+    print(f"[ranking] Sort: {sort_desc} (R excluded — footnote only)")
+    print(f"[ranking] Min trades for medal: {settings['award_eligibility']['min_trades_for_medal']}")
 
     results = []
     for strat in STRATEGIES:
@@ -192,12 +276,14 @@ def main():
             data = run_yw_backtest(strat["id"], days)
         data["strategy"] = strat
         results.append(data)
-        print(f"PF={data['profit_factor']:.2f}, R={data['total_R']:+.0f}, WR={data['win_rate']:.1f}%")
+        print(f"PnL=${data['total_pnl_usd']:+,.0f}, PF={data['profit_factor']:.2f}, R={data['total_R']:+.0f}")
 
-    # Rank
-    ranking = compute_ranking(results)
-    print(f"\n[ranking] Top: {ranking[0]['strategy']['name']} (PF {ranking[0]['profit_factor']:.2f})")
-    print(f"[ranking] Bottom: {ranking[-1]['strategy']['name']} (PF {ranking[-1]['profit_factor']:.2f})")
+    # Rank using 9/22 收緊版 sort
+    ranking = compute_ranking(results, settings)
+    n_eligible = sum(1 for r in ranking if r.get("n_trades", 0) >= settings["award_eligibility"]["min_trades_for_medal"])
+    print(f"\n[ranking] Top: {ranking[0]['strategy']['name']} (P&L ${ranking[0]['total_pnl_usd']:+,.0f}, PF {ranking[0]['profit_factor']:.2f})")
+    print(f"[ranking] Bottom: {ranking[-1]['strategy']['name']} (P&L ${ranking[-1]['total_pnl_usd']:+,.0f}, PF {ranking[-1]['profit_factor']:.2f})")
+    print(f"[ranking] Eligible (n≥{settings['award_eligibility']['min_trades_for_medal']}): {n_eligible}/{len(ranking)}")
 
     # Output dir
     out_dir = REPO / "automation/reports/strategy_ranking"
@@ -208,6 +294,7 @@ def main():
     json_path.write_text(json.dumps({
         "date": today_hkt,
         "days": days,
+        "settings_version": "v5.3 (9/22 收緊版: Total$+PF sort, n<10 no medal, ticker column)",
         "ranking": [
             {"rank": i + 1, **r} for i, r in enumerate(ranking)
         ],
@@ -216,7 +303,7 @@ def main():
 
     # Save Markdown
     md_path = out_dir / f"ranking_{today_hkt}.md"
-    md_content = make_ranking_markdown(ranking, today_hkt)
+    md_content = make_ranking_markdown(ranking, today_hkt, settings)
     md_path.write_text(md_content)
     print(f"[ranking] MD: {md_path}")
 

@@ -74,8 +74,11 @@ def regenerate_24h_ranking():
         gross_win = sum(t.get("R_multiple", 0) for t in wins)
         gross_loss = abs(sum(t.get("R_multiple", 0) for t in losses))
         pf = gross_win / gross_loss if gross_loss > 0 else (10.0 if gross_win > 0 else 0)
+        # Extract ticker from first trade
+        tk = tlist[0].get("ticker", "—")
         ranking.append({
             "strategy": strat,
+            "ticker": tk,
             "n_trades": n, "n_wins": len(wins), "n_losses": len(losses),
             "win_rate": round(wr, 1),
             "total_R": round(total_R, 2),
@@ -83,17 +86,23 @@ def regenerate_24h_ranking():
             "total_pnl_usd": round(total_pnl, 2),
             "profit_factor": round(pf, 2),
         })
-    
-    ranking.sort(key=lambda x: x["total_R"], reverse=True)
+
+    # 9/22 收緊版: sort by total_pnl_usd, then PF, then WR (NOT by total_R)
+    ranking.sort(key=lambda x: (x["total_pnl_usd"], x["profit_factor"], x["win_rate"]),
+                 reverse=True)
+    n_disqualified = sum(1 for r in ranking if r["n_trades"] < 10)
     for i, r in enumerate(ranking):
         r["rank"] = i + 1
-    
+        r["medal_eligible"] = r["n_trades"] >= 10
+
     out = {
         "date": now_utc.astimezone(HKT).strftime("%Y-%m-%d"),
         "window_hours": 24,
         "hkt_timestamp": now_utc.isoformat(),
         "type": "24h_live_ranking",
+        "sort": "Total $ → PF → WR (R as footnote, per 9/22 收緊版)",
         "n_total": len(last24),
+        "n_disqualified_medal": n_disqualified,
         "ranking": ranking,
     }
     ranking_24h_path = REPO / "automation/reports/strategy_ranking/24h/ranking_24h.json"

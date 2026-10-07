@@ -1,0 +1,67 @@
+{
+  "_comment": "Daily strategy ranking settings — single source of truth for all ranking scripts. 9/22 user 收緊版 applied.",
+
+  "schedule": {
+    "primary_cron_utc": "0 16 * * *",
+    "primary_cron_hkt": "00:00 HKT (just after midnight)",
+    "_note": "Single daily run at 00:00 HKT. Previous 3x (00:00/12:00/20:00 UTC) over-triggered LLM iteration and produced duplicated rankings. Use workflow_dispatch for manual re-rank.",
+    "timezone": "Asia/Hong_Kong"
+  },
+
+  "sort_criteria": {
+    "_comment": "9/22 feedback: Total $ + PF 排行，R 只作附註",
+    "primary": ["total_pnl_usd"],
+    "secondary": ["profit_factor"],
+    "tertiary": ["win_rate"],
+    "r_role": "footnote",
+    "_r_note": "Total R appears as a footnote column (rightmost), not in main sort. 種田要睇$同單筆風險，R係效率指標。"
+  },
+
+  "award_eligibility": {
+    "_comment": "9/22 feedback: n<10 唔入獎",
+    "min_trades_for_medal": 10,
+    "_detail": "Strategy with n_trades < 10 is shown in the table but does NOT receive 🥇/🥈/🥉. Display with '  ' (no medal). Prevents n=2 B1 cases from taking silver due to lucky 1/1 WR."
+  },
+
+  "ticker_split": {
+    "_comment": "9/22 feedback: ticker 拆欄",
+    "enabled": true,
+    "display_column": true,
+    "sort_within_group": false,
+    "_detail": "Add a Ticker column to the ranking table. Same ticker = consecutive rows (stable grouping, but global sort order is preserved across tickers). BTC口數扭曲 RSI/H ranking, 用拆欄後一目了然."
+  },
+
+  "lookback": {
+    "default_days": 20,
+    "rolling_window_days": 7,
+    "_note": "20d for daily full-pipeline ranking, 7d for rolling (naturally derived from closed trades within window)."
+  },
+
+  "display_columns": [
+    "rank",
+    "ticker",
+    "strategy",
+    "n_trades",
+    "win_rate",
+    "profit_factor",
+    "total_pnl_usd",
+    "footnote_total_R"
+  ],
+
+  "table_columns": {
+    "main": ["Rank", "Ticker", "Strategy", "Trades", "WR", "PF", "P&L (USD)"],
+    "footnote": "Total R (footnote, not in sort)"
+  },
+
+  "tg_summary": {
+    "show_top_n": 3,
+    "show_bottom_n": 3,
+    "include_aggregate": true,
+    "include_n_disqualified": true
+  },
+
+  "_history": {
+    "v5.3_2026-10-07": "Applied 9/22 收緊版: sort by Total $ + PF; n<10 no medal; ticker column.",
+    "prior": "Original settings: sort by PF → Total R → WR; no n<10 filter; no ticker column."
+  }
+}
