@@ -60,6 +60,27 @@
     "include_n_disqualified": true
   },
 
+  "daily_settlement": {
+    "_comment": "Per-agent daily settlement — if all 3 conditions met, level += 1 (升1lv). 9/22 user directive.",
+    "enabled": true,
+    "window_days": 7,
+    "min_trades": 10,
+    "min_PF": 1.0,
+    "min_WR": 0.5,
+    "min_RR": 1.0,
+    "max_level": 5,
+    "default_level": 1,
+    "decrement_on_fail": false,
+    "_decrement_note": "9/22 user only specified 升 (level up). Decrement not auto-applied; manual via LLM iter.",
+    "_metrics_definition": {
+      "PF": "Profit Factor = gross_win_R / |gross_loss_R|",
+      "WR": "Win Rate = n_wins / n_trades",
+      "RR": "Risk-Reward = avg_win_R / |avg_loss_R|"
+    },
+    "log_path": "automation/reports/strategy_settlement/",
+    "state_path": "automation/config/strategy_levels.json"
+  },
+
   "_history": {
     "v5.3_2026-10-07": "Applied 9/22 收緊版: sort by Total $ + PF; n<10 no medal; ticker column.",
     "prior": "Original settings: sort by PF → Total R → WR; no n<10 filter; no ticker column."

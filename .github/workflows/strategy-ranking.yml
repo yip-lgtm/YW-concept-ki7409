@@ -52,6 +52,15 @@ jobs:
           .venv/bin/python scripts/strategy_ranking.py 2>&1 | tee /tmp/ranking_log.txt
           cat automation/reports/strategy_ranking/ranking_*.md | tail -50
 
+      - name: Run daily settlement (level promotion)
+        id: settlement
+        if: always()
+        working-directory: automation
+        run: |
+          .venv/bin/python scripts/daily_settlement.py 2>&1 | tee /tmp/settlement_log.txt || true
+          echo "--- settlement output ---"
+          cat automation/reports/strategy_settlement/settlement_*.md 2>/dev/null | tail -50 || true
+
       - name: LLM iteration per-agent (9 strategies in parallel)
         id: iterate-all
         working-directory: automation

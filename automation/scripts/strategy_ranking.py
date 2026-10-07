@@ -161,6 +161,37 @@ def make_ranking_markdown(ranking: list[dict], date_str: str, settings: dict | N
     show_ticker = s.get("ticker_split", {}).get("display_column", False)
     n_disqualified = sum(1 for r in ranking if r.get("n_trades", 0) < min_medal)
 
+    # Load current levels (per-agent promotion state)
+    levels_path = REPO / "automation" / "config" / "strategy_levels.json"
+    levels_map = {}
+    if levels_path.exists():
+        try:
+            ldata = json.loads(levels_path.read_text())
+            for k, v in ldata.items():
+                if k.startswith("_") or not isinstance(v, dict):
+                    continue
+                # Map by name (case-insensitive)
+                levels_map[k.lower()] = v.get("level", 1)
+        except Exception:
+            pass
+
+    # Strategy-id → level-name mapping (handles "OCS BTC 5m" vs "OCS-BTC-5m" etc.)
+    NAME_TO_LEVEL_KEY = {
+        "ocs-btc":         "ocs-btc-5m",
+        "stair-pattern":   "stair",
+        "b1-mnq":          "b1",
+        "b1-mgc":          "b1",
+        "b1-btc":          "b1",
+        "b1-3in1":         "b1-3in1",
+        "50-20-pullback":  "50-20-pullback",
+        "crt":             "crt",
+        "h-pattern":       "h-pattern",
+        "3-pushes":        "3-pushes",
+        "two-yang":        "two-yang",
+        "rsi-div":         "rsi-div",
+        "kell-cycle":      "kell-cycle",
+    }
+
     # Build header
     ticker_header = "Ticker |" if show_ticker else ""
     ticker_sep    = "--------|" if show_ticker else ""
@@ -169,9 +200,10 @@ def make_ranking_markdown(ranking: list[dict], date_str: str, settings: dict | N
 ## Summary
 **{len(ranking)} strategies** ranked by **Total P&L (USD)**, tie-broken by **Profit Factor**.
 Sort key: Total $ → PF → Win Rate. Total R is a footnote (efficiency, not cash flow).
+Level: current agent level (auto-promotes by daily settlement).
 
-| Rank | {ticker_header} Strategy | Trades | WR | PF | P&L (USD) |
-|------|{ticker_sep}----------|--------|----|-----|-----------|
+| Rank | {ticker_header} Strategy | Lv | Trades | WR | PF | P&L (USD) |
+|------|{ticker_sep}----------|-----|--------|----|-----|-----------|
 """
     for i, r in enumerate(ranking, 1):
         rs = r["strategy"]
@@ -182,7 +214,11 @@ Sort key: Total $ → PF → Win Rate. Total R is a footnote (efficiency, not ca
         else:
             emoji = "  "  # disqualified from medal
         tk = f" {rs['ticker']} |" if show_ticker else ""
-        md += f"| {i} {emoji} |{tk} {rs['name']} | {n} | {r['win_rate']:.1f}% | {r['profit_factor']:.2f} | ${r['total_pnl_usd']:+,.0f} |\n"
+        # Look up level: try mapping table, then id, then name
+        sid = rs.get("id", "").lower()
+        level_key = NAME_TO_LEVEL_KEY.get(sid, sid)
+        lv = levels_map.get(level_key) or levels_map.get(sid) or levels_map.get(rs["name"].lower()) or "?"
+        md += f"| {i} {emoji} |{tk} {rs['name']} | {lv} | {n} | {r['win_rate']:.1f}% | {r['profit_factor']:.2f} | ${r['total_pnl_usd']:+,.0f} |\n"
 
     # Top 3 / Bottom 3 from ELIGIBLE strategies only
     eligible = [r for r in ranking if r.get("n_trades", 0) >= min_medal]
@@ -311,6 +347,22 @@ def main():
     chart_path = out_dir / f"ranking_{today_hkt}.png"
     make_ranking_chart(ranking, today_hkt, chart_path)
     print(f"[ranking] Chart: {chart_path}")
+
+    # Trigger daily settlement (level promotion per-agent)
+    print(f"\n[ranking] Running daily settlement...")
+    try:
+        import subprocess
+        r = subprocess.run(
+            [sys.executable, str(REPO / "automation" / "scripts" / "daily_settlement.py")],
+            capture_output=True, text=True, timeout=120
+        )
+        if r.returncode == 0:
+            # Tail last 15 lines
+            print("\n".join(r.stdout.splitlines()[-15:]))
+        else:
+            print(f"[ranking] settlement returned {r.returncode}: {r.stderr[-500:]}")
+    except Exception as e:
+        print(f"[ranking] settlement call failed: {e}")
 
     # Cumulative ranking history
     history_path = out_dir / "history.jsonl"
