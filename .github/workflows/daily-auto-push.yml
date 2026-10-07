@@ -49,6 +49,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+
+      - name: Install deps
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
 
       - name: Run daily auto-push
         id: push
@@ -64,22 +72,28 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           # Extract last 5 lines + exit code
-          tail -5 /tmp/daily_push_log.txt > /tmp/summary.txt
-          exit_code=$(grep -oE "exit_code=[0-9]+" /tmp/daily_push_log.txt | tail -1 || echo "exit_code=?")
+          tail -5 /tmp/daily_push_log.txt > /tmp/summary.txt 2>/dev/null || true
+          echo "(no log)" > /tmp/summary.txt
           cat > /tmp/tg.py <<'EOF'
-          import os, sys, requests
+          import os, requests
           from pathlib import Path
           from datetime import datetime
           from zoneinfo import ZoneInfo
           hkt = datetime.now(ZoneInfo("Asia/Hong_Kong")).strftime("%Y-%m-%d %H:%M HKT")
           summary = Path("/tmp/summary.txt").read_text().strip() if Path("/tmp/summary.txt").exists() else "(no log)"
-          exit_code = "$(cat /tmp/daily_push_log.txt | grep -oE 'exit_code=[0-9]+' | tail -1)"
-          ok = exit_code == "exit_code=0"
+          # Find exit_code from log
+          log_text = Path("/tmp/daily_push_log.txt").read_text() if Path("/tmp/daily_push_log.txt").exists() else ""
+          exit_code = "?"
+          for line in log_text.splitlines()[::-1]:
+              if "exit_code=" in line:
+                  exit_code = line.split("exit_code=")[-1].strip()
+                  break
+          ok = exit_code == "0"
           emoji = "✅" if ok else "❌"
           msg = (
               f"{emoji} <b>Daily Auto-Push</b> {hkt}\n\n"
               f"<pre>{summary[:600]}</pre>\n\n"
-              f"{exit_code}"
+              f"exit_code={exit_code}"
           )
           url = "https://api.telegram.org/bot" + os.environ["TELEGRAM_BOT_TOKEN"] + "/sendMessage"
           r = requests.post(
