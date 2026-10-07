@@ -61,7 +61,7 @@
   },
 
   "daily_settlement": {
-    "_comment": "Per-agent daily settlement — if all 3 conditions met, level += 1 (升1lv). 9/22 user directive.",
+    "_comment": "Per-agent daily settlement — symmetric rules (升1lv 達標 / 降1lv 唔達標). 9/22 + 10/07 user directives.",
     "enabled": true,
     "window_days": 7,
     "min_trades": 10,
@@ -69,9 +69,11 @@
     "min_WR": 0.5,
     "min_RR": 1.0,
     "max_level": 5,
+    "min_level": 1,
     "default_level": 1,
-    "decrement_on_fail": false,
-    "_decrement_note": "9/22 user only specified 升 (level up). Decrement not auto-applied; manual via LLM iter.",
+    "decrement_on_fail": true,
+    "_decrement_note": "10/07 user: '唔達標要 -1 lv'. Symmetric demote: PF≤1 AND WR≤0.5 AND RR≤1 (all 3 must fail) with n≥10. Floored at min_level=1.",
+    "_neutral_zone": "If 1-2 of 3 conditions fail (but not all), strategy stays flat. Avoids volatility from mixed signals.",
     "_metrics_definition": {
       "PF": "Profit Factor = gross_win_R / |gross_loss_R|",
       "WR": "Win Rate = n_wins / n_trades",

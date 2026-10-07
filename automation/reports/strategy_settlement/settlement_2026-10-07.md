@@ -1,21 +1,28 @@
 # Daily Settlement — 2026-10-07
 
-## Rule
+## Rule (Symmetric)
 For each agent, over the **7d** rolling window:
-- **PF > 1.0**  AND  **WR > 0.5**  AND  **RR > 1.0**  AND  **n ≥ 10**
-- → **level +1** (升 1 lv), capped at **5**
-- Decrement on fail: **False** (manual via LLM iter)
+- **PROMOTE** (升 1 lv) if: **PF > 1.0** AND **WR > 0.5** AND **RR > 1.0** AND **n ≥ 10**
+  - cap at **5**
+- **DEMOTE** (降 1 lv) if: **PF ≤ 1.0** AND **WR ≤ 0.5** AND **RR ≤ 1.0** AND **n ≥ 10**
+  - enabled: **True** (10/07 user directive)
+  - floor at **1**
+- Otherwise: **stay flat** (neutral zone — 1-2 of 3 conditions fail)
 
-## Promoted (0 agents)
+## Promoted (0 agents) ⬆
 | Agent | Old → New | n | PF | WR | RR | Reason |
 |-------|-----------|---|-----|-----|-----|--------|
 
-## Held (n≥10 but not promoted) (3 agents)
-| Agent | Level | n | PF | WR | RR | Why not promoted |
-|-------|-------|---|-----|-----|-----|------------------|
-| 50-20-Pullback | 1 | 44 | 1.02 | 38.6% | 1.62 | WR 38.6% ≤ 50.0% |
-| Stair | 1 | 16 | 0.54 | 25.0% | 1.62 | PF 0.54 ≤ 1.0; WR 25.0% ≤ 50.0% |
-| CRT | 1 | 16 | 1.26 | 43.8% | 1.62 | WR 43.8% ≤ 50.0% |
+## Demoted (0 agents) ⬇
+| Agent | Old → New | n | PF | WR | RR | Reason |
+|-------|-----------|---|-----|-----|-----|--------|
+
+## Held (n≥10, mixed signals — stays flat) (3 agents)
+| Agent | Level | n | PF | WR | RR | Why not promoted / demoted |
+|-------|-------|---|-----|-----|-----|----------------------------|
+| 50-20-Pullback | 1 | 44 | 1.02 | 38.6% | 1.62 | NOT promoted: WR 38.6% ≤ 50.0% | NOT demoted: PF 1.02 > 1.0; RR 1.62 > 1.0; at min_level |
+| Stair | 1 | 16 | 0.54 | 25.0% | 1.62 | NOT promoted: PF 0.54 ≤ 1.0; WR 25.0% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0; at min_level |
+| CRT | 1 | 16 | 1.26 | 43.8% | 1.62 | NOT promoted: WR 43.8% ≤ 50.0% | NOT demoted: PF 1.26 > 1.0; RR 1.62 > 1.0; at min_level |
 
 ## Insufficient data (n<10) (8 agents)
 | Agent | Level | n | Note |
@@ -28,3 +35,10 @@ For each agent, over the **7d** rolling window:
 | B1-3in1 | 1 | 4 | need ≥ 10 trades to settle |
 | Kell-Cycle | 1 | 1 | need ≥ 10 trades to settle |
 | OCS-BTC-5m | 1 | 0 | need ≥ 10 trades to settle |
+
+## Aggregate
+- **Promoted (⬆)**: 0
+- **Demoted (⬇)**: 0
+- **Held (flat)**: 3
+- **Insufficient data**: 8
+- **Total evaluated**: 11

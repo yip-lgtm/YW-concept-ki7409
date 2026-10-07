@@ -52,8 +52,9 @@ _DEFAULTS = {
     "min_WR": 0.5,
     "min_RR": 1.0,
     "max_level": 5,
+    "min_level": 1,
     "default_level": 1,
-    "decrement_on_fail": False,
+    "decrement_on_fail": True,
     "log_path": "automation/reports/strategy_settlement/",
     "state_path": "automation/config/strategy_levels.json",
 }
@@ -194,23 +195,29 @@ def make_settlement_markdown(results: list[dict], date_str: str,
     min_wr = settings["min_WR"]
     min_rr = settings["min_RR"]
     max_lv = settings["max_level"]
+    min_lv = settings.get("min_level", 1)
+    decrement = settings.get("decrement_on_fail", False)
 
     # Each result has metrics.n_trades — that's where n lives
     def n(r): return r.get("metrics", {}).get("n_trades", 0)
 
     promoted = [r for r in results if r.get("promoted")]
-    held = [r for r in results if not r.get("promoted") and n(r) >= min_n]
+    demoted = [r for r in results if r.get("demoted")]
+    held = [r for r in results if not r.get("promoted") and not r.get("demoted") and n(r) >= min_n]
     insufficient = [r for r in results if n(r) < min_n]
 
     md = f"""# Daily Settlement — {date_str}
 
-## Rule
+## Rule (Symmetric)
 For each agent, over the **{settings['window_days']}d** rolling window:
-- **PF > {min_pf}**  AND  **WR > {min_wr}**  AND  **RR > {min_rr}**  AND  **n ≥ {min_n}**
-- → **level +1** (升 1 lv), capped at **{max_lv}**
-- Decrement on fail: **{settings['decrement_on_fail']}** (manual via LLM iter)
+- **PROMOTE** (升 1 lv) if: **PF > {min_pf}** AND **WR > {min_wr}** AND **RR > {min_rr}** AND **n ≥ {min_n}**
+  - cap at **{max_lv}**
+- **DEMOTE** (降 1 lv) if: **PF ≤ {min_pf}** AND **WR ≤ {min_wr}** AND **RR ≤ {min_rr}** AND **n ≥ {min_n}**
+  - enabled: **{decrement}** (10/07 user directive)
+  - floor at **{min_lv}**
+- Otherwise: **stay flat** (neutral zone — 1-2 of 3 conditions fail)
 
-## Promoted ({len(promoted)} agents)
+## Promoted ({len(promoted)} agents) ⬆
 | Agent | Old → New | n | PF | WR | RR | Reason |
 |-------|-----------|---|-----|-----|-----|--------|
 """
@@ -220,29 +227,63 @@ For each agent, over the **{settings['window_days']}d** rolling window:
         m = r["metrics"]
         md += f"| {r['strategy']} | {old} → {new} ⬆ | {m['n_trades']} | {m['profit_factor']:.2f} | {m['win_rate']*100:.1f}% | {m['rr_ratio']:.2f} | all 3 conditions met |\n"
 
-    md += f"\n## Held (n≥{min_n} but not promoted) ({len(held)} agents)\n"
-    md += "| Agent | Level | n | PF | WR | RR | Why not promoted |\n"
-    md += "|-------|-------|---|-----|-----|-----|------------------|\n"
+    if decrement:
+        md += f"\n## Demoted ({len(demoted)} agents) ⬇\n"
+        md += "| Agent | Old → New | n | PF | WR | RR | Reason |\n"
+        md += "|-------|-----------|---|-----|-----|-----|--------|\n"
+        for r in demoted:
+            old = r.get("old_level", 1)
+            new = r.get("new_level", 0)
+            m = r["metrics"]
+            md += f"| {r['strategy']} | {old} → {new} ⬇ | {m['n_trades']} | {m['profit_factor']:.2f} | {m['win_rate']*100:.1f}% | {m['rr_ratio']:.2f} | all 3 conditions failed (唔達標) |\n"
+
+    md += f"\n## Held (n≥{min_n}, mixed signals — stays flat) ({len(held)} agents)\n"
+    md += "| Agent | Level | n | PF | WR | RR | Why not promoted / demoted |\n"
+    md += "|-------|-------|---|-----|-----|-----|----------------------------|\n"
     for r in held:
         m = r["metrics"]
         lv = r.get("level", 1)
-        # Why not?
-        why = []
+        # Why not promote?
+        why_p = []
         if m["profit_factor"] <= min_pf:
-            why.append(f"PF {m['profit_factor']:.2f} ≤ {min_pf}")
+            why_p.append(f"PF {m['profit_factor']:.2f} ≤ {min_pf}")
         if m["win_rate"] <= min_wr:
-            why.append(f"WR {m['win_rate']*100:.1f}% ≤ {min_wr*100}%")
+            why_p.append(f"WR {m['win_rate']*100:.1f}% ≤ {min_wr*100}%")
         if m["rr_ratio"] <= min_rr:
-            why.append(f"RR {m['rr_ratio']:.2f} ≤ {min_rr}")
+            why_p.append(f"RR {m['rr_ratio']:.2f} ≤ {min_rr}")
+        # Why not demote?
+        why_d = []
+        if m["profit_factor"] > min_pf:
+            why_d.append(f"PF {m['profit_factor']:.2f} > {min_pf}")
+        if m["win_rate"] > min_wr:
+            why_d.append(f"WR {m['win_rate']*100:.1f}% > {min_wr*100}%")
+        if m["rr_ratio"] > min_rr:
+            why_d.append(f"RR {m['rr_ratio']:.2f} > {min_rr}")
         if r.get("at_max_level"):
-            why.append("at max_level")
-        md += f"| {r['strategy']} | {lv} | {m['n_trades']} | {m['profit_factor']:.2f} | {m['win_rate']*100:.1f}% | {m['rr_ratio']:.2f} | {'; '.join(why) or '—'} |\n"
+            why_p.append("at max_level")
+        if r.get("at_min_level"):
+            why_d.append("at min_level")
+        md += f"| {r['strategy']} | {lv} | {m['n_trades']} | {m['profit_factor']:.2f} | {m['win_rate']*100:.1f}% | {m['rr_ratio']:.2f} | "
+        md += f"NOT promoted: {'; '.join(why_p) or '—'} | NOT demoted: {'; '.join(why_d) or '—'} |\n"
 
     md += f"\n## Insufficient data (n<{min_n}) ({len(insufficient)} agents)\n"
     md += "| Agent | Level | n | Note |\n|-------|-------|---|------|\n"
     for r in insufficient:
         m = r["metrics"]
         md += f"| {r['strategy']} | {r.get('level', 1)} | {m['n_trades']} | need ≥ {min_n} trades to settle |\n"
+
+    # Aggregate
+    n_promoted = len(promoted)
+    n_demoted = len(demoted)
+    n_held = len(held)
+    n_insuf = len(insufficient)
+    md += f"\n## Aggregate\n"
+    md += f"- **Promoted (⬆)**: {n_promoted}\n"
+    if decrement:
+        md += f"- **Demoted (⬇)**: {n_demoted}\n"
+    md += f"- **Held (flat)**: {n_held}\n"
+    md += f"- **Insufficient data**: {n_insuf}\n"
+    md += f"- **Total evaluated**: {len(results)}\n"
 
     return md
 
@@ -282,17 +323,29 @@ def main() -> int:
         old_level = cur.get("level", settings["default_level"])
         new_level = old_level
         promoted = False
+        demoted = False
         at_max = (old_level >= settings["max_level"])
+        at_min = (old_level <= settings["min_level"])
 
-        # 3-condition check
-        all_3 = (
+        # 3-condition promote test (all 3 must hold)
+        promote_ok = (
             metrics["n_trades"] >= settings["min_trades"]
             and metrics["profit_factor"] > settings["min_PF"]
             and metrics["win_rate"] > settings["min_WR"]
             and metrics["rr_ratio"] > settings["min_RR"]
         )
 
-        if all_3 and not at_max:
+        # 3-condition demote test (mirror: all 3 must FAIL) — only if decrement_on_fail
+        # Note: PF/WR/RR ≤ 1/0.5/1 — strict "fail" (not just "not strictly greater")
+        demote_ok = (
+            settings.get("decrement_on_fail", False)
+            and metrics["n_trades"] >= settings["min_trades"]
+            and metrics["profit_factor"] <= settings["min_PF"]
+            and metrics["win_rate"] <= settings["min_WR"]
+            and metrics["rr_ratio"] <= settings["min_RR"]
+        )
+
+        if promote_ok and not at_max:
             new_level = min(old_level + 1, settings["max_level"])
             promoted = (new_level > old_level)
             if promoted:
@@ -304,13 +357,28 @@ def main() -> int:
                     "PF": metrics["profit_factor"],
                     "WR": metrics["win_rate"],
                     "RR": metrics["rr_ratio"],
+                    "action": "promote",
                     "reason": "PF>1 & WR>0.5 & RR>1 — promoted",
                 })
-                # Cap history at 50 entries
-                cur["history"] = cur["history"][-50:]
-        elif all_3 and at_max:
-            pass  # At max, no change but still log
+        elif demote_ok and not at_min:
+            new_level = max(old_level - 1, settings["min_level"])
+            demoted = (new_level < old_level)
+            if demoted:
+                cur["history"].append({
+                    "date": today_hkt,
+                    "old_level": old_level,
+                    "new_level": new_level,
+                    "n_trades": metrics["n_trades"],
+                    "PF": metrics["profit_factor"],
+                    "WR": metrics["win_rate"],
+                    "RR": metrics["rr_ratio"],
+                    "action": "demote",
+                    "reason": "PF≤1 & WR≤0.5 & RR≤1 — demoted (唔達標)",
+                })
+        # else: stay flat (insufficient data, mixed signals, or at floor/ceiling)
 
+        # Cap history at 50 entries
+        cur["history"] = cur["history"][-50:]
         cur["level"] = new_level
         cur["last_settled"] = today_hkt
 
@@ -320,11 +388,25 @@ def main() -> int:
             "old_level": old_level,
             "new_level": new_level,
             "promoted": promoted,
+            "demoted": demoted,
             "at_max_level": at_max,
+            "at_min_level": at_min,
+            "promote_ok": promote_ok,
+            "demote_ok": demote_ok,
             "metrics": metrics,
         })
-        marker = " ⬆" if promoted else (" [max]" if at_max and all_3 else "")
-        print(f"  {name:<20} lv{new_level}{marker}  "
+        # Display marker
+        if promoted:
+            marker = " ⬆"
+        elif demoted:
+            marker = " ⬇"
+        elif at_max and promote_ok:
+            marker = " [max]"
+        elif at_min and demote_ok:
+            marker = " [min]"
+        else:
+            marker = ""
+        print(f"  {name:<20} lv{old_level}→{new_level}{marker}  "
               f"n={metrics['n_trades']:>3} PF={metrics['profit_factor']:.2f} "
               f"WR={metrics['win_rate']*100:>5.1f}% RR={metrics['rr_ratio']:.2f}")
 
