@@ -20,6 +20,13 @@
       "at_min_level": true,
       "promote_ok": false,
       "demote_ok": false,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 2,
         "wins": 1,
@@ -44,6 +51,13 @@
       "at_min_level": true,
       "promote_ok": false,
       "demote_ok": false,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 6,
         "wins": 3,
@@ -68,6 +82,13 @@
       "at_min_level": true,
       "promote_ok": false,
       "demote_ok": false,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 6,
         "wins": 1,
@@ -92,6 +113,13 @@
       "at_min_level": true,
       "promote_ok": false,
       "demote_ok": false,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 1,
         "wins": 0,
@@ -107,15 +135,22 @@
     },
     {
       "strategy": "50-20-Pullback",
-      "level": 1,
+      "level": 2,
       "old_level": 1,
-      "new_level": 1,
-      "promoted": false,
+      "new_level": 2,
+      "promoted": true,
       "demoted": false,
       "at_max_level": false,
       "at_min_level": true,
-      "promote_ok": false,
+      "promote_ok": true,
       "demote_ok": false,
+      "has_override": true,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.35,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 44,
         "wins": 17,
@@ -140,6 +175,13 @@
       "at_min_level": true,
       "promote_ok": false,
       "demote_ok": false,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 16,
         "wins": 4,
@@ -164,6 +206,13 @@
       "at_min_level": true,
       "promote_ok": false,
       "demote_ok": false,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 1,
         "wins": 0,
@@ -188,6 +237,13 @@
       "at_min_level": true,
       "promote_ok": false,
       "demote_ok": false,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 4,
         "wins": 0,
@@ -212,6 +268,13 @@
       "at_min_level": true,
       "promote_ok": false,
       "demote_ok": false,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 1,
         "wins": 0,
@@ -236,6 +299,13 @@
       "at_min_level": true,
       "promote_ok": false,
       "demote_ok": false,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 16,
         "wins": 7,
@@ -260,6 +330,13 @@
       "at_min_level": true,
       "promote_ok": false,
       "demote_ok": false,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
       "metrics": {
         "n_trades": 0,
         "wins": 0,
@@ -272,5 +349,5 @@
       }
     }
   ],
-  "n_promoted": 0
+  "n_promoted": 1
 }

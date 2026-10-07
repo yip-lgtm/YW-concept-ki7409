@@ -28,8 +28,32 @@ else:
     REPO = Path("/workspace/YW-concept-ki7409")
 
 
-def load_settings() -> dict:
-    """Load ranking_settings.json + merge with daily_settlement defaults."""
+def load_agent_overrides() -> dict:
+    """Load per-agent threshold overrides (managed by settlement_llm_intervene.py).
+
+    Returns {agent_name: {"min_PF": x, "min_WR": y, "min_RR": z, "min_trades": n}}
+    LLM writes these to lower conditions for agents stuck in the neutral zone.
+    """
+    ov_path = REPO / "automation" / "config" / "settlement_overrides.json"
+    if not ov_path.exists():
+        return {}
+    try:
+        data = json.loads(ov_path.read_text())
+        out = {}
+        for k, v in data.items():
+            if k.startswith("_") or not isinstance(v, dict):
+                continue
+            ov = v.get("overrides")
+            if ov and isinstance(ov, dict):
+                out[k] = ov
+        return out
+    except Exception as e:
+        print(f"[settlement] WARN: overrides read failed: {e}", file=sys.stderr)
+        return {}
+
+
+def load_ranking_settings() -> dict:
+    """Load ranking settings, merging per-agent overrides for each agent."""
     cfg_path = REPO / "automation" / "config" / "ranking_settings.json"
     if not cfg_path.exists():
         return _DEFAULTS
@@ -292,10 +316,15 @@ def main() -> int:
     HKT = timezone(timedelta(hours=8))
     today_hkt = datetime.now(HKT).strftime("%Y-%m-%d")
 
-    settings = load_settings()
+    settings = load_ranking_settings()
     if not settings.get("enabled", True):
         print("[settlement] DISABLED in settings — exit")
         return 0
+
+    # Load per-agent overrides (LLM-managed, for stuck agents in neutral zone)
+    agent_overrides = load_agent_overrides()
+    if agent_overrides:
+        print(f"[settlement] Per-agent overrides active: {list(agent_overrides.keys())}")
 
     print(f"[settlement] Daily settlement for {today_hkt}")
     print(f"[settlement] Window: {settings['window_days']}d | Min n: {settings['min_trades']} | "
@@ -327,22 +356,29 @@ def main() -> int:
         at_max = (old_level >= settings["max_level"])
         at_min = (old_level <= settings["min_level"])
 
-        # 3-condition promote test (all 3 must hold)
+        # Per-agent overrides (LLM-managed for stuck neutral-zone agents)
+        ov = agent_overrides.get(name, {})
+        thr_n = ov.get("min_trades", settings["min_trades"])
+        thr_pf = ov.get("min_PF", settings["min_PF"])
+        thr_wr = ov.get("min_WR", settings["min_WR"])
+        thr_rr = ov.get("min_RR", settings["min_RR"])
+        has_override = bool(ov)
+
+        # 3-condition promote test (all 3 must hold, using per-agent thresholds)
         promote_ok = (
-            metrics["n_trades"] >= settings["min_trades"]
-            and metrics["profit_factor"] > settings["min_PF"]
-            and metrics["win_rate"] > settings["min_WR"]
-            and metrics["rr_ratio"] > settings["min_RR"]
+            metrics["n_trades"] >= thr_n
+            and metrics["profit_factor"] > thr_pf
+            and metrics["win_rate"] > thr_wr
+            and metrics["rr_ratio"] > thr_rr
         )
 
         # 3-condition demote test (mirror: all 3 must FAIL) — only if decrement_on_fail
-        # Note: PF/WR/RR ≤ 1/0.5/1 — strict "fail" (not just "not strictly greater")
         demote_ok = (
             settings.get("decrement_on_fail", False)
-            and metrics["n_trades"] >= settings["min_trades"]
-            and metrics["profit_factor"] <= settings["min_PF"]
-            and metrics["win_rate"] <= settings["min_WR"]
-            and metrics["rr_ratio"] <= settings["min_RR"]
+            and metrics["n_trades"] >= thr_n
+            and metrics["profit_factor"] <= thr_pf
+            and metrics["win_rate"] <= thr_wr
+            and metrics["rr_ratio"] <= thr_rr
         )
 
         if promote_ok and not at_max:
@@ -393,6 +429,11 @@ def main() -> int:
             "at_min_level": at_min,
             "promote_ok": promote_ok,
             "demote_ok": demote_ok,
+            "has_override": has_override,
+            "thresholds_used": {
+                "min_PF": thr_pf, "min_WR": thr_wr,
+                "min_RR": thr_rr, "min_trades": thr_n,
+            },
             "metrics": metrics,
         })
         # Display marker
@@ -406,9 +447,12 @@ def main() -> int:
             marker = " [min]"
         else:
             marker = ""
-        print(f"  {name:<20} lv{old_level}→{new_level}{marker}  "
+        ov_mark = " *" if has_override else ""
+        print(f"  {name:<20} lv{old_level}→{new_level}{marker}{ov_mark}  "
               f"n={metrics['n_trades']:>3} PF={metrics['profit_factor']:.2f} "
               f"WR={metrics['win_rate']*100:>5.1f}% RR={metrics['rr_ratio']:.2f}")
+        if has_override:
+            print(f"      └─ LLM override: PF>{thr_pf} WR>{thr_wr} RR>{thr_rr} n≥{thr_n}")
 
     # Persist state
     save_levels_state(state)
@@ -450,8 +494,32 @@ def main() -> int:
 
     n_promoted = sum(1 for r in results if r.get("promoted"))
     print(f"\n[settlement] Promoted: {n_promoted}/{len(results)} agents")
-    return 0
 
+    # Append to history.jsonl (for LLM intervention stuck-detection)
+    hist_path = out_dir / "history.jsonl"
+    with hist_path.open("a") as f:
+        f.write(json.dumps({
+            "date": today_hkt,
+            "window_days": settings["window_days"],
+            "min_trades": settings["min_trades"],
+            "results": [
+                {
+                    "strategy": r["strategy"],
+                    "level": r["level"],
+                    "old_level": r["old_level"],
+                    "new_level": r["new_level"],
+                    "promoted": r["promoted"],
+                    "demoted": r["demoted"],
+                    "n_trades": r["metrics"]["n_trades"],
+                    "profit_factor": r["metrics"]["profit_factor"],
+                    "win_rate": r["metrics"]["win_rate"],
+                    "rr_ratio": r["metrics"]["rr_ratio"],
+                }
+                for r in results
+            ],
+        }, ensure_ascii=False) + "\n")
+    print(f"[settlement] History: {hist_path}")
+    return 0
 
 if __name__ == "__main__":
     sys.exit(main())

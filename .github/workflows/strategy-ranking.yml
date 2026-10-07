@@ -61,6 +61,17 @@ jobs:
           echo "--- settlement output ---"
           cat automation/reports/strategy_settlement/settlement_*.md 2>/dev/null | tail -50 || true
 
+      - name: LLM intervention — auto-lower conditions for stuck agents
+        id: llm-intervene
+        if: always()
+        working-directory: automation
+        env:
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+        run: |
+          .venv/bin/python scripts/settlement_llm_intervene.py 2>&1 | tee /tmp/llm_intervene_log.txt || true
+          echo "--- intervention output ---"
+          cat automation/config/settlement_overrides.json 2>/dev/null | head -60 || true
+
       - name: LLM iteration per-agent (9 strategies in parallel)
         id: iterate-all
         working-directory: automation
