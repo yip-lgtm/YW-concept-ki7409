@@ -13,6 +13,8 @@
 | [08-RSI-Divergence.md](08-RSI-Divergence.md) | RSI Divergence strategy |
 | [09-Auxiliary-Tips.md](09-Auxiliary-Tips.md) | Auxiliary tips |
 | [10-Zhongtian-Practical-Setup.md](10-Zhongtian-Practical-Setup.md) | 中天 practical setup |
+| [17-TTrades-Model.md](17-TTrades-Model.md) | TTrades OSOK + Fractal |
+| [18-TTrades-L12.md](18-TTrades-L12.md) | TTrades L12 Candle 2 Closure |
 
 ## Automation Docs
 | File | Topic |
