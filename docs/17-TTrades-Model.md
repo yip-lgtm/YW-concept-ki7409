@@ -1,11 +1,12 @@
 # 17. TTrades Model（OSOK + Fractal）
 
 來源：TTrades / ICT Fractal Model Handbook（課程筆記整理，非原文複製）  
-關聯：[13-TTFM-Fractal-Model.md](13-TTFM-Fractal-Model.md)、[18-TTrades-L12.md](18-TTrades-L12.md)、[19-TTrades-L13.md](19-TTrades-L13.md)、YW H-Pattern / Stair  
+關聯：[13-TTFM-Fractal-Model.md](13-TTFM-Fractal-Model.md)、[18-TTrades-L12.md](18-TTrades-L12.md)、[19-TTrades-L13.md](19-TTrades-L13.md)、[20-TTrades-L14.md](20-TTrades-L14.md)、YW H-Pattern / Stair  
 更新：2026-10-09
 
 L12 詳解：[18-TTrades-L12.md](18-TTrades-L12.md)。C2 必須掃極值並收回 C1 區間，且落在高時間框 POI；配對周期 CISD 之前不開倉。
 L13 詳解：[19-TTrades-L13.md](19-TTrades-L13.md)。只做擴張燭；長影線 C2 等收盤後做 C3 continuation order block。
+L14 詳解：[20-TTrades-L14.md](20-TTrades-L14.md)。無掃流動性不是 C2；等 C3 收破 C2 實體，只做 C4。
 
 兩套用法同一骨架：
 
@@ -243,3 +244,17 @@ YW 實盤配對建議：
 - 小影線用整根區間 0.5 判斷回調，不用影線 0.5。
 - CISD 與目標流動性幾乎同位：skip。
 - 詳見 [19-TTrades-L13.md](19-TTrades-L13.md)。
+
+---
+
+## 12. L14 對照（2026-10-09）
+
+來源筆記：https://notes.powerofdeal.com/courses/ttrades-fractal-model/lesson-14/
+
+- C2 closure：掃 C1 極值後收回區間，期待 C3、C4。
+- C3 closure：沒有掃極值，但 C3 收破 C2 實體。多 = 收在 C2 實體上；空 = 收在 C2 實體下。確認延後一根，只做 C4。
+- 兩者都沒有：不在 model 內，不做。POI 上無 C2 closure 不准硬接。
+- C4 回調用 C3 整根區間 0.5。守住 EQ 先擴張。
+- 進場：低一級 CISD + protected swing。SL 在 swing 外，目標 2R。
+- 機械成立但未到 POI、前高太近、或已到目標：skip。
+- 詳見 [20-TTrades-L14.md](20-TTrades-L14.md)。
