@@ -72,6 +72,7 @@
 <div class="nav">
   <a href="index.html">📊 Dashboard</a>
   <a href="review.html" class="active">🗂️ Review Hub</a>
+  <a href="#agent-control">🎛️ Agent Control</a>
   <a href="strategy-dashboard.html">🎯 Strategy Dashboard</a>
 </div>
 
@@ -130,6 +131,45 @@
   <div id="rankings-list"></div>
 </div>
 
+<!-- ============== AGENT CONTROL TAB ============== -->
+<div id="tab-agent" class="tab-content" style="display:none">
+  <h2>🎛️ Agent Control — Levels &amp; Weights</h2>
+  <p class="sub">
+    What the overnight pipeline <em>decided</em>: per-agent level promotion
+    (PF&gt;1 &amp; WR&gt;0.5 &amp; RR&gt;1 → +1 lv, all-fail → −1 lv) and
+    data-driven confidence weights (edge index with Bayesian shrinkage).
+    The LLM may only veto a weight change, never propose one.
+  </p>
+
+  <h3>⬆️ Agent Levels</h3>
+  <div class="stats" id="levels-stats"></div>
+  <div style="overflow-x:auto"><table id="levels-table"><thead><tr>
+    <th>Agent</th><th>Level</th><th>Last settled</th><th>Changes</th><th>Last action</th><th>Reason</th>
+  </tr></thead><tbody></tbody></table></div>
+
+  <h3 style="margin-top:28px">⚖️ Effective Confidence Weights</h3>
+  <p class="sub">
+    <code>confidence = round(llm_confidence × weight)</code> at signal build.
+    Higher weight fires more readily; lower weight demands more confluence.
+    Floor is 0.40 — no agent is ever silenced entirely.
+  </p>
+  <div class="stats" id="weights-stats"></div>
+  <div style="overflow-x:auto"><table id="weights-table"><thead><tr>
+    <th>Strategy</th><th>Weight</th><th>Source</th><th>Verdict</th>
+  </tr></thead><tbody></tbody></table></div>
+
+  <h3 style="margin-top:28px">🧮 Latest Weight Optimization Run</h3>
+  <div id="weight-run"></div>
+
+  <h3 style="margin-top:28px">🔧 Settlement Condition Overrides (LLM)</h3>
+  <p class="sub">
+    When an agent sits in the neutral zone (1–2 of 3 conditions failing) for
+    3+ consecutive days it is stuck forever, so the LLM proposes relaxed
+    per-agent thresholds. Deltas are capped and every revision is rate-limited.
+  </p>
+  <div id="settle-overrides"></div>
+</div>
+
 <!-- ============== LLM ANALYSIS TAB ============== -->
 <div id="tab-llm" class="tab-content" style="display:none">
   <h2>🤖 LLM Iteration Analysis</h2>
@@ -154,6 +194,7 @@ const state = {
   trades: [],
   rankings: [],
   iterations: [],
+  agentControl: null,
   activeTab: 'tab-charts',
 };
 
@@ -169,6 +210,7 @@ function switchTab(tabId) {
   else if (tabId === 'tab-trades') state.activeTab = 'trades';
   else if (tabId === 'tab-rankings') state.activeTab = 'rankings';
   else if (tabId === 'tab-llm') state.activeTab = 'llm';
+  else if (tabId === 'tab-agent') state.activeTab = 'agent';
 }
 
 // ============ Load Data ============
@@ -184,6 +226,14 @@ async function loadAll() {
     state.trades = t.trades || [];
     state.rankings = r.rankings || [];
     state.iterations = l.iterations || [];
+    // Agent Control (levels + weights) — non-fatal if unavailable
+    try {
+      const dres = await fetch(REPO_BASE + 'dashboard-data.json?t=' + Date.now());
+      const dd = await dres.json();
+      state.agentControl = dd.agent_control || null;
+    } catch (e) {
+      console.warn('agent_control unavailable:', e);
+    }
     document.getElementById('last-updated').textContent = new Date().toLocaleString();
     initFilters();
     renderAll();
@@ -213,6 +263,7 @@ function renderAll() {
   renderTrades();
   renderRankings();
   renderLlm();
+  renderAgentControl();
 }
 
 // ============ CHARTS ============
@@ -420,6 +471,125 @@ document.addEventListener('keydown', e => {
   }
 });
 
+// ============ AGENT CONTROL ============
+function renderAgentControl() {
+  const ac = state.agentControl;
+  const tbody = document.querySelector('#levels-table tbody');
+  if (!ac) {
+    document.getElementById('levels-stats').innerHTML =
+      '<div class="empty">Agent control data not published yet.</div>';
+    if (tbody) tbody.innerHTML = '';
+    document.getElementById('weight-run').innerHTML = '';
+    document.getElementById('settle-overrides').innerHTML = '';
+    return;
+  }
+
+  // --- Levels ---
+  const levels = ac.levels || [];
+  const lv = [...levels].sort((a, b) => b.level - a.level);
+  const maxLv = lv.length ? lv[0].level : 1;
+  const promoted = lv.filter(x => x.n_changes > 0).length;
+
+  document.getElementById('levels-stats').innerHTML =
+    `<div class="stat"><div class="v">${lv.length}</div><div class="l">Agents</div></div>` +
+    `<div class="stat"><div class="v">${maxLv}</div><div class="l">Max level</div></div>` +
+    `<div class="stat"><div class="v">${promoted}</div><div class="l">Ever promoted</div></div>` +
+    `<div class="stat"><div class="v">${lv.filter(x => x.last_settled).length}</div><div class="l">Settled today</div></div>`;
+
+  if (tbody) {
+    tbody.innerHTML = lv.length ? lv.map(x => {
+      const stars = '★'.repeat(x.level) + '☆'.repeat(Math.max(0, 5 - x.level));
+      const act = x.last_action === 'promote' ? '⬆ promote'
+                : x.last_action === 'demote' ? '⬇ demote'
+                : '—';
+      const reason = (x.last_reason || '').slice(0, 70);
+      return `<tr>
+        <td><b>${x.strategy}</b></td>
+        <td>${stars} <span class="sub">lv${x.level}</span></td>
+        <td>${x.last_settled || '—'}</td>
+        <td>${x.n_changes}</td>
+        <td>${act}</td>
+        <td class="sub">${reason || '—'}</td>
+      </tr>`;
+    }).join('') : '<tr><td colspan="6" class="empty">No settlement data yet.</td></tr>';
+  }
+
+  // --- Effective weights ---
+  const ws = ac.effective_weights || [];
+  const wtbody = document.querySelector('#weights-table tbody');
+  const maxW = ws.length ? Math.max(...ws.map(w => w.weight)) : 1.8;
+  document.getElementById('weights-stats').innerHTML =
+    `<div class="stat"><div class="v">${ws.length}</div><div class="l">Strategies</div></div>` +
+    `<div class="stat"><div class="v">${(ac.weight_optimization ? ac.weight_optimization.date : '—')}</div><div class="l">Last weight run</div></div>` +
+    `<div class="stat"><div class="v">${(ac.settlement_overrides || []).length}</div><div class="l">Settle overrides</div></div>`;
+
+  if (wtbody) {
+    wtbody.innerHTML = ws.length ? ws.map(w => {
+      const pct = Math.min(100, (w.weight / 1.8) * 100);
+      const verdict = w.weight > 1.05 ? '⬆ trust' : w.weight < 0.95 ? '⬇ distrust' : '= neutral';
+      const colour = w.weight > 1.05 ? '#3fb950' : w.weight < 0.95 ? '#f85149' : '#8b949e';
+      return `<tr>
+        <td><b>${w.strategy}</b></td>
+        <td style="min-width:150px">
+          <div style="background:#21262d;border-radius:4px;height:8px;overflow:hidden">
+            <div style="width:${pct}%;height:100%;background:${colour}"></div>
+          </div>
+          <span class="sub" style="float:right">${w.weight.toFixed(2)}</span>
+        </td>
+        <td class="sub">${w.source}</td>
+        <td style="color:${colour}">${verdict}</td>
+      </tr>`;
+    }).join('') : '<tr><td colspan="4" class="empty">No weight data.</td></tr>';
+  }
+
+  // --- Latest weight optimization run ---
+  const run = ac.weight_optimization;
+  const wrun = document.getElementById('weight-run');
+  if (run && run.candidates && run.candidates.length) {
+    const cands = [...run.candidates].sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+    wrun.innerHTML = `<p class="sub">Window <b>${run.window_days}d</b> · from <code>${run.generated_from || ''}</code> · ` +
+      `model <code>edge=(PF/1.0)×(WR/0.45)×(RR/1.0)</code>, shrink <code>n/(n+20)</code>, ` +
+      `hard cap 1.0 whenever PF&lt;1.0</p>` +
+      `<div style="overflow-x:auto"><table><thead><tr>
+        <th>Strategy</th><th>n</th><th>PF</th><th>WR</th><th>RR</th><th>edge</th>
+        <th>shrink</th><th>from</th><th>to</th><th>Δ</th><th>status</th><th>LLM</th>
+      </tr></thead><tbody>` +
+      cands.map(c => `<tr>
+        <td><b>${c.strategy}</b></td>
+        <td>${c.n}</td>
+        <td style="color:${c.pf >= 1 ? '#3fb950' : '#f85149'}">${c.pf.toFixed(2)}</td>
+        <td>${(c.wr * 100).toFixed(1)}%</td>
+        <td>${c.rr.toFixed(2)}</td>
+        <td>${c.edge != null ? c.edge.toFixed(2) : '—'}</td>
+        <td>${c.shrink != null ? c.shrink.toFixed(2) : '—'}</td>
+        <td>${c.current.toFixed(2)}</td>
+        <td><b>${c.target.toFixed(2)}</b></td>
+        <td style="color:${c.delta > 0 ? '#3fb950' : c.delta < 0 ? '#f85149' : '#8b949e'}">${c.delta > 0 ? '+' : ''}${c.delta.toFixed(2)}</td>
+        <td class="sub">${c.status}</td>
+        <td class="sub">${c.llm || '—'}</td>
+      </tr>`).join('') + '</tbody></table></div>';
+  } else {
+    wrun.innerHTML = '<div class="empty">No weight optimization run recorded yet.</div>';
+  }
+
+  // --- Settlement overrides ---
+  const so = ac.settlement_overrides || [];
+  const sdiv = document.getElementById('settle-overrides');
+  sdiv.innerHTML = so.length ? so.map(o => {
+    const ov = o.overrides || {};
+    const chips = Object.entries(ov).map(([k, v]) => {
+      const label = { min_PF: 'PF', min_WR: 'WR', min_RR: 'RR', min_trades: 'n' }[k] || k;
+      const disp = k === 'min_WR' ? (v * 100).toFixed(0) + '%' : v;
+      return `<span class="sub" style="background:#21262d;border:1px solid #30363d;border-radius:4px;padding:1px 6px;margin-right:4px">${label} &gt; ${disp}</span>`;
+    }).join('');
+    return `<div style="border:1px solid #30363d;border-radius:6px;padding:10px 12px;margin-bottom:8px">
+      <b>${o.strategy}</b> <span class="sub">(${o.action} · stuck ${o.stuck_days_at_revision ?? '?'}d · ${(o.last_revised || '').slice(0, 10)})</span>
+      <div style="margin:6px 0">${chips}</div>
+      <div class="sub">${(o.reasoning || '').slice(0, 220)}</div>
+    </div>`;
+  }).join('') : '<div class="empty">No overrides — no agent has been stuck in the neutral zone for 3+ consecutive days yet.</div>';
+}
+
 // ============ Tab Nav Click ============
 document.querySelectorAll('.nav a').forEach(a => {
   a.addEventListener('click', e => {
@@ -429,6 +599,7 @@ document.querySelectorAll('.nav a').forEach(a => {
     const target = a.textContent.trim();
     let tab = 'tab-charts';
     if (target.includes('Strategy')) tab = 'tab-rankings';
+    else if (target.includes('Agent Control')) tab = 'tab-agent';
     else if (target.includes('Dashboard')) tab = 'tab-charts';
     switchTab(tab);
   });

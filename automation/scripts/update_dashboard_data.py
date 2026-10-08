@@ -354,6 +354,93 @@ total_R_24h = sum(s['live_24h']['R'] for s in strategies_out)
 total_sigs_24h = sum(s['signals_24h'] for s in strategies_out)
 total_w_24h = sum(s['live_24h']['wins'] for s in strategies_out)
 
+# ================== AGENT CONTROL (2026-10-08) ==================
+# Settlement levels + data-driven weight optimization, so the Review Hub
+# shows what the pipeline decided overnight instead of only reporting
+# performance after the fact.
+def _load_json(p):
+    try:
+        return json.loads(p.read_text())
+    except Exception:
+        return None
+
+# Settlement: current level per agent + promotion/demotion history
+levels_state = _load_json(REPO / 'automation' / 'config' / 'strategy_levels.json') or {}
+agent_levels = []
+for name, v in levels_state.items():
+    if name.startswith('_') or not isinstance(v, dict):
+        continue
+    hist = v.get('history') or []
+    last = hist[-1] if hist else None
+    agent_levels.append({
+        'strategy': name,
+        'level': v.get('level', 1),
+        'last_settled': v.get('last_settled'),
+        'n_changes': len(hist),
+        'last_action': (last or {}).get('action'),
+        'last_reason': (last or {}).get('reason'),
+        'last_change_date': (last or {}).get('date'),
+    })
+agent_levels.sort(key=lambda x: (-x['level'], x['strategy']))
+
+# Settlement overrides (LLM auto-lowered conditions for stuck agents)
+sett_ov_raw = _load_json(REPO / 'automation' / 'config' / 'settlement_overrides.json') or {}
+settlement_overrides = []
+for name, v in sett_ov_raw.items():
+    if name.startswith('_') or not isinstance(v, dict):
+        continue
+    settlement_overrides.append({
+        'strategy': name,
+        'action': v.get('action'),
+        'reasoning': v.get('reasoning', ''),
+        'overrides': v.get('overrides', {}),
+        'last_revised': v.get('last_revised'),
+        'stuck_days_at_revision': v.get('stuck_days_at_revision'),
+    })
+
+# Weight optimization: latest report + effective weights
+weight_files = sorted((REPO / 'automation' / 'reports' / 'weight_optimization').glob('weight_*.json'))
+weight_opt = None
+if weight_files:
+    wj = _load_json(weight_files[-1]) or {}
+    weight_opt = {
+        'date': wj.get('date'),
+        'window_days': wj.get('window_days'),
+        'generated_from': weight_files[-1].name,
+        'candidates': [
+            {
+                'strategy': c['strategy'],
+                'n': c['metrics']['n'],
+                'pf': c['metrics']['pf'],
+                'wr': c['metrics']['wr'],
+                'rr': c['metrics']['rr'],
+                'edge': c['detail'].get('edge_index'),
+                'shrink': c['detail'].get('shrink'),
+                'current': c['current'],
+                'target': c['target'],
+                'delta': c['delta'],
+                'status': c['status'],
+                'llm': (c.get('llm_check') or {}).get('llm'),
+            }
+            for c in wj.get('candidates', [])
+        ],
+    }
+
+# Effective weights = live_scan defaults < LLM overrides < data-driven overrides
+w_ov = _load_json(REPO / 'automation' / 'config' / 'weight_overrides.json') or {}
+effective_weights = []
+for s in strategies_out:
+    nm = s.get('name')
+    if not nm:
+        continue
+    w = s.get('weight', 1.0)
+    src = 'default'
+    lo = (w_ov or {}).get(nm)
+    if isinstance(lo, dict) and isinstance(lo.get('weight'), (int, float)):
+        w = float(lo['weight']); src = 'data-driven'
+    effective_weights.append({'strategy': nm, 'weight': round(float(w), 3), 'source': src})
+effective_weights.sort(key=lambda x: -x['weight'])
+
 out = {
     'generated_at': HKT_STR,
     'hkt_timestamp': now.isoformat(),
@@ -370,6 +457,12 @@ out = {
     'ranking_24h_aggregate': ranking_24h_agg,
     'ranking_24h_updated': r24.get("hkt_timestamp") if r24 else None,
     'strategies': strategies_out,
+    'agent_control': {
+        'levels': agent_levels,
+        'settlement_overrides': settlement_overrides,
+        'weight_optimization': weight_opt,
+        'effective_weights': effective_weights,
+    },
 }
 
 out_path = REPO / 'docs' / 'dashboard-data.json'
