@@ -1,0 +1,261 @@
+{
+  "date": "2026-10-08",
+  "window_days": 14,
+  "candidates": [
+    {
+      "strategy": "3-Pushes",
+      "metrics": {
+        "n": 12,
+        "pf": 1.156,
+        "wr": 0.4167,
+        "rr": 1.618,
+        "total_r": 1.09,
+        "pnl": -97.11,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 1.0,
+      "target": 1.165,
+      "delta": 0.165,
+      "status": "applied",
+      "detail": {
+        "pf_component": 1.156,
+        "wr_component": 0.926,
+        "rr_component": 1.618,
+        "edge_index": 1.732,
+        "raw_weight": 1.439,
+        "shrink": 0.375,
+        "losing_penalty_applied": false
+      },
+      "uncapped_target": 1.165,
+      "llm_check": {
+        "llm": "AGREE",
+        "llm_reason": ""
+      }
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "metrics": {
+        "n": 88,
+        "pf": 0.795,
+        "wr": 0.3295,
+        "rr": 1.618,
+        "total_r": -12.078,
+        "pnl": -1914.92,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 1.0,
+      "target": 0.8,
+      "delta": -0.2,
+      "status": "applied",
+      "detail": {
+        "pf_component": 0.795,
+        "wr_component": 0.732,
+        "rr_component": 1.618,
+        "edge_index": 0.942,
+        "raw_weight": 0.965,
+        "shrink": 0.815,
+        "losing_penalty_applied": true
+      },
+      "uncapped_target": 0.772,
+      "llm_check": {
+        "llm": "AGREE",
+        "llm_reason": ""
+      }
+    },
+    {
+      "strategy": "B1",
+      "metrics": {
+        "n": 4,
+        "pf": 0.539,
+        "wr": 0.25,
+        "rr": 1.618,
+        "total_r": -1.382,
+        "pnl": -224.47,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 1.0,
+      "target": 1.0,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=4 < MIN_TRADES_TO_ACT=10"
+      }
+    },
+    {
+      "strategy": "B1-3in1",
+      "metrics": {
+        "n": 8,
+        "pf": 0.0,
+        "wr": 0.0,
+        "rr": 0.0,
+        "total_r": -8.0,
+        "pnl": 227.15,
+        "avg_win": 0.0,
+        "avg_loss": 1.0
+      },
+      "current": 1.0,
+      "target": 1.0,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=8 < MIN_TRADES_TO_ACT=10"
+      }
+    },
+    {
+      "strategy": "CRT",
+      "metrics": {
+        "n": 39,
+        "pf": 1.126,
+        "wr": 0.4103,
+        "rr": 1.618,
+        "total_r": 2.888,
+        "pnl": -86.85,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 1.1,
+      "target": 1.262,
+      "delta": 0.162,
+      "status": "applied",
+      "detail": {
+        "pf_component": 1.126,
+        "wr_component": 0.912,
+        "rr_component": 1.618,
+        "edge_index": 1.661,
+        "raw_weight": 1.397,
+        "shrink": 0.661,
+        "losing_penalty_applied": false
+      },
+      "uncapped_target": 1.262,
+      "llm_check": {
+        "llm": "AGREE",
+        "llm_reason": ""
+      }
+    },
+    {
+      "strategy": "H-Pattern",
+      "metrics": {
+        "n": 4,
+        "pf": 1.618,
+        "wr": 0.5,
+        "rr": 1.618,
+        "total_r": 1.236,
+        "pnl": 554.94,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 1.2,
+      "target": 1.2,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=4 < MIN_TRADES_TO_ACT=10"
+      }
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "metrics": {
+        "n": 3,
+        "pf": 0.809,
+        "wr": 0.3333,
+        "rr": 1.618,
+        "total_r": -0.382,
+        "pnl": 255.39,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 0.9,
+      "target": 0.9,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=3 < MIN_TRADES_TO_ACT=10"
+      }
+    },
+    {
+      "strategy": "RSI-Div",
+      "metrics": {
+        "n": 2,
+        "pf": 1.618,
+        "wr": 0.5,
+        "rr": 1.618,
+        "total_r": 0.618,
+        "pnl": -5.2,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 0.7,
+      "target": 0.7,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=2 < MIN_TRADES_TO_ACT=10"
+      }
+    },
+    {
+      "strategy": "Stair",
+      "metrics": {
+        "n": 26,
+        "pf": 1.011,
+        "wr": 0.3846,
+        "rr": 1.618,
+        "total_r": 0.18,
+        "pnl": 87.98,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 0.9,
+      "target": 1.1,
+      "delta": 0.2,
+      "status": "applied",
+      "detail": {
+        "pf_component": 1.011,
+        "wr_component": 0.855,
+        "rr_component": 1.618,
+        "edge_index": 1.398,
+        "raw_weight": 1.239,
+        "shrink": 0.565,
+        "losing_penalty_applied": false
+      },
+      "uncapped_target": 1.135,
+      "llm_check": {
+        "llm": "AGREE",
+        "llm_reason": ""
+      }
+    },
+    {
+      "strategy": "Two-Yang",
+      "metrics": {
+        "n": 10,
+        "pf": 0.693,
+        "wr": 0.3,
+        "rr": 1.618,
+        "total_r": -2.146,
+        "pnl": 67.51,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 0.8,
+      "target": 0.658,
+      "delta": -0.142,
+      "status": "applied",
+      "detail": {
+        "pf_component": 0.693,
+        "wr_component": 0.667,
+        "rr_component": 1.618,
+        "edge_index": 0.748,
+        "raw_weight": 0.849,
+        "shrink": 0.333,
+        "losing_penalty_applied": true
+      },
+      "uncapped_target": 0.658,
+      "llm_check": {
+        "llm": "AGREE",
+        "llm_reason": ""
+      }
+    }
+  ]
+}

@@ -186,6 +186,20 @@ for _sname, _cfg in STRATEGIES.items():
     if _ov.get("resample_tf"):
         _cfg.setdefault("args", {})["resample_tf"] = _ov["resample_tf"]
 
+# Data-driven overrides take precedence over LLM-proposed ones: the model
+# decides from realised PF/WR/RR with Bayesian shrinkage, the LLM only vetoes.
+# (weight_optimizer.py, 2026-10-08)
+try:
+    _wo_path = Path(__file__).resolve().parents[1] / "config" / "weight_overrides.json"
+    _wo_data = json.loads(_wo_path.read_text()) if _wo_path.exists() else {}
+    for _sname, _cfg in STRATEGIES.items():
+        _wov = _wo_data.get(_sname)
+        if isinstance(_wov, dict) and isinstance(_wov.get("weight"), (int, float)):
+            _cfg["weight"] = float(_wov["weight"])
+            _cfg["weight_optimized"] = True
+except Exception:
+    pass
+
 STRATEGY_WEIGHT = {k: v.get("weight", 1.0) for k, v in STRATEGIES.items()}
 
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")

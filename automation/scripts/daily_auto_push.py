@@ -58,6 +58,8 @@ WATCHED_PATHS = [
     "automation/config/ranking_settings.json",
     "automation/config/settlement_overrides.json",
     "automation/config/strategy_overrides.json",
+    "automation/config/weight_overrides.json",
+    "automation/reports/weight_optimization/",
     # Web dashboard
     "docs/dashboard-data.json",
     "docs/charts-manifest.json",

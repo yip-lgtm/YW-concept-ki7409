@@ -80,6 +80,14 @@ jobs:
         run: |
           .venv/bin/python scripts/llm_iterate_all.py 2>&1 | tee /tmp/iterate_all_log.txt
 
+      - name: Data-driven weight optimization (PF/WR/RR decides, LLM vetoes)
+        id: weight-opt
+        if: always()
+        run: |
+          .venv/bin/python automation/scripts/weight_optimizer.py 2>&1 | tee /tmp/weight_opt_log.txt || true
+          echo "--- weight report ---"
+          cat automation/reports/weight_optimization/weight_*.md 2>/dev/null | tail -25 || true
+
       - name: Apply LLM param suggestions (auto-optimize)
         id: param-apply
         if: always()
