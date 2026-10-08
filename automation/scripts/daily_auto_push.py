@@ -53,6 +53,7 @@ WATCHED_PATHS = [
     "automation/reports/llm_iteration/",
     "automation/reports/live_scan/",
     "automation/reports/ocs_btc_5m/",
+    "automation/reports/ttrades_btc/",
     # Config (state + settings)
     "automation/config/strategy_levels.json",
     "automation/config/ranking_settings.json",

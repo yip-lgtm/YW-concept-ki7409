@@ -285,6 +285,8 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install -q -r requirements.txt
           .venv/bin/python scripts/ttrades_btc.py 2>&1 || echo "ttrades_btc done"
+          # L12/L13/L14 as independent agents (docs/18,19,20)
+          .venv/bin/python scripts/ttrades_l_strategies.py 2>&1 || echo "ttrades_l done"
 
       - name: Commit TTrades output
         run: |
