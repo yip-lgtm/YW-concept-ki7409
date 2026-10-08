@@ -1,10 +1,11 @@
 # 17. TTrades Model（OSOK + Fractal）
 
 來源：TTrades / ICT Fractal Model Handbook（課程筆記整理，非原文複製）  
-關聯：[13-TTFM-Fractal-Model.md](13-TTFM-Fractal-Model.md)、[18-TTrades-L12.md](18-TTrades-L12.md)、YW H-Pattern / Stair  
+關聯：[13-TTFM-Fractal-Model.md](13-TTFM-Fractal-Model.md)、[18-TTrades-L12.md](18-TTrades-L12.md)、[19-TTrades-L13.md](19-TTrades-L13.md)、YW H-Pattern / Stair  
 更新：2026-10-09
 
 L12 詳解：[18-TTrades-L12.md](18-TTrades-L12.md)。C2 必須掃極值並收回 C1 區間，且落在高時間框 POI；配對周期 CISD 之前不開倉。
+L13 詳解：[19-TTrades-L13.md](19-TTrades-L13.md)。只做擴張燭；長影線 C2 等收盤後做 C3 continuation order block。
 
 兩套用法同一骨架：
 
@@ -12,7 +13,7 @@ L12 詳解：[18-TTrades-L12.md](18-TTrades-L12.md)。C2 必須掃極值並收�
 |--|------|---------|
 | 定位 | 一日一槍，跟日線 + 週 profile | 任意週期可嵌套，偏 scalp |
 | 骨架 | Daily swing → Weekly profile → H1 CISD → Daily profile → 15m/5m 進 |
-| 骨架 | HTF C1–C4 → LTF CISD + 投影 → 喂擴張燭入 |
+| 骨架 | HTF C1–C4 → LTF CISD + 投影 → 喎擴張燭入 |
 
 ---
 
@@ -25,7 +26,7 @@ L12 詳解：[18-TTrades-L12.md](18-TTrades-L12.md)。C2 必須掃極值並收�
 | **C3** | 轉折後第一根 |
 | **C4** | 跟住 C3 嘅延續 |
 
-市場要轉，必須先形成 swing high/low。機會主要喂 **C3 / C4**。
+市場要轉，必須先形成 swing high/low。機會主要喎 **C3 / C4**。
 
 ---
 
@@ -42,7 +43,7 @@ L12 詳解：[18-TTrades-L12.md](18-TTrades-L12.md)。C2 必須掃極值並收�
 
 - C2 **未**收返入 C1 range → 唔參與 C2，等 C3  
 - C3 強勢陽/陰收盤先確認 swing  
-- 之後只喂 **C4** 做延續  
+- 之後只喎 **C4** 做延續  
 - 進場：C4；SL = 轉折點
 
 **理想形態**：C2 大影收回 C1 → C3 離影線強收（確認 opposing close）→ C4 守 C3 EQ 去目標。
@@ -90,7 +91,7 @@ L12 詳解：[18-TTrades-L12.md](18-TTrades-L12.md)。C2 必須掃極值並收�
 
 ## 4. CISD 配對
 
-Swing 用 **低一級 CISD** 確認（多數喂 C2 內完成，亦可拖到 C3）。
+Swing 用 **低一級 CISD** 確認（多數喎 C2 內完成，亦可拖到 C3）。
 
 | Swing | CISD |
 |-------|------|
@@ -107,9 +108,9 @@ CISD 實務：空 = 收破「一連串陽裡面最低陽嘅開盤」；多相反
 
 ## 5. OSOK 流程（一日一槍）
 
-只喂以下齊先考慮進場：
+只喎以下齊先考慮進場：
 
-1. **日線** 有 C2 或 C3 closure，且喂 POI  
+1. **日線** 有 C2 或 C3 closure，且喎 POI  
 2. 對上四種 **週 profile 之一**  
 3. **H1 CISD** 確認 + 投影  
 4. **日內 profile**（倫敦反轉 / 紐約反轉）對齊  
@@ -129,7 +130,7 @@ CISD 實務：空 = 收破「一連串陽裡面最低陽嘅開盤」；多相反
 
 | Profile | 條件 | 預期 |
 |---------|------|------|
-| Classic Expansion（逆勢週五） | 一/二已反向並擴到四 | 五回週 range 20–50%；唯一可喂預期 swing 嘅 **C2** 做 |
+| Classic Expansion（逆勢週五） | 一/二已反向並擴到四 | 五回週 range 20–50%；唯一可喎預期 swing 嘅 **C2** 做 |
 | Midweek Reversal | 一、二相對週開盤盤整或反向 | 三 = C2 反轉，四／五擴張 |
 | Consolidation Reversal | 一至三盤整 | 四反轉，五擴張 |
 | Thursday Counter | 一至三同向擴張 | 四反轉，五擴張 |
@@ -159,10 +160,10 @@ CISD 實務：空 = 收破「一連串陽裡面最低陽嘅開盤」；多相反
 三件套：
 
 1. HTF swing（C2 或 C3）  
-2. LTF CISD + 投影（喂 HTF C2 內）  
-3. 喂 **擴張燭** 入碼  
-   - C2 closure → 喂 C3、C4 掲 LTF 入場  
-   - C3 closure → 只喂 C4 入
+2. LTF CISD + 投影（喎 HTF C2 內）  
+3. 喎 **擴張燭** 入碼  
+   - C2 closure → 喎 C3、C4 搵 LTF 入場  
+   - C3 closure → 只喎 C4 入
 
 檢查清單：
 
@@ -228,3 +229,17 @@ YW 實盤配對建議：
 - C2 長影線時，C3 要守影線上半 0.5，否則 swing 不算成立。
 - 配對：日線→小時 CISD，小時→5 分鐘。5 分鐘無 HTF C2 不開。
 - 詳見 [18-TTrades-L12.md](18-TTrades-L12.md)。
+
+---
+
+## 11. L13 對照（2026-10-09）
+
+來源筆記：https://notes.powerofdeal.com/courses/ttrades-fractal-model/lesson-13/
+
+- 只交易擴張燭（小影線、單邊）。長影線反轉燭不支持即時擴張。
+- C2 小影線反轉：可在 C2 內配 LTF CISD 直接做。C2 長影線：等 C2 closure，C3 開盤後做延續。
+- C2 本身已擴張（淺影線後拉開）：不做其後 C3。
+- C3 進場 = continuation order block：開盤後掃短線流動性或入 POI，對向燭確認影線，再順勢入。SL = protected swing 外。目標 2R 或 projection／流動性。
+- 小影線用整根區間 0.5 判斷回調，不用影線 0.5。
+- CISD 與目標流動性幾乎同位：skip。
+- 詳見 [19-TTrades-L13.md](19-TTrades-L13.md)。
