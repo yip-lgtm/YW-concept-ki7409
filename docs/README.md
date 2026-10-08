@@ -15,6 +15,7 @@
 | [10-Zhongtian-Practical-Setup.md](10-Zhongtian-Practical-Setup.md) | 中天 practical setup |
 | [17-TTrades-Model.md](17-TTrades-Model.md) | TTrades OSOK + Fractal |
 | [18-TTrades-L12.md](18-TTrades-L12.md) | TTrades L12 Candle 2 Closure |
+| [19-TTrades-L13.md](19-TTrades-L13.md) | TTrades L13 Trading Candle 3 |
 
 ## Automation Docs
 | File | Topic |
