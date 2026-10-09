@@ -94,6 +94,10 @@ LLM_VETO_THRESHOLD = 0.10
 TRADE_SOURCES = [
     ("automation/reports/live_scan/trades.jsonl", None),      # strategy field present
     ("automation/reports/ocs_btc_5m/trades.jsonl", "OCS-BTC-5m"),  # no strategy field
+    # TTrades family (2026-10-09). ttrades_tracker.py is what makes this row
+    # useful: before it existed the family wrote signals only, so there was
+    # never a closed trade and therefore never a PF / WR / RR to score.
+    ("automation/reports/ttrades_btc/trades.jsonl", None),    # strategy field present
 ]
 
 STRATEGY_CHARACTER = {
@@ -108,6 +112,10 @@ STRATEGY_CHARACTER = {
     "Kell-Cycle":     "Cycle-based, volatile. Low WR / high RR is normal.",
     "CRT":            "High-RR range reversal with T2 (1.618R) close. WR naturally moderate.",
     "OCS-BTC-5m":     "ML/kNN based, BTC 24/7. Different session profile.",
+    "TTrades-Fractal": "ICT Fractal Model (C1-C4 candle structure). Original model is BTC-native; MNQ/MGC are an extrapolation. Runs on 3 tickers.",
+    "TTrades-L12":     "Strictest entry: C2 sweep+reclaim AT an HTF POI, then paired-TF CISD. Never enters on the C2 close.",
+    "TTrades-L13":     "Expansion candles only; entry at the C3 continuation order block; target >= 2R. Does not chase a swept target.",
+    "TTrades-L14":     "Two closures: C2 sweep+reclaim, or no sweep with C3 closing beyond the C2 BODY (which then only trades C4). No subjective fill."
 }
 
 
@@ -382,7 +390,7 @@ def main() -> int:
             candidates.append({"strategy": name, "metrics": m, "current": cur,
                                "target": target, "delta": round(delta, 3),
                                "status": "cooldown",
-                               "detail": f"changed within {COOLDOWN_DAYS}d"})
+                               "detail": {"note": f"changed within {COOLDOWN_DAYS}d"}})
             continue
         # Cap the per-cycle move
         capped = round(cur + max(-MAX_DELTA_PER_CYCLE,
@@ -487,7 +495,11 @@ def main() -> int:
 
     for c in sorted(candidates, key=lambda x: -abs(x["delta"])):
         m = c["metrics"]
-        d = c["detail"]
+        # detail is normally the model-explanation dict, but a few status
+        # paths carry a plain note. Coerce so the report never dies on it.
+        d = c.get("detail")
+        if not isinstance(d, dict):
+            d = {}
         md.append(
             f"| {c['strategy']} | {m['n']} | {m['pf']:.2f} | {m['wr']*100:.1f}% | "
             f"{m['rr']:.2f} | {d.get('edge_index','—')} | {d.get('shrink','—')} | "

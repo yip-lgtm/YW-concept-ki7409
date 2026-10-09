@@ -88,6 +88,12 @@ _DEFAULTS = {
 AGENT_NAMES = [
     "H-Pattern", "3-Pushes", "Two-Yang", "RSI-Div", "50-20-Pullback",
     "Stair", "B1", "B1-3in1", "Kell-Cycle", "CRT", "OCS-BTC-5m",
+    # TTrades family — 4 strategies, each scanned on MNQ/MGC/BTC.
+    # The agent unit is the strategy, not strategy x ticker: the same way
+    # live_scan's 11 strategies are pooled across 5 tickers. Per-ticker
+    # levels are not meaningful here because TTrades levels and CISD are
+    # computed per strategy, and no single ticker has enough sample yet.
+    "TTrades-Fractal", "TTrades-L12", "TTrades-L13", "TTrades-L14",
 ]
 
 

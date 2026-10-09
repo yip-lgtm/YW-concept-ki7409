@@ -292,6 +292,12 @@ jobs:
             TTRADES_TICKER="$TK" .venv/bin/python scripts/ttrades_l_strategies.py --tickers "$TK" 2>&1 || echo "ttrades_l $TK done"
           done
 
+          # Close out TTrades positions so the family produces closed trades.
+          # Without this the 12 agents emit signals forever and never
+          # accumulate the PF / WR / RR that weight_optimizer and
+          # daily_settlement need to score them.
+          .venv/bin/python scripts/ttrades_tracker.py 2>&1 || echo "tt-tracker done"
+
       - name: Commit TTrades output
         run: |
           git config --global user.email "mavis@MiniMax" 2>/dev/null || true
