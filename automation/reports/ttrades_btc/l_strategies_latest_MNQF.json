@@ -1,20 +1,80 @@
 {
-  "ts": "2026-10-09T11:43:36.742863+08:00",
+  "ts": "2026-10-09T14:01:53.261473+08:00",
   "ticker": "MNQ=F",
-  "h4_bars": 153,
-  "m15_bars": 551,
+  "h4_bars": 148,
+  "m15_bars": 456,
   "strategies": {
     "TTrades-L12": {
-      "fired": false,
-      "stage": "no C2 closure (sweep+reclaim) on C2"
+      "fired": true,
+      "direction": "long",
+      "stage": "all L12 gates passed",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 30684.0,
+        "swing_levels": [
+          30684.0,
+          30958.75,
+          31119.5,
+          31144.25,
+          31308.75
+        ],
+        "pivot_count": 24,
+        "fvg_count": 8
+      },
+      "poi_note": "C2 range [30952, 31034] contains swing 30959",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 30886.0,
+        "series_length": 1,
+        "last_close": 31147.25,
+        "reason": "cisd_long"
+      },
+      "c2_eq": 30993.125,
+      "c2_high": 31034.0,
+      "c2_low": 30952.25,
+      "c2_close": 31026.0,
+      "c3_close": 31147.25,
+      "swing_level": 30952.25,
+      "entry_ref": 31147.25,
+      "target_r": 2.0
     },
     "TTrades-L13": {
       "fired": false,
       "stage": "C2 not an expansion candle (wick too large)"
     },
     "TTrades-L14": {
-      "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure"
+      "fired": true,
+      "direction": "long",
+      "closure": "c3_closure",
+      "trade_candle": "C4",
+      "stage": "c3_closure \u2014 trade C4",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 30684.0,
+        "swing_levels": [
+          30684.0,
+          30958.75,
+          31119.5,
+          31144.25,
+          31308.75
+        ],
+        "pivot_count": 24,
+        "fvg_count": 8
+      },
+      "poi_note": "C2 range [30952, 31034] contains swing 30959",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 30886.0,
+        "series_length": 1,
+        "last_close": 31147.25,
+        "reason": "cisd_long"
+      },
+      "c_eq": 30993.125,
+      "swing_level": 30952.25,
+      "entry_ref": 31147.25,
+      "target_r": 2.0
     }
   }
 }
