@@ -255,6 +255,106 @@ def target_already_swept(c2, poi, direction) -> bool:
     return float(c2["Low"]) <= float(ref) * 1.0005
 
 
+# ------------------------------------------------- trade levels (2026-10-09)
+
+def atr_h4(df, period: int = 14) -> float:
+    """ATR on the H4 frame. Used only as a buffer on the stop, never as the
+    entry — L12 §5 explicitly says not to open on a fixed-ATR basis at the C2
+    close, so ATR sizes the stop distance, not the trigger."""
+    if len(df) < period + 1:
+        return 0.0
+    h, l, c = df["High"], df["Low"], df["Close"]
+    prev = c.shift(1)
+    tr = pd.concat([h - l, (h - prev).abs(), (l - prev).abs()], axis=1).max(axis=1)
+    v = float(tr.tail(period).mean())
+    return v if v > 0 else 0.0
+
+
+def build_levels(direction: str, entry: float, sl_ref: float,
+                 atr: float, sl_basis: str) -> dict | None:
+    """Entry at the model's own reference, stop beyond `sl_ref`.
+
+    T1 is 1.0R and the T2 close is 1.618R, matching the rest of the book so
+    R-multiples stay comparable across agents. T3 is 2.618R.
+    """
+    if entry is None or sl_ref is None or entry <= 0 or sl_ref <= 0:
+        return None
+    buffer = max(atr * 0.15, entry * 0.0005)   # 0.15×ATR, floor 0.05%
+    if direction == "short":
+        sl = sl_ref + buffer
+        risk = sl - entry
+    else:
+        sl = sl_ref - buffer
+        risk = entry - sl
+    if risk <= 0:
+        return None
+    sign = -1 if direction == "short" else 1
+    return {
+        "entry": round(entry, 2),
+        "sl": round(sl, 2),
+        "t1": round(entry + sign * risk * 1.0, 2),
+        "t2_close": round(entry + sign * risk * 1.618, 2),
+        "t3": round(entry + sign * risk * 2.618, 2),
+        "risk": round(risk, 2),
+        "sl_basis": sl_basis,
+        "sl_buffer": round(buffer, 2),
+    }
+
+
+def _attach_levels(result: dict, h4) -> dict:
+    """Populate levels on a fired L-series result, using that agent's own
+    documented stop placement. A result with no valid geometry keeps
+    has_levels=False rather than being given a number the notes do not
+    justify."""
+    if not result.get("fired"):
+        return result
+    direction = result.get("direction")
+    if direction not in ("long", "short"):
+        result["has_levels"] = False
+        result["levels_note"] = f"no direction ({direction})"
+        return result
+
+    atr = atr_h4(h4)
+    levels = None
+
+    if direction == "long":
+        # All three notes put the stop beyond the protected swing.
+        # L13 is the exception: the notes place it outside the continuation
+        # order block, which is the structure the entry actually hangs off.
+        if "TTrades-L13" in result.get("strategy", "") or result.get("order_block"):
+            ob = result.get("order_block")
+            if ob and ob.get("ob_low") is not None:
+                levels = build_levels(direction, result.get("entry_ref"),
+                                      float(ob["ob_low"]), atr,
+                                      "outside continuation order block (L13 §2)")
+        if levels is None:
+            levels = build_levels(direction, result.get("entry_ref"),
+                                  result.get("swing_level"), atr,
+                                  "beyond protected swing (C2/C3 extreme)")
+    else:
+        ob = result.get("order_block")
+        if result.get("strategy") == "TTrades-L13" and ob and ob.get("ob_high") is not None:
+            levels = build_levels(direction, result.get("entry_ref"),
+                                  float(ob["ob_high"]), atr,
+                                  "outside continuation order block (L13 §2)")
+        if levels is None:
+            levels = build_levels(direction, result.get("entry_ref"),
+                                  result.get("swing_level"), atr,
+                                  "beyond protected swing (C2/C3 extreme)")
+
+    if levels is None:
+        result["has_levels"] = False
+        result["levels_note"] = ("stop reference is on the wrong side of entry "
+                                 f"(entry {result.get('entry_ref')}, "
+                                 f"stop ref {result.get('swing_level')})")
+        return result
+
+    result.update(levels)
+    result["has_levels"] = True
+    result["atr_h4"] = round(atr, 2)
+    return result
+
+
 # ------------------------------------------------- per-strategy detectors
 
 def detect_l12(h4, m15, direction_hint=None):
@@ -302,6 +402,7 @@ def detect_l12(h4, m15, direction_hint=None):
 
     return {
         "fired": True,
+        "strategy": "TTrades-L12",
         "direction": direction,
         "stage": "all L12 gates passed",
         "poi": poi,
@@ -351,6 +452,7 @@ def detect_l13(h4, m15):
     last = m15.iloc[-1]
     return {
         "fired": True,
+        "strategy": "TTrades-L13",
         "direction": direction,
         "stage": "C3 continuation order block",
         "cisd": cisd,
@@ -424,6 +526,7 @@ def detect_l14(h4, m15):
 
     return {
         "fired": True,
+        "strategy": "TTrades-L14",
         "direction": direction,
         "closure": closure,
         "trade_candle": trade_candle,
@@ -451,9 +554,16 @@ def run(h4, m15, ticker: str = "BTC-USD") -> dict:
     out = {}
     for name in STRATEGIES:
         try:
-            out[name] = DETECTORS[name](h4, m15)
+            r = DETECTORS[name](h4, m15)
         except Exception as e:
-            out[name] = {"fired": False, "stage": f"error: {type(e).__name__}: {e}"}
+            out[name] = {"fired": False, "has_levels": False,
+                         "stage": f"error: {type(e).__name__}: {e}"}
+            continue
+        r.setdefault("strategy", name)
+        r["has_levels"] = False
+        if r.get("fired"):
+            _attach_levels(r, h4)
+        out[name] = r
     return out
 
 
@@ -576,19 +686,29 @@ def _notify_tg(ticker: str, results: dict, now) -> None:
             ob = r["order_block"]
             lines.append(f"  order block: [{ob['ob_low']:,.0f}, {ob['ob_high']:,.0f}] "
                          f"EQ {ob['ob_eq']:,.0f}")
-        ref = r.get("entry_ref")
-        lvl = r.get("swing_level")
-        if ref and lvl:
-            lines.append(f"  entry ref {ref:,.0f} · protected swing {lvl:,.0f} "
-                         f"· target {r.get('target_r', 2)}R")
+        if r.get("has_levels"):
+            lines.append(f"  entry {r['entry']:,.2f} · SL {r['sl']:,.2f} "
+                         f"(risk {r['risk']:,.0f})")
+            lines.append(f"  T1 {r['t1']:,.0f} · T2 CLOSE {r['t2_close']:,.0f} "
+                         f"(1.618R) · T3 {r['t3']:,.0f}")
+            lines.append(f"  stop basis: {r.get('sl_basis', '—')}")
+        else:
+            ref = r.get("entry_ref")
+            lvl = r.get("swing_level")
+            if ref and lvl:
+                lines.append(f"  entry ref {ref:,.0f} · protected swing {lvl:,.0f}")
+            lines.append(f"  ⚠ no levels: {r.get('levels_note', 'geometry invalid')}")
         if r.get("cisd"):
             lines.append(f"  CISD: {r['cisd'].get('reason', 'confirmed')}")
         lines.append("")
 
-    # The L-series does not publish SL/T1/T2 yet, so a TG alert is a heads-up
-    # that a setup is live, not an instruction with a stop. Say so rather than
-    # letting the message read like an executable ticket.
-    lines.append("⚠️ L-series publishes no SL/T1/T2 yet — this is a setup alert, not an entry ticket.")
+    # Levels are published as of 2026-10-09, so this is now a ticket. Say so
+    # only when an agent genuinely could not produce a stop, rather than
+    # blanket-disclaiming the whole family.
+    no_lv = [n for n, r in fresh.items() if not r.get("has_levels")]
+    if no_lv:
+        lines.append(f"⚠️ {', '.join(no_lv)} fired without a valid stop — setup alert only.")
+    lines.append("T1 takes 50%, remainder closes at T2 (1.618R). Paper only.")
 
     try:
         import requests

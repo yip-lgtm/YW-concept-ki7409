@@ -171,11 +171,11 @@
 
   <h3 style="margin-top:28px">🕯️ TTrades Family — 4 strategies × 3 tickers</h3>
   <p class="sub">
-    ICT Fractal Model. <code>Fractal</code> publishes SL/T1/T2 so it can be
-    tracked and scored; <code>L12/L13/L14</code> report a gate verdict only —
-    for those the rejection reason <em>is</em> the signal. L12 is the strictest
-    (POI + paired-TF CISD), L13 trades the C3 continuation order block, L14
-    accepts a no-sweep C3 close beyond the C2 body and then only trades C4.
+    ICT Fractal Model, 4 strategies × 3 tickers. All four publish
+    entry / SL / T1 / T2 (T2 closes at 1.618R), so the whole family is tracked
+    and scored. L12 is the strictest (POI + paired-TF CISD), L13 trades the C3
+    continuation order block with its stop outside that block, L14 accepts a
+    no-sweep C3 close beyond the C2 body and then only trades C4.
   </p>
   <div class="stats" id="tt-stats"></div>
   <div id="tt-gates"></div>
@@ -648,6 +648,12 @@ function renderTtrades() {
       let reason = l.stage || '—';
       if (l.fired && l.poi_note) reason += ' · ' + l.poi_note;
       if (l.fired && l.trade_candle) reason += ` · trades ${l.trade_candle}`;
+      if (l.fired && l.has_levels) {
+        reason += `<br><b>entry ${l.entry.toLocaleString()} · SL ${l.sl.toLocaleString()}` +
+          ` (${l.risk} pts) · T2 ${l.t2_close.toLocaleString()}</b>`;
+      } else if (l.fired) {
+        reason += `<br><span style="color:#f85149">no levels</span>`;
+      }
       html += `<tr><td><b>${l.strategy}</b></td><td>${st}</td>` +
         `<td class="sub">${reason}</td></tr>`;
     });

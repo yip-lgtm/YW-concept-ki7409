@@ -277,6 +277,11 @@ function render(d) {
         let reason = l.stage || '—';
         if (l.fired && l.poi_note) reason += ' · ' + l.poi_note;
         if (l.fired && l.trade_candle) reason += ' · trades ' + l.trade_candle;
+        if (l.fired && l.has_levels) {
+          reason += '<br><strong>entry ' + l.entry.toLocaleString() +
+            ' · SL ' + l.sl.toLocaleString() + ' (' + l.risk + ' pts)' +
+            ' · T2 ' + l.t2_close.toLocaleString() + '</strong>';
+        }
         html.push(`<tr>
           <td><strong>${l.strategy}</strong></td>
           <td class="${l.fired ? 'pos' : ''}">${l.fired ? '▲ FIRE' : '— gated'}</td>

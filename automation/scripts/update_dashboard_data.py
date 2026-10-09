@@ -478,7 +478,11 @@ def _tt_agents():
                     'entry_ref': r.get('entry_ref'),
                     'swing_level': r.get('swing_level'),
                     'target_r': r.get('target_r'),
-                    'has_levels': False,
+                    'has_levels': bool(r.get('has_levels')),
+                    'entry': r.get('entry'),
+                    'sl': r.get('sl'), 't1': r.get('t1'),
+                    't2_close': r.get('t2_close'), 'risk': r.get('risk'),
+                    'sl_basis': r.get('sl_basis'),
                 }
                 for name, r in l_res.items()
             ],
@@ -544,9 +548,10 @@ ttrades = {
         if p.get('status') == 'open'
     ],
     'n_closed': len(_tt_trades),
-    'note': ('Only TTrades-Fractal publishes SL/T1/T2, so only it can be tracked '
-             'and scored. L12/L13/L14 report a gate verdict; their rejection '
-             'reason is the signal.'),
+    'note': ('All four agents publish entry/SL/T1/T2 (T2 closes at 1.618R) as of '
+             '2026-10-09, so the whole family is trackable and scoreable. A fired '
+             'row with has_levels=false means the stop reference sat on the wrong '
+             'side of entry, which is reported rather than papered over.'),
 }
 
 out = {

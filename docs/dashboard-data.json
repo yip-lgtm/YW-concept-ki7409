@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-09 14:55 HKT",
-  "hkt_timestamp": "2026-10-09T14:55:27.277300+08:00",
+  "generated_at": "2026-10-09 15:06 HKT",
+  "hkt_timestamp": "2026-10-09T15:06:35.792360+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 4,
@@ -89,7 +89,7 @@
     "total_R": 4.33,
     "total_pnl_usd": -121.26
   },
-  "ranking_24h_updated": "2026-10-09T06:55:27.277339+00:00",
+  "ranking_24h_updated": "2026-10-09T07:06:35.792400+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -772,7 +772,7 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-10-09T14:41:04.974912+08:00",
+        "updated": "2026-10-09T15:06:03.963032+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
@@ -789,10 +789,16 @@
             "closure": null,
             "trade_candle": null,
             "poi_note": "C2 range [30952, 31115] contains swing 30959",
-            "entry_ref": 31157.5,
+            "entry_ref": 31184.0,
             "swing_level": 30952.25,
             "target_r": 2.0,
-            "has_levels": false
+            "has_levels": true,
+            "entry": 31184.0,
+            "sl": 30926.12,
+            "t1": 31441.88,
+            "t2_close": 31601.25,
+            "risk": 257.88,
+            "sl_basis": "beyond protected swing (C2/C3 extreme)"
           },
           {
             "strategy": "TTrades-L13",
@@ -806,7 +812,13 @@
             "entry_ref": null,
             "swing_level": null,
             "target_r": null,
-            "has_levels": false
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
           },
           {
             "strategy": "TTrades-L14",
@@ -817,10 +829,16 @@
             "closure": "c3_closure",
             "trade_candle": "C4",
             "poi_note": "C2 range [30952, 31115] contains swing 30959",
-            "entry_ref": 31157.5,
+            "entry_ref": 31184.0,
             "swing_level": 30952.25,
             "target_r": 2.0,
-            "has_levels": false
+            "has_levels": true,
+            "entry": 31184.0,
+            "sl": 30926.12,
+            "t1": 31441.88,
+            "t2_close": 31601.25,
+            "risk": 257.88,
+            "sl_basis": "beyond protected swing (C2/C3 extreme)"
           }
         ]
       },
@@ -846,7 +864,13 @@
             "entry_ref": null,
             "swing_level": null,
             "target_r": null,
-            "has_levels": false
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
           },
           {
             "strategy": "TTrades-L13",
@@ -860,7 +884,13 @@
             "entry_ref": null,
             "swing_level": null,
             "target_r": null,
-            "has_levels": false
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
           },
           {
             "strategy": "TTrades-L14",
@@ -874,7 +904,13 @@
             "entry_ref": null,
             "swing_level": null,
             "target_r": null,
-            "has_levels": false
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
           }
         ]
       },
@@ -900,7 +936,13 @@
             "entry_ref": null,
             "swing_level": null,
             "target_r": null,
-            "has_levels": false
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
           },
           {
             "strategy": "TTrades-L13",
@@ -914,7 +956,13 @@
             "entry_ref": null,
             "swing_level": null,
             "target_r": null,
-            "has_levels": false
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
           },
           {
             "strategy": "TTrades-L14",
@@ -928,7 +976,13 @@
             "entry_ref": null,
             "swing_level": null,
             "target_r": null,
-            "has_levels": false
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
           }
         ]
       }
@@ -975,7 +1029,7 @@
     ],
     "open_positions": [],
     "n_closed": 5,
-    "note": "Only TTrades-Fractal publishes SL/T1/T2, so only it can be tracked and scored. L12/L13/L14 report a gate verdict; their rejection reason is the signal."
+    "note": "All four agents publish entry/SL/T1/T2 (T2 closes at 1.618R) as of 2026-10-09, so the whole family is trackable and scoreable. A fired row with has_levels=false means the stop reference sat on the wrong side of entry, which is reported rather than papered over."
   },
   "agent_control": {
     "levels": [

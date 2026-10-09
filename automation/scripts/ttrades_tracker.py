@@ -43,11 +43,12 @@ TRADES_FILE = SIGNAL_DIR / "trades.jsonl"
 POSITIONS_FILE = SIGNAL_DIR / "positions.json"
 
 TICKERS = ["MNQ=F", "MGC=F", "BTC-USD"]
-# TTrades-Fractal is the only agent that emits tradeable levels today; the
-# L-series detectors report a fired/not-fired verdict with an entry reference
-# but do not yet publish SL/T1/T2, so there is nothing to track against.
-# They are counted here so the gap is visible instead of silent.
-LEVEL_BEARING_AGENTS = {"TTrades-Fractal"}
+# Every agent in the family publishes levels as of 2026-10-09. The base
+# Fractal reports them in the flat signal; the L-series report them nested
+# under `result`. Both are handled below.
+LEVEL_BEARING_AGENTS = {
+    "TTrades-Fractal", "TTrades-L12", "TTrades-L13", "TTrades-L14",
+}
 
 # Bars to walk forward before giving up on a position.
 MAX_BARS_HELD = 96          # 96 x 5m = 8h
@@ -91,18 +92,21 @@ def parse_ts(ts):
 
 
 def read_signals() -> list[dict]:
-    """Read every signal log: the per-ticker files plus the legacy BTC-only one.
+    """Read every signal log and normalise both record shapes.
 
-    `signals.jsonl` predates the multi-ticker split and still holds the
-    historical BTC runs, including the only actionable signals the family
-    has produced so far. Excluding it would silently discard that history
-    at the exact moment the tracker is able to score it.
+    The base Fractal writes a flat record with entry/sl/t1 at the top level.
+    The L-series writes {strategy, ticker, actionable, result:{...}} with the
+    levels nested inside `result`. Both are flattened to the same shape so the
+    rest of the tracker does not care which agent produced a signal.
     """
     out = []
     paths = sorted(SIGNAL_DIR.glob("signals_*.jsonl"))
     legacy = SIGNAL_DIR / "signals.jsonl"
     if legacy.exists():
         paths.append(legacy)
+    # L-series: one log per ticker, records shaped {strategy, result:{...}}
+    paths.extend(sorted(SIGNAL_DIR.glob("l_strategies_*.jsonl")))
+
     for p in paths:
         for line in p.read_text(errors="ignore").splitlines():
             line = line.strip()
@@ -112,9 +116,34 @@ def read_signals() -> list[dict]:
                 d = json.loads(line)
             except Exception:
                 continue
-            if d.get("actionable"):
-                d["_src"] = p.name
-                out.append(d)
+            if not d.get("actionable"):
+                continue
+            d["_src"] = p.name
+
+            res = d.get("result") or {}
+            if res:
+                if not res.get("has_levels"):
+                    d["_no_levels"] = res.get("levels_note", "levels unavailable")
+                    continue
+                d = {
+                    "strategy": d.get("strategy"),
+                    "ticker": d.get("ticker"),
+                    "ts": d.get("ts"),
+                    "direction": res.get("direction"),
+                    "grade": None,
+                    "confidence": None,
+                    "entry": res.get("entry"),
+                    "sl": res.get("sl"),
+                    "t1": res.get("t1"),
+                    "t2_close": res.get("t2_close"),
+                    "t3": res.get("t3"),
+                    "units": None,
+                    "risk_per_unit": res.get("risk"),
+                    "reason": f"{d.get('strategy')}: {res.get('stage', '')}",
+                    "swing_type": res.get("closure") or res.get("stage"),
+                    "sl_basis": res.get("sl_basis"),
+                }
+            out.append(d)
     return out
 
 
@@ -183,6 +212,21 @@ def main() -> int:
         et = parse_ts(sig.get("ts"))
         if not et:
             continue
+        # L-series detectors do not size a position; the base sizes off
+        # RISK_AMOUNT / distance-to-stop. Reuse that so $ risk per trade is
+        # identical across the family instead of scoring L-series as if it
+        # were riskless.
+        units = sig.get("units")
+        if units is None:
+            try:
+                import ttrades_btc as base
+                risk_dist = abs(float(sig["entry"]) - float(sig["sl"]))
+                units = base.RISK_AMOUNT / risk_dist if risk_dist > 0 else 0.0
+                units = min(units, base.TTRADES_MAX_UNITS_BTC)
+                if units * float(sig["entry"]) > base.TTRADES_MAX_NOTIONAL_USD:
+                    units = base.TTRADES_MAX_NOTIONAL_USD / float(sig["entry"])
+            except Exception:
+                units = 0.0
         positions[sid] = {
             "signal_id": sid,
             "strategy": sig.get("strategy"),
@@ -191,7 +235,7 @@ def main() -> int:
             "grade": sig.get("grade"),
             "confidence": sig.get("confidence"),
             "entry": entry, "sl": sl, "t1": t1, "t2": t2,
-            "units": sig.get("units", 0),
+            "units": units,
             "risk_per_unit": sig.get("risk_per_unit"),
             "entry_time": sig.get("ts"),
             "entry_ts": et.isoformat(),
