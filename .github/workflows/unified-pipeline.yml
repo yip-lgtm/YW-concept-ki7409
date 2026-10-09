@@ -284,9 +284,13 @@ jobs:
         run: |
           python -m venv .venv
           .venv/bin/pip install -q -r requirements.txt
-          .venv/bin/python scripts/ttrades_btc.py 2>&1 || echo "ttrades_btc done"
-          # L12/L13/L14 as independent agents (docs/18,19,20)
-          .venv/bin/python scripts/ttrades_l_strategies.py 2>&1 || echo "ttrades_l done"
+          # TTrades family now scans MNQ + MGC + BTC (2026-10-09).
+          # The base Fractal model and L12/L13/L14 all run per ticker, so one
+          # iteration of this loop covers 4 strategies x 3 tickers = 12 agents.
+          for TK in MNQ=F MGC=F BTC-USD; do
+            TTRADES_TICKER="$TK" .venv/bin/python scripts/ttrades_btc.py 2>&1 || echo "ttrades_btc $TK done"
+            TTRADES_TICKER="$TK" .venv/bin/python scripts/ttrades_l_strategies.py --tickers "$TK" 2>&1 || echo "ttrades_l $TK done"
+          done
 
       - name: Commit TTrades output
         run: |

@@ -55,8 +55,40 @@ HKT = timezone(timedelta(hours=8))
 
 SIGNAL_DIR = REPO / "automation" / "reports" / "ttrades_btc"
 SIGNAL_DIR.mkdir(parents=True, exist_ok=True)
-L_SUMMARY_FILE = SIGNAL_DIR / "l_strategies_latest.json"
-L_LOG_FILE = SIGNAL_DIR / "l_strategies.jsonl"
+def _out_paths(ticker: str):
+    slug = ticker.replace("=", "").replace("-", "").replace("^", "")
+    return (SIGNAL_DIR / f"l_strategies_latest_{slug}.json",
+            SIGNAL_DIR / f"l_strategies_{slug}.jsonl")
+
+TICKERS = ["MNQ=F", "MGC=F", "BTC-USD"]
+
+L_SUMMARY_FILE, L_LOG_FILE = _out_paths("BTC-USD")
+
+CRYPTO = ("BTC-USD", "BTC=F", "ETH-USD")
+
+def market_open(ticker: str) -> tuple[bool, str]:
+    """Futures are Sun-Fri 6pm-5pm ET; crypto never closes.
+
+    Scanning a closed index/gold market yields stale bars and would emit
+    phantom signals from the last session, so it is skipped outright.
+    """
+    if ticker in CRYPTO:
+        return True, "24/7"
+    try:
+        from zoneinfo import ZoneInfo
+        ny = datetime.now(ZoneInfo("America/New_York"))
+    except Exception:
+        ny = datetime.now(timezone(timedelta(hours=-4)))
+    wd, hr = ny.weekday(), ny.hour          # 0=Mon .. 5=Sat
+    if wd == 5:
+        return False, "Saturday — futures closed"
+    if wd == 6:
+        return False, "Sunday before 18:00 ET — futures closed"
+    if wd == 6 or (wd == 0 and hr < 18):
+        return False, "weekend gap"
+    if wd == 4 and hr >= 17:
+        return False, "Friday after 17:00 ET — weekend gap"
+    return True, "open"
 
 STRATEGIES = ["TTrades-L12", "TTrades-L13", "TTrades-L14"]
 
@@ -415,7 +447,7 @@ DETECTORS = {
 
 # ---------------------------------------------------------------- runner
 
-def run(h4, m15, cisd_fetcher=None) -> dict:
+def run(h4, m15, ticker: str = "BTC-USD") -> dict:
     out = {}
     for name in STRATEGIES:
         try:
@@ -425,13 +457,20 @@ def run(h4, m15, cisd_fetcher=None) -> dict:
     return out
 
 
-def main() -> int:
+def main(ticker: str = "BTC-USD") -> int:
+    global L_SUMMARY_FILE, L_LOG_FILE
+    L_SUMMARY_FILE, L_LOG_FILE = _out_paths(ticker)
     now = datetime.now(HKT)
-    print(f"[ttrades-L] === {now.strftime('%Y-%m-%d %H:%M:%S HKT')} ===")
+    print(f"[ttrades-L] === {now.strftime('%Y-%m-%d %H:%M:%S HKT')} {ticker} ===")
+
+    ok, why = market_open(ticker)
+    if not ok:
+        print(f"  [skip] {why}")
+        return 0
 
     import ttrades_btc as base
-    h1 = base.fetch_ohlcv(base.TICKER, "1h", "30d")
-    m15 = base.fetch_ohlcv(base.TICKER, "15m", "7d")
+    h1 = base.fetch_ohlcv(ticker, "1h", "30d")
+    m15 = base.fetch_ohlcv(ticker, "15m", "7d")
     if h1.empty or m15.empty:
         print("  ✗ no data")
         return 0
@@ -439,10 +478,10 @@ def main() -> int:
         "Open": "first", "High": "max", "Low": "min", "Close": "last"
     }).dropna()
 
-    results = run(h4, m15)
+    results = run(h4, m15, ticker)
     summary = {
         "ts": now.isoformat(),
-        "ticker": base.TICKER,
+        "ticker": ticker,
         "h4_bars": len(h4),
         "m15_bars": len(m15),
         "strategies": results,
@@ -453,7 +492,7 @@ def main() -> int:
         for name, r in results.items():
             f.write(json.dumps({
                 "ts": now.isoformat(),
-                "ticker": base.TICKER,
+                "ticker": ticker,
                 "strategy": name,
                 "actionable": bool(r.get("fired")),
                 "direction": r.get("direction"),
@@ -473,4 +512,13 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--tickers", nargs="*", default=TICKERS)
+    ap.add_argument("--all", action="store_true",
+                    help="scan every ticker in TICKERS (default)")
+    a = ap.parse_args()
+    tk = a.tickers if a.tickers else TICKERS
+    for t in tk:
+        main(ticker=t)
+    sys.exit(0)

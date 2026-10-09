@@ -39,7 +39,11 @@ HKT = timezone(timedelta(hours=8))
 TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
 
-TICKER = "BTC-USD"
+TICKER = os.environ.get("TTRADES_TICKER", "BTC-USD")
+# Multi-ticker runners set TTRADES_TICKER per invocation, so the whole file
+# is now ticker-agnostic. Default stays BTC-USD so existing callers, the
+# latest.json consumer, and the TG message format are unaffected.
+IS_CRYPTO = TICKER in ("BTC-USD", "BTC=F", "ETH-USD")
 ACCOUNT_SIZE = 247_000
 RISK_PCT = 0.0025
 RISK_AMOUNT = ACCOUNT_SIZE * RISK_PCT  # $617.50
@@ -55,8 +59,13 @@ TTRADES_MAX_NOTIONAL_USD = 43_000
 
 SIGNAL_DIR = REPO / "automation" / "reports" / "ttrades_btc"
 SIGNAL_DIR.mkdir(parents=True, exist_ok=True)
-SIGNAL_FILE = SIGNAL_DIR / "latest.json"
-LOG_FILE = SIGNAL_DIR / "signals.jsonl"
+def _out_paths(ticker: str):
+    """Per-ticker output files so MNQ / MGC / BTC do not overwrite each other."""
+    slug = ticker.replace("=", "").replace("-", "").replace("^", "")
+    return (SIGNAL_DIR / f"latest_{slug}.json",
+            SIGNAL_DIR / f"signals_{slug}.jsonl")
+
+SIGNAL_FILE, LOG_FILE = _out_paths(TICKER)
 
 
 def fetch_ohlcv(symbol, interval, period="60d"):
@@ -392,8 +401,31 @@ def check_paper_mode() -> tuple:
     return False, f"validated: {n_closed} trades, WR {wr:.1f}%, PF {pf:.2f}"
 
 
-def main():
-    print(f"[ttrades-btc] === {datetime.now(HKT).strftime('%Y-%m-%d %H:%M:%S HKT')} ===")
+def main(ticker: str | None = None):
+    global TICKER, SIGNAL_FILE, LOG_FILE, IS_CRYPTO
+    if ticker:
+        TICKER = ticker
+        IS_CRYPTO = ticker in ("BTC-USD", "BTC=F", "ETH-USD")
+        SIGNAL_FILE, LOG_FILE = _out_paths(ticker)
+    print(f"[ttrades-btc] === {datetime.now(HKT).strftime('%Y-%m-%d %H:%M:%S HKT')} {TICKER} ===")
+
+    # Market hours (2026-10-09, multi-ticker): crypto is 24/7 but MNQ/MGC are
+    # CME futures. Without this guard the last session's bars would be scanned
+    # again all weekend and emit phantom signals.
+    if not IS_CRYPTO:
+        try:
+            from zoneinfo import ZoneInfo
+            _ny = datetime.now(ZoneInfo("America/New_York"))
+        except Exception:
+            _ny = datetime.now(timezone(timedelta(hours=-4)))
+        _wd, _hr = _ny.weekday(), _ny.hour          # 0=Mon .. 5=Sat
+        _closed = (_wd == 5 or _wd == 6
+                   or (_wd == 0 and _hr < 18)
+                   or (_wd == 4 and _hr >= 17))
+        if _closed:
+            print(f"  [skip] {_ny.strftime('%a %H:%M')} ET — futures closed")
+            return 0
+
     weekday = datetime.now(HKT).weekday()
     
     if weekday == 0:
@@ -543,7 +575,7 @@ def main():
                 f"💎 T3: ${levels['t3']:,.2f} (2.6R) runner\n"
                 f"📐 Manipulation -2: ${levels['projection_neg2']:,.2f}\n"
                 f"📐 Projection -4: ${levels['projection_neg4']:,.2f}\n"
-                f"💼 Units: {levels['units']:.4f} BTC (notional ${levels['notional']:,.0f})\n\n"
+                f"💼 Units: {levels['units']:.4f} (notional ${levels['notional']:,.0f})\n\n"
                 f"💬 {signal['reason']}\n"
                 f"📅 Weekly: {weekly_label['profile']}\n"
                 f"⏰ {signal['ts']}"
@@ -561,4 +593,9 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--ticker", default=None,
+                    help="override ticker (default: env TTRADES_TICKER or BTC-USD)")
+    a = ap.parse_args()
+    sys.exit(main(ticker=a.ticker))
