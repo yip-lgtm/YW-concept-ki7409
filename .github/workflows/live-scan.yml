@@ -1,10 +1,15 @@
-name: '9 Strategy Live Scan — 24/7 Detector Sweep'
+name: '11 Strategy Live Scan — 24/7 Detector Sweep'
 
-# Runs ALL 9 strategy detectors every 5 min, 24/7.
-# 9 detectors × 4 tickers = 36 parallel detector runs per scan.
+# Runs all 11 YW detectors every 15 min, 24/7, across 5 tickers
+# (MNQ, MES, M2K, MGC, BTC-USD).
+#
+# Count note (2026-10-09): the workflow name used to say 9. live_scan.py
+# actually holds 11 detectors — B1-3in1 and OCS-BTC-5m were added after
+# the name was written. The TTrades family (Fractal base + L12/L13/L14)
+# is NOT counted here: it lives in unified-pipeline.yml and is BTC-only.
 # LLM only invoked on detector signal → ~10-30 calls/day (low cost).
 #
-# This is the production loop for the 9 strategy sub-agents:
+# This is the production loop for the 11 strategy sub-agents:
 #  - Detector: 288 scans/day, no LLM
 #  - LLM: only on signal, A/B grade → fire TG + AI-Trader
 #

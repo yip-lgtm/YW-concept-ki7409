@@ -1,18 +1,31 @@
 name: Always-On Trigger — Stall Detector
 
-# Last-resort safety net:
-# - Every 5 min, check if unified-pipeline ran in last 10 min
-# - If not, re-trigger it
-# - Sends TG alert if re-trigger happens
-# 
-# This is the 3rd level of defense:
-# 1. unified-pipeline cron (primary)
-# 2. master-self-heal (now disabled to save GHA quota)
-# 3. always-on-trigger (this file - safety net)
+# Last-resort safety net for the two scanning loops.
+#
+# Why this exists (measured 2026-10-09): GitHub Actions `schedule` events
+# are best-effort, not guaranteed. On this repo live-scan's `*/15` cron was
+# firing every 30–280 minutes, with multi-hour gaps, even though every run
+# it did produce reported success. The jobs were never broken — they were
+# simply not being triggered.
+#
+# Root cause of the delay: 50 of the ~73 workflow runs in a 6h window were
+# "pages build and deployment". Pages is on the LEGACY dynamic build, which
+# fires on EVERY push to main regardless of which files changed (50 pushes
+# produced 50 builds; only 1 of those commits actually touched docs/). That
+# churn consumes the Actions concurrency slots that scheduled runs need.
+#
+# This workflow is level 3 of defence:
+#   1. each scan's own cron (primary, best-effort)
+#   2. this stall detector (every 5 min, checks the last run timestamp and
+#      re-dispatches if the loop has gone quiet)
+#   3. master-self-heal (currently disabled to save quota)
+#
+# It dispatches rather than duplicating work, so there is still exactly one
+# commit per scan and no push race.
 
 on:
   schedule:
-    - cron: '3,18,33,48 * * * *'  # Every 15 min (offset 3min), paired with -2/-3 for 5min stall latency
+    - cron: '*/5 * * * *'
   workflow_dispatch: {}
 
 permissions:
@@ -22,45 +35,61 @@ permissions:
 jobs:
   trigger:
     runs-on: ubuntu-latest
-    timeout-minutes: 1
+    timeout-minutes: 2
     env:
       GH_TOKEN: ${{ secrets.APEX_PAT }}
       TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+      REPO: yip-lgtm/YW-concept-ki7409
     steps:
-      - name: Check unified-pipeline + re-trigger if stalled
+      - name: Re-dispatch any scan loop that has gone quiet
         run: |
-          THRESHOLD_MIN=10
           NOW=$(date -u +%s)
-          
-          # Check any status (not just success) to avoid 1970 fallback bug
-          LAST_RUN=$(curl -s -H "Authorization: token $GH_TOKEN" \
-            "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/unified-pipeline.yml/runs?per_page=1" \
-            | python3 -c "import sys, json; d=json.load(sys.stdin); r=d.get('workflow_runs', []); print(r[0].get('created_at', '') if r else '')" 2>/dev/null || echo "")
-          
-          if [ -z "$LAST_RUN" ]; then
-            echo "No runs found - skipping (API may be down)"
-            exit 0
-          fi
-          
-          LAST_TS=$(date -u -d "$LAST_RUN" +%s 2>/dev/null || echo 0)
-          if [ "$LAST_TS" = "0" ]; then
-            echo "Invalid date - skipping"
-            exit 0
-          fi
-          DIFF=$(( (NOW - LAST_TS) / 60 ))
-          
-          echo "[unified-pipeline] last success: $LAST_SUCCESS (${DIFF}m ago)"
-          
-          if [ $DIFF -gt $THRESHOLD_MIN ]; then
-            echo "  Stalled (${DIFF}m > ${THRESHOLD_MIN}m) - re-triggering"
-            curl -s -X POST -H "Authorization: token $GH_TOKEN" \
-              "https://api.github.com/repos/yip-lgtm/YW-concept-ki7409/actions/workflows/unified-pipeline.yml/dispatches" \
-              -d '{"ref": "main"}' -H "Content-Type: application/json" > /dev/null
-            echo "  Triggered unified-pipeline.yml"
-            MSG="🚨 Always-On: unified-pipeline stalled ${DIFF}m. Auto re-triggered."
+          ALERTED=""
+
+          # workflow file : max minutes of silence before we force a re-run
+          check_loop() {
+            local wf="$1" threshold="$2" label="$3"
+            local last_run last_ts diff
+
+            last_run=$(curl -s -H "Authorization: token $GH_TOKEN" \
+              "https://api.github.com/repos/${REPO}/actions/workflows/${wf}/runs?per_page=1" \
+              | python3 -c 'import sys,json; r=json.load(sys.stdin).get("workflow_runs",[]); print(r[0].get("created_at","") if r else "")' \
+              2>/dev/null || echo "")
+
+            if [ -z "$last_run" ]; then
+              echo "  ${label}: no runs found — API unavailable or never triggered, skipping"
+              return 0
+            fi
+
+            last_ts=$(date -u -d "$last_run" +%s 2>/dev/null || echo 0)
+            if [ "$last_ts" = "0" ]; then
+              echo "  ${label}: unparseable timestamp, skipping"
+              return 0
+            fi
+
+            diff=$(( (NOW - last_ts) / 60 ))
+            if [ "$diff" -gt "$threshold" ]; then
+              echo "  ${label}: STALLED ${diff}m > ${threshold}m — re-dispatching"
+              curl -s -X POST -H "Authorization: token $GH_TOKEN" \
+                -H "Content-Type: application/json" \
+                "https://api.github.com/repos/${REPO}/actions/workflows/${wf}/dispatches" \
+                -d '{"ref": "main"}' > /dev/null
+              ALERTED="${ALERTED}${label} (${diff}m)"$'\n'
+            else
+              echo "  ${label}: healthy (${diff}m ago)"
+            fi
+          }
+
+          # live-scan: cron is */15, so 25m of silence is unambiguous
+          check_loop "live-scan.yml" 25 "live-scan"
+          # unified-pipeline: two crons at */15, 20m threshold
+          check_loop "unified-pipeline.yml" 20 "unified-pipeline"
+
+          if [ -n "$ALERTED" ]; then
+            MSG="🚨 Always-On re-triggered stale scan loop(s):$(printf "\\n${ALERTED}")"
             curl -s -X POST "https://api.telegram.org/bot${TG_TOKEN}/sendMessage" \
-              -d "chat_id=${TG_CHAT}&text=${MSG}" > /dev/null 2>&1
-          else
-            echo "  Healthy"
+              --data-urlencode "chat_id=${TG_CHAT}" \
+              --data-urlencode "text=${MSG}" > /dev/null 2>&1
+            echo "  TG alert sent"
           fi
