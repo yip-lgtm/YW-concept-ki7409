@@ -253,6 +253,56 @@ function render(d) {
   });
   html.push('</div>');
   
+  // TTrades family (4 strategies x 3 tickers)
+  if (d.ttrades) {
+    const tt = d.ttrades;
+    let nFire = 0;
+    (tt.agents || []).forEach(a => (a.l_series || []).forEach(l => { if (l.fired) nFire++; }));
+    html.push('<h2 id="ttrades">🕯️ TTrades Family — 4 strategies × 3 tickers</h2>');
+    html.push('<div class="card"><div class="stats">' +
+      `<div class="stat"><div class="stat-label">Tickers</div><div class="stat-value">${(tt.agents || []).length}</div></div>` +
+      `<div class="stat"><div class="stat-label">L-series fires</div><div class="stat-value ${nFire ? 'pos' : ''}">${nFire}</div></div>` +
+      `<div class="stat"><div class="stat-label">Closed trades</div><div class="stat-value">${tt.n_closed || 0}</div></div>` +
+      `<div class="stat"><div class="stat-label">Open</div><div class="stat-value">${(tt.open_positions || []).length}</div></div>` +
+      '</div>');
+    html.push('<table><thead><tr><th>Ticker</th><th>Agent</th><th>State</th><th>Gate / reason</th></tr></thead><tbody>');
+    (tt.agents || []).forEach(a => {
+      const b = a.base || {};
+      html.push(`<tr>
+        <td rowspan="4"><strong>${a.ticker}</strong></td>
+        <td><strong>${b.strategy || 'TTrades-Fractal'}</strong></td>
+        <td class="${b.actionable ? 'pos' : ''}">${b.actionable ? '▲ FIRE' : '— not fired'}</td>
+        <td>${b.reason || '—'}</td></tr>`);
+      (a.l_series || []).forEach(l => {
+        let reason = l.stage || '—';
+        if (l.fired && l.poi_note) reason += ' · ' + l.poi_note;
+        if (l.fired && l.trade_candle) reason += ' · trades ' + l.trade_candle;
+        html.push(`<tr>
+          <td><strong>${l.strategy}</strong></td>
+          <td class="${l.fired ? 'pos' : ''}">${l.fired ? '▲ FIRE' : '— gated'}</td>
+          <td>${reason}</td></tr>`);
+      });
+    });
+    html.push('</tbody></table>');
+    const scored = (tt.performance || []).filter(p => p.n > 0);
+    if (scored.length) {
+      html.push('<h3 style="margin-top:16px">Tracked performance</h3>');
+      html.push('<table><thead><tr><th>Strategy</th><th>n</th><th>PF</th><th>WR</th><th>Total R</th><th>P&L</th></tr></thead><tbody>');
+      scored.forEach(p => {
+        html.push(`<tr>
+          <td><strong>${p.strategy}</strong></td><td>${p.n}</td>
+          <td class="${p.pf >= 1 ? 'pos' : 'neg'}">${p.pf.toFixed(2)}</td>
+          <td>${p.wr}%</td>
+          <td class="${p.total_r >= 0 ? 'pos' : 'neg'}">${p.total_r >= 0 ? '+' : ''}${p.total_r.toFixed(2)}</td>
+          <td class="${p.pnl >= 0 ? 'pos' : 'neg'}">${p.pnl >= 0 ? '+' : '−'}$${Math.abs(Math.round(p.pnl)).toLocaleString()}</td>
+        </tr>`);
+      });
+      html.push('</tbody></table>');
+    }
+    html.push(`<p style="font-size:11px;opacity:.6;margin-top:10px">${tt.note || ''}</p>`);
+    html.push('</div>');
+  }
+
   // LLM Iterations history
   html.push('<h2 id="iterations">🔁 LLM Iterations History</h2>');
   html.push('<div class="chart-container" style="height:auto; max-height:none;"><table>');

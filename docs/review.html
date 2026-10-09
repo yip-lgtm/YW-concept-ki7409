@@ -168,6 +168,18 @@
     per-agent thresholds. Deltas are capped and every revision is rate-limited.
   </p>
   <div id="settle-overrides"></div>
+
+  <h3 style="margin-top:28px">🕯️ TTrades Family — 4 strategies × 3 tickers</h3>
+  <p class="sub">
+    ICT Fractal Model. <code>Fractal</code> publishes SL/T1/T2 so it can be
+    tracked and scored; <code>L12/L13/L14</code> report a gate verdict only —
+    for those the rejection reason <em>is</em> the signal. L12 is the strictest
+    (POI + paired-TF CISD), L13 trades the C3 continuation order block, L14
+    accepts a no-sweep C3 close beyond the C2 body and then only trades C4.
+  </p>
+  <div class="stats" id="tt-stats"></div>
+  <div id="tt-gates"></div>
+  <div id="tt-perf" style="margin-top:20px"></div>
 </div>
 
 <!-- ============== LLM ANALYSIS TAB ============== -->
@@ -195,6 +207,7 @@ const state = {
   rankings: [],
   iterations: [],
   agentControl: null,
+  ttrades: null,
   activeTab: 'tab-charts',
 };
 
@@ -231,6 +244,7 @@ async function loadAll() {
       const dres = await fetch(REPO_BASE + 'dashboard-data.json?t=' + Date.now());
       const dd = await dres.json();
       state.agentControl = dd.agent_control || null;
+      state.ttrades = dd.ttrades || null;
     } catch (e) {
       console.warn('agent_control unavailable:', e);
     }
@@ -264,6 +278,7 @@ function renderAll() {
   renderRankings();
   renderLlm();
   renderAgentControl();
+  renderTtrades();
 }
 
 // ============ CHARTS ============
@@ -588,6 +603,79 @@ function renderAgentControl() {
       <div class="sub">${(o.reasoning || '').slice(0, 220)}</div>
     </div>`;
   }).join('') : '<div class="empty">No overrides — no agent has been stuck in the neutral zone for 3+ consecutive days yet.</div>';
+}
+
+
+// ============ TTRADES FAMILY ============
+function renderTtrades() {
+  const tt = state.ttrades;
+  const gDiv = document.getElementById('tt-gates');
+  const pDiv = document.getElementById('tt-perf');
+  const sDiv = document.getElementById('tt-stats');
+  if (!tt) {
+    if (gDiv) gDiv.innerHTML = '<div class="empty">TTrades data not published yet.</div>';
+    if (pDiv) pDiv.innerHTML = '';
+    if (sDiv) sDiv.innerHTML = '';
+    return;
+  }
+
+  const agents = tt.agents || [];
+  let nFire = 0;
+  agents.forEach(a => (a.l_series || []).forEach(l => { if (l.fired) nFire++; }));
+
+  sDiv.innerHTML =
+    `<div class="stat"><div class="v">${agents.length}</div><div class="l">Tickers</div></div>` +
+    `<div class="stat"><div class="v">${nFire}</div><div class="l">L-series fires</div></div>` +
+    `<div class="stat"><div class="v">${tt.n_closed || 0}</div><div class="l">Closed trades</div></div>` +
+    `<div class="stat"><div class="v">${(tt.open_positions || []).length}</div><div class="l">Open</div></div>`;
+
+  // Gate matrix: one row per ticker x agent
+  let html = '<div style="overflow-x:auto"><table><thead><tr>' +
+    '<th>Ticker</th><th>Agent</th><th>State</th><th>Gate / reason</th>' +
+    '</tr></thead><tbody>';
+  agents.forEach(a => {
+    const b = a.base || {};
+    const bState = b.actionable
+      ? '<span style="color:#f85149;font-weight:600">▲ FIRE</span>'
+      : '<span style="color:#8b949e">— not fired</span>';
+    html += `<tr><td rowspan="4"><b>${a.ticker}</b></td>` +
+      `<td><b>${b.strategy || 'TTrades-Fractal'}</b></td>` +
+      `<td>${bState}</td><td class="sub">${(b.reason || '—')}</td></tr>`;
+    (a.l_series || []).forEach(l => {
+      const st = l.fired
+        ? '<span style="color:#f85149;font-weight:600">▲ FIRE</span>'
+        : '<span style="color:#8b949e">— gated</span>';
+      let reason = l.stage || '—';
+      if (l.fired && l.poi_note) reason += ' · ' + l.poi_note;
+      if (l.fired && l.trade_candle) reason += ` · trades ${l.trade_candle}`;
+      html += `<tr><td><b>${l.strategy}</b></td><td>${st}</td>` +
+        `<td class="sub">${reason}</td></tr>`;
+    });
+  });
+  html += '</tbody></table></div>';
+  if (gDiv) gDiv.innerHTML = html;
+
+  // Performance
+  const perf = tt.performance || [];
+  const scored = perf.filter(p => p.n > 0);
+  let ph = '<h4 style="margin:0 0 8px">Tracked performance</h4>';
+  if (scored.length) {
+    ph += '<div style="overflow-x:auto"><table><thead><tr>' +
+      '<th>Strategy</th><th>n</th><th>PF</th><th>WR</th><th>Total R</th><th>P&L</th><th>By ticker</th>' +
+      '</tr></thead><tbody>';
+    scored.forEach(p => {
+      const tk = Object.entries(p.tickers || {}).map(([k, v]) => `${k}×${v}`).join(', ');
+      ph += `<tr><td><b>${p.strategy}</b></td><td>${p.n}</td>` +
+        `<td style="color:${p.pf >= 1 ? '#3fb950' : '#f85149'}">${p.pf.toFixed(2)}</td>` +
+        `<td>${p.wr}%</td>` +
+        `<td style="color:${p.total_r >= 0 ? '#3fb950' : '#f85149'}">${p.total_r >= 0 ? '+' : ''}${p.total_r.toFixed(2)}</td>` +
+        `<td>${p.pnl >= 0 ? '+' : ''}$${Math.round(p.pnl).toLocaleString()}</td>` +
+        `<td class="sub">${tk || '—'}</td></tr>`;
+    });
+    ph += '</tbody></table></div>';
+  }
+  ph += `<p class="sub" style="margin-top:10px">${tt.note || ''}</p>`;
+  if (pDiv) pDiv.innerHTML = ph;
 }
 
 // ============ Tab Nav Click ============

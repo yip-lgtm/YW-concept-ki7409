@@ -441,6 +441,114 @@ for s in strategies_out:
     effective_weights.append({'strategy': nm, 'weight': round(float(w), 3), 'source': src})
 effective_weights.sort(key=lambda x: -x['weight'])
 
+# ================== TTRADES FAMILY (2026-10-09) ==================
+# 4 strategies (Fractal base + L12/L13/L14) x 3 tickers (MNQ/MGC/BTC).
+# The L-series detectors publish a fired/not-fired verdict with a readable
+# rejection reason rather than trade levels, so the useful thing to surface
+# is the current gate state per agent, not a P&L number.
+TT_DIR = REPO / 'automation/reports/ttrades_btc'
+TT_TICKERS = [('MNQ=F', 'MNQF'), ('MGC=F', 'MGCF'), ('BTC-USD', 'BTCUSD')]
+
+
+def _tt_agents():
+    out = []
+    for tk, slug in TT_TICKERS:
+        base_f = _load_json(TT_DIR / f'latest_{slug}.json') or {}
+        l_f = _load_json(TT_DIR / f'l_strategies_latest_{slug}.json') or {}
+        l_res = l_f.get('strategies') or {}
+        out.append({
+            'ticker': tk,
+            'updated': l_f.get('ts') or base_f.get('ts'),
+            'base': {
+                'strategy': 'TTrades-Fractal',
+                'actionable': bool(base_f.get('actionable')),
+                'reason': base_f.get('reason'),
+                'ts': base_f.get('ts'),
+            },
+            'l_series': [
+                {
+                    'strategy': name,
+                    'fired': bool(r.get('fired')),
+                    'stage': r.get('stage'),
+                    'detail': r.get('detail'),
+                    'direction': r.get('direction'),
+                    'closure': r.get('closure'),
+                    'trade_candle': r.get('trade_candle'),
+                    'poi_note': r.get('poi_note'),
+                    'entry_ref': r.get('entry_ref'),
+                    'swing_level': r.get('swing_level'),
+                    'target_r': r.get('target_r'),
+                    'has_levels': False,
+                }
+                for name, r in l_res.items()
+            ],
+        })
+    return out
+
+
+_tt_trades = []
+try:
+    _tp = TT_DIR / 'trades.jsonl'
+    if _tp.exists():
+        for line in _tp.read_text(errors='ignore').splitlines():
+            line = line.strip()
+            if not line or line[0] in '<=>':
+                continue
+            try:
+                _tt_trades.append(json.loads(line))
+            except Exception:
+                continue
+except Exception:
+    pass
+_tt_positions = _load_json(TT_DIR / 'positions.json') or {}
+
+_tt_by_agent = defaultdict(list)
+for _t in _tt_trades:
+    _tt_by_agent[_t.get('strategy', '?')].append(_t)
+
+_tt_perf = []
+for _name in ['TTrades-Fractal', 'TTrades-L12', 'TTrades-L13', 'TTrades-L14']:
+    _ts = _tt_by_agent.get(_name, [])
+    if not _ts:
+        _tt_perf.append({'strategy': _name, 'n': 0, 'pf': 0, 'wr': 0,
+                         'total_r': 0, 'pnl': 0, 'tickers': {}})
+        continue
+    _R = [float(t.get('R_multiple', 0) or 0) for t in _ts]
+    _w = [r for r in _R if r > 0]
+    _l = [r for r in _R if r <= 0]
+    _gw, _gl = sum(_w), abs(sum(_l))
+    _tkc = defaultdict(int)
+    for t in _ts:
+        _tkc[t.get('ticker', '?')] += 1
+    _tt_perf.append({
+        'strategy': _name,
+        'n': len(_ts),
+        'pf': round(_gw / _gl, 2) if _gl > 0 else (10.0 if _gw > 0 else 0.0),
+        'wr': round(len(_w) / len(_R) * 100, 1),
+        'total_r': round(sum(_R), 2),
+        'pnl': round(sum(float(t.get('pnl_usd', 0) or 0) for t in _ts), 2),
+        'tickers': dict(_tkc),
+    })
+
+ttrades = {
+    'agents': _tt_agents(),
+    'performance': _tt_perf,
+    'open_positions': [
+        {
+            'strategy': p.get('strategy'), 'ticker': p.get('ticker'),
+            'direction': p.get('direction'), 'entry': p.get('entry'),
+            'sl': p.get('sl'), 't2': p.get('t2'),
+            'entry_time': p.get('entry_time'), 'status': p.get('status'),
+        }
+        for p in (_tt_positions.values() if isinstance(_tt_positions, dict) else [])
+        if p.get('status') == 'open'
+    ],
+    'n_closed': len(_tt_trades),
+    'note': ('Only TTrades-Fractal publishes SL/T1/T2, so only it can be tracked '
+             'and scored. L12/L13/L14 report a gate verdict; their rejection '
+             'reason is the signal.'),
+}
+
 out = {
     'generated_at': HKT_STR,
     'hkt_timestamp': now.isoformat(),
@@ -457,6 +565,7 @@ out = {
     'ranking_24h_aggregate': ranking_24h_agg,
     'ranking_24h_updated': r24.get("hkt_timestamp") if r24 else None,
     'strategies': strategies_out,
+    'ttrades': ttrades,
     'agent_control': {
         'levels': agent_levels,
         'settlement_overrides': settlement_overrides,
