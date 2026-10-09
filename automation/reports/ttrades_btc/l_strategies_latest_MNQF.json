@@ -1,64 +1,28 @@
 {
-  "ts": "2026-10-09T18:56:05.353453+08:00",
+  "ts": "2026-10-09T21:09:28.691664+08:00",
   "ticker": "MNQ=F",
-  "h4_bars": 149,
-  "m15_bars": 488,
+  "h4_bars": 150,
+  "m15_bars": 496,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
-      "stage": "no C2 closure (sweep+reclaim) on C2",
+      "stage": "no POI",
+      "detail": "C2 [31177, 31267] misses nearest swing 31283 by 16",
+      "direction": "short",
       "strategy": "TTrades-L12",
       "has_levels": false
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C3 not an expansion candle (wick too large)",
+      "stage": "C2 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
-      "fired": true,
+      "fired": false,
+      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
       "strategy": "TTrades-L14",
-      "direction": "long",
-      "closure": "c2_closure",
-      "trade_candle": "C3",
-      "stage": "c2_closure \u2014 trade C3",
-      "poi": {
-        "found": true,
-        "basis": "structural pivots",
-        "prior_extreme": 30792.0,
-        "swing_levels": [
-          30792.0,
-          30958.75,
-          31119.5,
-          31144.25,
-          31308.75
-        ],
-        "pivot_count": 24,
-        "fvg_count": 9
-      },
-      "poi_note": "C2 range [30952, 31115] contains swing 30959",
-      "cisd": {
-        "confirmed": true,
-        "opposing_open": 30919.0,
-        "series_length": 4,
-        "last_close": 31190.75,
-        "reason": "cisd_long"
-      },
-      "c_eq": 31033.75,
-      "swing_level": 30952.25,
-      "entry_ref": 31190.75,
-      "target_r": 2.0,
-      "has_levels": true,
-      "entry": 31190.75,
-      "sl": 30925.85,
-      "t1": 31455.65,
-      "t2_close": 31619.35,
-      "t3": 31884.25,
-      "risk": 264.9,
-      "sl_basis": "beyond protected swing (C2/C3 extreme)",
-      "sl_buffer": 26.4,
-      "atr_h4": 175.98
+      "has_levels": false
     }
   }
 }
