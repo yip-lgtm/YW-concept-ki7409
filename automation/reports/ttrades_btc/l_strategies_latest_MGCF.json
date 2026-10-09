@@ -1,14 +1,35 @@
 {
-  "ts": "2026-10-09T21:47:32.080560+08:00",
+  "ts": "2026-10-10T01:22:15.582562+08:00",
   "ticker": "MGC=F",
-  "h4_bars": 150,
-  "m15_bars": 500,
+  "h4_bars": 151,
+  "m15_bars": 514,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
-      "stage": "no POI",
-      "detail": "C2 [4199, 4227] misses nearest swing 4198 by 2",
+      "stage": "CISD not confirmed",
+      "detail": "no break",
       "direction": "long",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 4169.39990234375,
+        "swing_levels": [
+          4169.39990234375,
+          4174.39990234375,
+          4178.0,
+          4178.39990234375,
+          4197.60009765625
+        ],
+        "pivot_count": 28,
+        "fvg_count": 12
+      },
+      "cisd": {
+        "confirmed": false,
+        "opposing_open": 4217.2998046875,
+        "series_length": 1,
+        "last_close": 4215.10009765625,
+        "reason": "no break"
+      },
       "strategy": "TTrades-L12",
       "has_levels": false
     },
@@ -20,7 +41,10 @@
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "stage": "no POI",
+      "detail": "C2 [4199, 4227] misses nearest swing 4198 by 2",
+      "direction": "long",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
