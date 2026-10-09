@@ -1,33 +1,33 @@
 {
   "_meta": {
-    "_comment": "Data-driven weight overrides. Written by weight_optimizer.py (PF/WR/RR + Bayesian shrinkage), read by live_scan.py at import. LLM may only VETO, never propose.",
+    "_comment": "Data-driven weight overrides. Written by weight_optimizer.py.",
     "created": "2026-10-08T00:00:00+00:00",
-    "changes": 5,
-    "last_run": "2026-10-08T07:31:44.606006+00:00",
-    "last_applied": 5,
+    "changes": 4,
+    "last_run": "2026-10-09T04:29:49.282701+00:00",
+    "last_applied": 4,
     "window_days": 14
   },
   "3-Pushes": {
-    "weight": 1.165,
-    "last_changed": "2026-10-08T07:31:44.606006+00:00",
-    "reason": "data-driven: n=12 PF=1.156 WR=41.7% RR=1.618 → edge=1.732 shrink=0.375",
+    "weight": 1.2,
+    "last_changed": "2026-10-09T04:29:49.282701+00:00",
+    "reason": "data-driven: n=11 PF=2.832 WR=63.6% RR=1.618 → edge=6.48 shrink=0.355",
     "metrics": {
-      "n": 12,
-      "pf": 1.156,
-      "wr": 0.4167,
+      "n": 11,
+      "pf": 2.832,
+      "wr": 0.6364,
       "rr": 1.618,
-      "total_r": 1.09,
-      "pnl": -97.11,
+      "total_r": 7.326,
+      "pnl": 30.22,
       "avg_win": 1.618,
       "avg_loss": 1.0
     },
     "model": {
-      "pf_component": 1.156,
-      "wr_component": 0.926,
+      "pf_component": 2.832,
+      "wr_component": 1.414,
       "rr_component": 1.618,
-      "edge_index": 1.732,
-      "raw_weight": 1.439,
-      "shrink": 0.375,
+      "edge_index": 6.48,
+      "raw_weight": 1.8,
+      "shrink": 0.355,
       "losing_penalty_applied": false
     },
     "llm_check": {
@@ -38,80 +38,77 @@
     "changes": 1,
     "history": [
       {
-        "date": "2026-10-08",
+        "date": "2026-10-09",
         "from": 1.0,
-        "to": 1.165,
-        "n": 12,
-        "pf": 1.156,
-        "wr": 0.4167,
+        "to": 1.2,
+        "n": 11,
+        "pf": 2.832,
+        "wr": 0.6364,
         "rr": 1.618,
         "llm": "AGREE"
       }
     ]
   },
   "50-20-Pullback": {
-    "weight": 0.8,
-    "last_changed": "2026-10-08T07:31:44.606006+00:00",
-    "reason": "data-driven: n=88 PF=0.795 WR=33.0% RR=1.618 → edge=0.942 shrink=0.815",
+    "weight": 0.948,
+    "last_changed": "2026-10-09T04:29:49.282701+00:00",
+    "reason": "data-driven: n=92 PF=0.948 WR=37.0% RR=1.618 → edge=1.26 shrink=0.821",
     "metrics": {
-      "n": 88,
-      "pf": 0.795,
-      "wr": 0.3295,
+      "n": 92,
+      "pf": 0.948,
+      "wr": 0.3696,
       "rr": 1.618,
-      "total_r": -12.078,
-      "pnl": -1914.92,
+      "total_r": -2.988,
+      "pnl": -739.26,
       "avg_win": 1.618,
       "avg_loss": 1.0
     },
     "model": {
-      "pf_component": 0.795,
-      "wr_component": 0.732,
+      "pf_component": 0.948,
+      "wr_component": 0.821,
       "rr_component": 1.618,
-      "edge_index": 0.942,
-      "raw_weight": 0.965,
-      "shrink": 0.815,
+      "edge_index": 1.26,
+      "raw_weight": 1.156,
+      "shrink": 0.821,
       "losing_penalty_applied": true
     },
-    "llm_check": {
-      "llm": "AGREE",
-      "llm_reason": ""
-    },
+    "llm_check": {},
     "previous_weight": 1.0,
     "changes": 1,
     "history": [
       {
-        "date": "2026-10-08",
+        "date": "2026-10-09",
         "from": 1.0,
-        "to": 0.8,
-        "n": 88,
-        "pf": 0.795,
-        "wr": 0.3295,
+        "to": 0.948,
+        "n": 92,
+        "pf": 0.948,
+        "wr": 0.3696,
         "rr": 1.618,
-        "llm": "AGREE"
+        "llm": "skipped"
       }
     ]
   },
   "CRT": {
-    "weight": 1.262,
-    "last_changed": "2026-10-08T07:31:44.606006+00:00",
-    "reason": "data-driven: n=39 PF=1.126 WR=41.0% RR=1.618 → edge=1.661 shrink=0.661",
+    "weight": 1.3,
+    "last_changed": "2026-10-09T04:29:49.282701+00:00",
+    "reason": "data-driven: n=40 PF=1.196 WR=42.5% RR=1.618 → edge=1.828 shrink=0.667",
     "metrics": {
-      "n": 39,
-      "pf": 1.126,
-      "wr": 0.4103,
+      "n": 40,
+      "pf": 1.196,
+      "wr": 0.425,
       "rr": 1.618,
-      "total_r": 2.888,
-      "pnl": -86.85,
+      "total_r": 4.506,
+      "pnl": 229.89,
       "avg_win": 1.618,
       "avg_loss": 1.0
     },
     "model": {
-      "pf_component": 1.126,
-      "wr_component": 0.912,
+      "pf_component": 1.196,
+      "wr_component": 0.944,
       "rr_component": 1.618,
-      "edge_index": 1.661,
-      "raw_weight": 1.397,
-      "shrink": 0.661,
+      "edge_index": 1.828,
+      "raw_weight": 1.497,
+      "shrink": 0.667,
       "losing_penalty_applied": false
     },
     "llm_check": {
@@ -122,12 +119,12 @@
     "changes": 1,
     "history": [
       {
-        "date": "2026-10-08",
+        "date": "2026-10-09",
         "from": 1.1,
-        "to": 1.262,
-        "n": 39,
-        "pf": 1.126,
-        "wr": 0.4103,
+        "to": 1.3,
+        "n": 40,
+        "pf": 1.196,
+        "wr": 0.425,
         "rr": 1.618,
         "llm": "AGREE"
       }
@@ -135,24 +132,24 @@
   },
   "Stair": {
     "weight": 1.1,
-    "last_changed": "2026-10-08T07:31:44.606006+00:00",
-    "reason": "data-driven: n=26 PF=1.011 WR=38.5% RR=1.618 → edge=1.398 shrink=0.565",
+    "last_changed": "2026-10-09T04:29:49.282701+00:00",
+    "reason": "data-driven: n=26 PF=1.387 WR=46.2% RR=1.618 → edge=2.302 shrink=0.565",
     "metrics": {
       "n": 26,
-      "pf": 1.011,
-      "wr": 0.3846,
+      "pf": 1.387,
+      "wr": 0.4615,
       "rr": 1.618,
-      "total_r": 0.18,
-      "pnl": 87.98,
+      "total_r": 5.416,
+      "pnl": 208.39,
       "avg_win": 1.618,
       "avg_loss": 1.0
     },
     "model": {
-      "pf_component": 1.011,
-      "wr_component": 0.855,
+      "pf_component": 1.387,
+      "wr_component": 1.026,
       "rr_component": 1.618,
-      "edge_index": 1.398,
-      "raw_weight": 1.239,
+      "edge_index": 2.302,
+      "raw_weight": 1.781,
       "shrink": 0.565,
       "losing_penalty_applied": false
     },
@@ -164,54 +161,12 @@
     "changes": 1,
     "history": [
       {
-        "date": "2026-10-08",
+        "date": "2026-10-09",
         "from": 0.9,
         "to": 1.1,
         "n": 26,
-        "pf": 1.011,
-        "wr": 0.3846,
-        "rr": 1.618,
-        "llm": "AGREE"
-      }
-    ]
-  },
-  "Two-Yang": {
-    "weight": 0.658,
-    "last_changed": "2026-10-08T07:31:44.606006+00:00",
-    "reason": "data-driven: n=10 PF=0.693 WR=30.0% RR=1.618 → edge=0.748 shrink=0.333",
-    "metrics": {
-      "n": 10,
-      "pf": 0.693,
-      "wr": 0.3,
-      "rr": 1.618,
-      "total_r": -2.146,
-      "pnl": 67.51,
-      "avg_win": 1.618,
-      "avg_loss": 1.0
-    },
-    "model": {
-      "pf_component": 0.693,
-      "wr_component": 0.667,
-      "rr_component": 1.618,
-      "edge_index": 0.748,
-      "raw_weight": 0.849,
-      "shrink": 0.333,
-      "losing_penalty_applied": true
-    },
-    "llm_check": {
-      "llm": "AGREE",
-      "llm_reason": ""
-    },
-    "previous_weight": 0.8,
-    "changes": 1,
-    "history": [
-      {
-        "date": "2026-10-08",
-        "from": 0.8,
-        "to": 0.658,
-        "n": 10,
-        "pf": 0.693,
-        "wr": 0.3,
+        "pf": 1.387,
+        "wr": 0.4615,
         "rr": 1.618,
         "llm": "AGREE"
       }

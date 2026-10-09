@@ -1,0 +1,277 @@
+{
+  "date": "2026-10-09",
+  "window_days": 14,
+  "candidates": [
+    {
+      "strategy": "3-Pushes",
+      "metrics": {
+        "n": 11,
+        "pf": 2.832,
+        "wr": 0.6364,
+        "rr": 1.618,
+        "total_r": 7.326,
+        "pnl": 30.22,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 1.0,
+      "target": 1.2,
+      "delta": 0.2,
+      "status": "applied",
+      "detail": {
+        "pf_component": 2.832,
+        "wr_component": 1.414,
+        "rr_component": 1.618,
+        "edge_index": 6.48,
+        "raw_weight": 1.8,
+        "shrink": 0.355,
+        "losing_penalty_applied": false
+      },
+      "uncapped_target": 1.284,
+      "llm_check": {
+        "llm": "AGREE",
+        "llm_reason": ""
+      }
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "metrics": {
+        "n": 92,
+        "pf": 0.948,
+        "wr": 0.3696,
+        "rr": 1.618,
+        "total_r": -2.988,
+        "pnl": -739.26,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 1.0,
+      "target": 0.948,
+      "delta": -0.052,
+      "status": "applied",
+      "detail": {
+        "pf_component": 0.948,
+        "wr_component": 0.821,
+        "rr_component": 1.618,
+        "edge_index": 1.26,
+        "raw_weight": 1.156,
+        "shrink": 0.821,
+        "losing_penalty_applied": true
+      },
+      "uncapped_target": 0.948
+    },
+    {
+      "strategy": "B1",
+      "metrics": {
+        "n": 4,
+        "pf": 0.539,
+        "wr": 0.25,
+        "rr": 1.618,
+        "total_r": -1.382,
+        "pnl": -224.47,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 1.0,
+      "target": 1.0,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=4 < MIN_TRADES_TO_ACT=10"
+      }
+    },
+    {
+      "strategy": "B1-3in1",
+      "metrics": {
+        "n": 11,
+        "pf": 0.0,
+        "wr": 0.0,
+        "rr": 0.0,
+        "total_r": -11.0,
+        "pnl": 306.21,
+        "avg_win": 0.0,
+        "avg_loss": 1.0
+      },
+      "current": 1.0,
+      "target": 0.8,
+      "delta": -0.2,
+      "status": "vetoed",
+      "detail": {
+        "pf_component": 0.0,
+        "wr_component": 0.0,
+        "rr_component": 0.0,
+        "edge_index": 0.0,
+        "raw_weight": 0.4,
+        "shrink": 0.355,
+        "losing_penalty_applied": true
+      },
+      "uncapped_target": 0.4,
+      "llm_check": {
+        "llm": "VETO",
+        "llm_reason": "PF=0, WR=0%, -11R total warrants weight near zero, not 0.8."
+      }
+    },
+    {
+      "strategy": "CRT",
+      "metrics": {
+        "n": 40,
+        "pf": 1.196,
+        "wr": 0.425,
+        "rr": 1.618,
+        "total_r": 4.506,
+        "pnl": 229.89,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 1.1,
+      "target": 1.3,
+      "delta": 0.2,
+      "status": "applied",
+      "detail": {
+        "pf_component": 1.196,
+        "wr_component": 0.944,
+        "rr_component": 1.618,
+        "edge_index": 1.828,
+        "raw_weight": 1.497,
+        "shrink": 0.667,
+        "losing_penalty_applied": false
+      },
+      "uncapped_target": 1.331,
+      "llm_check": {
+        "llm": "AGREE",
+        "llm_reason": ""
+      }
+    },
+    {
+      "strategy": "H-Pattern",
+      "metrics": {
+        "n": 4,
+        "pf": 1.618,
+        "wr": 0.5,
+        "rr": 1.618,
+        "total_r": 1.236,
+        "pnl": 554.94,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 1.2,
+      "target": 1.2,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=4 < MIN_TRADES_TO_ACT=10"
+      }
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "metrics": {
+        "n": 2,
+        "pf": 0.0,
+        "wr": 0.0,
+        "rr": 0.0,
+        "total_r": -2.0,
+        "pnl": -17.48,
+        "avg_win": 0.0,
+        "avg_loss": 1.0
+      },
+      "current": 0.9,
+      "target": 0.9,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=2 < MIN_TRADES_TO_ACT=10"
+      }
+    },
+    {
+      "strategy": "RSI-Div",
+      "metrics": {
+        "n": 2,
+        "pf": 1.618,
+        "wr": 0.5,
+        "rr": 1.618,
+        "total_r": 0.618,
+        "pnl": -5.2,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 0.7,
+      "target": 0.7,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=2 < MIN_TRADES_TO_ACT=10"
+      }
+    },
+    {
+      "strategy": "Stair",
+      "metrics": {
+        "n": 26,
+        "pf": 1.387,
+        "wr": 0.4615,
+        "rr": 1.618,
+        "total_r": 5.416,
+        "pnl": 208.39,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 0.9,
+      "target": 1.1,
+      "delta": 0.2,
+      "status": "applied",
+      "detail": {
+        "pf_component": 1.387,
+        "wr_component": 1.026,
+        "rr_component": 1.618,
+        "edge_index": 2.302,
+        "raw_weight": 1.781,
+        "shrink": 0.565,
+        "losing_penalty_applied": false
+      },
+      "uncapped_target": 1.441,
+      "llm_check": {
+        "llm": "AGREE",
+        "llm_reason": ""
+      }
+    },
+    {
+      "strategy": "TTrades-Fractal",
+      "metrics": {
+        "n": 2,
+        "pf": 0.0,
+        "wr": 0.0,
+        "rr": 0.0,
+        "total_r": -2.0,
+        "pnl": -824.04,
+        "avg_win": 0.0,
+        "avg_loss": 1.0
+      },
+      "current": 1.0,
+      "target": 1.0,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=2 < MIN_TRADES_TO_ACT=10"
+      }
+    },
+    {
+      "strategy": "Two-Yang",
+      "metrics": {
+        "n": 9,
+        "pf": 0.809,
+        "wr": 0.3333,
+        "rr": 1.618,
+        "total_r": -1.146,
+        "pnl": -392.26,
+        "avg_win": 1.618,
+        "avg_loss": 1.0
+      },
+      "current": 0.8,
+      "target": 0.8,
+      "delta": 0.0,
+      "status": "no-sample",
+      "detail": {
+        "skipped": "n=9 < MIN_TRADES_TO_ACT=10"
+      }
+    }
+  ]
+}
