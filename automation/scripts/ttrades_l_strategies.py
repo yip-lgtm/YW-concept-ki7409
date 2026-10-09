@@ -507,8 +507,102 @@ def main(ticker: str = "BTC-USD") -> int:
         print(f"  {mark} {name:<14} {r.get('stage')}{extra}")
 
     n = sum(1 for r in results.values() if r.get("fired"))
+
+    # TG alert (2026-10-09). The L-series previously had no Telegram path at
+    # all, so an L12/L13/L14 fire was invisible outside the repo. Batched per
+    # ticker because the workflow runs this module once per ticker and a
+    # module run can contain up to 3 simultaneous fires — one message instead
+    # of three. Deduped on strategy+bar so a setup that stays valid across
+    # cycles is announced once.
+    _notify_tg(ticker, results, now)
+
     print(f"  → {n}/3 fired · summary: {L_SUMMARY_FILE.name}")
     return 0
+
+
+TG_SENT_FILE = SIGNAL_DIR / "tg_sent_l_series.json"
+
+
+def _load_sent() -> set:
+    if not TG_SENT_FILE.exists():
+        return set()
+    try:
+        return set(json.loads(TG_SENT_FILE.read_text()))
+    except Exception:
+        return set()
+
+
+def _save_sent(sent: set):
+    try:
+        TG_SENT_FILE.write_text(json.dumps(sorted(sent)[-200:], indent=0))
+    except Exception:
+        pass
+
+
+def _notify_tg(ticker: str, results: dict, now) -> None:
+    tok = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    chat = os.environ.get("TELEGRAM_CHAT_ID", "")
+    if not (tok and chat):
+        return
+    now_str = now.strftime("%Y-%m-%d %H:%M HKT")
+    day_str = now.strftime("%Y-%m-%d")
+    fired = {k: v for k, v in results.items() if v.get("fired")}
+    if not fired:
+        return
+
+    sent = _load_sent()
+    fresh = {}
+    for name, r in fired.items():
+        key = f"{name}|{ticker}|{day_str}"
+        if key not in sent:
+            fresh[name] = r
+    if not fresh:
+        print(f"  [TG-suppressed] all {len(fired)} already announced today")
+        return
+
+    now_str = now.strftime("%Y-%m-%d %H:%M HKT")
+    lines = [f"🎯 <b>TTrades L-series — {ticker}</b>",
+             f"⏰ {now_str}", ""]
+    for name, r in fresh.items():
+        d = "↑" if r.get("direction") == "long" else "↓"
+        lines.append(f"<b>{name}</b> {d} {r.get('direction', '?')}")
+        lines.append(f"  stage: {r.get('stage')}")
+        if r.get("closure"):
+            extra = f" → trade {r['trade_candle']}" if r.get("trade_candle") else ""
+            lines.append(f"  closure: {r['closure']}{extra}")
+        if r.get("poi_note"):
+            lines.append(f"  POI: {r['poi_note']}")
+        if r.get("order_block"):
+            ob = r["order_block"]
+            lines.append(f"  order block: [{ob['ob_low']:,.0f}, {ob['ob_high']:,.0f}] "
+                         f"EQ {ob['ob_eq']:,.0f}")
+        ref = r.get("entry_ref")
+        lvl = r.get("swing_level")
+        if ref and lvl:
+            lines.append(f"  entry ref {ref:,.0f} · protected swing {lvl:,.0f} "
+                         f"· target {r.get('target_r', 2)}R")
+        if r.get("cisd"):
+            lines.append(f"  CISD: {r['cisd'].get('reason', 'confirmed')}")
+        lines.append("")
+
+    # The L-series does not publish SL/T1/T2 yet, so a TG alert is a heads-up
+    # that a setup is live, not an instruction with a stop. Say so rather than
+    # letting the message read like an executable ticket.
+    lines.append("⚠️ L-series publishes no SL/T1/T2 yet — this is a setup alert, not an entry ticket.")
+
+    try:
+        import requests
+        msg = "\n".join(lines)[:4000]
+        r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
+                          json={"chat_id": chat, "text": msg, "parse_mode": "HTML"},
+                          timeout=15)
+        print(f"  [TG] {len(fresh)} agent(s) HTTP {r.status_code}")
+        if r.status_code == 200:
+            for name in fresh:
+                sent.add(f"{name}|{ticker}|{day_str}")
+            _save_sent(sent)
+    except Exception as e:
+        print(f"  [TG] {e}")
 
 
 if __name__ == "__main__":

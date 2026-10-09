@@ -59,6 +59,29 @@ TTRADES_MAX_NOTIONAL_USD = 43_000
 
 SIGNAL_DIR = REPO / "automation" / "reports" / "ttrades_btc"
 SIGNAL_DIR.mkdir(parents=True, exist_ok=True)
+
+# TG dedup (2026-10-09). An actionable setup can stay actionable across several
+# 15-minute cycles. Without a record of what has already been announced, the
+# same trade is pushed to Telegram every cycle until the stop or target is
+# hit. Entries are pruned once older than 7 days.
+TG_SENT_FILE = SIGNAL_DIR / "tg_sent.json"
+
+
+def _load_tg_sent() -> set:
+    if not TG_SENT_FILE.exists():
+        return set()
+    try:
+        return set(json.loads(TG_SENT_FILE.read_text()))
+    except Exception:
+        return set()
+
+
+def _save_tg_sent(sent: set):
+    try:
+        keep = sorted(sent)[-200:]
+        TG_SENT_FILE.write_text(json.dumps(keep, indent=0))
+    except Exception:
+        pass
 def _out_paths(ticker: str):
     """Per-ticker output files so MNQ / MGC / BTC do not overwrite each other."""
     slug = ticker.replace("=", "").replace("-", "").replace("^", "")
@@ -561,7 +584,11 @@ def main(ticker: str | None = None):
     with LOG_FILE.open("a") as f:
         f.write(json.dumps(signal, default=str) + "\n")
     
-    if signal.get("actionable") and TG_TOKEN and TG_CHAT:
+    _tg_sent = _load_tg_sent()
+    _sig_key = f"{signal.get('strategy')}|{signal.get('ticker')}|{signal.get('ts')}"
+    _already = _sig_key in _tg_sent
+
+    if signal.get("actionable") and TG_TOKEN and TG_CHAT and not _already:
         try:
             d_emoji = "↑" if signal["direction"] == "long" else "↓"
             msg = (
@@ -583,9 +610,14 @@ def main(ticker: str | None = None):
             r = requests.post(
                 f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
                 json={"chat_id": TG_CHAT, "text": msg[:4000]}, timeout=15)
+            if r.status_code == 200:
+                _tg_sent.add(_sig_key)
+                _save_tg_sent(_tg_sent)
             print(f"  [TG] HTTP {r.status_code}")
         except Exception as e:
             print(f"  [TG] {e}")
+    elif signal.get("actionable") and _already:
+        print(f"  [TG-suppressed] already announced: {_sig_key}")
     else:
         print(f"  [no-action] {signal.get('reason', '?')}")
     
