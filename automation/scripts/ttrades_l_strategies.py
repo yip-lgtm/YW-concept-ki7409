@@ -650,16 +650,30 @@ def _save_sent(sent: set):
 
 
 def _notify_tg(ticker: str, results: dict, now) -> None:
+    """Telegram alert for the L-series, in the same shape live_scan uses.
+
+    The 2026-10-09 note asked for the L-series to read like a normal signal
+    card rather than a bespoke block, so this mirrors live_scan's layout
+    exactly: grade emoji, [grade], last price, confidence, direction, reason,
+    a Risk Plan with SL / T2 / T3-T5, and an NY timestamp.
+
+    Differences from live_scan that are deliberate, not drift:
+      - the L-series has no LLM grade, so the card is marked with the model
+        that produced it (L12/L13/L14) instead of a fake A/B/C
+      - the stop basis line is kept, because the three agents place the
+        stop differently and that is the part a reader cannot infer
+      - one message per ticker per cycle, batching up to 3 fires, rather
+        than one message per agent
+    """
     tok = os.environ.get("TELEGRAM_BOT_TOKEN", "")
     chat = os.environ.get("TELEGRAM_CHAT_ID", "")
     if not (tok and chat):
         return
-    now_str = now.strftime("%Y-%m-%d %H:%M HKT")
-    day_str = now.strftime("%Y-%m-%d")
     fired = {k: v for k, v in results.items() if v.get("fired")}
     if not fired:
         return
 
+    day_str = now.strftime("%Y-%m-%d")
     sent = _load_sent()
     fresh = {}
     for name, r in fired.items():
@@ -671,50 +685,46 @@ def _notify_tg(ticker: str, results: dict, now) -> None:
         return
 
     now_str = now.strftime("%Y-%m-%d %H:%M HKT")
-    lines = [f"🎯 <b>TTrades L-series — {ticker}</b>",
-             f"⏰ {now_str}", ""]
+    cards = []
     for name, r in fresh.items():
-        d = "↑" if r.get("direction") == "long" else "↓"
-        lines.append(f"<b>{name}</b> {d} {r.get('direction', '?')}")
-        lines.append(f"  stage: {r.get('stage')}")
-        if r.get("closure"):
-            extra = f" → trade {r['trade_candle']}" if r.get("trade_candle") else ""
-            lines.append(f"  closure: {r['closure']}{extra}")
-        if r.get("poi_note"):
-            lines.append(f"  POI: {r['poi_note']}")
-        if r.get("order_block"):
-            ob = r["order_block"]
-            lines.append(f"  order block: [{ob['ob_low']:,.0f}, {ob['ob_high']:,.0f}] "
-                         f"EQ {ob['ob_eq']:,.0f}")
-        if r.get("has_levels"):
-            lines.append(f"  entry {r['entry']:,.2f} · SL {r['sl']:,.2f} "
-                         f"(risk {r['risk']:,.0f})")
-            lines.append(f"  T1 {r['t1']:,.0f} · T2 CLOSE {r['t2_close']:,.0f} "
-                         f"(1.618R) · T3 {r['t3']:,.0f}")
-            lines.append(f"  stop basis: {r.get('sl_basis', '—')}")
-        else:
-            ref = r.get("entry_ref")
-            lvl = r.get("swing_level")
-            if ref and lvl:
-                lines.append(f"  entry ref {ref:,.0f} · protected swing {lvl:,.0f}")
-            lines.append(f"  ⚠ no levels: {r.get('levels_note', 'geometry invalid')}")
-        if r.get("cisd"):
-            lines.append(f"  CISD: {r['cisd'].get('reason', 'confirmed')}")
-        lines.append("")
+        emoji = "🟢" if r.get("has_levels") else "🟡"
+        entry = r.get("entry") or r.get("entry_ref")
+        head = f"{emoji} <b>{name}</b> [{r.get('stage', '?')}] {ticker}"
 
-    # Levels are published as of 2026-10-09, so this is now a ticket. Say so
-    # only when an agent genuinely could not produce a stop, rather than
-    # blanket-disclaiming the whole family.
-    no_lv = [n for n, r in fresh.items() if not r.get("has_levels")]
-    if no_lv:
-        lines.append(f"⚠️ {', '.join(no_lv)} fired without a valid stop — setup alert only.")
-    lines.append("T1 takes 50%, remainder closes at T2 (1.618R). Paper only.")
+        # Body lines sit together, blank line before the Risk Plan block and
+        # before the timestamp — same rhythm as live_scan's card.
+        body = []
+        if entry:
+            body.append(f"💰 Entry: ${entry:,.2f}")
+        if r.get("poi_note"):
+            body.append(f"🧭 POI: {r['poi_note']}")
+        if r.get("trade_candle"):
+            body.append(f"🕯️ Trades: {r['trade_candle']} ({r.get('closure', '—')})")
+        body.append(f"🎯 Dir: {r.get('direction', '—')}")
+        if r.get("cisd"):
+            body.append(f"✅ CISD: {r['cisd'].get('reason', 'confirmed')}")
+
+        if r.get("has_levels"):
+            risk = [
+                "<b>Risk Plan</b> (stop beyond protected swing, T2 close mode):",
+                f"• SL: ${r['sl']:,.2f} (close if hit)",
+                f"• T2 (1.618R): ${r['t2_close']:,.2f} 🎯 close target",
+                f"• T3: ${r['t3']:,.2f} (runner if T2 missed)",
+                f"• Stop basis: {r.get('sl_basis', '—')}",
+                f"• Risk: {r['risk']:,.2f} pts · ATR(H4) {r.get('atr_h4', 0):,.2f}",
+            ]
+        else:
+            risk = [f"⚠️ <b>No levels</b>: {r.get('levels_note', 'geometry invalid')}"]
+
+        cards.append("\n".join([head, "", *body, "", *risk, "", f"⏰ {now_str}"]))
+
+    footer = "Paper only — T1 takes 50%, remainder closes at T2 (1.618R)."
+    msg = "\n\n———\n\n".join(cards) + "\n\n" + footer
 
     try:
         import requests
-        msg = "\n".join(lines)[:4000]
         r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
-                          json={"chat_id": chat, "text": msg, "parse_mode": "HTML"},
+                          json={"chat_id": chat, "text": msg[:4000], "parse_mode": "HTML"},
                           timeout=15)
         print(f"  [TG] {len(fresh)} agent(s) HTTP {r.status_code}")
         if r.status_code == 200:
