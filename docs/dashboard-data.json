@@ -1,67 +1,53 @@
 {
-  "generated_at": "2026-10-11 01:47 HKT",
-  "hkt_timestamp": "2026-10-11T01:47:08.856100+08:00",
+  "generated_at": "2026-10-11 03:47 HKT",
+  "hkt_timestamp": "2026-10-11T03:47:30.531033+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 0,
-    "trades_today": 0,
-    "wins_24h": 0,
-    "R_24h": 0,
-    "signals_24h": 12,
-    "wr_24h": 0
+    "trades_24h": 1,
+    "trades_today": 1,
+    "wins_24h": 1,
+    "R_24h": 1.62,
+    "signals_24h": 18,
+    "wr_24h": 100.0
   },
   "ranking_24h": [
     {
-      "strategy": "50-20-Pullback",
+      "strategy": "H-Pattern",
       "ticker": "BTC-USD",
-      "n_trades": 6,
-      "n_wins": 1,
-      "n_losses": 5,
-      "win_rate": 16.7,
-      "total_R": -3.38,
-      "avg_R": -0.564,
-      "total_pnl_usd": 49.25,
-      "profit_factor": 0.32,
-      "rank": 1,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "Kell-Cycle",
-      "ticker": "M2K=F",
       "n_trades": 1,
       "n_wins": 1,
       "n_losses": 0,
       "win_rate": 100.0,
       "total_R": 1.62,
       "avg_R": 1.618,
-      "total_pnl_usd": 10.1,
+      "total_pnl_usd": 131.98,
       "profit_factor": 10.0,
-      "rank": 2,
+      "rank": 1,
       "medal_eligible": false
     },
     {
-      "strategy": "Stair",
-      "ticker": "MNQ=F",
-      "n_trades": 1,
+      "strategy": "50-20-Pullback",
+      "ticker": "BTC-USD",
+      "n_trades": 6,
       "n_wins": 0,
-      "n_losses": 1,
+      "n_losses": 6,
       "win_rate": 0.0,
-      "total_R": -1.0,
+      "total_R": -6.0,
       "avg_R": -1.0,
-      "total_pnl_usd": -79.91,
+      "total_pnl_usd": -450.88,
       "profit_factor": 0.0,
-      "rank": 3,
+      "rank": 2,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 8,
-    "n_wins": 2,
-    "win_rate": 25.0,
-    "total_R": -2.76,
-    "total_pnl_usd": -20.56
+    "n_trades": 7,
+    "n_wins": 1,
+    "win_rate": 14.3,
+    "total_R": -4.38,
+    "total_pnl_usd": -318.9
   },
-  "ranking_24h_updated": "2026-10-10T17:47:08.856120+00:00",
+  "ranking_24h_updated": "2026-10-10T19:47:30.531047+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -131,24 +117,24 @@
         5
       ],
       "live_24h": {
-        "n": 0,
-        "wins": 0,
+        "n": 1,
+        "wins": 1,
         "losses": 0,
-        "wr": 0,
-        "R": 0,
-        "pf": 0.0,
-        "pnl": 0
+        "wr": 100.0,
+        "R": 1.62,
+        "pf": 10.0,
+        "pnl": 131.98
       },
       "live_today": {
-        "n": 0,
-        "wins": 0,
+        "n": 1,
+        "wins": 1,
         "losses": 0,
-        "wr": 0,
-        "R": 0,
-        "pf": 0.0,
-        "pnl": 0
+        "wr": 100.0,
+        "R": 1.62,
+        "pf": 10.0,
+        "pnl": 131.98
       },
-      "signals_24h": 3,
+      "signals_24h": 6,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -163,8 +149,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "0 trades\u5168\u7121\u4fe1\u865f\uff0c3min/5min\u592a\u77ed+\u6307\u6a19\u592a\u57fa\u790e\uff0c\u7121\u5be6\u6230\u6578\u64da\u9a57\u8b49edge\uff0c\u9700\u5927\u5e45\u8abf\u6574"
+        "confidence": 65,
+        "reason": "0 trades\u4ee3\u8868\u4fe1\u865f\u592a\u7a00\u6709\uff0cweight\u904e\u9ad8\u904e\u6ffe\u592a\u72e0\uff1b3min pivot\u96dc\u8a0a\u5927\uff0c\u9700\u653e\u5bec\u689d\u4ef6\u6216\u62c9\u9577TF\u3002"
       }
     },
     {
@@ -200,7 +186,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 1,
+      "signals_24h": 2,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -215,8 +201,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 35,
-        "reason": "0 trades\u53cd\u6620\u8a0a\u865f\u689d\u4ef6\u904e\u56b4\u6216\u6307\u6a19\u672a\u89f8\u767c\uff0c\u9700\u653e\u5bec\u9580\u6abb\u4ee5\u7522\u751f\u4ea4\u6613"
+        "confidence": 18,
+        "reason": "0 trades = zero edge validation, strategy firing nothing, no statistical edge proven."
       }
     },
     {
@@ -267,8 +253,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 42,
-        "reason": "0 trades\u4ee3\u8868\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0c\u7d44\u5408\u904e\u6ffe\u592a\u56b4\u6216\u4e92\u76f8\u77db\u76fe\uff0c\u9700\u5927\u5e45\u8abf\u6574"
+        "confidence": 88,
+        "reason": "0 trades backtest = \u7b56\u7565\u5b8c\u5168\u6c92\u89f8\u767c\uff0cfilters \u592a\u56b4\u6216ADX\u9580\u6abb\u904e\u9ad8\uff0c\u9700\u653e\u5bec\u689d\u4ef6\u3002"
       }
     },
     {
@@ -319,8 +305,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 15,
-        "reason": "0 trades\u5b8c\u5168\u7121\u8a0a\u865f\uff0c\u7121\u6cd5\u9a57\u8b49\u7b56\u7565\u6709\u6548\u6027\uff0cRSI divergence\u7d44\u5408\u592a\u56b4\u82db"
+        "confidence": 20,
+        "reason": "0 trades\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u4fe1\u865f\u689d\u4ef6\u904e\u56b4\u6216\u6642\u6846\u4e0d\u5339\u914d\uff0c\u672a\u80fd\u9a57\u8b49\u7b56\u7565"
       }
     },
     {
@@ -370,9 +356,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "D",
-        "confidence": 55,
-        "reason": "0 trades\u4fe1\u865f\u672a\u89f8\u767c\uff0cpullback\u689d\u4ef6\u904e\u56b4\u6216\u6642\u6846\u4e0d\u5339\u914d\uff0c\u9700\u8abf\u6574\u4ee5\u7522\u751f\u4ea4\u6613\u6a5f\u6703\u3002"
+        "grade": "C",
+        "confidence": 25,
+        "reason": "0 trades\u6a23\u672c\u4e0d\u8db3\uff0c\u7121\u6cd5\u9a57\u8b49\u7b56\u7565\u6709\u6548\u6027\uff0c\u9700\u66f4\u591a\u6578\u64da\u7d2f\u7a4d"
       }
     },
     {
@@ -408,7 +394,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 1,
+      "signals_24h": 3,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -423,8 +409,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 15,
-        "reason": "0 trades = zero statistical edge confirmed. Backtest meaningless, live signal likely too strict or ill-tuned."
+        "confidence": 35,
+        "reason": "0 trades = \u96f6\u8ca2\u737b\uff0cstep_pattern\u55ae\u4e00\u6307\u6a19\u57285min\u7121\u8a0a\u865f\uff0c\u7b56\u7565\u5b8c\u5168\u5931\u6548"
       }
     },
     {
@@ -475,8 +461,8 @@
       },
       "iteration": {
         "grade": "C",
-        "confidence": 58,
-        "reason": "\u6574\u9ad4\u50c5\u5fae\u5229\uff0cMNQ\u56b4\u91cd\u8667\u640d\u62d6\u57ae\uff0cPF 1.09\u904e\u4f4e\uff0c\u9700\u524a\u6e1b\u66dd\u96aa\u4e26\u5f37\u5316\u6ffe\u7db2"
+        "confidence": 62,
+        "reason": "\u7e3d\u9ad4\u52c9\u5f37\u7372\u5229\uff0c\u4f46 MNQ \u91cd\u8667\u62d6\u7d2f\uff0c\u9700\u904e\u6ffe\u5dee\u6a19\u7684\u6216\u52a0\u8da8\u52e2\u6ffe\u7db2"
       }
     },
     {
@@ -527,8 +513,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 25,
-        "reason": "0 trades\u53cd\u6620\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0csubdetectors\u904e\u56b4\u6216timeframe\u592a\u77ed\uff0c\u9700\u653e\u5bec\u689d\u4ef6\u3002"
+        "confidence": 35,
+        "reason": "0 trades = strategy\u975e\u89f8\u767c\uff0c\u689d\u4ef6\u904e\u56b4\u6216timeframe\u592a\u77ednoise\u5927"
       }
     },
     {
@@ -888,20 +874,20 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-10-10T23:31:10.722157+08:00",
+        "updated": "2026-10-11T03:32:09.599616+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "EQ not respected; D1 counter-trend (uptrend); London expanded (skip NY)",
-          "ts": "2026-10-10T11:31:10.413125-04:00"
+          "reason": "no H4 C3 closure (Fractal quiet)",
+          "ts": "2026-10-10T15:32:09.185176-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no POI",
-            "detail": "C2 [82690, 82878] misses nearest swing 86690 by 3811",
-            "direction": "short",
+            "stage": "no C2 closure (sweep+reclaim) on C2",
+            "detail": null,
+            "direction": null,
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -919,7 +905,7 @@
           {
             "strategy": "TTrades-L13",
             "fired": false,
-            "stage": "C2 not an expansion candle (wick too large)",
+            "stage": "C3 not an expansion candle (wick too large)",
             "detail": null,
             "direction": null,
             "closure": null,
@@ -939,10 +925,10 @@
           {
             "strategy": "TTrades-L14",
             "fired": false,
-            "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
-            "detail": null,
-            "direction": null,
-            "closure": null,
+            "stage": "no POI",
+            "detail": "C2 [82674, 82878] misses nearest swing 86691 by 3813",
+            "direction": "short",
+            "closure": "c2_closure",
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
@@ -1039,9 +1025,18 @@
   "agent_control": {
     "levels": [
       {
+        "strategy": "CRT",
+        "level": 3,
+        "last_settled": "2026-10-11",
+        "n_changes": 2,
+        "last_action": "promote",
+        "last_reason": "PF>1 & WR>0.5 & RR>1 \u2014 promoted",
+        "last_change_date": "2026-10-11"
+      },
+      {
         "strategy": "3-Pushes",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1050,7 +1045,7 @@
       {
         "strategy": "50-20-Pullback",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1059,7 +1054,7 @@
       {
         "strategy": "B1",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1068,16 +1063,7 @@
       {
         "strategy": "B1-3in1",
         "level": 1,
-        "last_settled": "2026-10-09",
-        "n_changes": 0,
-        "last_action": null,
-        "last_reason": null,
-        "last_change_date": null
-      },
-      {
-        "strategy": "CRT",
-        "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1086,7 +1072,7 @@
       {
         "strategy": "H-Pattern",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1095,7 +1081,7 @@
       {
         "strategy": "Kell-Cycle",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1104,7 +1090,7 @@
       {
         "strategy": "OCS-BTC-5m",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1113,7 +1099,7 @@
       {
         "strategy": "RSI-Div",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1122,7 +1108,7 @@
       {
         "strategy": "Stair",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1131,7 +1117,7 @@
       {
         "strategy": "TTrades-Fractal",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1140,7 +1126,7 @@
       {
         "strategy": "TTrades-L12",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1149,7 +1135,7 @@
       {
         "strategy": "TTrades-L13",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1158,7 +1144,7 @@
       {
         "strategy": "TTrades-L14",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1167,14 +1153,75 @@
       {
         "strategy": "Two-Yang",
         "level": 1,
-        "last_settled": "2026-10-09",
+        "last_settled": "2026-10-11",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
         "last_change_date": null
       }
     ],
-    "settlement_overrides": [],
+    "settlement_overrides": [
+      {
+        "strategy": "3-Pushes",
+        "action": "relax",
+        "reasoning": "Only min_trades blocks promotion; metrics far exceed all other thresholds, and sample of 6 is meaningful given exceptional performance.</think>",
+        "overrides": {
+          "min_PF": 1.0,
+          "min_WR": 0.5,
+          "min_RR": 1.0,
+          "min_trades": 5
+        },
+        "last_revised": "2026-10-10T19:46:58.498549+00:00",
+        "stuck_days_at_revision": 3
+      },
+      {
+        "strategy": "Two-Yang",
+        "action": "relax",
+        "reasoning": "Candle pattern strategy \u81ea\u7136\u4f4e\u6a23\u672c\u3001\u4f4e WR\uff1b\u653e\u5bec WR \u81f3 0.40 \u540c n \u81f3 5\uff08\u525b\u597d 2 \u500b\uff09\uff0cPF/RR \u7dad\u6301\u56b4\u683c\uff0c\u78ba\u4fdd\u8cea\u7d20\u5514\u6703\u88ab\u6c96\u6de1\u3002",
+        "overrides": {
+          "min_PF": 1.0,
+          "min_WR": 0.4,
+          "min_RR": 1.0,
+          "min_trades": 5
+        },
+        "last_revised": "2026-10-10T19:46:58.498549+00:00",
+        "stuck_days_at_revision": 3
+      },
+      {
+        "strategy": "Stair",
+        "action": "relax",
+        "reasoning": "Trend continuation strategy profile accepts lower WR compensated by higher RR; agent has strong RR (1.618) and decent PF (1.214), so only WR needs relaxation \u2014 keep PF/RR/n as quality gates.",
+        "overrides": {
+          "min_PF": 1.0,
+          "min_WR": 0.4,
+          "min_RR": 1.0,
+          "min_trades": 10
+        },
+        "last_revised": "2026-10-10T19:46:58.498549+00:00",
+        "stuck_days_at_revision": 3
+      },
+      {
+        "strategy": "50-20-Pullback",
+        "action": "relax",
+        "reasoning": "\u5462\u500b\u4fc2 high-RR/low-WR \u8a2d\u8a08\u5605 pullback strategy\uff0cWR 38.5% \u5c0d\u4f62\u569f\u8b1b\u5b8c\u5168\u6b63\u5e38\uff08PF \u2248 1.011 \u540c RR 1.618 \u90fd\u9054\u6a19\uff09\uff0c\u53ea\u4fc2 global WR \u9580\u6abb 0.50 \u5514\u9069\u5408\u5462\u985e profile\uff1b\u653e\u5bec WR \u81f3 0.35\uff08\u4ecd\u56b4\u5b88 high-RR \u61c9\u6709\u6c34\u5e73\uff09\uff0c\u5176\u9918\u6307\u6a19\u7dad\u6301\u4e0d\u8b8a\u3002",
+        "overrides": {
+          "min_PF": 1.0,
+          "min_WR": 0.35,
+          "min_RR": 1.0,
+          "min_trades": 10
+        },
+        "last_revised": "2026-10-10T19:46:58.498549+00:00",
+        "stuck_days_at_revision": 3
+      },
+      {
+        "strategy": "B1-3in1",
+        "action": "hold",
+        "reasoning": "\u5be6\u969b\u8868\u73fe PF=0 / WR=0% / RR=0 \u5514\u4fc2\u300cmoderate\u300dprofile \u5605\u504f\u4f4e\uff0c\u4fc2\u5b8c\u5168\u5187 outcome\uff0c\u653e\u5bec\u53ea\u6703\u7e31\u5bb9\u5783\u573e\u5347 lv\uff0c\u4fdd\u6301 global \u9580\u6abb\u7b49\u4f62\u771f\u6b63 trade \u51fa\u6210\u7e3e\u5148\u8b1b\u3002",
+        "overrides": {},
+        "last_revised": "2026-10-10T19:46:58.498549+00:00",
+        "stuck_days_at_revision": 3
+      }
+    ],
     "weight_optimization": {
       "date": "2026-10-09",
       "window_days": 14,

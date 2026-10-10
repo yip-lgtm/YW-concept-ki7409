@@ -2,6 +2,97 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 0
+    "runs": 1,
+    "last_run": "2026-10-10T19:46:58.498549+00:00",
+    "last_applied": 4,
+    "last_log": [
+      {
+        "agent": "3-Pushes",
+        "action": "relax"
+      },
+      {
+        "agent": "Two-Yang",
+        "action": "relax"
+      },
+      {
+        "agent": "Stair",
+        "action": "relax"
+      },
+      {
+        "agent": "50-20-Pullback",
+        "action": "relax"
+      },
+      {
+        "agent": "B1-3in1",
+        "action": "hold"
+      }
+    ]
+  },
+  "3-Pushes": {
+    "last_revised": "2026-10-10T19:46:58.498549+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "relax",
+    "reasoning": "Only min_trades blocks promotion; metrics far exceed all other thresholds, and sample of 6 is meaningful given exceptional performance.</think>",
+    "response_raw": "<think>The agent 3-Pushes is stuck in neutral zone for 3 days. Looking at the metrics:\n- PF = 3.236 (well above promote threshold of 1.0)\n- WR = 66.7% (above 50%)\n- RR = 1.618 (above 1.0)\n- n = 6 (below required minimum of 10)\n\nThe strategy is an exhaustion reversal counter-trend strategy. Typically such strategies have low WR but high RR. However, this agent actually has both high WR (66.7%) and high RR (1.618), with excellent PF of 3.236. The only blocker is sample size n=6, which is below the minimum 10.\n\nThe min_trades can be lowered to minimum 5 (hard limit). Since n=6 is close to 5, and the metrics are exceptional (PF 3.236, WR 66.7%, RR 1.618), this strategy clearly deserves promotion. We only need to relax 1 metric (min_trades from 10 to 5).\n\nWe can relax only min_trades. The other",
+    "overrides": {
+      "min_PF": 1.0,
+      "min_WR": 0.5,
+      "min_RR": 1.0,
+      "min_trades": 5
+    },
+    "relaxed_count": 1,
+    "tightened_count": 0
+  },
+  "Two-Yang": {
+    "last_revised": "2026-10-10T19:46:58.498549+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "relax",
+    "reasoning": "Candle pattern strategy 自然低樣本、低 WR；放寬 WR 至 0.40 同 n 至 5（剛好 2 個），PF/RR 維持嚴格，確保質素唔會被沖淡。",
+    "response_raw": "<think>The agent is Two-Yang, a candle pattern strategy with typically low sample counts. Currently stuck in neutral zone for 3 days.\n\nCurrent metrics (7d, n=5):\n- PF = 1.079 (global promote > 1.0) ✓ passes\n- WR = 40.0% (global promote > 50%) ✗ fails\n- RR = 1.618 (global promote > 1.0) ✓ passes\n- n = 5 (global min ≥ 10) ✗ fails\n\nTwo failures: WR and n.\n\nStrategy personality: Candle pattern, low sample count typical. So WR might naturally be lower and n being small is expected.\n\nConstraints:\n- Max 2 indicators can be relaxed\n- min_trades minimum is 5 (can go to 5)\n- Hard limits: PF ∈ [0.80, 1.50], WR ∈ [0.30, 0.70], RR ∈ [0.80, 2.00], n ∈ [5, 50]\n\nAnalysis:\n- PF = 1.079 is decent, above 1.0, no need to relax\n- WR = 40% — for candle patterns, 40% is plausible. Global threshold of 50% is too ",
+    "overrides": {
+      "min_PF": 1.0,
+      "min_WR": 0.4,
+      "min_RR": 1.0,
+      "min_trades": 5
+    },
+    "relaxed_count": 2,
+    "tightened_count": 0
+  },
+  "Stair": {
+    "last_revised": "2026-10-10T19:46:58.498549+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "relax",
+    "reasoning": "Trend continuation strategy profile accepts lower WR compensated by higher RR; agent has strong RR (1.618) and decent PF (1.214), so only WR needs relaxation — keep PF/RR/n as quality gates.",
+    "response_raw": "<think>The agent has been stuck in neutral zone for 3 days. Let me analyze:\n\nCurrent metrics:\n- PF = 1.214 (passes global threshold > 1.0) ✓\n- WR = 42.9% (fails global threshold > 50%) ✗\n- RR = 1.618 (passes global threshold > 1.0) ✓\n- n = 14 (passes global threshold ≥ 10) ✓\n\nStrategy profile: Trend continuation. Needs momentum; WR should be OK but PF thin is common.\n\nThe conflict: WR is below 50% threshold, but for a trend continuation strategy, lower WR with higher RR is the design. PF and RR are both good.\n\nCurrent PF (1.214) and RR (1.618) are both above thresholds and look solid. The only failing metric is WR.\n\nSince the strategy is trend continuation with thin PF being common but RR being high, I should consider relaxing WR. But WR = 42.9% - if I relax WR to say 0.40, it passes. Or I",
+    "overrides": {
+      "min_PF": 1.0,
+      "min_WR": 0.4,
+      "min_RR": 1.0,
+      "min_trades": 10
+    },
+    "relaxed_count": 1,
+    "tightened_count": 0
+  },
+  "50-20-Pullback": {
+    "last_revised": "2026-10-10T19:46:58.498549+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "relax",
+    "reasoning": "呢個係 high-RR/low-WR 設計嘅 pullback strategy，WR 38.5% 對佢嚟講完全正常（PF ≈ 1.011 同 RR 1.618 都達標），只係 global WR 門檻 0.50 唔適合呢類 profile；放寬 WR 至 0.35（仍嚴守 high-RR 應有水平），其餘指標維持不變。",
+    "response_raw": "<think>The agent is stuck in neutral zone for 3 consecutive days. Let me analyze:\n\nCurrent metrics:\n- PF = 1.011 (just above 1.0 promote threshold)\n- WR = 38.5% (below 50% promote threshold)\n- RR = 1.618 (well above 1.0 promote threshold)\n- n = 39 (well above 10 minimum)\n\nStrategy profile: High-RR trend pullback. Low WR is EXPECTED. Judge on PF + RR, not WR.\n\nThe agent meets PF (barely) and RR (comfortably), but fails WR badly. Since WR is not the right metric for this strategy type, we should relax WR.\n\nCurrent promotion thresholds (inferred):\n- min_PF > 1.0\n- min_WR > 0.50\n- min_RR > 1.0\n- min_trades >= 10\n\nRelaxing only WR makes sense here. PF is borderline (1.011) — it's positive but barely profitable. RR is strong at 1.618. The strategy's nature means WR should be relaxed to something",
+    "overrides": {
+      "min_PF": 1.0,
+      "min_WR": 0.35,
+      "min_RR": 1.0,
+      "min_trades": 10
+    },
+    "relaxed_count": 1,
+    "tightened_count": 0
+  },
+  "B1-3in1": {
+    "last_revised": "2026-10-10T19:46:58.498549+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "hold",
+    "reasoning": "實際表現 PF=0 / WR=0% / RR=0 唔係「moderate」profile 嘅偏低，係完全冇 outcome，放寬只會縱容垃圾升 lv，保持 global 門檻等佢真正 trade 出成績先講。",
+    "response_raw": "<think>Let me analyze this carefully.\n\nAGENT: B1-3in1\n- Multi-asset combined, diversified, expect moderate both.\n- 7d rolling metrics: PF=0.000, WR=0.0%, RR=0.000, n=9\n\nKey issues:\n1. All performance metrics are essentially 0 — this is terrible performance, not mediocre.\n2. n=9 is just below the threshold of 10.\n3. The strategy profile says \"moderate both\" — meaning it should perform OK across metrics.\n\nBut here's the thing: PF=0.000 and WR=0.0% means no winning trades at all, or no closed trades with meaningful P&L. This is NOT a case where \"WR is low but it's fine for this strategy type.\" This is genuinely bad performance.\n\nFor a diversified multi-asset strategy, we shouldn't expect high WR or high RR — we should expect moderate both. But \"moderate\" still means PF > 1.0 and WR > 35% or s"
   }
 }
