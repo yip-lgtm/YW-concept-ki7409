@@ -1,33 +1,35 @@
 {
-  "ts": "2026-10-09T22:46:43.239755-04:00",
+  "ts": "2026-10-10T03:18:53.969303-04:00",
   "ticker": "BTC-USD",
   "strategy": "TTrades-Fractal",
-  "swing_type": "C3",
-  "side": "bullish",
+  "swing_type": "C2",
+  "side": "bearish",
   "swing": {
-    "type": "c3_closure",
-    "side": "bullish",
-    "c2_low": 82198.5,
-    "c2_eq": 82572.734375,
-    "c4_close": 82546.6328125,
-    "swing_level": 82198.5,
-    "direction": "long"
+    "type": "c2_closure",
+    "side": "bearish",
+    "c2_high": 82694.453125,
+    "c2_low": 82468.7578125,
+    "c2_close": 82519.921875,
+    "c2_eq": 82581.60546875,
+    "c3_close": 82588.1796875,
+    "swing_level": 82694.453125,
+    "direction": "short"
   },
   "cisd": {
-    "confirmed": false,
-    "opposing_open": 84767.3984375,
-    "series_length": 1,
-    "last_close": 82546.6328125,
-    "reason": "no break"
+    "confirmed": true,
+    "opposing_open": 84787.3125,
+    "series_length": 2,
+    "last_close": 82588.1796875,
+    "reason": "cisd_short"
   },
   "eq_respected": false,
   "d1_trend": {
-    "aligned": true,
+    "aligned": false,
     "trend": "uptrend",
-    "d1_close": 82546.6328125,
-    "d1_ema50": 79745.4848288076,
-    "d1_ema20": 83241.04123036316,
-    "reason": "D1 uptrend"
+    "d1_close": 82588.1796875,
+    "d1_ema50": 79856.95128424268,
+    "d1_ema20": 83178.83701312903,
+    "reason": "D1 uptrend (counter-trend)"
   },
   "weekly_profile": {
     "profile": "thursday_counter",
@@ -35,15 +37,14 @@
     "notes": ""
   },
   "daily_profile": {
-    "london_expanded": true,
-    "london_range": 1064.71875,
-    "skip_ny": true
+    "london_expanded": false,
+    "skip_ny": false
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "CISD not confirmed; EQ not respected; London expanded (skip NY)",
+  "reason": "EQ not respected; D1 counter-trend (uptrend)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
