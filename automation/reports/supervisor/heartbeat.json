@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-10T14:44:13.956696+00:00",
+  "timestamp": "2026-10-10T17:47:06.519673+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -73,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
+          "id": 38073109368,
+          "conclusion": "success",
+          "created_at": "2026-10-10T17:46:30Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 38065534048,
+          "conclusion": "success",
+          "created_at": "2026-10-10T15:54:57Z",
+          "event": "schedule"
+        },
+        {
           "id": 38060764228,
-          "conclusion": "running",
+          "conclusion": "success",
           "created_at": "2026-10-10T14:43:43Z",
           "event": "workflow_dispatch"
-        },
-        {
-          "id": 38053874612,
-          "conclusion": "success",
-          "created_at": "2026-10-10T12:57:30Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 38044571273,
-          "conclusion": "success",
-          "created_at": "2026-10-10T10:20:42Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -151,14 +151,14 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 1,
+    "n_open": 2,
     "n_stale_24h": 1,
     "issues": [
-      "Stale: 3-Pushes MGC=F open 25h"
+      "Stale: 3-Pushes MGC=F open 28h"
     ],
-    "long_count": 0,
+    "long_count": 1,
     "short_count": 0,
-    "total_risk": 10.559988839285715,
+    "total_risk": 92.126953125,
     "deep_loss_positions": []
   }
 }
