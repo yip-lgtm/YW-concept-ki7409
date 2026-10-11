@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-10T22:05:17.782807+00:00",
+  "timestamp": "2026-10-11T00:25:09.850578+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -16,10 +16,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-10-10",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 38080764433
+    "today": "2026-10-11",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -74,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 38090050266,
+          "id": 38098326709,
           "conclusion": "running",
+          "created_at": "2026-10-11T00:24:38Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 38093220813,
+          "conclusion": "success",
+          "created_at": "2026-10-10T22:55:45Z",
+          "event": "schedule"
+        },
+        {
+          "id": 38090050266,
+          "conclusion": "success",
           "created_at": "2026-10-10T22:04:42Z",
           "event": "workflow_dispatch"
-        },
-        {
-          "id": 38087747545,
-          "conclusion": "success",
-          "created_at": "2026-10-10T21:28:18Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 38080687864,
-          "conclusion": "success",
-          "created_at": "2026-10-10T19:39:52Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -153,7 +152,7 @@
     "n_open": 1,
     "n_stale_24h": 1,
     "issues": [
-      "Stale: 3-Pushes MGC=F open 32h"
+      "Stale: 3-Pushes MGC=F open 35h"
     ],
     "long_count": 0,
     "short_count": 0,
