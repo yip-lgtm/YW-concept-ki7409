@@ -1,12 +1,14 @@
 {
-  "ts": "2026-10-13T06:56:14.082236+08:00",
+  "ts": "2026-10-13T08:35:44.308876+08:00",
   "ticker": "MGC=F",
-  "h4_bars": 154,
-  "m15_bars": 533,
+  "h4_bars": 155,
+  "m15_bars": 539,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
-      "stage": "no C2 closure (sweep+reclaim) on C2",
+      "stage": "no POI",
+      "detail": "C2 [4190, 4202] misses nearest swing 4229 by 27",
+      "direction": "short",
       "strategy": "TTrades-L12",
       "has_levels": false
     },
@@ -17,10 +19,48 @@
       "has_levels": false
     },
     "TTrades-L14": {
-      "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "fired": true,
       "strategy": "TTrades-L14",
-      "has_levels": false
+      "direction": "long",
+      "closure": "c3_closure",
+      "trade_candle": "C4",
+      "stage": "c3_closure \u2014 trade C4",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 4178.0,
+        "swing_levels": [
+          4178.0,
+          4178.39990234375,
+          4193.2001953125,
+          4197.60009765625,
+          4209.10009765625
+        ],
+        "pivot_count": 30,
+        "fvg_count": 10
+      },
+      "poi_note": "C2 range [4190, 4202] contains swing 4193",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 4166.60009765625,
+        "series_length": 3,
+        "last_close": 4188.7001953125,
+        "reason": "cisd_long"
+      },
+      "c_eq": 4196.10009765625,
+      "swing_level": 4190.5,
+      "entry_ref": 4188.7001953125,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 4188.7,
+      "sl": 4187.36,
+      "t1": 4190.04,
+      "t2_close": 4190.86,
+      "t3": 4192.2,
+      "risk": 1.34,
+      "sl_basis": "beyond protected swing (C2/C3 extreme)",
+      "sl_buffer": 3.14,
+      "atr_h4": 20.91
     }
   }
 }

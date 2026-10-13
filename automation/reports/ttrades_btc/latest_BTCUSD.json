@@ -1,35 +1,35 @@
 {
-  "ts": "2026-10-12T18:56:15.642373-04:00",
+  "ts": "2026-10-12T20:35:46.644517-04:00",
   "ticker": "BTC-USD",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
-  "side": "bullish",
+  "side": "bearish",
   "swing": {
     "type": "c2_closure",
-    "side": "bullish",
-    "c2_high": 82869.859375,
-    "c2_low": 82199.2734375,
-    "c2_close": 82758.078125,
-    "c2_eq": 82534.56640625,
-    "c3_close": 82379.9921875,
-    "swing_level": 82199.2734375,
-    "direction": "long"
+    "side": "bearish",
+    "c2_high": 83052.328125,
+    "c2_low": 81671.3984375,
+    "c2_close": 81742.5,
+    "c2_eq": 82361.86328125,
+    "c3_close": 81403.578125,
+    "swing_level": 83052.328125,
+    "direction": "short"
   },
   "cisd": {
-    "confirmed": false,
-    "opposing_open": 86051.5078125,
-    "series_length": 3,
-    "last_close": 82379.96875,
-    "reason": "no break"
+    "confirmed": true,
+    "opposing_open": 85292.9765625,
+    "series_length": 1,
+    "last_close": 81403.578125,
+    "reason": "cisd_short"
   },
-  "eq_respected": false,
+  "eq_respected": true,
   "d1_trend": {
-    "aligned": true,
+    "aligned": false,
     "trend": "uptrend",
-    "d1_close": 82379.96875,
-    "d1_ema50": 80111.64783567878,
-    "d1_ema20": 83171.15578666248,
-    "reason": "D1 uptrend"
+    "d1_close": 81403.578125,
+    "d1_ema50": 80073.35800724736,
+    "d1_ema20": 83078.16620332914,
+    "reason": "D1 uptrend (counter-trend)"
   },
   "weekly_profile": {
     "profile": "early_week",
@@ -38,14 +38,14 @@
   },
   "daily_profile": {
     "london_expanded": true,
-    "london_range": 1560.0234375,
+    "london_range": 1244.578125,
     "skip_ny": true
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "CISD not confirmed; EQ not respected; London expanded (skip NY)",
+  "reason": "D1 counter-trend (uptrend); London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
