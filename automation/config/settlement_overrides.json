@@ -2,29 +2,13 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 1,
-    "last_run": "2026-10-10T19:46:58.498549+00:00",
-    "last_applied": 4,
+    "runs": 2,
+    "last_run": "2026-10-13T20:59:53.806093+00:00",
+    "last_applied": 1,
     "last_log": [
       {
-        "agent": "3-Pushes",
+        "agent": "CRT",
         "action": "relax"
-      },
-      {
-        "agent": "Two-Yang",
-        "action": "relax"
-      },
-      {
-        "agent": "Stair",
-        "action": "relax"
-      },
-      {
-        "agent": "50-20-Pullback",
-        "action": "relax"
-      },
-      {
-        "agent": "B1-3in1",
-        "action": "hold"
       }
     ]
   },
@@ -94,5 +78,20 @@
     "action": "hold",
     "reasoning": "實際表現 PF=0 / WR=0% / RR=0 唔係「moderate」profile 嘅偏低，係完全冇 outcome，放寬只會縱容垃圾升 lv，保持 global 門檻等佢真正 trade 出成績先講。",
     "response_raw": "<think>Let me analyze this carefully.\n\nAGENT: B1-3in1\n- Multi-asset combined, diversified, expect moderate both.\n- 7d rolling metrics: PF=0.000, WR=0.0%, RR=0.000, n=9\n\nKey issues:\n1. All performance metrics are essentially 0 — this is terrible performance, not mediocre.\n2. n=9 is just below the threshold of 10.\n3. The strategy profile says \"moderate both\" — meaning it should perform OK across metrics.\n\nBut here's the thing: PF=0.000 and WR=0.0% means no winning trades at all, or no closed trades with meaningful P&L. This is NOT a case where \"WR is low but it's fine for this strategy type.\" This is genuinely bad performance.\n\nFor a diversified multi-asset strategy, we shouldn't expect high WR or high RR — we should expect moderate both. But \"moderate\" still means PF > 1.0 and WR > 35% or s"
+  },
+  "CRT": {
+    "last_revised": "2026-10-13T20:59:53.806093+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "relax",
+    "reasoning": "呢個係 high-RR range reversal strategy，RR=1.618 已經好強，WR 43.8% 配呢個 RR 已經好正常（breakeven WR ≈ 38.5%），唔應該用一般 strategy 嘅 50% 門檻去卡佢；只有 WR 需要放寬，PF/RR/n 都已經過關唔使動。",
+    "response_raw": "<think>\nLet me analyze this carefully.\n\nThe agent CRT is stuck in neutral zone for 3 days. Let me look at the metrics:\n\n- PF = 1.258 (global promote threshold > 1.0) — ALREADY PASSES\n- WR = 43.8% (global promote threshold > 50%) — FAILS (43.8% < 50%)\n- RR = 1.618 (global promote threshold > 1.0) — ALREADY PASSES\n- n = 16 (min required ≥ 10) — ALREADY PASSES\n\nSo only WR is blocking promotion. \n\nThe strategy personality is \"High-RR range reversal. WR naturally moderate. RR is the edge.\" — This is a classic high-RR / low-WR strategy. WR 43.8% with RR 1.618 is actually quite good. The expected WR for such a strategy would be lower than 50%.\n\nThe task says: can relax up to 2 metrics (not 3). And min_trades minimum is 5.\n\nSince only WR is failing, and the strategy is designed to be low-WR/high-R",
+    "overrides": {
+      "min_PF": 1.0,
+      "min_WR": 0.4,
+      "min_RR": 1.0,
+      "min_trades": 10
+    },
+    "relaxed_count": 1,
+    "tightened_count": 0
   }
 }
