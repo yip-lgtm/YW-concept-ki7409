@@ -390,9 +390,12 @@
     "entry_time": "2026-10-13T11:23:10.904184+08:00",
     "entry_ts": "2026-10-13T03:23:10.904184+00:00",
     "t1_hit": false,
-    "status": "open",
+    "status": "closed",
     "reason": "TTrades-L14: c3_closure \u2014 trade C4",
-    "swing_type": "c3_closure"
+    "swing_type": "c3_closure",
+    "exit_time": "2026-10-13T00:15:00-04:00",
+    "exit_level": "T2",
+    "R_multiple": 1.618
   },
   "TTrades-L13|MNQ=F|2026-10-13T11:23:07.973272+08:00": {
     "signal_id": "TTrades-L13|MNQ=F|2026-10-13T11:23:07.973272+08:00",
@@ -410,9 +413,12 @@
     "entry_time": "2026-10-13T11:23:07.973272+08:00",
     "entry_ts": "2026-10-13T03:23:07.973272+00:00",
     "t1_hit": false,
-    "status": "open",
+    "status": "closed",
     "reason": "TTrades-L13: C3 continuation order block",
-    "swing_type": "C3 continuation order block"
+    "swing_type": "C3 continuation order block",
+    "exit_time": "2026-10-12T23:50:00-04:00",
+    "exit_level": "SL",
+    "R_multiple": -1.0
   },
   "TTrades-L14|MGC=F|2026-10-13T12:17:57.358430+08:00": {
     "signal_id": "TTrades-L14|MGC=F|2026-10-13T12:17:57.358430+08:00",
@@ -433,5 +439,25 @@
     "status": "open",
     "reason": "TTrades-L14: c3_closure \u2014 trade C4",
     "swing_type": "c3_closure"
+  },
+  "TTrades-L12|MGC=F|2026-10-13T15:05:52.909814+08:00": {
+    "signal_id": "TTrades-L12|MGC=F|2026-10-13T15:05:52.909814+08:00",
+    "strategy": "TTrades-L12",
+    "ticker": "MGC=F",
+    "direction": "long",
+    "grade": null,
+    "confidence": null,
+    "entry": 4214.0,
+    "sl": 4170.51,
+    "t1": 4257.49,
+    "t2": 4284.37,
+    "units": 0.5,
+    "risk_per_unit": 43.49,
+    "entry_time": "2026-10-13T15:05:52.909814+08:00",
+    "entry_ts": "2026-10-13T07:05:52.909814+00:00",
+    "t1_hit": false,
+    "status": "open",
+    "reason": "TTrades-L12: all L12 gates passed",
+    "swing_type": "all L12 gates passed"
   }
 }
