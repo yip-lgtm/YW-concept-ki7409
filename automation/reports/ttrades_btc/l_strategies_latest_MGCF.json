@@ -1,14 +1,28 @@
 {
-  "ts": "2026-10-13T23:58:24.160170+08:00",
+  "ts": "2026-10-14T01:52:12.613863+08:00",
   "ticker": "MGC=F",
-  "h4_bars": 152,
-  "m15_bars": 508,
+  "h4_bars": 153,
+  "m15_bars": 515,
   "strategies": {
     "TTrades-L12": {
-      "fired": true,
+      "fired": false,
+      "stage": "no C2 closure (sweep+reclaim) on C2",
       "strategy": "TTrades-L12",
+      "has_levels": false
+    },
+    "TTrades-L13": {
+      "fired": false,
+      "stage": "C3 not an expansion candle (wick too large)",
+      "strategy": "TTrades-L13",
+      "has_levels": false
+    },
+    "TTrades-L14": {
+      "fired": true,
+      "strategy": "TTrades-L14",
       "direction": "long",
-      "stage": "all L12 gates passed",
+      "closure": "c2_closure",
+      "trade_candle": "C3",
+      "stage": "c2_closure \u2014 trade C3",
       "poi": {
         "found": true,
         "basis": "structural pivots",
@@ -21,41 +35,22 @@
           4209.10009765625
         ],
         "pivot_count": 31,
-        "fvg_count": 10
+        "fvg_count": 11
       },
       "poi_note": "C2 range [4203, 4218] contains swing 4209",
       "cisd": {
         "confirmed": true,
-        "opposing_open": 4148.5,
-        "series_length": 5,
-        "last_close": 4181.60009765625,
+        "opposing_open": 4148.2001953125,
+        "series_length": 1,
+        "last_close": 4179.2998046875,
         "reason": "cisd_long"
       },
-      "c2_eq": 4210.5,
-      "c2_high": 4218.0,
-      "c2_low": 4203.0,
-      "c2_close": 4209.0,
-      "c3_close": 4181.60009765625,
+      "c_eq": 4210.5,
       "swing_level": 4203.0,
-      "entry_ref": 4181.60009765625,
+      "entry_ref": 4179.2998046875,
       "target_r": 2.0,
       "has_levels": false,
-      "levels_note": "stop reference is on the wrong side of entry (entry 4181.60009765625, stop ref 4203.0)"
-    },
-    "TTrades-L13": {
-      "fired": false,
-      "stage": "C2 not an expansion candle (wick too large)",
-      "strategy": "TTrades-L13",
-      "has_levels": false
-    },
-    "TTrades-L14": {
-      "fired": false,
-      "stage": "no POI",
-      "detail": "C2 [4207, 4225] misses nearest swing 4229 by 4",
-      "direction": "short",
-      "closure": "c2_closure",
-      "strategy": "TTrades-L14",
-      "has_levels": false
+      "levels_note": "stop reference is on the wrong side of entry (entry 4179.2998046875, stop ref 4203.0)"
     }
   }
 }
