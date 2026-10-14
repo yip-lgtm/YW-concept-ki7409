@@ -380,6 +380,11 @@ for name, v in levels_state.items():
         'last_action': (last or {}).get('action'),
         'last_reason': (last or {}).get('reason'),
         'last_change_date': (last or {}).get('date'),
+        # Promotion streak (2026-10-14). Levels are unbounded, so the streak is
+        # what actually explains why an agent is still where it is: it is the
+        # count of consecutive qualifying settlement days, and it resets on any
+        # failure or on the day after a promotion.
+        'streak': v.get('streak', 0),
     })
 agent_levels.sort(key=lambda x: (-x['level'], x['strategy']))
 
@@ -576,6 +581,9 @@ out = {
         'settlement_overrides': settlement_overrides,
         'weight_optimization': weight_opt,
         'effective_weights': effective_weights,
+        'settlement_rules': _load_json(
+            REPO / 'automation/config/ranking_settings.json'
+        ).get('daily_settlement', {}),
     },
 }
 

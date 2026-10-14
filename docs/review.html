@@ -142,9 +142,10 @@
   </p>
 
   <h3>⬆️ Agent Levels</h3>
+  <p class="sub" id="levels-rules"></p>
   <div class="stats" id="levels-stats"></div>
   <div style="overflow-x:auto"><table id="levels-table"><thead><tr>
-    <th>Agent</th><th>Level</th><th>Last settled</th><th>Changes</th><th>Last action</th><th>Reason</th>
+    <th>Agent</th><th>Level</th><th>Streak</th><th>Last settled</th><th>Changes</th><th>Last action</th><th>Reason</th>
   </tr></thead><tbody></tbody></table></div>
 
   <h3 style="margin-top:28px">⚖️ Effective Confidence Weights</h3>
@@ -505,28 +506,53 @@ function renderAgentControl() {
   const maxLv = lv.length ? lv[0].level : 1;
   const promoted = lv.filter(x => x.n_changes > 0).length;
 
+  const rules = ac.settlement_rules || {};
+  const needStreak = rules.consecutive_days_to_promote || 1;
+  const maxCap = rules.max_level;
+  const rEl = document.getElementById('levels-rules');
+  if (rEl) {
+    rEl.innerHTML = maxCap
+      ? `Promotion requires PF&gt;1 &amp; WR&gt;0.5 &amp; RR&gt;1 &amp; n≥${rules.min_trades}, ` +
+        `plus ${needStreak} consecutive qualifying days and fresh evidence. Capped at lv${maxCap}.`
+      : `Promotion requires PF&gt;1 &amp; WR&gt;0.5 &amp; RR&gt;1 &amp; n≥${rules.min_trades}, plus ` +
+        `<b>${needStreak} consecutive qualifying days</b> and <b>new evidence</b> ` +
+        `(n must exceed the count at the last promotion). <b>Levels are unbounded.</b> ` +
+        `The streak resets the moment either condition fails, including the day after a promotion.`;
+  }
+
   document.getElementById('levels-stats').innerHTML =
     `<div class="stat"><div class="v">${lv.length}</div><div class="l">Agents</div></div>` +
-    `<div class="stat"><div class="v">${maxLv}</div><div class="l">Max level</div></div>` +
+    `<div class="stat"><div class="v">${maxLv}</div><div class="l">Highest level</div></div>` +
     `<div class="stat"><div class="v">${promoted}</div><div class="l">Ever promoted</div></div>` +
-    `<div class="stat"><div class="v">${lv.filter(x => x.last_settled).length}</div><div class="l">Settled today</div></div>`;
+    `<div class="stat"><div class="v">${lv.filter(x => (x.streak || 0) > 0).length}</div><div class="l">On a streak</div></div>`;
 
   if (tbody) {
     tbody.innerHTML = lv.length ? lv.map(x => {
-      const stars = '★'.repeat(x.level) + '☆'.repeat(Math.max(0, 5 - x.level));
       const act = x.last_action === 'promote' ? '⬆ promote'
                 : x.last_action === 'demote' ? '⬇ demote'
                 : '—';
       const reason = (x.last_reason || '').slice(0, 70);
+      const st = x.streak || 0;
+      // Streak meter: filled segments are qualifying days held so far.
+      let meter = '';
+      for (let i = 0; i < needStreak; i++) {
+        const on = i < st;
+        meter += `<span style="display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:3px;` +
+          `background:${on ? '#2C9E8F' : '#E3E9EF'};border:1px solid ${on ? '#2C9E8F' : '#C9D5DF'}"></span>`;
+      }
+      const stTxt = st >= needStreak
+        ? `<span style="color:#2C9E8F;font-weight:600">ready</span>`
+        : `<span class="sub">${st}/${needStreak}</span>`;
       return `<tr>
         <td><b>${x.strategy}</b></td>
-        <td>${stars} <span class="sub">lv${x.level}</span></td>
+        <td><b style="font-size:14px">lv${x.level}</b></td>
+        <td>${meter} ${stTxt}</td>
         <td>${x.last_settled || '—'}</td>
         <td>${x.n_changes}</td>
         <td>${act}</td>
         <td class="sub">${reason || '—'}</td>
       </tr>`;
-    }).join('') : '<tr><td colspan="6" class="empty">No settlement data yet.</td></tr>';
+    }).join('') : '<tr><td colspan="7" class="empty">No settlement data yet.</td></tr>';
   }
 
   // --- Effective weights ---
