@@ -1,0 +1,63 @@
+name: Deploy Pages
+
+# 2026-10-14: Pages was on the LEGACY dynamic build, which fires on every
+# push to main regardless of which files changed. Measured over the last 100
+# workflow runs: 69 were "pages build and deployment" against 31 real
+# workflows — 69% of all Actions capacity spent rebuilding a static site.
+#
+# That churn is why the scheduled workflows kept going quiet. GitHub Actions
+# schedule events are best-effort, and on a busy repo they get delayed or
+# dropped; the measurement that actually suffered was `live-scan`, whose
+# */15 cron was firing every 30-280 minutes with multi-hour gaps while every
+# run it did produce reported success.
+#
+# With this workflow, only a change that actually touches docs/ can trigger
+# a deploy, because of paths-ignore below. Routine pipeline pushes that only
+# touch automation/ no longer rebuild the site.
+#
+# ALWAYS keep index.html first: GitHub Pages serves /docs/index.html at the
+# site root, and this workflow only publishes what is in the source folder.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/pages.yml'
+  # schedule is not needed — the other workflows commit docs/ and this
+  # workflow reacts to the push.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy at a time. A newer push cancels an in-flight build rather
+# than queueing a second deploy of an older commit.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './docs'
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@v4

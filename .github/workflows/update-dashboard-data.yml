@@ -1,20 +1,44 @@
-name: 'Dashboard Data Auto-Update (hourly)'
+name: 'Dashboard Data Auto-Update (every 15 min)'
 
-# Every hour, regenerate docs/dashboard-data.json from current state.
-# The static dashboard.html fetches this file on every page load, so it
-# automatically shows the latest data without redeployment.
+# Regenerate docs/dashboard-data.json on its own schedule so the Review Hub
+# and dashboard do not depend on unified-pipeline.yml staying healthy.
+#
+# Before 2026-10-14 this workflow had `workflow_dispatch:` only and no cron,
+# so it never ran on its own. The dashboard happened to stay fresh because
+# unified-pipeline.yml regenerates the same file every 15 minutes as a
+# side effect. That is a single point of failure: if the pipeline workflow
+# breaks, the dashboard silently freezes with no error anywhere.
+#
+# This workflow is the independent second path. It writes the same file, so
+# both paths can commit in the same window, which is why the push below uses
+# a retry loop instead of a bare `git push`.
 
 on:
+  schedule:
+    # Offset from the */15 pipeline crons (0,15,30,45 and 8,23,38,53) so the
+    # two do not contend for the same commit window.
+    - cron: '5,20,35,50 * * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+# Serialize against anything else writing main in the same window.
+concurrency:
+  group: dashboard-data-update
+  cancel-in-progress: false
 
 jobs:
   update-dashboard:
     name: Regenerate dashboard-data.json
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    env:
+      # APEX_PAT was referenced in the push step but never defined here, so
+      # the remote URL interpolated an empty string and the push was being
+      # rejected by auth. It was masked by the `|| echo "push failed"` on the
+      # last line, which is why this went unnoticed.
+      APEX_PAT: ${{ secrets.APEX_PAT }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -46,16 +70,22 @@ jobs:
           git config --global user.email "mavis@MiniMax"
           git remote set-url origin "https://x-access-token:${APEX_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
           git pull --rebase --autostash origin main 2>&1 || echo "pull failed, continuing"
-          if git diff --quiet docs/dashboard-data.json; then
+          git add docs/dashboard-data.json
+          if git diff --cached --quiet; then
             echo "No changes to dashboard-data.json"
             exit 0
           fi
-          git add docs/dashboard-data.json
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M")
-          git commit -m "auto(dashboard): update data ${TIMESTAMP}" || true
-          git stash --include-untracked 2>&1 || echo "no stash needed"
-          git pull --rebase origin main 2>&1 || echo "rebase failed"
-          git stash pop 2>&1 || echo "no stash to pop"
-          git add docs/dashboard-data.json || true
-          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
-          git push origin main 2>&1 || echo "push failed"
+          git commit -m "auto(dashboard): update data ${TIMESTAMP}"
+
+          for attempt in 1 2 3; do
+            echo "=== push attempt $attempt ==="
+            if git push origin main; then
+              echo "Pushed on attempt $attempt"
+              exit 0
+            fi
+            git pull --rebase origin main || true
+            sleep $((attempt * 5))
+          done
+          echo "::error::failed to push dashboard-data.json after 3 attempts"
+          exit 1
