@@ -1,8 +1,8 @@
 {
-  "ts": "2026-10-14T10:34:13.637097+08:00",
+  "ts": "2026-10-14T12:46:57.356268+08:00",
   "ticker": "BTC-USD",
-  "h4_bars": 175,
-  "m15_bars": 587,
+  "h4_bars": 176,
+  "m15_bars": 596,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -12,18 +12,53 @@
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C2 not an expansion candle (wick too large)",
+      "stage": "C3 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
-      "fired": false,
-      "stage": "no POI",
-      "detail": "C2 [82877, 83535] misses nearest swing 83582 by 47",
-      "direction": "long",
-      "closure": "c2_closure",
+      "fired": true,
       "strategy": "TTrades-L14",
-      "has_levels": false
+      "direction": "long",
+      "closure": "c3_closure",
+      "trade_candle": "C4",
+      "stage": "c3_closure \u2014 trade C4",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 83197.09375,
+        "swing_levels": [
+          83197.09375,
+          83573.8671875,
+          84970.828125,
+          85112.9765625,
+          85395.75
+        ],
+        "pivot_count": 21,
+        "fvg_count": 12
+      },
+      "poi_note": "C2 range [83096, 83900] contains swing 83197",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 83213.2109375,
+        "series_length": 1,
+        "last_close": 83673.4765625,
+        "reason": "cisd_long"
+      },
+      "c_eq": 83498.1796875,
+      "swing_level": 83096.3671875,
+      "entry_ref": 83673.4765625,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 83673.48,
+      "sl": 82963.81,
+      "t1": 84383.14,
+      "t2_close": 84821.71,
+      "t3": 85531.38,
+      "risk": 709.66,
+      "sl_basis": "beyond protected swing (C2/C3 extreme)",
+      "sl_buffer": 132.55,
+      "atr_h4": 883.7
     }
   }
 }
