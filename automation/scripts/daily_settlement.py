@@ -5,7 +5,13 @@ User directive (9/22 → 10/07):
   For each strategy (agent), if over the last 7 days:
     PF > 1.0  AND  WR > 0.5  AND  RR > 1.0
   AND n_trades >= 10
-  THEN level += 1 (升 1 lv), capped at max_level (default 5).
+  THEN level += 1 (升 1 lv). Level is UNBOUNDED (2026-10-14).
+
+  Two guards keep an unbounded level from becoming meaningless:
+    - a promotion requires NEW evidence: n must exceed the n at the last
+      promotion, so the same sample cannot promote twice
+    - the metrics must hold for consecutive_days_to_promote days
+      (default 2) before the level actually moves
 
 Output:
   - automation/reports/strategy_settlement/settlement_YYYY-MM-DD.md
@@ -75,8 +81,10 @@ _DEFAULTS = {
     "min_PF": 1.0,
     "min_WR": 0.5,
     "min_RR": 1.0,
-    "max_level": 5,
+    "max_level": None,       # unlimited (2026-10-14 user directive)
     "min_level": 1,
+    "require_new_evidence": True,
+    "consecutive_days_to_promote": 2,
     "default_level": 1,
     "decrement_on_fail": True,
     "log_path": "automation/reports/strategy_settlement/",
@@ -335,7 +343,9 @@ def main() -> int:
     print(f"[settlement] Daily settlement for {today_hkt}")
     print(f"[settlement] Window: {settings['window_days']}d | Min n: {settings['min_trades']} | "
           f"PF>{settings['min_PF']} & WR>{settings['min_WR']} & RR>{settings['min_RR']} → +1 lv "
-          f"(cap {settings['max_level']})")
+          f"(max_level={settings['max_level'] or 'unlimited'} | "
+          f"evidence-gated={settings.get('require_new_evidence')} | "
+          f"{settings.get('consecutive_days_to_promote')}-day streak)")
 
     # Load trades
     by_strat = load_strategy_trades(settings["window_days"])
@@ -359,8 +369,29 @@ def main() -> int:
         new_level = old_level
         promoted = False
         demoted = False
-        at_max = (old_level >= settings["max_level"])
         at_min = (old_level <= settings["min_level"])
+        _max_lv = settings.get("max_level")
+        at_max = (_max_lv is not None and old_level >= _max_lv)
+
+        # Evidence gate: a promotion needs MORE trades than the promotion that
+        # set the current level. Without this, an agent holding one good
+        # sample (3-Pushes ran n=6, PF 3.24) promotes once per settlement day
+        # forever — with an unbounded level that becomes lv300+ inside a year.
+        last_n = None
+        for h in reversed(cur.get("history") or []):
+            if h.get("action") == "promote":
+                last_n = h.get("n_trades")
+                break
+        require_new = bool(settings.get("require_new_evidence", True))
+        has_new_evidence = (last_n is None) or (metrics["n_trades"] > last_n)
+        if require_new and not has_new_evidence:
+            last_promote_day = next((h.get("date") for h in reversed(cur.get("history") or [])
+                                     if h.get("action") == "promote"), None)
+            reason = (f"no new evidence since lv{old_level} "
+                      f"(n={metrics['n_trades']}, last promotion n={last_n}"
+                      + (f" on {last_promote_day}" if last_promote_day else "") + ")")
+        else:
+            reason = None
 
         # Per-agent overrides (LLM-managed for stuck neutral-zone agents)
         ov = agent_overrides.get(name, {})
@@ -387,21 +418,35 @@ def main() -> int:
             and metrics["rr_ratio"] <= thr_rr
         )
 
-        if promote_ok and not at_max:
-            new_level = min(old_level + 1, settings["max_level"])
-            promoted = (new_level > old_level)
-            if promoted:
-                cur["history"].append({
-                    "date": today_hkt,
-                    "old_level": old_level,
-                    "new_level": new_level,
-                    "n_trades": metrics["n_trades"],
-                    "PF": metrics["profit_factor"],
-                    "WR": metrics["win_rate"],
-                    "RR": metrics["rr_ratio"],
-                    "action": "promote",
-                    "reason": "PF>1 & WR>0.5 & RR>1 — promoted",
-                })
+        # Promotion needs BOTH the metrics to hold AND new evidence since the
+        # last promotion. `streak` tracks consecutive qualifying days so a
+        # single lucky day cannot lift a level on its own.
+        streak = int(cur.get("streak", 0))
+        if promote_ok and (reason is None) and not at_max:
+            streak += 1
+        else:
+            streak = 0
+        need_days = int(settings.get("consecutive_days_to_promote", 1))
+        streak_ready = streak >= need_days
+        eligible = promote_ok and (reason is None) and streak_ready and not at_max
+
+        if eligible:
+            new_level = old_level + 1          # unbounded since 2026-10-14
+            promoted = True
+            cur["history"].append({
+                "date": today_hkt,
+                "old_level": old_level,
+                "new_level": new_level,
+                "n_trades": metrics["n_trades"],
+                "PF": metrics["profit_factor"],
+                "WR": metrics["win_rate"],
+                "RR": metrics["rr_ratio"],
+                "action": "promote",
+                "streak": streak,
+                "reason": f"PF>{thr_pf} & WR>{thr_wr} & RR>{thr_rr}, "
+                          f"n={metrics['n_trades']} (new evidence), "
+                          f"{streak} consecutive qualifying day(s)",
+            })
         elif demote_ok and not at_min:
             new_level = max(old_level - 1, settings["min_level"])
             demoted = (new_level < old_level)
@@ -422,6 +467,7 @@ def main() -> int:
         # Cap history at 50 entries
         cur["history"] = cur["history"][-50:]
         cur["level"] = new_level
+        cur["streak"] = streak
         cur["last_settled"] = today_hkt
 
         results.append({
@@ -435,6 +481,11 @@ def main() -> int:
             "at_min_level": at_min,
             "promote_ok": promote_ok,
             "demote_ok": demote_ok,
+            "eligible_for_promote": eligible,
+            "streak": streak,
+            "streak_required": int(settings.get("consecutive_days_to_promote", 1)),
+            "blocked_reason": reason,
+            "at_max_level": at_max,
             "has_override": has_override,
             "thresholds_used": {
                 "min_PF": thr_pf, "min_WR": thr_wr,
@@ -479,6 +530,8 @@ def main() -> int:
             "min_WR": settings["min_WR"],
             "min_RR": settings["min_RR"],
             "max_level": settings["max_level"],
+            "require_new_evidence": settings.get("require_new_evidence"),
+            "consecutive_days_to_promote": settings.get("consecutive_days_to_promote"),
         },
         "results": results,
         "n_promoted": sum(1 for r in results if r.get("promoted")),
