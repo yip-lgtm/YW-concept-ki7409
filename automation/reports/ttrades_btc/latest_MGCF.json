@@ -1,5 +1,5 @@
 {
-  "ts": "2026-10-15T10:16:59.556032-04:00",
+  "ts": "2026-10-15T11:00:05.078444-04:00",
   "ticker": "MGC=F",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
@@ -11,24 +11,24 @@
     "c2_low": 4165.7998046875,
     "c2_close": 4166.2001953125,
     "c2_eq": 4173.89990234375,
-    "c3_close": 4171.2001953125,
+    "c3_close": 4176.0,
     "swing_level": 4182.0,
     "direction": "short"
   },
   "cisd": {
     "confirmed": false,
-    "opposing_open": 4156.5,
-    "series_length": 1,
-    "last_close": 4171.2001953125,
+    "opposing_open": 4152.0,
+    "series_length": 2,
+    "last_close": 4176.0,
     "reason": "no break"
   },
-  "eq_respected": true,
+  "eq_respected": false,
   "d1_trend": {
     "aligned": true,
     "trend": "downtrend",
-    "d1_close": 4171.2001953125,
-    "d1_ema50": 4267.534328266967,
-    "d1_ema20": 4204.962688110208,
+    "d1_close": 4176.0,
+    "d1_ema50": 4267.722555901772,
+    "d1_ema20": 4205.41981236616,
     "reason": "D1 downtrend"
   },
   "weekly_profile": {
@@ -45,7 +45,7 @@
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "CISD not confirmed; London expanded (skip NY)",
+  "reason": "CISD not confirmed; EQ not respected; London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
