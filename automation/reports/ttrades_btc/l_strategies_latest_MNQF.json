@@ -1,24 +1,30 @@
 {
-  "ts": "2026-10-15T09:31:28.335761+08:00",
+  "ts": "2026-10-15T12:31:06.937650+08:00",
   "ticker": "MNQ=F",
-  "h4_bars": 155,
-  "m15_bars": 542,
+  "h4_bars": 144,
+  "m15_bars": 370,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
-      "stage": "no C2 closure (sweep+reclaim) on C2",
+      "stage": "no POI",
+      "detail": "C2 [30744, 30892] misses nearest swing 30959 by 67",
+      "direction": "long",
       "strategy": "TTrades-L12",
       "has_levels": false
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C3 not an expansion candle (wick too large)",
+      "stage": "C2 already swept the target \u2014 do not chase",
+      "direction": "long",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "stage": "no POI",
+      "detail": "C2 [30750, 30829] misses nearest swing 31290 by 461",
+      "direction": "short",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
