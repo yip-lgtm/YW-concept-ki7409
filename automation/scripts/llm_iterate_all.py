@@ -47,7 +47,11 @@ def call_minimax(prompt: str, system: str = "") -> str:
         headers={"Authorization": f"Bearer {api_key}"},
         json={
             "model": "MiniMax-M3",
-            "max_tokens": 1024,
+            # 1024 was not enough once the model wrote a <think> block first:
+            # the 2026-10-15 CRT answer never reached GRADE because the
+            # reasoning consumed the whole budget.
+            "max_tokens": 2048,
+            "temperature": 0.2,
             "messages": [
                 {"role": "system", "content": system or "你是策略 sub-agent。直接輸出 GRADE/CONFIDENCE/REASON + suggested_params。"},
                 {"role": "user", "content": prompt},
@@ -58,9 +62,27 @@ def call_minimax(prompt: str, system: str = "") -> str:
     return r.json()["choices"][0]["message"]["content"]
 
 
-def parse_response(content: str) -> dict:
+def strip_think(content: str) -> str:
+    """Drop the <think> reasoning block, return only the answer.
+
+    MiniMax-M3 emits <think> even when told not to. The 2026-10-15 CRT run
+    produced a 1500-char response that was entirely inside that block, so
+    parse_response saw no GRADE line and returned grade "?". Stripping first
+    and truncating second keeps the part that actually carries the answer.
+    """
+    if not content:
+        return ""
     if "</think>" in content:
-        content = content.split("</think>")[-1].strip()
+        content = content.split("</think>")[-1]
+    # Unclosed <think> (ran out of tokens mid-reasoning): nothing after it
+    # exists, so there is no answer to parse.
+    if "<think>" in content:
+        content = content.split("<think>")[0]
+    return content.replace("</think>", "").strip()
+
+
+def parse_response(content: str) -> dict:
+    content = strip_think(content)
     m = re.search(r"GRADE:\s*([ABCD?])\s*\|\s*CONFIDENCE:\s*(\d+)\s*\|\s*REASON:\s*(.+)", content, re.IGNORECASE)
     grade = m.group(1).upper() if m else "?"
     conf = int(m.group(2)) if m else 0
@@ -82,17 +104,73 @@ def parse_response(content: str) -> dict:
     }
 
 
+# Explicit agent-id -> strategy-name mapping.
+#
+# The previous matcher did `strategy_id.replace("-", " ").lower() in
+# strategy.lower()`, which silently failed for most agents: "stair-pattern"
+# searched for "stair pattern" and never matched the stored name "Stair",
+# and "50-20-pullback" searched for "50 20 pullback" against "50-20-Pullback".
+# Only "b1" matched, and then by coincidence as a substring of "B1-3in1".
+#
+# Result on the 2026-10-15 run: eight of nine agents were handed an empty
+# trade list plus default metrics (PF 1.00 / WR 50% / R 0.00), so the model
+# had nothing to reason about and graded every one of them D. The iteration
+# loop was effectively a no-op.
+#
+# When the stored name is not known, fall back to a normalised comparison
+# that strips every non-alphanumeric character from both sides, so
+# "stairpattern" and "Stair" can never be confused but "3-Pushes" and
+# "3-Pushes" always agree.
+STRATEGY_ALIASES = {
+    "h-pattern": "H-Pattern",
+    "3-pushes": "3-Pushes",
+    "two-yang": "Two-Yang",
+    "rsi-div": "RSI-Div",
+    "50-20-pullback": "50-20-Pullback",
+    "stair-pattern": "Stair",
+    "crt": "CRT",
+    "kell-cycle": "Kell-Cycle",
+    "b1": "B1",
+    "b1-3in1": "B1-3in1",
+    # ocs-btc has no live_scan trades; it reads the OCS log instead.
+    "ocs-btc": None,
+}
+
+
+def _norm(name: str) -> str:
+    """Casefold and drop every non-alphanumeric character."""
+    return "".join(ch for ch in str(name).lower() if ch.isalnum())
+
+
 def load_live_trades_for(strategy_id: str) -> list:
-    """Load recent live trades for a strategy from live_scan/trades.jsonl."""
-    trades = []
+    """Load live trades for a strategy.
+
+    Checks the alias table first, then falls back to a normalised comparison
+    so an unmapped agent id still resolves instead of silently returning [].
+    """
     fp = REPO / "automation/reports/live_scan/trades.jsonl"
     if not fp.exists():
         return []
+
+    want = STRATEGY_ALIASES.get(strategy_id, "__unmapped__")
+    if want == "__unmapped__":
+        want_norm = _norm(strategy_id)
+    elif want is None:
+        return []
+    else:
+        want_norm = _norm(want)
+
+    trades = []
     with open(fp) as f:
         for line in f:
-            t = json.loads(line)
-            # Match strategy (e.g. "Two-Yang" vs "two-yang")
-            if strategy_id.replace("-", " ").lower() in t.get("strategy", "").lower():
+            line = line.strip()
+            if not line or line[0] in "<=>":
+                continue
+            try:
+                t = json.loads(line)
+            except Exception:
+                continue
+            if _norm(t.get("strategy", "")) == want_norm:
                 trades.append(t)
     return trades
 
@@ -183,7 +261,10 @@ suggested_params = {{
     parsed["live_R"] = round(total_r, 2)
     parsed["current_weight"] = agent["weight"]
     parsed["current_timeframe"] = agent["tf"]
-    parsed["response_raw"] = response[:1500]
+    # Store the post-think answer so the artefact is auditable; the raw
+    # reasoning is not useful downstream and used to push the answer out
+    # of the 1500-char window.
+    parsed["response_raw"] = strip_think(response)[:1500]
     return parsed
 
 
