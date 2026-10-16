@@ -308,6 +308,70 @@ function render(d) {
     html.push('</div>');
   }
 
+  // Agent Levels + streaks (2026-10-16). Was Review-Hub only, so the root
+  // dashboard showed performance without ever showing what the pipeline
+  // decided about it — the level was invisible where people actually look.
+  if (d.agent_control && d.agent_control.levels) {
+    const ac = d.agent_control;
+    const lv = ac.levels.slice();
+    const rules = ac.settlement_rules || {};
+    const needStreak = rules.consecutive_days_to_promote || 1;
+    const maxCap = rules.max_level;
+    lv.sort((a, b) => (b.level - a.level) || ((b.streak||0) - (a.streak||0)));
+
+    html.push('<h2 id="levels">⬆️ Agent Levels — 每日結算信任等級</h2>');
+
+    const ruleTxt = maxCap
+      ? `升級條件：PF&gt;${rules.min_PF} &amp; WR&gt;${rules.min_WR} &amp; RR&gt;${rules.min_RR} &amp; n≥${rules.min_trades}，連續 ${needStreak} 日達標且有新證據 · 上限 lv${maxCap}`
+      : `升級條件：PF&gt;${rules.min_PF} &amp; WR&gt;${rules.min_WR} &amp; RR&gt;${rules.min_RR} &amp; n≥${rules.min_trades}，連續 ${needStreak} 日達標且有<b>新證據</b> · <b>無上限</b>`;
+    html.push('<div class="card"><div class="sub" style="margin-bottom:8px">' + ruleTxt + '</div>');
+
+    const topLv = lv[0] ? lv[0].level : 1;
+    const everPromo = lv.filter(x => (x.n_changes || 0) > 0).length;
+    const onStreak = lv.filter(x => (x.streak || 0) > 0).length;
+    html.push('<div class="stats">' +
+      `<div class="stat"><div class="stat-label">Agents</div><div class="stat-value">${lv.length}</div></div>` +
+      `<div class="stat"><div class="stat-label">最高等級</div><div class="stat-value">lv${topLv}</div></div>` +
+      `<div class="stat"><div class="stat-label">曾升級</div><div class="stat-value">${everPromo}</div></div>` +
+      `<div class="stat"><div class="stat-label">累積中</div><div class="stat-value">${onStreak}</div></div>` +
+      '</div>');
+
+    html.push('<table><thead><tr><th>Agent</th><th>等級</th><th>Streak</th><th>最後結算</th><th>升級次數</th><th>上次動作</th></tr></thead><tbody>');
+    lv.forEach(x => {
+      const st = x.streak || 0;
+      let meter = '';
+      for (let i = 0; i < needStreak; i++) {
+        const on = i < st;
+        meter += '<span style="display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:3px;'
+          + 'background:' + (on ? '#2C9E8F' : '#E3E9EF') + ';border:1px solid '
+          + (on ? '#2C9E8F' : '#C9D5DF') + '"></span>';
+      }
+      const ready = st >= needStreak;
+      const stTxt = ready
+        ? '<span style="color:#2C9E8F;font-weight:600">ready</span>'
+        : '<span style="color:#8A99A8">' + st + '/' + needStreak + '</span>';
+      const lvCol = x.level > 1 ? '#2C9E8F' : (x.level === 1 ? '#8A99A8' : '#C94F4F');
+      const act = x.last_action === 'promote'
+        ? '<span style="color:#2C9E8F">⬆ 升級</span>'
+        : x.last_action === 'demote'
+          ? '<span style="color:#C94F4F">⬇ 降級</span>'
+          : '<span style="color:#8A99A8">—</span>';
+      html.push('<tr>' +
+        '<td><strong>' + x.strategy + '</strong></td>' +
+        '<td><strong style="color:' + lvCol + '">lv' + x.level + '</strong></td>' +
+        '<td>' + meter + ' ' + stTxt + '</td>' +
+        '<td>' + (x.last_settled || '—') + '</td>' +
+        '<td>' + (x.n_changes || 0) + '</td>' +
+        '<td>' + act + '</td>' +
+        '</tr>');
+    });
+    html.push('</tbody></table>');
+    html.push('<p style="font-size:11px;opacity:.6;margin-top:10px">'
+      + '等級由每日結算自動升降：達標連續 ' + needStreak + ' 日且樣本數增長才升級，'
+      + '避免同一組數據重複加權。詳見 Review Hub → Agent Control。</p>');
+    html.push('</div>');
+  }
+
   // LLM Iterations history
   html.push('<h2 id="iterations">🔁 LLM Iterations History</h2>');
   html.push('<div class="chart-container" style="height:auto; max-height:none;"><table>');
