@@ -1,27 +1,27 @@
 {
-  "generated_at": "2026-10-16 17:55 HKT",
-  "hkt_timestamp": "2026-10-16T17:55:49.041590+08:00",
+  "generated_at": "2026-10-16 19:10 HKT",
+  "hkt_timestamp": "2026-10-16T19:10:08.713223+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 9,
+    "trades_24h": 6,
     "trades_today": 3,
     "wins_24h": 3,
-    "R_24h": -1.14,
-    "signals_24h": 70,
-    "wr_24h": 33.3
+    "R_24h": 1.86,
+    "signals_24h": 63,
+    "wr_24h": 50.0
   },
   "ranking_24h": [
     {
       "strategy": "50-20-Pullback",
       "ticker": "BTC-USD",
-      "n_trades": 4,
+      "n_trades": 3,
       "n_wins": 2,
-      "n_losses": 2,
-      "win_rate": 50.0,
-      "total_R": 1.24,
-      "avg_R": 0.309,
-      "total_pnl_usd": 170.78,
-      "profit_factor": 1.62,
+      "n_losses": 1,
+      "win_rate": 66.7,
+      "total_R": 2.24,
+      "avg_R": 0.745,
+      "total_pnl_usd": 320.24,
+      "profit_factor": 3.24,
       "rank": 1,
       "medal_eligible": false
     },
@@ -40,6 +40,20 @@
       "medal_eligible": false
     },
     {
+      "strategy": "CRT",
+      "ticker": "M2K=F",
+      "n_trades": 4,
+      "n_wins": 2,
+      "n_losses": 2,
+      "win_rate": 50.0,
+      "total_R": 1.24,
+      "avg_R": 0.309,
+      "total_pnl_usd": 50.4,
+      "profit_factor": 1.62,
+      "rank": 3,
+      "medal_eligible": false
+    },
+    {
       "strategy": "B1-3in1",
       "ticker": "MES=F",
       "n_trades": 2,
@@ -50,20 +64,6 @@
       "avg_R": -1.0,
       "total_pnl_usd": 9.73,
       "profit_factor": 0.0,
-      "rank": 3,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "MES=F",
-      "n_trades": 6,
-      "n_wins": 2,
-      "n_losses": 4,
-      "win_rate": 33.3,
-      "total_R": -0.76,
-      "avg_R": -0.127,
-      "total_pnl_usd": 2.97,
-      "profit_factor": 0.81,
       "rank": 4,
       "medal_eligible": false
     },
@@ -97,13 +97,13 @@
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 16,
+    "n_trades": 13,
     "n_wins": 5,
-    "win_rate": 31.2,
-    "total_R": -2.9,
-    "total_pnl_usd": 307.85
+    "win_rate": 38.5,
+    "total_R": 0.1,
+    "total_pnl_usd": 504.74
   },
-  "ranking_24h_updated": "2026-10-16T09:55:49.041610+00:00",
+  "ranking_24h_updated": "2026-10-16T11:10:08.713245+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -485,13 +485,13 @@
         5
       ],
       "live_24h": {
-        "n": 6,
+        "n": 3,
         "wins": 2,
-        "losses": 4,
-        "wr": 33.3,
-        "R": -0.76,
-        "pf": 0.81,
-        "pnl": 2.97
+        "losses": 1,
+        "wr": 66.7,
+        "R": 2.24,
+        "pf": 3.24,
+        "pnl": 53.03
       },
       "live_today": {
         "n": 3,
@@ -502,7 +502,7 @@
         "pf": 3.24,
         "pnl": 53.03
       },
-      "signals_24h": 34,
+      "signals_24h": 27,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
