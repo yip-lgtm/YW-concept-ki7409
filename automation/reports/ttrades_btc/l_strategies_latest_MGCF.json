@@ -1,14 +1,14 @@
 {
-  "ts": "2026-10-16T22:32:35.408769+08:00",
+  "ts": "2026-10-17T00:49:31.375295+08:00",
   "ticker": "MGC=F",
-  "h4_bars": 153,
-  "m15_bars": 502,
+  "h4_bars": 154,
+  "m15_bars": 511,
   "strategies": {
     "TTrades-L12": {
-      "fired": false,
-      "stage": "CISD not confirmed",
-      "detail": "no break",
+      "fired": true,
+      "strategy": "TTrades-L12",
       "direction": "short",
+      "stage": "all L12 gates passed",
       "poi": {
         "found": true,
         "basis": "structural pivots",
@@ -20,30 +20,85 @@
           4233.5,
           4242.2998046875
         ],
-        "pivot_count": 26,
+        "pivot_count": 27,
         "fvg_count": 13
       },
+      "poi_note": "C2 range [4170, 4220] contains swing 4213",
       "cisd": {
-        "confirmed": false,
-        "opposing_open": 4206.7001953125,
-        "series_length": 4,
-        "last_close": 4215.0,
-        "reason": "no break"
+        "confirmed": true,
+        "opposing_open": 4212.2998046875,
+        "series_length": 1,
+        "last_close": 4182.39990234375,
+        "reason": "cisd_short"
       },
-      "strategy": "TTrades-L12",
-      "has_levels": false
+      "c2_eq": 4195.300048828125,
+      "c2_high": 4220.5,
+      "c2_low": 4170.10009765625,
+      "c2_close": 4188.39990234375,
+      "c3_close": 4182.39990234375,
+      "swing_level": 4220.5,
+      "entry_ref": 4182.39990234375,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 4182.4,
+      "sl": 4225.27,
+      "t1": 4139.53,
+      "t2_close": 4113.03,
+      "t3": 4070.16,
+      "risk": 42.87,
+      "sl_basis": "beyond protected swing (C2/C3 extreme)",
+      "sl_buffer": 4.77,
+      "atr_h4": 31.82
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C3 not an expansion candle (wick too large)",
+      "stage": "C2 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
-      "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "fired": true,
       "strategy": "TTrades-L14",
-      "has_levels": false
+      "direction": "short",
+      "closure": "c2_closure",
+      "trade_candle": "C3",
+      "stage": "c2_closure \u2014 trade C3",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 4242.2998046875,
+        "swing_levels": [
+          4212.60009765625,
+          4224.7998046875,
+          4228.0,
+          4233.5,
+          4242.2998046875
+        ],
+        "pivot_count": 27,
+        "fvg_count": 13
+      },
+      "poi_note": "C2 range [4192, 4213] contains swing 4213",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 4212.2998046875,
+        "series_length": 1,
+        "last_close": 4182.39990234375,
+        "reason": "cisd_short"
+      },
+      "c_eq": 4202.699951171875,
+      "swing_level": 4213.39990234375,
+      "entry_ref": 4182.39990234375,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 4182.4,
+      "sl": 4218.17,
+      "t1": 4146.63,
+      "t2_close": 4124.52,
+      "t3": 4088.75,
+      "risk": 35.77,
+      "sl_basis": "beyond protected swing (C2/C3 extreme)",
+      "sl_buffer": 4.77,
+      "atr_h4": 31.82
     }
   }
 }
