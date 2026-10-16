@@ -1,29 +1,64 @@
 {
-  "ts": "2026-10-16T15:06:31.575286+08:00",
+  "ts": "2026-10-16T22:22:01.236085+08:00",
   "ticker": "MGC=F",
-  "h4_bars": 151,
-  "m15_bars": 471,
+  "h4_bars": 153,
+  "m15_bars": 501,
   "strategies": {
     "TTrades-L12": {
-      "fired": false,
-      "stage": "no POI",
-      "detail": "C2 [4168, 4201] misses nearest swing 4225 by 24",
-      "direction": "short",
+      "fired": true,
       "strategy": "TTrades-L12",
-      "has_levels": false
+      "direction": "short",
+      "stage": "all L12 gates passed",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 4242.2998046875,
+        "swing_levels": [
+          4212.60009765625,
+          4224.7998046875,
+          4228.0,
+          4233.5,
+          4242.2998046875
+        ],
+        "pivot_count": 26,
+        "fvg_count": 13
+      },
+      "poi_note": "C2 range [4192, 4213] contains swing 4213",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 4212.2998046875,
+        "series_length": 3,
+        "last_close": 4207.60009765625,
+        "reason": "cisd_short"
+      },
+      "c2_eq": 4202.699951171875,
+      "c2_high": 4213.39990234375,
+      "c2_low": 4192.0,
+      "c2_close": 4192.89990234375,
+      "c3_close": 4207.60009765625,
+      "swing_level": 4213.39990234375,
+      "entry_ref": 4207.60009765625,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 4207.6,
+      "sl": 4218.19,
+      "t1": 4197.01,
+      "t2_close": 4190.47,
+      "t3": 4179.89,
+      "risk": 10.59,
+      "sl_basis": "beyond protected swing (C2/C3 extreme)",
+      "sl_buffer": 4.79,
+      "atr_h4": 31.91
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C2 not an expansion candle (wick too large)",
+      "stage": "C3 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "no POI",
-      "detail": "C2 [4176, 4198] misses nearest swing 4225 by 27",
-      "direction": "short",
-      "closure": "c2_closure",
+      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
