@@ -1,8 +1,8 @@
 {
-  "ts": "2026-10-16T08:34:05.623052+08:00",
+  "ts": "2026-10-16T09:17:38.856931+08:00",
   "ticker": "MNQ=F",
   "h4_bars": 155,
-  "m15_bars": 538,
+  "m15_bars": 541,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -11,10 +11,41 @@
       "has_levels": false
     },
     "TTrades-L13": {
-      "fired": false,
-      "stage": "C3 not an expansion candle (wick too large)",
+      "fired": true,
       "strategy": "TTrades-L13",
-      "has_levels": false
+      "direction": "short",
+      "stage": "C3 continuation order block",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 31360.25,
+        "series_length": 3,
+        "last_close": 30056.0,
+        "reason": "cisd_short"
+      },
+      "order_block": {
+        "ob_high": 30071.0,
+        "ob_low": 30039.25,
+        "ob_eq": 30055.125,
+        "rule": "opposing (bullish) candle confirms HTF wick"
+      },
+      "c2_eq": 30068.625,
+      "c2_high": 30155.25,
+      "c2_low": 29982.0,
+      "c3_high": 30071.0,
+      "c3_low": 29958.75,
+      "swing_level": 30155.25,
+      "entry_ref": 30056.0,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 30056.0,
+      "sl": 30106.19,
+      "t1": 30005.81,
+      "t2_close": 29974.79,
+      "t3": 29924.6,
+      "risk": 50.19,
+      "sl_basis": "outside continuation order block (L13 \u00a72)",
+      "sl_buffer": 35.19,
+      "atr_h4": 234.61
     },
     "TTrades-L14": {
       "fired": false,
