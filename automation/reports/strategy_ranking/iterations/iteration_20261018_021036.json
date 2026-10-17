@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-18",
+  "worst_strategy": {
+    "strategy_id": "b1-mnq",
+    "name": "B1 \u6218\u6cd5 (MNQ)",
+    "rank": 9,
+    "pf": 0,
+    "total_R": 0,
+    "pnl_usd": 0,
+    "win_rate": 0,
+    "n_trades": 0,
+    "avg_pf": 0.0
+  },
+  "llm_response": "<think>The strategy \"b1-mnq (B1 \u6218\u6cd5 (MNQ))\" has zero performance across all metrics - no trades, no profit factor, no R, no win rate. It's been consistently at rank #9 for 7 days with no activity.\n\nThis means the current parameters are empty `{}`, which is why there are no signals being generated. I need to suggest a complete parameter set to activate this strategy.\n\nFor MNQ (Micro E-mini Nasdaq-100), which is a volatile index futures product, I should recommend:\n- A suitable timeframe for the \"B1\" (Breakout/Bias 1?) strategy\n- Appropriate indicators for momentum/breakout trading\n- Reasonable R multiples for profit targets\n\nMNQ is volatile and trending. Common effective approaches:\n- Timeframes: 5min or 15min for intraday\n- Indicators: EMA crossovers, RSI for momentum, VWAP for bias, ATR for volatility, volume\n- R multiples: Conservative to aggressive targets\n\nFor a B1 strategy (likely Breakout 1 or similar), I'd suggest:\n- 5min timeframe for good signal frequency on MNQ\n- EMA (trend), RSI (momentum), VWAP (institutional bias), Volume (confirmation)\n- R multiples: [1.0, 1.5, 2.0, 2.5, 3.0] - standard scaling\n\nWeight should be moderate since we're starting from scratch - maybe 0.8-1.0 since we don't know yet if it'll work. Actually, given it's been completely dead, maybe starting at 1.0 is fair to give it a chance.\n\nLet me construct the JSON response.</think>\n\n```json\n{\n  \"weight\": 1.0,\n  \"timeframe\": \"5min\",\n  \"indicators\": [\"ema_9\", \"ema_21\", \"vwap\", \"rsi_14\", \"volume\", \"atr_",
+  "suggested_params": {}
+}
