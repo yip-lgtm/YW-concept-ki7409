@@ -1,8 +1,8 @@
 {
-  "ts": "2026-10-17T23:23:58.969409+08:00",
+  "ts": "2026-10-18T00:22:49.040047+08:00",
   "ticker": "BTC-USD",
-  "h4_bars": 178,
-  "m15_bars": 638,
+  "h4_bars": 179,
+  "m15_bars": 642,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -18,7 +18,10 @@
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "stage": "no POI",
+      "detail": "C2 [81190, 81507] misses nearest swing 83900 by 2393",
+      "direction": "short",
+      "closure": "c3_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
