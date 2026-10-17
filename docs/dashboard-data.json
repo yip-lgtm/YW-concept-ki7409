@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-17 12:13 HKT",
-  "hkt_timestamp": "2026-10-17T12:13:31.491718+08:00",
+  "generated_at": "2026-10-17 13:27 HKT",
+  "hkt_timestamp": "2026-10-17T13:27:58.523382+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 9,
     "trades_today": 1,
     "wins_24h": 6,
     "R_24h": 6.72,
-    "signals_24h": 36,
+    "signals_24h": 37,
     "wr_24h": 66.7
   },
   "ranking_24h": [
@@ -84,26 +84,26 @@
     {
       "strategy": "50-20-Pullback",
       "ticker": "MES=F",
-      "n_trades": 4,
+      "n_trades": 5,
       "n_wins": 1,
-      "n_losses": 3,
-      "win_rate": 25.0,
-      "total_R": -1.38,
-      "avg_R": -0.345,
-      "total_pnl_usd": -537.33,
-      "profit_factor": 0.54,
+      "n_losses": 4,
+      "win_rate": 20.0,
+      "total_R": -2.38,
+      "avg_R": -0.476,
+      "total_pnl_usd": -623.24,
+      "profit_factor": 0.4,
       "rank": 6,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 12,
+    "n_trades": 13,
     "n_wins": 4,
-    "win_rate": 33.3,
-    "total_R": -1.52,
-    "total_pnl_usd": 457.34
+    "win_rate": 30.8,
+    "total_R": -2.52,
+    "total_pnl_usd": 371.43
   },
-  "ranking_24h_updated": "2026-10-17T04:13:31.491736+00:00",
+  "ranking_24h_updated": "2026-10-17T05:27:58.523400+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -242,7 +242,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 6,
+      "signals_24h": 7,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -930,20 +930,20 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-10-17T10:38:59.481017+08:00",
+        "updated": "2026-10-17T12:59:00.177074+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "D1 counter-trend (uptrend); London expanded (skip NY)",
-          "ts": "2026-10-16T22:38:59.209249-04:00"
+          "reason": "CISD not confirmed; EQ not respected; London expanded (skip NY)",
+          "ts": "2026-10-17T00:58:59.808510-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [81400, 81720] misses nearest swing 83890 by 2170",
-            "direction": "short",
+            "detail": "C2 [81285, 81562] misses nearest swing 82733 by 1172",
+            "direction": "long",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -982,8 +982,8 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [80706, 81693] misses nearest swing 82733 by 1040",
-            "direction": "long",
+            "detail": "C2 [81400, 81720] misses nearest swing 83890 by 2170",
+            "direction": "short",
             "closure": "c2_closure",
             "trade_candle": null,
             "poi_note": null,
