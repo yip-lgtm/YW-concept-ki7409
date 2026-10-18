@@ -1,8 +1,8 @@
 {
-  "ts": "2026-10-18T14:34:37.546642+08:00",
+  "ts": "2026-10-18T17:06:37.993158+08:00",
   "ticker": "BTC-USD",
-  "h4_bars": 176,
-  "m15_bars": 603,
+  "h4_bars": 177,
+  "m15_bars": 613,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -11,18 +11,45 @@
       "has_levels": false
     },
     "TTrades-L13": {
-      "fired": false,
-      "stage": "C2 already swept the target \u2014 do not chase",
-      "direction": "long",
+      "fired": true,
       "strategy": "TTrades-L13",
-      "has_levels": false
+      "direction": "short",
+      "stage": "C3 continuation order block",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 83582.40625,
+        "series_length": 5,
+        "last_close": 81816.9375,
+        "reason": "cisd_short"
+      },
+      "order_block": {
+        "ob_high": 81816.9375,
+        "ob_low": 81627.6796875,
+        "ob_eq": 81722.30859375,
+        "rule": "opposing (bullish) candle confirms HTF wick"
+      },
+      "c2_eq": 81681.78125,
+      "c2_high": 81856.0,
+      "c2_low": 81507.5625,
+      "c3_high": 81816.9375,
+      "c3_low": 81542.3984375,
+      "swing_level": 81856.0,
+      "entry_ref": 81816.9375,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 81816.94,
+      "sl": 81901.73,
+      "t1": 81732.15,
+      "t2_close": 81679.75,
+      "t3": 81594.96,
+      "risk": 84.79,
+      "sl_basis": "outside continuation order block (L13 \u00a72)",
+      "sl_buffer": 84.79,
+      "atr_h4": 565.26
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "no POI",
-      "detail": "C2 [80737, 81589] misses nearest swing 83890 by 2301",
-      "direction": "short",
-      "closure": "c2_closure",
+      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
