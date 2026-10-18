@@ -1,8 +1,8 @@
 {
-  "ts": "2026-10-18T22:55:05.670959+08:00",
+  "ts": "2026-10-19T00:53:46.411739+08:00",
   "ticker": "BTC-USD",
-  "h4_bars": 178,
-  "m15_bars": 636,
+  "h4_bars": 179,
+  "m15_bars": 644,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -12,17 +12,13 @@
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C2 already swept the target \u2014 do not chase",
-      "direction": "long",
+      "stage": "C3 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "CISD not confirmed",
-      "detail": "no break",
-      "direction": "long",
-      "closure": "c3_closure",
+      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
