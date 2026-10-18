@@ -2,23 +2,23 @@
   "_meta": {
     "_comment": "Live strategy param overrides — written by param_optimizer.py, read by live_scan.py at import. Auto-optimization output (weight/min_strength/resample_tf per strategy).",
     "created": "2026-10-07T13:30:00+00:00",
-    "applications": 1,
-    "last_run": "2026-10-17T18:10:36.458503+00:00",
+    "applications": 2,
+    "last_run": "2026-10-18T18:28:41.474034+00:00",
     "note": "Empty = all strategies use live_scan.py hardcoded defaults. 2026-10-07: weight became LIVE config (was dead) — see param_optimizer.py.",
-    "last_source": "iteration_all_20261018_021021.json",
+    "last_source": "iteration_all_20261019_022827.json",
     "last_applied_n": 1,
-    "last_rejected_n": 4,
+    "last_rejected_n": 3,
     "last_log": [
-      "  OCS-BTC-5m: SKIP grade=D (LLM has no useful suggestion; live n=0)",
-      "  CRT: REJECT grade=C conf=62 < 75",
+      "  Kell-Cycle: REJECT conf=55 < 65 (grade B)",
+      "  3-Pushes: APPLY [B/72] weight 1.0→0.9, resample_tf →15min",
+      "  RSI-Div: SKIP (on cooldown, applied 2026-10-17)",
       "  Stair: SKIP grade=D (LLM has no useful suggestion; live n=335)",
-      "  Kell-Cycle: REJECT grade=C conf=65 < 75",
+      "  OCS-BTC-5m: SKIP grade=D (LLM has no useful suggestion; live n=0)",
+      "  CRT: REJECT grade=C conf=70 < 75",
+      "  50-20-Pullback: SKIP grade=D (LLM has no useful suggestion; live n=1000)",
       "  H-Pattern: SKIP grade=D (LLM has no useful suggestion; live n=131)",
-      "  3-Pushes: REJECT conf=58 < 65 (grade B)",
-      "  50-20-Pullback: SKIP grade=D (LLM has no useful suggestion; live n=992)",
-      "  RSI-Div: APPLY [B/72] weight 0.7→0.85, resample_tf →15min",
-      "  Two-Yang: SKIP grade=D (LLM has no useful suggestion; live n=220)",
-      "  B1: REJECT grade=C conf=62 < 75"
+      "  B1: REJECT grade=C conf=58 < 75",
+      "  Two-Yang: SKIP grade=D (LLM has no useful suggestion; live n=220)"
     ]
   },
   "RSI-Div": {
@@ -47,6 +47,37 @@
         "confidence": 72,
         "changes": {
           "weight": 0.85,
+          "resample_tf": "15min"
+        }
+      }
+    ]
+  },
+  "3-Pushes": {
+    "weight": 0.9,
+    "resample_tf": "15min",
+    "last_applied": "2026-10-18T18:28:41.474034+00:00",
+    "grade": "B",
+    "confidence": 72,
+    "reason": "整體+36.8R 盈利但分佈極不均，MNQ獨贏+51.14R，BTC/MES/MGC合計蝕-22.23R拖累",
+    "source_iteration": "iteration_all_20261019_022827.json",
+    "changes": {
+      "weight": {
+        "from": 1.0,
+        "to": 0.9
+      },
+      "resample_tf": {
+        "from": "",
+        "to": "15min"
+      }
+    },
+    "applications": 1,
+    "history": [
+      {
+        "date": "2026-10-18T18:28:41.474034+00:00",
+        "grade": "B",
+        "confidence": 72,
+        "changes": {
+          "weight": 0.9,
           "resample_tf": "15min"
         }
       }
