@@ -1,14 +1,28 @@
 {
-  "ts": "2026-10-19T09:34:03.208547+08:00",
+  "ts": "2026-10-19T13:17:34.429306+08:00",
   "ticker": "BTC-USD",
-  "h4_bars": 175,
-  "m15_bars": 578,
+  "h4_bars": 176,
+  "m15_bars": 598,
   "strategies": {
     "TTrades-L12": {
-      "fired": true,
+      "fired": false,
+      "stage": "no C2 closure (sweep+reclaim) on C2",
       "strategy": "TTrades-L12",
+      "has_levels": false
+    },
+    "TTrades-L13": {
+      "fired": false,
+      "stage": "C2 not an expansion candle (wick too large)",
+      "strategy": "TTrades-L13",
+      "has_levels": false
+    },
+    "TTrades-L14": {
+      "fired": true,
+      "strategy": "TTrades-L14",
       "direction": "long",
-      "stage": "all L12 gates passed",
+      "closure": "c2_closure",
+      "trade_candle": "C3",
+      "stage": "c2_closure \u2014 trade C3",
       "poi": {
         "found": true,
         "basis": "structural pivots",
@@ -21,47 +35,30 @@
           83197.09375
         ],
         "pivot_count": 25,
-        "fvg_count": 9
+        "fvg_count": 10
       },
-      "poi_note": "C2 range [80602, 81623] contains swing 81591",
+      "poi_note": "C2 range [80602, 82118] contains swing 81591",
       "cisd": {
         "confirmed": true,
-        "opposing_open": 81980.7734375,
-        "series_length": 1,
-        "last_close": 82430.140625,
+        "opposing_open": 82276.140625,
+        "series_length": 2,
+        "last_close": 82534.0703125,
         "reason": "cisd_long"
       },
-      "c2_eq": 81112.48828125,
-      "c2_high": 81623.3203125,
-      "c2_low": 80601.65625,
-      "c2_close": 81617.2421875,
-      "c3_close": 82430.140625,
+      "c_eq": 81359.72265625,
       "swing_level": 80601.65625,
-      "entry_ref": 82430.140625,
+      "entry_ref": 82534.0703125,
       "target_r": 2.0,
       "has_levels": true,
-      "entry": 82430.14,
-      "sl": 80517.52,
-      "t1": 84342.77,
-      "t2_close": 85524.77,
-      "t3": 87437.39,
-      "risk": 1912.63,
+      "entry": 82534.07,
+      "sl": 80511.56,
+      "t1": 84556.58,
+      "t2_close": 85806.49,
+      "t3": 87828.99,
+      "risk": 2022.51,
       "sl_basis": "beyond protected swing (C2/C3 extreme)",
-      "sl_buffer": 84.14,
-      "atr_h4": 560.94
-    },
-    "TTrades-L13": {
-      "fired": false,
-      "stage": "C2 already swept the target \u2014 do not chase",
-      "direction": "long",
-      "strategy": "TTrades-L13",
-      "has_levels": false
-    },
-    "TTrades-L14": {
-      "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
-      "strategy": "TTrades-L14",
-      "has_levels": false
+      "sl_buffer": 90.09,
+      "atr_h4": 600.62
     }
   }
 }
