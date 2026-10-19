@@ -13,10 +13,13 @@
 | [08-RSI-Divergence.md](08-RSI-Divergence.md) | RSI Divergence strategy |
 | [09-Auxiliary-Tips.md](09-Auxiliary-Tips.md) | Auxiliary tips |
 | [10-Zhongtian-Practical-Setup.md](10-Zhongtian-Practical-Setup.md) | 中天 practical setup |
+| [11-50-20.md](11-50-20.md) | 50/20 EMA pullback |
+| [12-Stair-Pattern.md](12-Stair-Pattern.md) | Stair Pattern (H-pattern variant) |
 | [17-TTrades-Model.md](17-TTrades-Model.md) | TTrades OSOK + Fractal |
 | [18-TTrades-L12.md](18-TTrades-L12.md) | TTrades L12 Candle 2 Closure |
 | [19-TTrades-L13.md](19-TTrades-L13.md) | TTrades L13 Trading Candle 3 |
 | [20-TTrades-L14.md](20-TTrades-L14.md) | TTrades L14 Candle 3 Closure |
+| [21-Argon-Gold-SOP.md](21-Argon-Gold-SOP.md) | Argon 黃金極短線 SOP（15M箱體 + M5確認） |
 
 ## Automation Docs
 | File | Topic |
