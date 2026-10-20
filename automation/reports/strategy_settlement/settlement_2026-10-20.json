@@ -48,17 +48,17 @@
     },
     {
       "strategy": "3-Pushes",
-      "level": 3,
-      "old_level": 3,
-      "new_level": 3,
-      "promoted": false,
+      "level": 2,
+      "old_level": 1,
+      "new_level": 2,
+      "promoted": true,
       "demoted": false,
       "at_max_level": false,
-      "at_min_level": false,
+      "at_min_level": true,
       "promote_ok": true,
       "demote_ok": false,
-      "eligible_for_promote": false,
-      "streak": 1,
+      "eligible_for_promote": true,
+      "streak": 2,
       "streak_required": 2,
       "blocked_reason": null,
       "has_override": true,
@@ -154,18 +154,18 @@
     {
       "strategy": "50-20-Pullback",
       "level": 2,
-      "old_level": 1,
+      "old_level": 2,
       "new_level": 2,
-      "promoted": true,
+      "promoted": false,
       "demoted": false,
       "at_max_level": false,
-      "at_min_level": true,
+      "at_min_level": false,
       "promote_ok": true,
       "demote_ok": false,
-      "eligible_for_promote": true,
-      "streak": 2,
+      "eligible_for_promote": false,
+      "streak": 0,
       "streak_required": 2,
-      "blocked_reason": null,
+      "blocked_reason": "no new evidence since lv2 (n=78, last promotion n=78 on 2026-10-20)",
       "has_override": true,
       "thresholds_used": {
         "min_PF": 0.95,
@@ -189,18 +189,18 @@
     {
       "strategy": "Stair",
       "level": 2,
-      "old_level": 1,
+      "old_level": 2,
       "new_level": 2,
-      "promoted": true,
+      "promoted": false,
       "demoted": false,
       "at_max_level": false,
-      "at_min_level": true,
+      "at_min_level": false,
       "promote_ok": true,
       "demote_ok": false,
-      "eligible_for_promote": true,
-      "streak": 2,
+      "eligible_for_promote": false,
+      "streak": 0,
       "streak_required": 2,
-      "blocked_reason": null,
+      "blocked_reason": "no new evidence since lv2 (n=33, last promotion n=34 on 2026-10-20)",
       "has_override": true,
       "thresholds_used": {
         "min_PF": 0.85,
@@ -209,16 +209,16 @@
         "min_trades": 10
       },
       "metrics": {
-        "n_trades": 34,
+        "n_trades": 33,
         "wins": 15,
-        "losses": 19,
-        "win_rate": 0.4412,
-        "profit_factor": 1.277,
+        "losses": 18,
+        "win_rate": 0.4545,
+        "profit_factor": 1.348,
         "rr_ratio": 1.618,
         "avg_win_R": 1.618,
         "avg_loss_R": 1.0,
-        "total_pnl_usd": 359.6,
-        "total_R": 5.27
+        "total_pnl_usd": 361.78,
+        "total_R": 6.27
       }
     },
     {
@@ -357,7 +357,7 @@
         "rr_ratio": 1.618,
         "avg_win_R": 1.618,
         "avg_loss_R": 1.0,
-        "total_pnl_usd": -646.84,
+        "total_pnl_usd": -681.09,
         "total_R": -3.112
       }
     },
@@ -525,7 +525,40 @@
         "total_pnl_usd": 0,
         "total_R": 0
       }
+    },
+    {
+      "strategy": "Argon-Gold",
+      "level": 1,
+      "old_level": 1,
+      "new_level": 1,
+      "promoted": false,
+      "demoted": false,
+      "at_max_level": false,
+      "at_min_level": true,
+      "promote_ok": false,
+      "demote_ok": false,
+      "eligible_for_promote": false,
+      "streak": 0,
+      "streak_required": 2,
+      "blocked_reason": null,
+      "has_override": false,
+      "thresholds_used": {
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_trades": 10
+      },
+      "metrics": {
+        "n_trades": 0,
+        "wins": 0,
+        "losses": 0,
+        "win_rate": 0,
+        "profit_factor": 0,
+        "rr_ratio": 0,
+        "total_pnl_usd": 0,
+        "total_R": 0
+      }
     }
   ],
-  "n_promoted": 2
+  "n_promoted": 1
 }
