@@ -849,6 +849,35 @@ def load_exit_overrides() -> dict:
 EXIT_OVERRIDES = load_exit_overrides()
 
 
+def load_agent_params() -> dict:
+    """Per-agent parameters chosen by the backtest optimiser.
+
+    Only entries that were validated on the holdout carry a configuration
+    that differs from the book template; everything else keeps the
+    template. The optimiser writes the holdout baseline alongside the
+    config, so it is possible to see what a strategy would have done
+    without the change.
+    """
+    p = Path(__file__).resolve().parents[1] / "config" / "agent_params.json"
+    if not p.exists():
+        return {}
+    try:
+        data = json.loads(p.read_text())
+        out = {}
+        for k, v in data.items():
+            if k.startswith("_") or not isinstance(v, dict):
+                continue
+            cfg = v.get("config")
+            if isinstance(cfg, dict):
+                out[k] = {**cfg, "_validated": bool(v.get("validated_on_holdout"))}
+        return out
+    except Exception:
+        return {}
+
+
+AGENT_PARAMS = load_agent_params()
+
+
 def load_arm_state() -> dict:
     p = Path(__file__).resolve().parents[1] / "config" / "exit_arm_state.json"
     if not p.exists():
@@ -871,6 +900,18 @@ def resolve_exit_config(strategy: str):
     into the position so a trade cannot switch rules halfway through.
     """
     from rl_arm import arm_for_strategy, ARM_CONTROL
+    # The optimiser's configuration wins when it was validated on the holdout:
+    # it has out-of-sample evidence. The RL exit policy only has a replay
+    # estimate, so it is the fallback for agents the optimiser could not
+    # validate.
+    _ap = AGENT_PARAMS.get(strategy)
+    if _ap and _ap.get("_validated"):
+        ov = {k: _ap.get(k) for k in ("t2_r", "breakeven_at_r", "partial_at_r")
+              if k in _ap}
+        if ov:
+            arm, _ = arm_for_strategy(strategy, overrides=EXIT_OVERRIDES,
+                                     state=ARM_STATE)
+            return (ov, arm) if arm != ARM_CONTROL else (None, arm)
     ov = EXIT_OVERRIDES.get(strategy)
     if not ov:
         return None, ARM_CONTROL
@@ -1585,9 +1626,47 @@ def main() -> int:
         df_5m = ticker_data.get("df_5m")
         atr = compute_atr(df_5m) if df_5m is not None and not df_5m.empty else 0
         sig["atr"] = atr
+        # Optimiser parameters (backtest_optimizer.py). A strategy whose
+        # configuration was validated on the holdout gets its optimised
+        # ticker exclusions, confidence floor and grade filter applied here.
+        # These are the levers the optimiser had the most freedom over, and
+        # the ones that generalise: dropping the instruments that bled, and
+        # refusing low-confidence signals.
+        _ap = AGENT_PARAMS.get(sig.get("strategy"))
+        if _ap and _ap.get("_validated"):
+            _drop = set(_ap.get("drop_tickers") or [])
+            _keep = set(_ap.get("keep_tickers") or [])
+            if (_drop and sig.get("ticker") in _drop) or \
+                    (_keep and sig.get("ticker") not in _keep):
+                sig["gate_skip"] = (
+                    f"optimiser ticker filter: dropping {sig.get('ticker')} for "
+                    f"{sig.get('strategy')} (validated on holdout)")
+                print(f"[gate] {sig.get('strategy')} optimiser drops "
+                      f"{sig.get('ticker')} -> SKIP")
+                continue
+            _mc = int(_ap.get("min_conf") or 0)
+            if _mc > 0:
+                _raw = float(sig.get("raw_confidence") or conf)
+                if _raw < _mc:
+                    sig["gate_skip"] = (
+                        f"optimiser confidence floor {_mc} (raw {_raw:.0f})")
+                    print(f"[gate] {sig.get('strategy')} conf {_raw:.0f} < "
+                          f"{_mc} -> SKIP")
+                    continue
+            _gf = _ap.get("grade_filter")
+            if _gf == "A" and grade != "A":
+                sig["gate_skip"] = "optimiser grade filter: A only"
+                print(f"[gate] {sig.get('strategy')} grade {grade} -> SKIP")
+                continue
+
         # Compute SL/TP. A detector-provided preset (Argon Gold SOP) takes
         # precedence over the generic ATR template.
         _ecfg, _arm = resolve_exit_config(sig.get("strategy"))
+        _ap2 = AGENT_PARAMS.get(sig.get("strategy"))
+        if _ap2 and _ap2.get("_validated") and not _ecfg:
+            # The optimiser's exit configuration (t2_r, breakeven, partial).
+            _ecfg = {k: _ap2.get(k) for k in
+                     ("t2_r", "breakeven_at_r", "partial_at_r") if k in _ap2}
         sl_tp = sig.get("sl_tp_preset") or calc_sl_tp(
             sig.get("last_close", 0), atr, sig.get("direction", "long"), _ecfg)
         sig["exit_arm"] = _arm

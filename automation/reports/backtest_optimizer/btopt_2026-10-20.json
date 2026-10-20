@@ -1,0 +1,412 @@
+{
+  "generated_at": "2026-10-20T13:55:39.558724+00:00",
+  "target": {
+    "pf": 1.5,
+    "rr": 1.5
+  },
+  "window": {
+    "from": "2026-08-25T01:41:28",
+    "to": "2026-10-20T12:19:08",
+    "train_cut": "2026-09-10T22:32:04"
+  },
+  "results": {
+    "B1": {
+      "strategy": "B1",
+      "config": {
+        "t2_r": 1.618,
+        "breakeven_at_r": 0.0,
+        "partial_at_r": 0.0,
+        "min_conf": 0,
+        "grade_filter": "AB",
+        "keep_tickers": [],
+        "drop_tickers": [],
+        "keep_hours": []
+      },
+      "train": {
+        "n": 6,
+        "pf": 1.618,
+        "wr": 50.0,
+        "rr": 1.618,
+        "total_r": 1.85
+      },
+      "train_baseline": {
+        "n": 6,
+        "pf": 1.618,
+        "wr": 50.0,
+        "rr": 1.618,
+        "total_r": 1.85
+      },
+      "holdout": {
+        "n": 7,
+        "pf": 0.647,
+        "wr": 28.6,
+        "rr": 1.618,
+        "total_r": -1.76
+      },
+      "holdout_baseline": {
+        "n": 7,
+        "pf": 0.647,
+        "wr": 28.6,
+        "rr": 1.618,
+        "total_r": -1.76
+      },
+      "reached_target": true,
+      "searched": 0
+    },
+    "H-Pattern": {
+      "strategy": "H-Pattern",
+      "config": {
+        "t2_r": 1.618,
+        "breakeven_at_r": 0.0,
+        "partial_at_r": 0.0,
+        "min_conf": 0,
+        "grade_filter": "AB",
+        "keep_tickers": [],
+        "drop_tickers": [],
+        "keep_hours": []
+      },
+      "train": {
+        "n": 23,
+        "pf": 0.708,
+        "wr": 30.4,
+        "rr": 1.618,
+        "total_r": -4.67
+      },
+      "train_baseline": {
+        "n": 23,
+        "pf": 0.708,
+        "wr": 30.4,
+        "rr": 1.618,
+        "total_r": -4.67
+      },
+      "holdout": {
+        "n": 17,
+        "pf": 1.82,
+        "wr": 52.9,
+        "rr": 1.618,
+        "total_r": 6.56
+      },
+      "holdout_baseline": {
+        "n": 17,
+        "pf": 1.82,
+        "wr": 52.9,
+        "rr": 1.618,
+        "total_r": 6.56
+      },
+      "reached_target": false,
+      "searched": 0
+    },
+    "3-Pushes": {
+      "strategy": "3-Pushes",
+      "config": {
+        "t2_r": 3.0,
+        "breakeven_at_r": 0.5,
+        "partial_at_r": 0.0,
+        "min_conf": 0,
+        "grade_filter": "AB",
+        "keep_tickers": [],
+        "drop_tickers": [
+          "BTC-USD",
+          "M2K=F"
+        ],
+        "keep_hours": []
+      },
+      "train": {
+        "n": 173,
+        "pf": 2.217,
+        "wr": 19.7,
+        "rr": 9.065,
+        "total_r": 56.0
+      },
+      "train_baseline": {
+        "n": 311,
+        "pf": 1.162,
+        "wr": 41.8,
+        "rr": 1.618,
+        "total_r": 29.34
+      },
+      "holdout": {
+        "n": 50,
+        "pf": 1.615,
+        "wr": 14.0,
+        "rr": 9.923,
+        "total_r": 8.0
+      },
+      "holdout_baseline": {
+        "n": 82,
+        "pf": 1.09,
+        "wr": 40.2,
+        "rr": 1.618,
+        "total_r": 4.39
+      },
+      "reached_target": true,
+      "searched": 1152
+    },
+    "Kell-Cycle": {
+      "strategy": "Kell-Cycle",
+      "config": {
+        "t2_r": 1.618,
+        "breakeven_at_r": 0.0,
+        "partial_at_r": 0.0,
+        "min_conf": 0,
+        "grade_filter": "AB",
+        "keep_tickers": [],
+        "drop_tickers": [],
+        "keep_hours": []
+      },
+      "train": {
+        "n": 35,
+        "pf": 0.844,
+        "wr": 34.3,
+        "rr": 1.618,
+        "total_r": -3.58
+      },
+      "train_baseline": {
+        "n": 35,
+        "pf": 0.844,
+        "wr": 34.3,
+        "rr": 1.618,
+        "total_r": -3.58
+      },
+      "holdout": {
+        "n": 12,
+        "pf": 1.156,
+        "wr": 41.7,
+        "rr": 1.618,
+        "total_r": 1.09
+      },
+      "holdout_baseline": {
+        "n": 12,
+        "pf": 1.156,
+        "wr": 41.7,
+        "rr": 1.618,
+        "total_r": 1.09
+      },
+      "reached_target": false,
+      "searched": 0
+    },
+    "RSI-Div": {
+      "strategy": "RSI-Div",
+      "config": {
+        "t2_r": 1.618,
+        "breakeven_at_r": 0.0,
+        "partial_at_r": 0.0,
+        "min_conf": 0,
+        "grade_filter": "AB",
+        "keep_tickers": [],
+        "drop_tickers": [],
+        "keep_hours": []
+      },
+      "train": {
+        "n": 17,
+        "pf": 1.133,
+        "wr": 41.2,
+        "rr": 1.618,
+        "total_r": 1.33
+      },
+      "train_baseline": {
+        "n": 17,
+        "pf": 1.133,
+        "wr": 41.2,
+        "rr": 1.618,
+        "total_r": 1.33
+      },
+      "holdout": {
+        "n": 14,
+        "pf": 0.124,
+        "wr": 7.1,
+        "rr": 1.618,
+        "total_r": -11.38
+      },
+      "holdout_baseline": {
+        "n": 14,
+        "pf": 0.124,
+        "wr": 7.1,
+        "rr": 1.618,
+        "total_r": -11.38
+      },
+      "reached_target": false,
+      "searched": 0
+    },
+    "Two-Yang": {
+      "strategy": "Two-Yang",
+      "config": {
+        "t2_r": 1.0,
+        "breakeven_at_r": 0.5,
+        "partial_at_r": 1.5,
+        "min_conf": 0,
+        "grade_filter": "AB",
+        "keep_tickers": [],
+        "drop_tickers": [],
+        "keep_hours": []
+      },
+      "train": {
+        "n": 90,
+        "pf": 1.438,
+        "wr": 36.7,
+        "rr": 2.483,
+        "total_r": 10.5
+      },
+      "train_baseline": {
+        "n": 84,
+        "pf": 1.1,
+        "wr": 40.5,
+        "rr": 1.618,
+        "total_r": 5.01
+      },
+      "holdout": {
+        "n": 40,
+        "pf": 0.889,
+        "wr": 37.5,
+        "rr": 1.481,
+        "total_r": -2.0
+      },
+      "holdout_baseline": {
+        "n": 40,
+        "pf": 0.779,
+        "wr": 32.5,
+        "rr": 1.618,
+        "total_r": -5.97
+      },
+      "reached_target": false,
+      "searched": 1152
+    },
+    "Stair": {
+      "strategy": "Stair",
+      "config": {
+        "t2_r": 2.618,
+        "breakeven_at_r": 0.5,
+        "partial_at_r": 0.0,
+        "min_conf": 75,
+        "grade_filter": "A",
+        "keep_tickers": [],
+        "drop_tickers": [
+          "MGC=F"
+        ],
+        "keep_hours": []
+      },
+      "train": {
+        "n": 113,
+        "pf": 1.122,
+        "wr": 18.6,
+        "rr": 4.915,
+        "total_r": 5.98
+      },
+      "train_baseline": {
+        "n": 209,
+        "pf": 0.868,
+        "wr": 34.9,
+        "rr": 1.618,
+        "total_r": -17.89
+      },
+      "holdout": {
+        "n": 70,
+        "pf": 1.309,
+        "wr": 15.7,
+        "rr": 7.021,
+        "total_r": 6.8
+      },
+      "holdout_baseline": {
+        "n": 136,
+        "pf": 1.002,
+        "wr": 38.2,
+        "rr": 1.618,
+        "total_r": 0.14
+      },
+      "reached_target": false,
+      "searched": 1152
+    },
+    "CRT": {
+      "strategy": "CRT",
+      "config": {
+        "t2_r": 2.0,
+        "breakeven_at_r": 1.5,
+        "partial_at_r": 0.0,
+        "min_conf": 65,
+        "grade_filter": "AB",
+        "keep_tickers": [],
+        "drop_tickers": [
+          "M2K=F",
+          "MNQ=F"
+        ],
+        "keep_hours": []
+      },
+      "train": {
+        "n": 267,
+        "pf": 1.536,
+        "wr": 39.7,
+        "rr": 2.333,
+        "total_r": 74.0
+      },
+      "train_baseline": {
+        "n": 443,
+        "pf": 1.064,
+        "wr": 39.7,
+        "rr": 1.614,
+        "total_r": 17.15
+      },
+      "holdout": {
+        "n": 129,
+        "pf": 0.886,
+        "wr": 27.1,
+        "rr": 2.38,
+        "total_r": -9.0
+      },
+      "holdout_baseline": {
+        "n": 236,
+        "pf": 1.149,
+        "wr": 41.5,
+        "rr": 1.618,
+        "total_r": 20.56
+      },
+      "reached_target": true,
+      "searched": 1152
+    },
+    "50-20-Pullback": {
+      "strategy": "50-20-Pullback",
+      "config": {
+        "t2_r": 2.618,
+        "breakeven_at_r": 0.5,
+        "partial_at_r": 0.0,
+        "min_conf": 0,
+        "grade_filter": "AB",
+        "keep_tickers": [],
+        "drop_tickers": [
+          "M2K=F",
+          "MNQ=F"
+        ],
+        "keep_hours": []
+      },
+      "train": {
+        "n": 302,
+        "pf": 1.309,
+        "wr": 17.9,
+        "rr": 6.012,
+        "total_r": 33.37
+      },
+      "train_baseline": {
+        "n": 472,
+        "pf": 0.696,
+        "wr": 30.1,
+        "rr": 1.618,
+        "total_r": -100.24
+      },
+      "holdout": {
+        "n": 264,
+        "pf": 0.995,
+        "wr": 14.4,
+        "rr": 5.917,
+        "total_r": -0.52
+      },
+      "holdout_baseline": {
+        "n": 298,
+        "pf": 0.96,
+        "wr": 37.2,
+        "rr": 1.618,
+        "total_r": -7.4
+      },
+      "reached_target": false,
+      "searched": 1152
+    }
+  }
+}

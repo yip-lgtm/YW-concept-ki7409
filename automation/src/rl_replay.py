@@ -44,9 +44,18 @@ from __future__ import annotations
 import pandas as pd
 
 # Current book template, used as the baseline for reward comparison.
+#
+# The book takes NO partial. The tracker's exit order is SL, then T2, then
+# T1 (which merely continues), so a position either stops at -1R or runs to
+# the 1.618R close. An earlier version of this file had BOOK_PARTIAL_AT_R
+# at 0.5, which modelled a half-size take at 1.0R that the live system
+# never performed. That inflated the replayed win rate (a trade that went
+# to +1R and then reversed counted as a 0R win instead of a -1R loss) and
+# depressed the replayed reward:risk. The baseline is now the template
+# the tracker actually implements.
 BOOK_T2_R = 1.618
 BOOK_BREAKEVEN_AT_R = 0.0
-BOOK_PARTIAL_AT_R = 0.5
+BOOK_PARTIAL_AT_R = 0.0
 BOOK_PARTIAL_R = 1.0
 
 # Replay fidelity: how many bars after entry to consider. The live tracker
@@ -135,10 +144,15 @@ def replay_trade(trade: dict, df: pd.DataFrame,
 
         # Stop first: the conservative assumption.
         if hit_sl:
-            r = (current_sl - entry) / risk
+            # R is measured in the TRADE's direction. A short that stops
+            # out loses, so the sign has to follow the direction rather
+            # than the price movement. Without the sign every short was
+            # scored backwards: a stop-out counted as a win and the
+            # 1.618R target counted as a loss.
+            r = sign * (current_sl - entry) / risk
             if partial_taken:
                 # Half was already banked at the partial price.
-                r = 0.5 * (partial_price - entry) / risk + 0.5 * r
+                r = 0.5 * sign * (partial_price - entry) / risk + 0.5 * r
             return {"r": round(r, 4), "exit_level": "SL", "bars": i, "status": "closed"}
 
         if hit_partial:
@@ -150,9 +164,9 @@ def replay_trade(trade: dict, df: pd.DataFrame,
             continue
 
         if hit_t2:
-            r = (t2_price - entry) / risk
+            r = sign * (t2_price - entry) / risk
             if partial_taken:
-                r = 0.5 * (partial_price - entry) / risk + 0.5 * r
+                r = 0.5 * sign * (partial_price - entry) / risk + 0.5 * r
             return {"r": round(r, 4), "exit_level": "T2", "bars": i, "status": "closed"}
 
         # Breakeven move: the trade has reached the breakeven trigger R.
@@ -326,9 +340,14 @@ def simulate_prepared(prep: dict, t2_r: float, breakeven_at_r: float,
             hit_t2 = lo <= t2_price
 
         if hit_sl:
-            r = (current_sl - entry) / risk
+            # R is measured in the TRADE's direction. A short that stops
+            # out loses, so the sign has to follow the direction rather
+            # than the price movement. Without the sign every short was
+            # scored backwards: a stop-out counted as a win and the
+            # 1.618R target counted as a loss.
+            r = sign * (current_sl - entry) / risk
             if partial_taken:
-                r = 0.5 * (partial_price - entry) / risk + 0.5 * r
+                r = 0.5 * sign * (partial_price - entry) / risk + 0.5 * r
             return {"r": round(r, 4), "exit_level": "SL", "bars": i,
                     "status": "closed"}
 
@@ -339,9 +358,9 @@ def simulate_prepared(prep: dict, t2_r: float, breakeven_at_r: float,
             continue
 
         if hit_t2:
-            r = (t2_price - entry) / risk
+            r = sign * (t2_price - entry) / risk
             if partial_taken:
-                r = 0.5 * (partial_price - entry) / risk + 0.5 * r
+                r = 0.5 * sign * (partial_price - entry) / risk + 0.5 * r
             return {"r": round(r, 4), "exit_level": "T2", "bars": i,
                     "status": "closed"}
 
