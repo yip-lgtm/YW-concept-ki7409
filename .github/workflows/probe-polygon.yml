@@ -1,0 +1,65 @@
+name: Probe Polygon data depth (diagnostic)
+
+# One-off diagnostic: how much intraday history does the Polygon key in the
+# Actions secrets actually give us for the futures tickers?  The optimiser
+# needs more than the 56 days of five-minute history the live system has
+# traded, and Yahoo caps that at 60 days.
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Probe
+        run: |
+          python - <<'PY'
+          import os, requests, datetime
+          key = os.environ.get("POLYGON_API_KEY", "")
+          print(f"key present: {bool(key)} len {len(key)}")
+          if not key:
+              raise SystemExit(1)
+          today = datetime.date.today()
+          cands = {
+              "MNQ=F": ["MNQ", "MNQ1!"],
+              "MES=F": ["MES", "MES1!"],
+              "M2K=F": ["M2K", "M2K1!"],
+              "MGC=F": ["MGC", "MGC1!"],
+              "BTC-USD": ["X:BTCUSD"],
+          }
+          def probe(t, mult, days):
+              frm = (today - datetime.timedelta(days=days)).isoformat()
+              to = today.isoformat()
+              url = (f"https://api.polygon.io/v2/aggs/ticker/{t}/range/{mult}/minute/{frm}/{to}"
+                     f"?apiKey={key}&limit=50000&sort=asc")
+              try:
+                  r = requests.get(url, timeout=45)
+                  j = r.json()
+                  if j.get("results"):
+                      res = j["results"]
+                      d0 = datetime.datetime.utcfromtimestamp(res[0]["t"]/1000).date()
+                      d1 = datetime.datetime.utcfromtimestamp(res[-1]["t"]/1000).date()
+                      return f"HTTP {r.status_code} {len(res):>6} bars {d0} -> {d1}"
+                  m = j.get("message", "?")
+                  if j.get("error"):
+                      m = j["error"].get("message", m)
+                  return f"HTTP {r.status_code} empty ({str(m)[:50]})"
+              except Exception as e:
+                  return f"ERR {type(e).__name__}"
+          for label, tickers in cands.items():
+              for t in tickers:
+                  for mult, days, lbl in [(5, 60, "5m/60d"), (5, 400, "5m/400d"), (60, 730, "1h/730d")]:
+                      print(f"  {label:<9} {t:<9} {lbl:<9} {probe(t, mult, days)}")
+              print()
+          PY
