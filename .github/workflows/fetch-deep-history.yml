@@ -1,0 +1,56 @@
+name: Fetch deep intraday history (Polygon)
+
+# Yahoo caps intraday history at 60 days, and the live system has only 56
+# days of real trades. The optimiser needs a longer five-minute sample or
+# every configuration it finds is fitted to a sample that is too small to
+# judge. Polygon serves five-minute bars back at least a year for crypto,
+# which is the only instrument in the book this key covers — the CME
+# futures return zero results on this plan.
+#
+# Monthly schedule: the data only grows, and the fetcher is polite about
+# the per-minute request cap.
+
+on:
+  schedule:
+    - cron: '23 4 * * 0'   # weekly, Sunday 04:23 UTC
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'days of history to fetch'
+        required: false
+        default: '400'
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.APEX_PAT }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Fetch
+        run: |
+          cd automation
+          python scripts/fetch_deep_history.py --days "${{ github.event.inputs.days || 400 }}" --interval 5
+      - name: Commit
+        run: |
+          git config --global user.name "Mavis bot"
+          git config --global user.email "mavis@MiniMax"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/yip-lgtm/YW-concept-ki7409.git"
+          git add automation/data/deep_history/ || true
+          if git diff --cached --quiet; then
+            echo "No new history"
+            exit 0
+          fi
+          git commit -m "auto(data): deep intraday history $(date -u +%Y-%m-%d)"
+          git pull --rebase origin main || true
+          git push origin main
