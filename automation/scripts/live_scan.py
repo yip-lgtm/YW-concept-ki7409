@@ -825,26 +825,64 @@ def compute_atr(df, period=14):
     return float(tr.rolling(period).mean().iloc[-1])
 
 
-def calc_sl_tp(entry, atr, direction):
+# Exit configurations learned by the RL iteration agent. Keyed by strategy
+# name; written by rl_iterate.py. These override the book's shared exit
+# template for the strategies that earned them.
+def load_exit_overrides() -> dict:
+    p = Path(__file__).resolve().parents[1] / "config" / "exit_overrides.json"
+    if not p.exists():
+        return {}
+    try:
+        data = json.loads(p.read_text())
+        out = {}
+        for k, v in data.items():
+            if k.startswith("_") or not isinstance(v, dict):
+                continue
+            cfg = v.get("config")
+            if isinstance(cfg, dict):
+                out[k] = cfg
+        return out
+    except Exception:
+        return {}
+
+
+EXIT_OVERRIDES = load_exit_overrides()
+
+
+def calc_sl_tp(entry, atr, direction, exit_cfg=None):
     """Calculate SL/TP using 1.6x ATR stop + R-multiple targets.
-    
+
     R multiples: T1=1R, T2=1.618R, T3=2.618R, T4=3.618R, T5=5R (Fib)
+
+    `exit_cfg` is the per-strategy exit configuration learned by the RL
+    iteration agent (rl_iterate.py). It may override:
+      t2_r            the R multiple the position closes at
+      partial_at_r    the R multiple at which half the position is taken
+      breakeven_at_r  the R multiple after which the stop moves to entry
+    The stop distance itself is always 1.6xATR: the RL agent tunes the
+    target and the stop management, not the initial risk.
     """
     if atr <= 0 or entry <= 0:
         return None
+    cfg = exit_cfg or {}
+    t2_r = float(cfg.get("t2_r", 1.618))
+    partial_at_r = float(cfg.get("partial_at_r", 0) or 0)
+    breakeven_at_r = float(cfg.get("breakeven_at_r", 0) or 0)
     sl_dist = atr * 1.6
+    t1_r = partial_at_r if partial_at_r > 0 else 1.0
+    t3_r = max(2.618, t2_r + 0.618)
     if direction in ("long", "buy", "up", "bullish", "LONG"):
         sl = entry - sl_dist
-        t1 = entry + sl_dist * 1.0
-        t2 = entry + sl_dist * 1.618
-        t3 = entry + sl_dist * 2.618
+        t1 = entry + sl_dist * t1_r
+        t2 = entry + sl_dist * t2_r
+        t3 = entry + sl_dist * t3_r
         t4 = entry + sl_dist * 3.618
         t5 = entry + sl_dist * 5.0
     elif direction in ("short", "sell", "down", "bearish", "SHORT", "DOWN"):
         sl = entry + sl_dist
-        t1 = entry - sl_dist * 1.0
-        t2 = entry - sl_dist * 1.618
-        t3 = entry - sl_dist * 2.618
+        t1 = entry - sl_dist * t1_r
+        t2 = entry - sl_dist * t2_r
+        t3 = entry - sl_dist * t3_r
         t4 = entry - sl_dist * 3.618
         t5 = entry - sl_dist * 5.0
     else:
@@ -856,7 +894,10 @@ def calc_sl_tp(entry, atr, direction):
         t3 = entry + sl_dist * 2.618
         t4 = entry + sl_dist * 3.618
         t5 = entry + sl_dist * 5.0
-    return {"sl": sl, "t1": t1, "t2": t2, "t3": t3, "t4": t4, "t5": t5, "sl_dist": sl_dist}
+    return {"sl": sl, "t1": t1, "t2": t2, "t3": t3, "t4": t4, "t5": t5,
+            "sl_dist": sl_dist, "t2_r": t2_r, "t1_r": t1_r,
+            "partial_at_r": partial_at_r, "breakeven_at_r": breakeven_at_r,
+            "exit_override": bool(cfg)}
 
 
 def open_live_position(sig, atr):
@@ -866,7 +907,8 @@ def open_live_position(sig, atr):
     # A detector that ships its own levels (Argon Gold SOP) wins over the
     # generic 1.6xATR template, otherwise the SOP's stop cap and its
     # 1.5R target would both be silently discarded.
-    sl_tp = sig.get("sl_tp_preset") or calc_sl_tp(entry, atr, direction)
+    _ecfg = EXIT_OVERRIDES.get(sig.get("strategy"))
+    sl_tp = sig.get("sl_tp_preset") or calc_sl_tp(entry, atr, direction, _ecfg)
     if not sl_tp:
         return None
     sl_tp = dict(sl_tp)
@@ -891,6 +933,10 @@ def open_live_position(sig, atr):
         "t4": sl_tp["t4"],
         "t5": sl_tp["t5"],
         "sl_dist": sl_tp["sl_dist"],
+        "t2_r": sl_tp.get("t2_r", 1.618),
+        "t1_r": sl_tp.get("t1_r", 1.0),
+        "breakeven_at_r": sl_tp.get("breakeven_at_r", 0.0),
+        "partial_at_r": sl_tp.get("partial_at_r", 0.0),
         "status": "open",
     }
     # Load existing + dedupe
@@ -1487,8 +1533,9 @@ def main() -> int:
         sig["atr"] = atr
         # Compute SL/TP. A detector-provided preset (Argon Gold SOP) takes
         # precedence over the generic ATR template.
+        _ecfg = EXIT_OVERRIDES.get(sig.get("strategy"))
         sl_tp = sig.get("sl_tp_preset") or calc_sl_tp(
-            sig.get("last_close", 0), atr, sig.get("direction", "long"))
+            sig.get("last_close", 0), atr, sig.get("direction", "long"), _ecfg)
         if sl_tp:
             sig.update(sl_tp)
         # Open position (DEDUPED)

@@ -65,6 +65,9 @@ WATCHED_PATHS = [
     "automation/config/settlement_overrides.json",
     "automation/config/strategy_overrides.json",
     "automation/config/weight_overrides.json",
+    "automation/config/exit_overrides.json",
+    "automation/config/rl_policy.npz",
+    "automation/reports/rl_iteration/",
     "automation/reports/weight_optimization/",
     # Web dashboard
     "docs/dashboard-data.json",

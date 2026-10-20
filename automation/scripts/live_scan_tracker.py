@@ -132,18 +132,26 @@ def check_position_exit(pos, df):
     t1, t2, t3, t4, t5 = pos["t1"], pos["t2"], pos["t3"], pos["t4"], pos["t5"]
     entry = pos["entry"]
 
+    # Exit configuration learned by the RL iteration agent. t2_r is the R
+    # multiple the position actually closes at; breakeven_at_r moves the stop
+    # to entry once the trade has run that far.
+    t2_r = float(pos.get("t2_r", 1.618) or 1.618)
+    breakeven_at_r = float(pos.get("breakeven_at_r", 0.0) or 0.0)
+    sl_dist = abs(entry - sl)
+    cur_sl = sl
+
     for i, (ts, bar) in enumerate(df.iterrows()):
         high = float(bar["High"])
         low = float(bar["Low"])
         if direction in ("long", "buy", "up", "bullish", "LONG"):
-            hit_sl = low <= sl
+            hit_sl = low <= cur_sl
             hit_t1 = high >= t1
             hit_t2 = high >= t2
             hit_t3 = high >= t3
             hit_t4 = high >= t4
             hit_t5 = high >= t5
         else:
-            hit_sl = high >= sl
+            hit_sl = high >= cur_sl
             hit_t1 = low <= t1
             hit_t2 = low <= t2
             hit_t3 = low <= t3
@@ -153,13 +161,13 @@ def check_position_exit(pos, df):
         # T2_CLOSE_MODE: lock in 1.618R when T2 hit, skip T1 (let winners run)
         # LL-iter 2026-08-28: avg R -0.138, all T1+SL only. Move close to T2 (1.618R).
         if hit_sl:
-            exit_price = sl
+            exit_price = cur_sl
             exit_level = "SL"
-            R_multiple = -1.0
+            R_multiple = -1.0 if cur_sl == sl else 0.0
         elif hit_t2:
             exit_price = t2
             exit_level = "T2"
-            R_multiple = 1.618
+            R_multiple = t2_r
         elif hit_t1:
             # T1 hit but T2 not yet - let it run, don't close
             # (will check again next bar)
@@ -177,6 +185,14 @@ def check_position_exit(pos, df):
             exit_level = "T5"
             R_multiple = 5.0
         else:
+            # No exit on this bar. Apply the breakeven move if the trade has
+            # run far enough, so the stop for the next bar is at entry.
+            if breakeven_at_r > 0 and sl_dist > 0:
+                r_now = ((high - entry) / sl_dist if direction in
+                         ("long", "buy", "up", "bullish", "LONG")
+                         else (entry - low) / sl_dist)
+                if r_now >= breakeven_at_r:
+                    cur_sl = entry
             continue
         pnl_usd = (exit_price - entry) * (1 if direction in ("long", "buy", "up", "bullish", "LONG") else -1)
         return {

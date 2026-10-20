@@ -72,6 +72,17 @@ jobs:
           echo "--- intervention output ---"
           cat automation/config/settlement_overrides.json 2>/dev/null | head -60 || true
 
+      - name: RL iteration agent (PPO — learns per-strategy exit policy)
+        id: rl-iterate
+        if: always()
+        working-directory: automation
+        env:
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+        run: |
+          .venv/bin/python scripts/rl_iterate.py 2>&1 | tee /tmp/rl_iterate_log.txt || true
+          echo "--- learned exit overrides ---"
+          cat ../automation/config/exit_overrides.json 2>/dev/null | head -60 || true
+
       - name: LLM iteration per-agent (9 strategies in parallel)
         id: iterate-all
         working-directory: automation
