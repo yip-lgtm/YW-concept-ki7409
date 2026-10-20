@@ -235,8 +235,18 @@ def fetch_bars(symbol: str = "BTC-USD", days: int = 5, interval_min: int = 5,
             log.info(f"[data_source] Cache hit ({cache_key}, age={int(_time.time()-ts)}s)")
             return df_cached
 
-    # Try yfinance first (reliable, 60d 5m, free)
-    df = fetch_yfinance(symbol, period=f"{min(days, 60)}d", interval=f"{interval_min}m")
+    # Try yfinance first (reliable, free).
+    #
+    # The 60-day cap applies to INTRADAY intervals only. Yahoo Finance serves
+    # at most 60 days of 1m/2m/5m/15m/30m bars, but hourly and daily bars go
+    # back about 730 days. Capping the hourly request at 60 days as well
+    # threw away most of the available history whenever a longer window was
+    # asked for, which is what the optimiser needs.
+    if interval_min < 60:
+        _period = f"{min(days, 60)}d"
+    else:
+        _period = f"{min(days, 730)}d"
+    df = fetch_yfinance(symbol, period=_period, interval=f"{interval_min}m")
     if not df.empty:
         log.info(f"[data_source] yfinance primary: {len(df)} bars")
         _CACHE[cache_key] = (df, _time.time())
