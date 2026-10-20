@@ -14,7 +14,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     env:
       POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
     steps:
@@ -25,12 +25,43 @@ jobs:
       - name: Probe
         run: |
           python - <<'PY'
-          import os, requests, datetime
+          import os, json, urllib.request, urllib.error, datetime
+
           key = os.environ.get("POLYGON_API_KEY", "")
           print(f"key present: {bool(key)} len {len(key)}")
           if not key:
               raise SystemExit(1)
+
           today = datetime.date.today()
+
+          def get(url):
+              try:
+                  with urllib.request.urlopen(url, timeout=45) as r:
+                      return r.status, json.loads(r.read().decode())
+              except urllib.error.HTTPError as e:
+                  try:
+                      return e.code, json.loads(e.read().decode())
+                  except Exception:
+                      return e.code, {}
+              except Exception as e:
+                  return 0, {"message": f"{type(e).__name__}: {e}"}
+
+          def probe(t, mult, days):
+              frm = (today - datetime.timedelta(days=days)).isoformat()
+              to = today.isoformat()
+              url = (f"https://api.polygon.io/v2/aggs/ticker/{t}/range/{mult}/minute/{frm}/{to}"
+                     f"?apiKey={key}&limit=50000&sort=asc")
+              code, j = get(url)
+              res = j.get("results") or []
+              if res:
+                  d0 = datetime.datetime.utcfromtimestamp(res[0]["t"]/1000).date()
+                  d1 = datetime.datetime.utcfromtimestamp(res[-1]["t"]/1000).date()
+                  return f"HTTP {code} {len(res):>6} bars {d0} -> {d1}"
+              m = j.get("message", "?")
+              if j.get("error"):
+                  m = j["error"].get("message", m)
+              return f"HTTP {code} empty ({str(m)[:60]})"
+
           cands = {
               "MNQ=F": ["MNQ", "MNQ1!"],
               "MES=F": ["MES", "MES1!"],
@@ -38,28 +69,9 @@ jobs:
               "MGC=F": ["MGC", "MGC1!"],
               "BTC-USD": ["X:BTCUSD"],
           }
-          def probe(t, mult, days):
-              frm = (today - datetime.timedelta(days=days)).isoformat()
-              to = today.isoformat()
-              url = (f"https://api.polygon.io/v2/aggs/ticker/{t}/range/{mult}/minute/{frm}/{to}"
-                     f"?apiKey={key}&limit=50000&sort=asc")
-              try:
-                  r = requests.get(url, timeout=45)
-                  j = r.json()
-                  if j.get("results"):
-                      res = j["results"]
-                      d0 = datetime.datetime.utcfromtimestamp(res[0]["t"]/1000).date()
-                      d1 = datetime.datetime.utcfromtimestamp(res[-1]["t"]/1000).date()
-                      return f"HTTP {r.status_code} {len(res):>6} bars {d0} -> {d1}"
-                  m = j.get("message", "?")
-                  if j.get("error"):
-                      m = j["error"].get("message", m)
-                  return f"HTTP {r.status_code} empty ({str(m)[:50]})"
-              except Exception as e:
-                  return f"ERR {type(e).__name__}"
           for label, tickers in cands.items():
               for t in tickers:
                   for mult, days, lbl in [(5, 60, "5m/60d"), (5, 400, "5m/400d"), (60, 730, "1h/730d")]:
-                      print(f"  {label:<9} {t:<9} {lbl:<9} {probe(t, mult, days)}")
-              print()
+                      print(f"  {label:<9} {t:<9} {lbl:<9} {probe(t, mult, days)}", flush=True)
+              print(flush=True)
           PY
