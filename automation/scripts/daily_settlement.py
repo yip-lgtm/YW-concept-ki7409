@@ -107,6 +107,7 @@ AGENT_NAMES = [
     # levels are not meaningful here because TTrades levels and CISD are
     # computed per strategy, and no single ticker has enough sample yet.
     "TTrades-Fractal", "TTrades-L12", "TTrades-L13", "TTrades-L14",
+    "Argon-Gold",
 ]
 
 

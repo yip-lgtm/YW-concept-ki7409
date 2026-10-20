@@ -35,6 +35,7 @@ AGENTS = [
     {"id": "kell-cycle",       "agent": "yw-kell-cycle",       "ticker": "MNQ=F",  "weight": 0.9, "tf": "5min",      "indicators": ["cycle", "5_subdetectors"]},
     {"id": "ocs-btc",          "agent": "ocs-btc-5m",          "ticker": "BTC-USD","weight": 1.0, "tf": "5min",      "indicators": ["8_features", "knn_k7"]},
     {"id": "b1",                "agent": "yw-b1",                "ticker": "MNQ=F",  "weight": 1.0, "tf": "5min/15min/1h", "indicators": ["bbi", "kdj", "volume"]},
+    {"id": "argon-gold",         "agent": "yw-argon-gold",         "ticker": "MGC=F",  "weight": 1.0, "tf": "5min/15min/1h", "indicators": ["box_break", "pin_bar", "engulfing", "msb", "hh_hl"]},
 ]
 
 
@@ -132,6 +133,7 @@ STRATEGY_ALIASES = {
     "kell-cycle": "Kell-Cycle",
     "b1": "B1",
     "b1-3in1": "B1-3in1",
+    "argon-gold": "Argon-Gold",
     # ocs-btc has no live_scan trades; it reads the OCS log instead.
     "ocs-btc": None,
 }

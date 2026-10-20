@@ -79,6 +79,7 @@ from yw_indicators import (
 from yw_indicators_extra import (
     detect_stair_pattern, detect_kell_setups, detect_crt,
 )
+from yw_indicators_argon import detect_argon_gold
 
 # OCS BTC 5m
 from ocs_btc_5m import compute_signal as ocs_compute_signal, K as OCS_K
@@ -149,6 +150,11 @@ def get_active_tickers() -> list:
 # B1 战法: 右侧交易，专攻 3 个标的 (MNQ, MGC, BTC)
 B1_TICKERS = {"MNQ=F", "MGC=F", "BTC-USD"}
 
+# Argon Gold SOP (docs/21) is written for spot gold. On MGC=F (Micro Gold
+# futures, 10 troy oz per contract) the SOP's $5.00 spot stop cap maps to
+# $0.50 of price distance, which is what the detector applies.
+ARGON_GOLD_TICKERS = {"MGC=F"}
+
 # Strategy name → (detector_fn, required_args, weight, timeframe)
 STRATEGIES = {
     "H-Pattern":     {"fn": "h_pattern",     "args": {}, "weight": 1.2, "tf": "5m"},
@@ -162,6 +168,10 @@ STRATEGIES = {
     "Kell-Cycle":    {"fn": "kell",          "args": {}, "weight": 0.9, "tf": "5m"},
     "CRT":           {"fn": "crt",           "args": {"needs_4h": True}, "weight": 1.1, "tf": "5m+4h"},
     "OCS-BTC-5m":    {"fn": "ocs",           "args": {"needs_btc": True}, "weight": 1.0, "tf": "5m"},
+    # Argon Gold SOP (docs/21): 15M box + M5 confirmation, gold only.
+    # The absolute $5.00 stop cap in the SOP is spot-gold dollars; on MGC=F
+    # (10 troy oz per contract) it maps to $0.50 of price distance.
+    "Argon-Gold":    {"fn": "argon_gold",    "args": {"gold_only": True}, "weight": 1.0, "tf": "5m/15m/1h", "llm_optimized": True},
 }
 
 # === LLM auto-optimization overrides (param_optimizer.py writes this) ===
@@ -841,9 +851,16 @@ def open_live_position(sig, atr):
     """Open a position from a fired live_scan signal. Returns the position dict."""
     entry = float(sig.get("last_close", 0))
     direction = sig.get("direction", "long")
-    sl_tp = calc_sl_tp(entry, atr, direction)
+    # A detector that ships its own levels (Argon Gold SOP) wins over the
+    # generic 1.6xATR template, otherwise the SOP's stop cap and its
+    # 1.5R target would both be silently discarded.
+    sl_tp = sig.get("sl_tp_preset") or calc_sl_tp(entry, atr, direction)
     if not sl_tp:
         return None
+    sl_tp = dict(sl_tp)
+    sl_tp.setdefault("t4", sl_tp.get("t3"))
+    sl_tp.setdefault("t5", sl_tp.get("t3"))
+    sl_tp.setdefault("sl_dist", abs(entry - sl_tp["sl"]))
     pos = {
         "signal_id": f"{sig['strategy']}|{sig['ticker']}|{sig['ts']}",
         "strategy": sig["strategy"],
@@ -1042,6 +1059,24 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
             out["last_close"] = float(df_b1["Close"].iloc[-1]) if not df_b1.empty else 0
             if data.get("df_1h") is not None:
                 out["tf_used"] = "1h"
+        elif cfg["fn"] == "argon_gold":
+            # Argon Gold SOP: M5 entry, 15M box, 1H bias. Gold instruments only.
+            if ticker not in ARGON_GOLD_TICKERS:
+                out["present"] = False
+                out["skip"] = f"Argon-Gold is gold-only (ticker={ticker})"
+                return out
+            res = detect_argon_gold(df, data.get("df_1h"))
+            out.update(res)
+            if not out.get("present"):
+                return out
+            # The SOP publishes its own levels; live_scan's generic 1.6xATR
+            # stop would override them, so mark it so the caller keeps ours.
+            out["sl_tp_preset"] = {
+                "sl": out["sl"], "t1": out["t1"],
+                "t2": out["t2_close"], "t3": out["t3"],
+                "sl_dist": out["sl_dist"],
+            }
+            out["last_close"] = out.get("last_close", 0)
         elif cfg["fn"] == "b1_3in1":
             # B1 3合1: scans MNQ + MGC + BTC, picks strongest
             from yw_indicators_b1_3in1 import detect_b1_3in1
@@ -1438,8 +1473,10 @@ def main() -> int:
         df_5m = ticker_data.get("df_5m")
         atr = compute_atr(df_5m) if df_5m is not None and not df_5m.empty else 0
         sig["atr"] = atr
-        # Compute SL/TP
-        sl_tp = calc_sl_tp(sig.get("last_close", 0), atr, sig.get("direction", "long"))
+        # Compute SL/TP. A detector-provided preset (Argon Gold SOP) takes
+        # precedence over the generic ATR template.
+        sl_tp = sig.get("sl_tp_preset") or calc_sl_tp(
+            sig.get("last_close", 0), atr, sig.get("direction", "long"))
         if sl_tp:
             sig.update(sl_tp)
         # Open position (DEDUPED)
