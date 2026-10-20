@@ -68,14 +68,25 @@ def log(msg: str):
 
 
 def _get(url: str):
+    """Return (status, parsed_body). The body is always a dict; on an
+    unparseable error the raw text is kept under "raw" so nothing is
+    silently mistaken for an empty result."""
     try:
         with urllib.request.urlopen(url, timeout=60) as r:
-            return r.status, json.loads(r.read().decode())
+            raw = r.read().decode()
+            try:
+                return r.status, json.loads(raw)
+            except Exception:
+                return r.status, {"raw": raw[:300]}
     except urllib.error.HTTPError as e:
         try:
-            return e.code, json.loads(e.read().decode())
+            raw = e.read().decode()
         except Exception:
-            return e.code, {}
+            raw = ""
+        try:
+            return e.code, json.loads(raw)
+        except Exception:
+            return e.code, {"raw": raw[:300]}
     except Exception as e:
         return 0, {"message": f"{type(e).__name__}: {e}"}
 
@@ -107,12 +118,18 @@ def fetch_window(ticker: str, mult: str, span: str, frm: str, to: str,
         code, j = _get(url)
         if not isinstance(j, dict):
             break
-        if _rate_limited(j):
-            wait = 20 * (retries + 1)
-            log(f"    rate limited, waiting {wait}s")
+        # ANY non-200 is treated as retryable. The per-minute cap on this
+        # plan is low enough that a run of monthly requests trips it, and a
+        # 429 whose body failed to parse was previously indistinguishable
+        # from a month with no bars — which silently truncated the history.
+        if code != 200 or _rate_limited(j):
+            wait = 25 * (retries + 1)
+            log(f"    HTTP {code}, waiting {wait}s before retry "
+                f"({str(j)[:120]})")
             time.sleep(wait)
             retries -= 1
             if retries < 0:
+                log("    giving up on this window")
                 break
             continue
         res = j.get("results") or []
@@ -174,6 +191,10 @@ def main() -> int:
         total = 0
         months = 0
         for frm, to in month_windows(start, end):
+            target = out_dir / f"{frm.isoformat()}.csv"
+            if target.exists() and target.stat().st_size > 1000:
+                log(f"  {ticker} {frm} -> {to}: already present, skipping")
+                continue
             bars, pages = fetch_window(ticker, mult, span, frm.isoformat(),
                                        to.isoformat(), key)
             if not bars:
@@ -184,7 +205,7 @@ def main() -> int:
             total += n
             months += 1
             log(f"  {ticker} {frm} -> {to}: {n} bars ({pages} pages)")
-            time.sleep(3.0)
+            time.sleep(6.0)
         log(f"  {ticker}: {total} bars over {months} months -> {out_dir}")
 
     return 0
