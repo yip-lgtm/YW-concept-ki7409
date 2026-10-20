@@ -80,9 +80,25 @@ def _get(url: str):
         return 0, {"message": f"{type(e).__name__}: {e}"}
 
 
+def _rate_limited(j) -> bool:
+    if not isinstance(j, dict):
+        return False
+    if j.get("status") == "ERROR" and "exceeded the maximum requests" in str(
+            j.get("error", "")):
+        return True
+    return "exceeded the maximum requests" in str(j.get("message", ""))
+
+
 def fetch_window(ticker: str, mult: str, span: str, frm: str, to: str,
-                 key: str):
-    """Fetch one window, following the pagination chain. Returns a list of bars."""
+                 key: str, retries: int = 5):
+    """Fetch one window, following the pagination chain. Returns a list of bars.
+
+    An empty result is not the same as no data. A rate-limited response
+    carries an error body and no results array, and treating it as "no data
+    for this month" silently truncates the history at whatever point the
+    per-minute cap was hit. Rate-limited windows are retried with a longer
+    wait instead.
+    """
     url = (f"{API}/{ticker}/range/{mult}/{span}/{frm}/{to}"
            f"?apiKey={key}&limit=50000&sort=asc")
     bars = []
@@ -91,6 +107,14 @@ def fetch_window(ticker: str, mult: str, span: str, frm: str, to: str,
         code, j = _get(url)
         if not isinstance(j, dict):
             break
+        if _rate_limited(j):
+            wait = 20 * (retries + 1)
+            log(f"    rate limited, waiting {wait}s")
+            time.sleep(wait)
+            retries -= 1
+            if retries < 0:
+                break
+            continue
         res = j.get("results") or []
         bars.extend(res)
         pages += 1
@@ -98,7 +122,7 @@ def fetch_window(ticker: str, mult: str, span: str, frm: str, to: str,
         if url:
             if "apiKey=" not in url:
                 url += f"&apiKey={key}"
-            time.sleep(1.1)          # stay under the per-minute request cap
+            time.sleep(1.5)          # stay under the per-minute request cap
     return bars, pages
 
 
@@ -160,7 +184,7 @@ def main() -> int:
             total += n
             months += 1
             log(f"  {ticker} {frm} -> {to}: {n} bars ({pages} pages)")
-            time.sleep(0.6)
+            time.sleep(3.0)
         log(f"  {ticker}: {total} bars over {months} months -> {out_dir}")
 
     return 0
