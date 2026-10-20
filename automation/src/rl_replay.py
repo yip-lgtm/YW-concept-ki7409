@@ -302,8 +302,11 @@ def prepare_trade(trade: dict, df: pd.DataFrame) -> dict | None:
     # Pull the window into plain arrays. The counterfactual sweep runs the
     # simulator 96 times per trade, and iterating a pandas frame row by row
     # inside that loop is what made the dataset build take minutes.
+    atr = float(trade.get("atr") or 0.0)
+    if atr <= 0:
+        atr = risk / 1.6
     return {
-        "entry": entry, "sl": sl, "t1": t1, "risk": risk,
+        "entry": entry, "sl": sl, "t1": t1, "risk": risk, "atr": atr,
         "sign": _direction_sign(trade.get("direction", "long")),
         "hi": win["High"].to_numpy(dtype=float),
         "lo": win["Low"].to_numpy(dtype=float),
@@ -312,20 +315,39 @@ def prepare_trade(trade: dict, df: pd.DataFrame) -> dict | None:
 
 
 def simulate_prepared(prep: dict, t2_r: float, breakeven_at_r: float,
-                      partial_at_r: float, partial_r: float) -> dict:
-    """Run the exit simulation over a prepared trade."""
+                      partial_at_r: float, partial_r: float,
+                      stop_override: float | None = None,
+                      max_bars: int | None = None) -> dict:
+    """Run the exit simulation over a prepared trade.
+
+    `stop_override` replaces the recorded stop. The stop distance is the
+    single largest lever on profit factor that the optimiser had not
+    touched: the book fixes it at 1.6x ATR, but the right distance depends
+    on the strategy's own volatility, and the risk per trade scales with
+    it. `max_bars` is a time stop — a position that has not resolved
+    within that many bars is closed at the last close rather than being
+    left open forever.
+    """
     entry = prep["entry"]
-    risk = prep["risk"]
     sign = prep["sign"]
+    if stop_override is not None:
+        sl = stop_override
+        risk = abs(entry - sl)
+    else:
+        sl = prep["sl"]
+        risk = prep["risk"]
+    if risk <= 0:
+        return {"r": 0.0, "exit_level": "invalid", "bars": 0, "status": "invalid"}
     t2_price = entry + sign * risk * t2_r
     partial_price = (entry + sign * risk * partial_at_r) if partial_at_r else None
 
-    current_sl = prep["sl"]
+    current_sl = sl
     partial_taken = False
     his = prep["hi"]
     los = prep["lo"]
+    n_bars = prep["n_bars"] if max_bars is None else min(prep["n_bars"], max_bars)
 
-    for i in range(prep["n_bars"]):
+    for i in range(n_bars):
         hi = his[i]
         lo = los[i]
         if sign > 0:
@@ -369,5 +391,12 @@ def simulate_prepared(prep: dict, t2_r: float, breakeven_at_r: float,
             if r_now >= breakeven_at_r:
                 current_sl = entry
 
+    # Time stop: close at the last bar's close rather than leaving the
+    # position open forever. The realised R is whatever the market gave.
+    if max_bars is not None and n_bars > 0:
+        last_close = his[n_bars - 1] if sign > 0 else los[n_bars - 1]
+        r = sign * (last_close - entry) / risk
+        return {"r": round(r, 4), "exit_level": "TIME", "bars": n_bars,
+                "status": "closed"}
     return {"r": 0.0, "exit_level": "expired", "bars": prep["n_bars"],
             "status": "expired"}

@@ -867,9 +867,17 @@ def load_agent_params() -> dict:
         for k, v in data.items():
             if k.startswith("_") or not isinstance(v, dict):
                 continue
+            entry = {"_validated": bool(v.get("validated_on_holdout")),
+                     "drop_tickers": v.get("drop_tickers") or [],
+                     "keep_tickers": v.get("keep_tickers") or [],
+                     "cells": v.get("cells") or {}}
+            # Older revisions of this file stored a single strategy-level
+            # config under "config". Keep reading it so a partially updated
+            # file still works.
             cfg = v.get("config")
-            if isinstance(cfg, dict):
-                out[k] = {**cfg, "_validated": bool(v.get("validated_on_holdout"))}
+            if isinstance(cfg, dict) and cfg:
+                entry["config"] = cfg
+            out[k] = entry
         return out
     except Exception:
         return {}
@@ -891,14 +899,25 @@ def load_arm_state() -> dict:
 ARM_STATE = load_arm_state()
 
 
-def resolve_exit_config(strategy: str):
-    """Return (exit_cfg, arm) for a strategy.
+def resolve_exit_config(strategy: str, ticker: str = ""):
+    """Return (exit_cfg, arm) for a strategy, optionally per ticker.
 
-    A strategy with a learned override trades under one of two arms: the RL
-    configuration or the book's shared template, alternating on a fixed
-    period.  The arm is decided here, at position-open time, and frozen
-    into the position so a trade cannot switch rules halfway through.
+    The optimiser works per (strategy, ticker) cell, so the cell's own
+    configuration wins when one exists. The strategy-level fallback is the
+    RL exit policy, which alternates between the learned configuration and
+    the book's template across the A/B arms. The arm is decided here, at
+    position-open time, and frozen into the position so a trade cannot
+    switch rules halfway through.
     """
+    _ap = AGENT_PARAMS.get(strategy)
+    if _ap and _ap.get("_validated"):
+        _cell = (_ap.get("cells") or {}).get(ticker)
+        if _cell:
+            _cfg = {k: _cell.get(k) for k in
+                    ("t2_r", "breakeven_at_r", "partial_at_r", "stop_mult",
+                     "max_bars_held", "min_conf", "grade_filter", "direction",
+                     "weekday_exclude", "hours")}
+            return _cfg, "RL"
     from rl_arm import arm_for_strategy, ARM_CONTROL
     # The optimiser's configuration wins when it was validated on the holdout:
     # it has out-of-sample evidence. The RL exit policy only has a replay
@@ -922,7 +941,7 @@ def resolve_exit_config(strategy: str):
     return ov, arm
 
 
-def calc_sl_tp(entry, atr, direction, exit_cfg=None):
+def calc_sl_tp(entry, atr, direction, exit_cfg=None, stop_mult=None):
     """Calculate SL/TP using 1.6x ATR stop + R-multiple targets.
 
     R multiples: T1=1R, T2=1.618R, T3=2.618R, T4=3.618R, T5=5R (Fib)
@@ -938,10 +957,16 @@ def calc_sl_tp(entry, atr, direction, exit_cfg=None):
     if atr <= 0 or entry <= 0:
         return None
     cfg = exit_cfg or {}
+    # The stop multiple is the optimiser's largest lever: the book pins it at
+    # 1.6xATR for every strategy, but the right distance depends on the
+    # strategy's own volatility, and the money risked scales with it.
+    if stop_mult is None:
+        stop_mult = cfg.get("stop_mult")
+    stop_mult = float(stop_mult) if stop_mult else 1.6
     t2_r = float(cfg.get("t2_r", 1.618))
     partial_at_r = float(cfg.get("partial_at_r", 0) or 0)
     breakeven_at_r = float(cfg.get("breakeven_at_r", 0) or 0)
-    sl_dist = atr * 1.6
+    sl_dist = atr * stop_mult
     t1_r = partial_at_r if partial_at_r > 0 else 1.0
     t3_r = max(2.618, t2_r + 0.618)
     if direction in ("long", "buy", "up", "bullish", "LONG"):
@@ -968,7 +993,8 @@ def calc_sl_tp(entry, atr, direction, exit_cfg=None):
         t4 = entry + sl_dist * 3.618
         t5 = entry + sl_dist * 5.0
     return {"sl": sl, "t1": t1, "t2": t2, "t3": t3, "t4": t4, "t5": t5,
-            "sl_dist": sl_dist, "t2_r": t2_r, "t1_r": t1_r,
+            "sl_dist": sl_dist, "stop_mult": stop_mult,
+            "t2_r": t2_r, "t1_r": t1_r,
             "partial_at_r": partial_at_r, "breakeven_at_r": breakeven_at_r,
             "exit_override": bool(cfg)}
 
@@ -980,7 +1006,7 @@ def open_live_position(sig, atr):
     # A detector that ships its own levels (Argon Gold SOP) wins over the
     # generic 1.6xATR template, otherwise the SOP's stop cap and its
     # 1.5R target would both be silently discarded.
-    _ecfg, _arm = resolve_exit_config(sig.get("strategy"))
+    _ecfg, _arm = resolve_exit_config(sig.get("strategy"), sig.get("ticker", ""))
     sl_tp = sig.get("sl_tp_preset") or calc_sl_tp(entry, atr, direction, _ecfg)
     if not sl_tp:
         return None
@@ -1633,6 +1659,7 @@ def main() -> int:
         # the ones that generalise: dropping the instruments that bled, and
         # refusing low-confidence signals.
         _ap = AGENT_PARAMS.get(sig.get("strategy"))
+        _cellcfg = ((_ap or {}).get("cells") or {}).get(sig.get("ticker")) if _ap else None
         if _ap and _ap.get("_validated"):
             _drop = set(_ap.get("drop_tickers") or [])
             _keep = set(_ap.get("keep_tickers") or [])
@@ -1644,7 +1671,7 @@ def main() -> int:
                 print(f"[gate] {sig.get('strategy')} optimiser drops "
                       f"{sig.get('ticker')} -> SKIP")
                 continue
-            _mc = int(_ap.get("min_conf") or 0)
+            _mc = int((_cellcfg or _ap).get("min_conf") or 0)
             if _mc > 0:
                 _raw = float(sig.get("raw_confidence") or conf)
                 if _raw < _mc:
@@ -1653,7 +1680,7 @@ def main() -> int:
                     print(f"[gate] {sig.get('strategy')} conf {_raw:.0f} < "
                           f"{_mc} -> SKIP")
                     continue
-            _gf = _ap.get("grade_filter")
+            _gf = (_cellcfg or _ap).get("grade_filter")
             if _gf == "A" and grade != "A":
                 sig["gate_skip"] = "optimiser grade filter: A only"
                 print(f"[gate] {sig.get('strategy')} grade {grade} -> SKIP")
@@ -1661,12 +1688,14 @@ def main() -> int:
 
         # Compute SL/TP. A detector-provided preset (Argon Gold SOP) takes
         # precedence over the generic ATR template.
-        _ecfg, _arm = resolve_exit_config(sig.get("strategy"))
+        _ecfg, _arm = resolve_exit_config(sig.get("strategy"), sig.get("ticker", ""))
         _ap2 = AGENT_PARAMS.get(sig.get("strategy"))
         if _ap2 and _ap2.get("_validated") and not _ecfg:
-            # The optimiser's exit configuration (t2_r, breakeven, partial).
+            # Fallback for a strategy with no per-cell entry: the strategy
+            # level exit configuration.
             _ecfg = {k: _ap2.get(k) for k in
-                     ("t2_r", "breakeven_at_r", "partial_at_r") if k in _ap2}
+                     ("t2_r", "breakeven_at_r", "partial_at_r", "stop_mult")
+                     if k in _ap2}
         sl_tp = sig.get("sl_tp_preset") or calc_sl_tp(
             sig.get("last_close", 0), atr, sig.get("direction", "long"), _ecfg)
         sig["exit_arm"] = _arm
