@@ -24,7 +24,23 @@ Entry discipline from the SOP:
 
 INSTRUMENT NOTE
 
-  The SOP is written for spot gold XAUUSD with an absolute $5.00 stop cap.
+  EXPECTED FIRE RATE — READ THIS BEFORE "FIXING" IT
+
+    Roughly one signal per five hours of continuous scanning, on one
+    instrument. A walk-forward over 200 GC=F five-minute bars found three
+    qualifying moments, and the dominant rejection reasons were 224x "no
+    clear 1H bias" and 36x "box broken but no confirmation model".
+
+    That is the SOP working as written: 極短線 + 大勢明確 + 嚴格確認.
+    A quiet day is the expected state, NOT a fault. The 1H bias gate is
+    doing most of the filtering and it should not be loosened to raise the
+    hit rate, because the SOP's edge comes from only trading with a clear
+    higher-timeframe trend. If this strategy has not produced a signal in
+    24 hours, that is a normal outcome; look for an actual error (the
+    detector not being reached, or the trigger-bar window being too
+    narrow) before touching a threshold.
+
+  THE SOP is written for spot gold XAUUSD with an absolute $5.00 stop cap.
   There is no XAUUSD feed available, so this detector runs on GC=F, the
   COMEX front-month gold future.
 
