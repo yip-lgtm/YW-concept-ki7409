@@ -251,6 +251,40 @@ if iter_files:
     for r in d['results']:
         agent = r.get('agent', '').replace('yw-', '')
         latest_iter[agent] = r
+        # Also index by strategy_id so both naming conventions resolve.
+        sid_from_result = r.get('strategy_id')
+        if sid_from_result:
+            latest_iter.setdefault(sid_from_result, r)
+    # Third index: base family key with timeframe suffix stripped, so
+    # "ocs-btc-5m" is also reachable as "ocs-btc".
+    for k in list(latest_iter.keys()):
+        base = k.rsplit('-', 1)[0] if k.rsplit('-', 1)[-1] in ('5m', '15m', '5min', '1m') else k
+        if base != k:
+            latest_iter.setdefault(base, latest_iter[k])
+
+
+def _iter_lookup(sid):
+    """Resolve an iteration record for a dashboard strategy id.
+
+    Handles three mismatches seen in production:
+      1. agent 'yw-two-yang' vs sid 'two-yang'      -> strip 'yw-' prefix
+      2. agent 'ocs-btc-5m'  vs sid 'ocs-btc'       -> strip timeframe suffix
+      3. agent 'yw-b1'        vs sid 'b1-mnq'/-mgc/-btc/-3in1
+                                                -> B1 family shares one grade
+    """
+    for cand in (sid, sid.replace('-', ''), f"yw-{sid}"):
+        if cand in latest_iter:
+            return latest_iter[cand]
+    # B1 family: b1-mnq / b1-mgc / b1-btc / b1-3in1 all inherit 'b1'
+    if sid.startswith('b1'):
+        for key in ('b1', 'yw-b1'):
+            if key in latest_iter:
+                return latest_iter[key]
+    # timeframe suffix: 50-20-pullback has no suffix; ocs-btc-5m does
+    parts = sid.rsplit('-', 1)
+    if len(parts) == 2 and parts[1] in ('mnq', 'mgc', 'btc', '3in1'):
+        return latest_iter.get(sid.rsplit('-', 1)[0], {})
+    return {}
 
 # 6. Backtest 4d
 bt_path = REPO / 'automation/reports/strategy_ranking/backtest_4d_2026-08-25.json'
@@ -305,7 +339,7 @@ for sid, w in weights.items():
     live_24h = [t for t in last24h if _match(t.get('strategy', ''), name)]
     today = [t for t in today_trades if _match(t.get('strategy', ''), name)]
     sigs_24h = [s for s in last24h_sigs if _match(s.get('strategy', ''), name)]
-    iter_ = latest_iter.get(sid, {})
+    iter_ = _iter_lookup(sid)
 
     cfg = grader_cfg.get({
         'h-pattern': 'H-Pattern', '3-pushes': '3-Pushes', 'two-yang': 'Two-Yang-One-Yin',
