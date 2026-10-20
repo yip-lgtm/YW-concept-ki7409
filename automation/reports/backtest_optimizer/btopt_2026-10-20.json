@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-20T14:22:24.383025+00:00",
+  "generated_at": "2026-10-20T15:14:35.946266+00:00",
   "target": {
     "pf": 1.5,
     "rr": 1.5
@@ -89,6 +89,39 @@
         "total_r": 0.17
       },
       "folds": [],
+      "confirmation": {
+        "available": true,
+        "train": {
+          "n": 6,
+          "pf": 0.324,
+          "wr": 16.7,
+          "rr": 1.618,
+          "total_r": -3.38
+        },
+        "train_baseline": {
+          "n": 6,
+          "pf": 0.324,
+          "wr": 16.7,
+          "rr": 1.618,
+          "total_r": -3.38
+        },
+        "holdout": {
+          "n": 15,
+          "pf": 0.91,
+          "wr": 53.3,
+          "rr": 0.796,
+          "total_r": -0.63
+        },
+        "holdout_baseline": {
+          "n": 15,
+          "pf": 0.91,
+          "wr": 53.3,
+          "rr": 0.796,
+          "total_r": -0.63
+        },
+        "n_train": 35,
+        "n_holdout": 15
+      },
       "floor": 50,
       "reached_target": false
     },
@@ -141,6 +174,39 @@
         "total_r": 6.33
       },
       "folds": [],
+      "confirmation": {
+        "available": true,
+        "train": {
+          "n": 18,
+          "pf": 1.618,
+          "wr": 50.0,
+          "rr": 1.618,
+          "total_r": 5.56
+        },
+        "train_baseline": {
+          "n": 19,
+          "pf": 1.456,
+          "wr": 47.4,
+          "rr": 1.618,
+          "total_r": 4.56
+        },
+        "holdout": {
+          "n": 58,
+          "pf": 1.316,
+          "wr": 51.7,
+          "rr": 1.229,
+          "total_r": 6.35
+        },
+        "holdout_baseline": {
+          "n": 63,
+          "pf": 1.516,
+          "wr": 52.4,
+          "rr": 1.378,
+          "total_r": 10.46
+        },
+        "n_train": 147,
+        "n_holdout": 64
+      },
       "floor": 50,
       "reached_target": false
     },
@@ -278,6 +344,39 @@
           "total_r": -4.82
         }
       ],
+      "confirmation": {
+        "available": true,
+        "train": {
+          "n": 105,
+          "pf": 1.079,
+          "wr": 40.0,
+          "rr": 1.618,
+          "total_r": 4.96
+        },
+        "train_baseline": {
+          "n": 105,
+          "pf": 1.079,
+          "wr": 40.0,
+          "rr": 1.618,
+          "total_r": 4.96
+        },
+        "holdout": {
+          "n": 241,
+          "pf": 0.994,
+          "wr": 44.4,
+          "rr": 1.244,
+          "total_r": -0.64
+        },
+        "holdout_baseline": {
+          "n": 241,
+          "pf": 0.994,
+          "wr": 44.4,
+          "rr": 1.244,
+          "total_r": -0.64
+        },
+        "n_train": 553,
+        "n_holdout": 241
+      },
       "floor": 50,
       "reached_target": false
     },
@@ -406,6 +505,9 @@
           "total_r": 38.97
         }
       ],
+      "confirmation": {
+        "available": false
+      },
       "floor": 140,
       "reached_target": false
     },
@@ -518,7 +620,141 @@
         "total_r": -7.38
       },
       "folds": [],
+      "confirmation": {
+        "available": false
+      },
       "floor": 50,
+      "reached_target": false
+    },
+    "CRT": {
+      "strategy": "CRT",
+      "cells": {
+        "MES=F": {
+          "config": {
+            "t2_r": 1.618,
+            "breakeven_at_r": 0.0,
+            "partial_at_r": 0.0,
+            "min_conf": 0,
+            "grade_filter": "AB",
+            "direction": "all",
+            "weekday_exclude": null,
+            "hours": null,
+            "stop_mult": 1.6,
+            "max_bars_held": 96
+          },
+          "train": {
+            "n": 88,
+            "pf": 2.033,
+            "wr": 55.7,
+            "rr": 1.618,
+            "total_r": 40.28
+          }
+        },
+        "MGC=F": {
+          "config": {
+            "t2_r": 1.618,
+            "breakeven_at_r": 0.0,
+            "partial_at_r": 0.0,
+            "min_conf": 0,
+            "grade_filter": "AB",
+            "direction": "all",
+            "weekday_exclude": null,
+            "hours": null,
+            "stop_mult": 1.6,
+            "max_bars_held": 96
+          },
+          "train": {
+            "n": 81,
+            "pf": 1.112,
+            "wr": 40.7,
+            "rr": 1.618,
+            "total_r": 5.39
+          }
+        },
+        "BTC-USD": {
+          "config": {
+            "t2_r": 1.618,
+            "breakeven_at_r": 0.0,
+            "partial_at_r": 0.0,
+            "min_conf": 0,
+            "grade_filter": "AB",
+            "direction": "all",
+            "weekday_exclude": null,
+            "hours": null,
+            "stop_mult": 1.6,
+            "max_bars_held": 96
+          },
+          "train": {
+            "n": 124,
+            "pf": 1.169,
+            "wr": 41.9,
+            "rr": 1.618,
+            "total_r": 12.14
+          }
+        }
+      },
+      "dropped_cells": [
+        "M2K=F",
+        "MNQ=F"
+      ],
+      "train": {
+        "n": 293,
+        "pf": 1.364,
+        "wr": 45.7,
+        "rr": 1.618,
+        "total_r": 57.81
+      },
+      "train_baseline": {
+        "n": 471,
+        "pf": 1.065,
+        "wr": 39.7,
+        "rr": 1.618,
+        "total_r": 18.57
+      },
+      "holdout": {
+        "n": 131,
+        "pf": 1.065,
+        "wr": 39.7,
+        "rr": 1.618,
+        "total_r": 5.14
+      },
+      "holdout_baseline": {
+        "n": 208,
+        "pf": 1.163,
+        "wr": 41.8,
+        "rr": 1.618,
+        "total_r": 19.77
+      },
+      "folds": [
+        {
+          "upto": "2026-09-02T04:55:52",
+          "n": 95,
+          "pf": 1.519,
+          "wr": 48.4,
+          "rr": 1.618,
+          "total_r": 25.43
+        },
+        {
+          "upto": "2026-09-08T00:30:41",
+          "n": 202,
+          "pf": 1.437,
+          "wr": 47.0,
+          "rr": 1.618,
+          "total_r": 46.71
+        },
+        {
+          "upto": "2026-09-11T09:10:17",
+          "n": 292,
+          "pf": 1.372,
+          "wr": 45.9,
+          "rr": 1.618,
+          "total_r": 58.81
+        }
+      ],
+      "confirmation": {
+        "available": false
+      },
+      "floor": 237,
       "reached_target": false
     },
     "Stair": {
@@ -655,6 +891,39 @@
           "total_r": 15.34
         }
       ],
+      "confirmation": {
+        "available": true,
+        "train": {
+          "n": 32,
+          "pf": 1.255,
+          "wr": 40.6,
+          "rr": 1.834,
+          "total_r": 4.08
+        },
+        "train_baseline": {
+          "n": 69,
+          "pf": 1.32,
+          "wr": 44.9,
+          "rr": 1.618,
+          "total_r": 12.16
+        },
+        "holdout": {
+          "n": 53,
+          "pf": 0.968,
+          "wr": 45.3,
+          "rr": 1.169,
+          "total_r": -0.59
+        },
+        "holdout_baseline": {
+          "n": 129,
+          "pf": 1.012,
+          "wr": 43.4,
+          "rr": 1.319,
+          "total_r": 0.6
+        },
+        "n_train": 300,
+        "n_holdout": 129
+      },
       "floor": 121,
       "reached_target": false
     },
@@ -827,136 +1096,41 @@
           "total_r": 33.55
         }
       ],
+      "confirmation": {
+        "available": true,
+        "train": {
+          "n": 24,
+          "pf": 1.064,
+          "wr": 41.7,
+          "rr": 1.489,
+          "total_r": 0.7
+        },
+        "train_baseline": {
+          "n": 43,
+          "pf": 1.407,
+          "wr": 46.5,
+          "rr": 1.618,
+          "total_r": 9.36
+        },
+        "holdout": {
+          "n": 53,
+          "pf": 0.831,
+          "wr": 67.9,
+          "rr": 0.392,
+          "total_r": -1.37
+        },
+        "holdout_baseline": {
+          "n": 115,
+          "pf": 0.973,
+          "wr": 49.6,
+          "rr": 0.99,
+          "total_r": -1.31
+        },
+        "n_train": 266,
+        "n_holdout": 115
+      },
       "floor": 50,
       "reached_target": true
-    },
-    "CRT": {
-      "strategy": "CRT",
-      "cells": {
-        "MES=F": {
-          "config": {
-            "t2_r": 1.618,
-            "breakeven_at_r": 0.0,
-            "partial_at_r": 0.0,
-            "min_conf": 0,
-            "grade_filter": "AB",
-            "direction": "all",
-            "weekday_exclude": null,
-            "hours": null,
-            "stop_mult": 1.6,
-            "max_bars_held": 96
-          },
-          "train": {
-            "n": 88,
-            "pf": 2.033,
-            "wr": 55.7,
-            "rr": 1.618,
-            "total_r": 40.28
-          }
-        },
-        "MGC=F": {
-          "config": {
-            "t2_r": 1.618,
-            "breakeven_at_r": 0.0,
-            "partial_at_r": 0.0,
-            "min_conf": 0,
-            "grade_filter": "AB",
-            "direction": "all",
-            "weekday_exclude": null,
-            "hours": null,
-            "stop_mult": 1.6,
-            "max_bars_held": 96
-          },
-          "train": {
-            "n": 81,
-            "pf": 1.112,
-            "wr": 40.7,
-            "rr": 1.618,
-            "total_r": 5.39
-          }
-        },
-        "BTC-USD": {
-          "config": {
-            "t2_r": 1.618,
-            "breakeven_at_r": 0.0,
-            "partial_at_r": 0.0,
-            "min_conf": 0,
-            "grade_filter": "AB",
-            "direction": "all",
-            "weekday_exclude": null,
-            "hours": null,
-            "stop_mult": 1.6,
-            "max_bars_held": 96
-          },
-          "train": {
-            "n": 124,
-            "pf": 1.169,
-            "wr": 41.9,
-            "rr": 1.618,
-            "total_r": 12.14
-          }
-        }
-      },
-      "dropped_cells": [
-        "M2K=F",
-        "MNQ=F"
-      ],
-      "train": {
-        "n": 293,
-        "pf": 1.364,
-        "wr": 45.7,
-        "rr": 1.618,
-        "total_r": 57.81
-      },
-      "train_baseline": {
-        "n": 471,
-        "pf": 1.065,
-        "wr": 39.7,
-        "rr": 1.618,
-        "total_r": 18.57
-      },
-      "holdout": {
-        "n": 131,
-        "pf": 1.065,
-        "wr": 39.7,
-        "rr": 1.618,
-        "total_r": 5.14
-      },
-      "holdout_baseline": {
-        "n": 208,
-        "pf": 1.163,
-        "wr": 41.8,
-        "rr": 1.618,
-        "total_r": 19.77
-      },
-      "folds": [
-        {
-          "upto": "2026-09-02T04:55:52",
-          "n": 95,
-          "pf": 1.519,
-          "wr": 48.4,
-          "rr": 1.618,
-          "total_r": 25.43
-        },
-        {
-          "upto": "2026-09-08T00:30:41",
-          "n": 202,
-          "pf": 1.437,
-          "wr": 47.0,
-          "rr": 1.618,
-          "total_r": 46.71
-        },
-        {
-          "upto": "2026-09-11T09:10:17",
-          "n": 292,
-          "pf": 1.372,
-          "wr": 45.9,
-          "rr": 1.618,
-          "total_r": 58.81
-        }
-      ],
-      "floor": 237,
-      "reached_target": false
     },
     "50-20-Pullback": {
       "strategy": "50-20-Pullback",
@@ -1083,6 +1257,39 @@
           "total_r": 18.94
         }
       ],
+      "confirmation": {
+        "available": true,
+        "train": {
+          "n": 34,
+          "pf": 1.133,
+          "wr": 41.2,
+          "rr": 1.618,
+          "total_r": 2.65
+        },
+        "train_baseline": {
+          "n": 68,
+          "pf": 0.774,
+          "wr": 32.4,
+          "rr": 1.618,
+          "total_r": -10.4
+        },
+        "holdout": {
+          "n": 72,
+          "pf": 0.841,
+          "wr": 40.3,
+          "rr": 1.247,
+          "total_r": -5.48
+        },
+        "holdout_baseline": {
+          "n": 130,
+          "pf": 0.952,
+          "wr": 41.5,
+          "rr": 1.34,
+          "total_r": -2.75
+        },
+        "n_train": 302,
+        "n_holdout": 130
+      },
       "floor": 334,
       "reached_target": false
     }

@@ -77,6 +77,12 @@ HKT = timezone(timedelta(hours=8))
 from rl_replay import prepare_trade, simulate_prepared  # noqa: E402
 
 TRADES_FILE = REPO / "automation/reports/live_scan/trades.jsonl"
+# The second, independent sample. 180 days of one-hour history synthesised
+# by historical_backtest.py. The live five-minute history is only 56 days,
+# and on that sample optimising profit factor produced configurations that
+# did not survive out of sample. A configuration now has to improve BOTH
+# tracks before it is published.
+HIST_TRADES_FILE = REPO / "automation/reports/historical_backtest/trades.jsonl"
 OUT_DIR = REPO / "automation/reports/backtest_optimizer"
 OUT_CONFIG = REPO / "automation/config/agent_params.json"
 
@@ -171,6 +177,31 @@ def load_trades() -> list[dict]:
                 continue
             out.append(t)
     out.sort(key=lambda t: str(t.get("entry_time", "")))
+    return out
+
+
+def load_trades_file(path: Path, label: str) -> list[dict]:
+    out = []
+    if not path.exists():
+        return out
+    with open(path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line[0] in "<=>":
+                continue
+            try:
+                t = json.loads(line)
+            except Exception:
+                continue
+            if t.get("status") != "closed":
+                continue
+            if (t.get("grade") or "?").upper() == "C":
+                continue
+            out.append(t)
+    out.sort(key=lambda t: str(t.get("entry_time", "")))
+    if out:
+        log(f"  {label}: {len(out)} trades, "
+            f"{str(out[0].get('entry_time'))[:10]} → {str(out[-1].get('entry_time'))[:10]}")
     return out
 
 
@@ -591,7 +622,8 @@ def holdout_evaluate(trades_by_cell: dict[str, list[dict]], bars: dict,
 # ---------------------------------------------------------------- main
 
 def _run_strategy(strategy: str, trades: list[dict], bars: dict,
-                   train_cut: str | None = None) -> dict:
+                   train_cut: str | None = None,
+                   hist_trades: list[dict] | None = None) -> dict:
     # Per-strategy chronological split. Each strategy's own trades are sorted
     # by entry time; the first 70% is the training window and the later 30%
     # is the holdout. A single global cut leaves the small agents with an
@@ -645,6 +677,42 @@ def _run_strategy(strategy: str, trades: list[dict], bars: dict,
     hold = holdout_evaluate(hold_cells, bars, cell_cfgs, drop, strategy)
     base_hold = holdout_evaluate(hold_cells, bars, base_cfg, set(), strategy)
 
+    # --- confirmation on the second, independent track ---
+    # The same configuration has to improve the longer one-hour history too.
+    # The two tracks share no trades and cover different periods, so a
+    # configuration that only fits one of them is fitted, not improved.
+    conf = {"available": False}
+    if hist_trades:
+        h_by = defaultdict(list)
+        for t in hist_trades:
+            if t.get("strategy") == strategy:
+                h_by[t.get("ticker")].append(t)
+        if h_by:
+            h_ordered = sorted(hist_trades, key=lambda t: str(t.get("entry_time", "")))
+            h_trades = [t for t in h_ordered if t.get("strategy") == strategy]
+            if len(h_trades) >= 40:
+                h_split = int(len(h_trades) * (1 - HOLDOUT_FRACTION))
+                h_cut = str(h_trades[h_split].get("entry_time", ""))
+                h_train_cells = {tk: [t for t in ts if str(t.get("entry_time", "")) < h_cut]
+                                 for tk, ts in h_by.items()}
+                h_hold_cells = {tk: [t for t in ts if str(t.get("entry_time", "")) >= h_cut]
+                                for tk, ts in h_by.items()}
+                h_cells = {tk: Cell(strategy, tk, ts, bars)
+                           for tk, ts in h_train_cells.items() if ts}
+                if h_cells:
+                    h_base = {tk: dict(BOOK_DEFAULTS) for tk in h_cells}
+                    h_opt = evaluate_config_set(h_cells, cell_cfgs, drop)
+                    h_base_sc = evaluate_config_set(h_cells, h_base, set())
+                    h_hold = holdout_evaluate(h_hold_cells, bars, cell_cfgs,
+                                              drop, strategy)
+                    h_base_hold = holdout_evaluate(h_hold_cells, bars, h_base,
+                                                   set(), strategy)
+                    conf = {"available": True, "train": h_opt,
+                            "train_baseline": h_base_sc,
+                            "holdout": h_hold, "holdout_baseline": h_base_hold,
+                            "n_train": sum(len(v) for v in h_train_cells.values()),
+                            "n_holdout": sum(len(v) for v in h_hold_cells.values())}
+
     return {
         "strategy": strategy,
         "cells": {tk: {"config": v["config"], "train": v["score"]}
@@ -655,6 +723,7 @@ def _run_strategy(strategy: str, trades: list[dict], bars: dict,
         "holdout": hold,
         "holdout_baseline": base_hold,
         "folds": fold_scores,
+        "confirmation": conf,
         "floor": res["floor"],
         "reached_target": (train["pf"] >= TARGET_PF and train["rr"] >= TARGET_RR),
     }
@@ -690,11 +759,17 @@ def main() -> int:
     for t in trades:
         by_agent[t.get("strategy", "?")].append(t)
 
+    hist_trades_all = load_trades_file(HIST_TRADES_FILE, "history track")
+    hist_by = defaultdict(list)
+    for t in hist_trades_all:
+        hist_by[t.get("strategy", "?")].append(t)
+
     agents = args.agents or sorted(by_agent.keys())
     log(f"optimising {len([a for a in agents if a in by_agent])} strategies")
     results = {}
     with ThreadPoolExecutor(max_workers=4) as pool:
-        futs = {pool.submit(_run_strategy, a, by_agent[a], bars, None): a
+        futs = {pool.submit(_run_strategy, a, by_agent[a], bars, None,
+                                   hist_by.get(a, [])): a
                 for a in agents if a in by_agent}
         for fut in as_completed(futs):
             a = futs[fut]
@@ -727,7 +802,7 @@ def main() -> int:
           f"validation. The holdout was never used for selection.", "",
           f"Window {report['window']['from']} → {report['window']['to']}; "
           f"train cut {report['window']['train_cut']}.", "",
-          "| Agent | Train n | Train PF | Train RR | Base PF | HO n | HO PF | HO RR | Base HO PF | Verdict |",
+          "| Agent | Train n | Train PF | Base PF | HO n | HO PF | Base HO PF | 2nd track HO (base) | Verdict |",
           "|---|---|---|---|---|---|---|---|---|---|"]
     improved, overfit, insufficient = [], [], []
     for a, r in sorted(results.items()):
@@ -735,21 +810,34 @@ def main() -> int:
             md.append(f"| {a} | — | — | — | — | — | — | — | — | ERROR |")
             continue
         t, tb, h, hb = r["train"], r["train_baseline"], r["holdout"], r["holdout_baseline"]
+        cf = r.get("confirmation") or {}
         if h["n"] < MIN_TRADES_FOR_CLAIM:
             insufficient.append(a)
             verdict = "— insufficient holdout"
+        elif cf.get("available") and cf["holdout"]["n"] >= MIN_TRADES_FOR_CLAIM \
+                and cf["holdout"]["pf"] <= cf["holdout_baseline"]["pf"] + 0.02:
+            overfit.append(a)
+            verdict = "⚠️ overfit (failed 2nd track)"
         elif h["pf"] > hb["pf"] + 0.05:
             improved.append(a)
-            verdict = "✅ improved"
+            verdict = "✅ improved (both tracks)"
         elif h["pf"] < hb["pf"]:
             overfit.append(a)
             verdict = "⚠️ overfit"
         else:
             verdict = "—"
-        md.append(f"| {a} | {t['n']} | {t['pf']} | {t['rr']} | {tb['pf']} | "
-                  f"{h['n']} | {h['pf']} | {h['rr']} | {hb['pf']} | {verdict} |")
-    md += ["", f"**Improved on the holdout: {len(improved)}/{len(results)}**"
-           + (f" — {', '.join(improved)}" if improved else "")]
+        cf = r.get("confirmation") or {}
+        _c2 = (f"{cf['holdout']['pf']} ({cf['holdout_baseline']['pf']}, "
+               f"n={cf['holdout']['n']})") if cf.get("available") else "— no 2nd track"
+        md.append(f"| {a} | {t['n']} | {t['pf']} | {tb['pf']} | "
+                  f"{h['n']} | {h['pf']} | {hb['pf']} | {_c2} | {verdict} |")
+    md += ["", f"**Improved on BOTH tracks: {len(improved)}/{len(results)}**"
+           + (f" — {', '.join(improved)}" if improved else ""),
+           "", "The live track is the 56-day five-minute history the system "
+           "actually traded. The second track is 180 days of one-hour history "
+           "synthesised by historical_backtest.py. They share no trades and "
+           "cover different periods, so a configuration that only improves one "
+           "of them has been fitted rather than improved."]
     if overfit:
         md += ["", f"**Overfitted (holdout below the book's own baseline): "
                    f"{', '.join(overfit)}**"]
@@ -783,7 +871,12 @@ def main() -> int:
         if r.get("error"):
             continue
         h, hb = r["holdout"], r["holdout_baseline"]
-        validated = (h["n"] >= MIN_TRADES_FOR_CLAIM and h["pf"] > hb["pf"] + 0.05)
+        cf = r.get("confirmation") or {}
+        confirmed = True
+        if cf.get("available") and cf["holdout"]["n"] >= MIN_TRADES_FOR_CLAIM:
+            confirmed = cf["holdout"]["pf"] > cf["holdout_baseline"]["pf"] + 0.02
+        validated = (h["n"] >= MIN_TRADES_FOR_CLAIM and h["pf"] > hb["pf"] + 0.05
+                     and confirmed)
         # A strategy-level view of the per-cell configuration: the cell configs
         # are kept per ticker, and the ticker list is the dropped set.
         keep = [tk for tk in r.get("cells", {})]

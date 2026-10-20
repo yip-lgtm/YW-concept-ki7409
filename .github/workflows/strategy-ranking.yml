@@ -100,6 +100,14 @@ jobs:
         run: |
           .venv/bin/python scripts/llm_iterate_all.py 2>&1 | tee /tmp/iterate_all_log.txt
 
+      - name: Historical backtest (180d, 1h bars) — second independent track
+        id: hist-backtest
+        if: always()
+        working-directory: automation
+        run: |
+          .venv/bin/python scripts/historical_backtest.py --days 180 2>&1 \
+            | tee /tmp/hist_backtest_log.txt || echo "hist backtest failed"
+
       - name: Data-driven weight optimization (PF/WR/RR decides, LLM vetoes)
         id: weight-opt
         if: always()

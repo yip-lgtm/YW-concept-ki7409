@@ -48,12 +48,13 @@
     "holdout_pf": 1.056,
     "holdout_n": 6,
     "holdout_baseline_pf": 1.056,
+    "confirmation_holdout_pf": 0.91,
+    "confirmation_holdout_baseline_pf": 0.91,
     "reached_target": false,
     "validated_on_holdout": false,
     "source": "backtest_optimizer",
-    "generated_at": "2026-10-20T14:22:24.383025+00:00",
-    "config": {},
-    "note": "not published: no improvement on the holdout"
+    "generated_at": "2026-10-20T15:14:35.946266+00:00",
+    "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
   },
   "H-Pattern": {
     "cells": {
@@ -78,12 +79,13 @@
     "holdout_pf": 2.265,
     "holdout_n": 12,
     "holdout_baseline_pf": 2.265,
+    "confirmation_holdout_pf": 1.316,
+    "confirmation_holdout_baseline_pf": 1.516,
     "reached_target": false,
     "validated_on_holdout": false,
     "source": "backtest_optimizer",
-    "generated_at": "2026-10-20T14:22:24.383025+00:00",
-    "config": {},
-    "note": "not published: no improvement on the holdout"
+    "generated_at": "2026-10-20T15:14:35.946266+00:00",
+    "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
   },
   "Kell-Cycle": {
     "cells": {
@@ -160,12 +162,13 @@
     "holdout_pf": 1.416,
     "holdout_n": 15,
     "holdout_baseline_pf": 1.416,
+    "confirmation_holdout_pf": 0.994,
+    "confirmation_holdout_baseline_pf": 0.994,
     "reached_target": false,
     "validated_on_holdout": false,
     "source": "backtest_optimizer",
-    "generated_at": "2026-10-20T14:22:24.383025+00:00",
-    "config": {},
-    "note": "not published: no improvement on the holdout"
+    "generated_at": "2026-10-20T15:14:35.946266+00:00",
+    "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
   },
   "3-Pushes": {
     "cells": {
@@ -219,12 +222,13 @@
     "holdout_pf": 1.191,
     "holdout_n": 66,
     "holdout_baseline_pf": 1.226,
+    "confirmation_holdout_pf": null,
+    "confirmation_holdout_baseline_pf": null,
     "reached_target": false,
     "validated_on_holdout": false,
     "source": "backtest_optimizer",
-    "generated_at": "2026-10-20T14:22:24.383025+00:00",
-    "config": {},
-    "note": "not published: no improvement on the holdout"
+    "generated_at": "2026-10-20T15:14:35.946266+00:00",
+    "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
   },
   "RSI-Div": {
     "cells": {
@@ -301,12 +305,73 @@
     "holdout_pf": 0.18,
     "holdout_n": 10,
     "holdout_baseline_pf": 0.18,
+    "confirmation_holdout_pf": null,
+    "confirmation_holdout_baseline_pf": null,
     "reached_target": false,
     "validated_on_holdout": false,
     "source": "backtest_optimizer",
-    "generated_at": "2026-10-20T14:22:24.383025+00:00",
-    "config": {},
-    "note": "not published: no improvement on the holdout"
+    "generated_at": "2026-10-20T15:14:35.946266+00:00",
+    "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
+  },
+  "CRT": {
+    "cells": {
+      "MES=F": {
+        "t2_r": 1.618,
+        "breakeven_at_r": 0.0,
+        "partial_at_r": 0.0,
+        "stop_mult": 1.6,
+        "max_bars_held": 96,
+        "min_conf": 0,
+        "grade_filter": "AB",
+        "direction": "all",
+        "weekday_exclude": null,
+        "hours": null
+      },
+      "MGC=F": {
+        "t2_r": 1.618,
+        "breakeven_at_r": 0.0,
+        "partial_at_r": 0.0,
+        "stop_mult": 1.6,
+        "max_bars_held": 96,
+        "min_conf": 0,
+        "grade_filter": "AB",
+        "direction": "all",
+        "weekday_exclude": null,
+        "hours": null
+      },
+      "BTC-USD": {
+        "t2_r": 1.618,
+        "breakeven_at_r": 0.0,
+        "partial_at_r": 0.0,
+        "stop_mult": 1.6,
+        "max_bars_held": 96,
+        "min_conf": 0,
+        "grade_filter": "AB",
+        "direction": "all",
+        "weekday_exclude": null,
+        "hours": null
+      }
+    },
+    "drop_tickers": [
+      "M2K=F",
+      "MNQ=F"
+    ],
+    "keep_tickers": [
+      "MES=F",
+      "MGC=F",
+      "BTC-USD"
+    ],
+    "train_pf": 1.364,
+    "holdout_pf": 1.065,
+    "holdout_n": 131,
+    "holdout_baseline_pf": 1.163,
+    "confirmation_holdout_pf": null,
+    "confirmation_holdout_baseline_pf": null,
+    "reached_target": false,
+    "validated_on_holdout": false,
+    "source": "backtest_optimizer",
+    "generated_at": "2026-10-20T15:14:35.946266+00:00",
+    "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
   },
   "Stair": {
     "cells": {
@@ -369,10 +434,13 @@
     "holdout_pf": 1.136,
     "holdout_n": 55,
     "holdout_baseline_pf": 0.907,
+    "confirmation_holdout_pf": 0.968,
+    "confirmation_holdout_baseline_pf": 1.012,
     "reached_target": false,
-    "validated_on_holdout": true,
+    "validated_on_holdout": false,
     "source": "backtest_optimizer",
-    "generated_at": "2026-10-20T14:22:24.383025+00:00"
+    "generated_at": "2026-10-20T15:14:35.946266+00:00",
+    "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
   },
   "Two-Yang": {
     "cells": {
@@ -462,71 +530,13 @@
     "holdout_pf": 0.651,
     "holdout_n": 15,
     "holdout_baseline_pf": 0.809,
+    "confirmation_holdout_pf": 0.831,
+    "confirmation_holdout_baseline_pf": 0.973,
     "reached_target": true,
     "validated_on_holdout": false,
     "source": "backtest_optimizer",
-    "generated_at": "2026-10-20T14:22:24.383025+00:00",
-    "config": {},
-    "note": "not published: no improvement on the holdout"
-  },
-  "CRT": {
-    "cells": {
-      "MES=F": {
-        "t2_r": 1.618,
-        "breakeven_at_r": 0.0,
-        "partial_at_r": 0.0,
-        "stop_mult": 1.6,
-        "max_bars_held": 96,
-        "min_conf": 0,
-        "grade_filter": "AB",
-        "direction": "all",
-        "weekday_exclude": null,
-        "hours": null
-      },
-      "MGC=F": {
-        "t2_r": 1.618,
-        "breakeven_at_r": 0.0,
-        "partial_at_r": 0.0,
-        "stop_mult": 1.6,
-        "max_bars_held": 96,
-        "min_conf": 0,
-        "grade_filter": "AB",
-        "direction": "all",
-        "weekday_exclude": null,
-        "hours": null
-      },
-      "BTC-USD": {
-        "t2_r": 1.618,
-        "breakeven_at_r": 0.0,
-        "partial_at_r": 0.0,
-        "stop_mult": 1.6,
-        "max_bars_held": 96,
-        "min_conf": 0,
-        "grade_filter": "AB",
-        "direction": "all",
-        "weekday_exclude": null,
-        "hours": null
-      }
-    },
-    "drop_tickers": [
-      "M2K=F",
-      "MNQ=F"
-    ],
-    "keep_tickers": [
-      "MES=F",
-      "MGC=F",
-      "BTC-USD"
-    ],
-    "train_pf": 1.364,
-    "holdout_pf": 1.065,
-    "holdout_n": 131,
-    "holdout_baseline_pf": 1.163,
-    "reached_target": false,
-    "validated_on_holdout": false,
-    "source": "backtest_optimizer",
-    "generated_at": "2026-10-20T14:22:24.383025+00:00",
-    "config": {},
-    "note": "not published: no improvement on the holdout"
+    "generated_at": "2026-10-20T15:14:35.946266+00:00",
+    "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
   },
   "50-20-Pullback": {
     "cells": {
@@ -580,11 +590,12 @@
     "holdout_pf": 0.893,
     "holdout_n": 244,
     "holdout_baseline_pf": 1.008,
+    "confirmation_holdout_pf": 0.841,
+    "confirmation_holdout_baseline_pf": 0.952,
     "reached_target": false,
     "validated_on_holdout": false,
     "source": "backtest_optimizer",
-    "generated_at": "2026-10-20T14:22:24.383025+00:00",
-    "config": {},
-    "note": "not published: no improvement on the holdout"
+    "generated_at": "2026-10-20T15:14:35.946266+00:00",
+    "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
   }
 }

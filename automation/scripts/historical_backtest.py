@@ -216,8 +216,12 @@ def main() -> int:
     # OCS-BTC-5m is excluded because it fits a KNN at every evaluation point,
     # which is far too slow for a sweep, and it is a separate strategy with
     # its own pipeline.
+    # B1-3in1 is excluded because it costs about 415 ms per evaluation
+    # against one to fifteen for everything else, which alone would take
+    # five minutes per ticker for one strategy. It is also a multi-asset
+    # combination, so it has no clean single-cell story in this sweep.
     skip = {"Argon-Gold", "TTrades-Fractal", "TTrades-L12", "TTrades-L13",
-            "TTrades-L14", "OCS-BTC-5m"}
+            "TTrades-L14", "OCS-BTC-5m", "B1-3in1"}
     det_names = [n for n in ls.STRATEGIES if n not in skip]
     log(f"  detectors: {len(det_names)} ({', '.join(det_names)})")
 
