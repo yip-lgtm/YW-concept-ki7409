@@ -36,6 +36,8 @@ Also called by strategy-ranking.yml at end of main() for same-day guarantees.
 from __future__ import annotations
 import os
 import sys
+import json
+import time
 import subprocess
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
@@ -46,6 +48,9 @@ else:
     REPO = Path("/workspace/YW-concept-ki7409")
 
 # Paths that should be in every daily auto-push
+# Push attempts before giving up. Each attempt re-syncs with origin.
+PUSH_ATTEMPTS = 5
+
 WATCHED_PATHS = [
     # Reports
     "automation/reports/strategy_ranking/",
@@ -108,16 +113,36 @@ def main() -> int:
     if branch != "main":
         log(f"WARN: on branch '{branch}', expected 'main' — continuing anyway")
 
-    # 3. Fetch + rebase to avoid rejection from concurrent commits
+    # 3. Fetch + rebase to avoid rejection from concurrent commits.
+    #
+    # Order matters: the tree must be clean before a rebase, and the branch
+    # must be on top of origin/main before we commit. On 2026-10-20 this
+    # step failed with "cannot pull with rebase: You have unstaged changes"
+    # and the script carried on to commit against a stale base. The push
+    # was then rejected as non-fast-forward, and because this script had no
+    # retry the settlement's level update was lost for the day.
+    #
+    # So: stage first, rebase second, and if the rebase still fails, abort
+    # and hard-reset onto origin/main before continuing.
     log("git fetch origin")
     run(["git", "fetch", "origin"], timeout=60)
-    log("git pull --rebase (best-effort)")
+    run(["git", "add", "-A"], timeout=60)
+    log("git pull --rebase onto origin")
     pull = run(["git", "pull", "--rebase", "origin", branch], timeout=60)
     if pull.returncode != 0:
         log(f"WARN: pull --rebase failed (rc={pull.returncode}); "
             f"stderr: {pull.stderr[:300]}")
-        # Try to abort rebase
         run(["git", "rebase", "--abort"])
+        # Hard reset onto the remote tip, keeping the working tree. Anything
+        # we were carrying is re-staged below, so no work is lost.
+        log("git reset --hard origin/<branch> (keep working tree via stash)")
+        stash = run(["git", "stash", "push", "--include-untracked",
+                     "-m", "auto-push-pre-reset"], timeout=60)
+        run(["git", "reset", "--hard", f"origin/{branch}"], timeout=60)
+        if stash.returncode == 0:
+            pop = run(["git", "stash", "pop"], timeout=60)
+            if pop.returncode != 0:
+                log(f"WARN: stash pop failed: {pop.stderr[:200]}")
 
     # 4. Detect changes in watched paths
     # Filter to paths that actually exist locally (git add fails hard on
@@ -160,17 +185,35 @@ def main() -> int:
         log(f"ERROR: git commit failed: {commit.stderr[:500]}")
         return 3
 
-    # 7. Push
-    log("git push origin main")
-    push = run(["git", "push", "origin", "main"], timeout=120)
-    if push.returncode != 0:
+    # 7. Push, with retry.
+    #
+    # A single push attempt is not enough: other workflows commit to main
+    # every few minutes, so a push that is correct when it starts can be
+    # rejected as non-fast-forward a second later. Each attempt re-syncs
+    # with origin and replays the commit on top.
+    push = None
+    for attempt in range(1, PUSH_ATTEMPTS + 1):
+        log(f"git push origin main (attempt {attempt}/{PUSH_ATTEMPTS})")
+        push = run(["git", "push", "origin", "main"], timeout=120)
+        if push.returncode == 0:
+            break
+        log(f"  push rejected: {push.stderr.strip().splitlines()[0][:120] if push.stderr.strip() else 'unknown'}")
+        if attempt < PUSH_ATTEMPTS:
+            log(f"  re-syncing with origin/{branch} and retrying in 5s")
+            run(["git", "add", "-A"], timeout=60)
+            run(["git", "pull", "--rebase", "origin", branch], timeout=60)
+            time.sleep(5)
+
+    if push is None or push.returncode != 0:
         err_log = REPO / "automation" / "reports" / "daily_push_error.log"
         err_log.parent.mkdir(parents=True, exist_ok=True)
         err_log.write_text(
-            f"Daily auto-push failed at {ts}\n\n"
-            f"STDOUT:\n{push.stdout}\n\nSTDERR:\n{push.stderr}\n"
+            f"Daily auto-push failed at {ts} after {PUSH_ATTEMPTS} attempts\n\n"
+            f"STDOUT:\n{push.stdout if push else ''}\n\n"
+            f"STDERR:\n{push.stderr if push else ''}\n"
         )
-        log(f"ERROR: git push failed: {push.stderr[:500]}")
+        log(f"ERROR: git push failed after {PUSH_ATTEMPTS} attempts: "
+            f"{(push.stderr[:500] if push else 'unknown')}")
         log(f"Full error: {err_log}")
         return 4
 

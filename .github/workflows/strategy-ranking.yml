@@ -191,5 +191,9 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.APEX_PAT }}
         run: |
-          .venv/bin/python scripts/daily_auto_push.py 2>&1 | tee /tmp/auto_push_log.txt || true
+          # Do NOT append `|| true` here. The auto-push is the last thing
+          # that persists the settlement's level state, and swallowing its
+          # exit code meant a rejected push looked like a green run.
+          set -o pipefail
+          .venv/bin/python scripts/daily_auto_push.py 2>&1 | tee /tmp/auto_push_log.txt
           echo "auto-push-step:exit=$?" >> /tmp/auto_push_log.txt

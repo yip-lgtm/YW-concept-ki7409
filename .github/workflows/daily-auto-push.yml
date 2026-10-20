@@ -62,6 +62,9 @@ jobs:
         id: push
         working-directory: automation
         run: |
+          # pipefail so the STEP fails when the push is rejected, instead of
+          # the pipeline swallowing it and the step reporting success.
+          set -o pipefail
           .venv/bin/python scripts/daily_auto_push.py 2>&1 | tee /tmp/daily_push_log.txt
           echo "exit_code=${PIPESTATUS[0]}" >> /tmp/daily_push_log.txt
 
