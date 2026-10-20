@@ -1,10 +1,5 @@
 name: Probe Polygon data depth (diagnostic)
 
-# One-off diagnostic: how much intraday history does the Polygon key in the
-# Actions secrets actually give us for the futures tickers?  The optimiser
-# needs more than the 56 days of five-minute history the live system has
-# traded, and Yahoo caps that at 60 days.
-
 on:
   workflow_dispatch: {}
 
@@ -28,7 +23,7 @@ jobs:
           import os, json, urllib.request, urllib.error, datetime
 
           key = os.environ.get("POLYGON_API_KEY", "")
-          print(f"key present: {bool(key)} len {len(key)}")
+          print(f"key present: {bool(key)} len {len(key)}", flush=True)
           if not key:
               raise SystemExit(1)
 
@@ -46,32 +41,46 @@ jobs:
               except Exception as e:
                   return 0, {"message": f"{type(e).__name__}: {e}"}
 
-          def probe(t, mult, days):
+          def probe(t, mult, days, verbose=False):
               frm = (today - datetime.timedelta(days=days)).isoformat()
               to = today.isoformat()
               url = (f"https://api.polygon.io/v2/aggs/ticker/{t}/range/{mult}/minute/{frm}/{to}"
                      f"?apiKey={key}&limit=50000&sort=asc")
               code, j = get(url)
+              if not isinstance(j, dict):
+                  return f"HTTP {code} non-json body"
               res = j.get("results") or []
               if res:
                   d0 = datetime.datetime.utcfromtimestamp(res[0]["t"]/1000).date()
                   d1 = datetime.datetime.utcfromtimestamp(res[-1]["t"]/1000).date()
                   return f"HTTP {code} {len(res):>6} bars {d0} -> {d1}"
-              m = j.get("message", "?")
-              if j.get("error"):
-                  m = j["error"].get("message", m)
-              return f"HTTP {code} empty ({str(m)[:60]})"
+              body = json.dumps(j)[:160]
+              return f"HTTP {code} empty body={body}"
 
+          # First: does the key work at all? X:BTCUSD is crypto, always in the
+          # free tier's asset coverage.
+          print("--- control: crypto, known to be covered ---", flush=True)
+          for mult, days, lbl in [(5, 60, "5m/60d"), (5, 400, "5m/400d"), (60, 730, "1h/730d")]:
+              print(f"  X:BTCUSD  {lbl:<9} {probe('X:BTCUSD', mult, days)}", flush=True)
+          print(flush=True)
+
+          print("--- futures: candidate ticker spellings ---", flush=True)
           cands = {
-              "MNQ=F": ["MNQ", "MNQ1!"],
-              "MES=F": ["MES", "MES1!"],
-              "M2K=F": ["M2K", "M2K1!"],
-              "MGC=F": ["MGC", "MGC1!"],
-              "BTC-USD": ["X:BTCUSD"],
+              "MNQ=F": ["MNQ", "MNQ1!", "X:MNQ", "MNQ26"],
+              "MES=F": ["MES", "MES1!", "X:MES"],
+              "M2K=F": ["M2K", "M2K1!", "X:M2K"],
+              "MGC=F": ["MGC", "MGC1!", "X:MGC", "GC", "GC1!"],
           }
           for label, tickers in cands.items():
               for t in tickers:
-                  for mult, days, lbl in [(5, 60, "5m/60d"), (5, 400, "5m/400d"), (60, 730, "1h/730d")]:
-                      print(f"  {label:<9} {t:<9} {lbl:<9} {probe(t, mult, days)}", flush=True)
+                  print(f"  {label:<9} {t:<9} 5m/400d  {probe(t, 5, 400)}", flush=True)
               print(flush=True)
+
+          print("--- reference endpoints (plan / coverage hints) ---", flush=True)
+          for path in ["/v2/reference/tickers?market=stocks&limit=5",
+                       "/v2/subscribe?status=active",
+                       "/v2/aggs/ticker/X:BTCUSD/range/1/minute/2026-10-01/2026-10-02?limit=10&sort=asc&apiKey=" + key]:
+              code, j = get(f"https://api.polygon.io{path}" if "apiKey=" not in path else f"https://api.polygon.io{path}")
+              s = json.dumps(j)[:200] if isinstance(j, (dict, list)) else str(j)[:200]
+              print(f"  {path[:52]:<54} HTTP {code} {s}", flush=True)
           PY
