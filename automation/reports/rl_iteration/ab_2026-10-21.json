@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-21",
+  "generated_at": "2026-10-20T17:24:16.717754+00:00",
+  "n_closed_total": 3257,
+  "n_armed": 8,
+  "n_unlabelled": 3249,
+  "rl": {
+    "n": 7,
+    "wins": 0,
+    "wr": 0.0,
+    "pf": 0.0,
+    "total_r": -7.0,
+    "avg_r": -1.0,
+    "pnl": -427.35,
+    "first": "2026-10-20 08:20",
+    "last": "2026-10-20 13:25"
+  },
+  "control": {
+    "n": 1,
+    "wins": 0,
+    "wr": 0.0,
+    "pf": 0.0,
+    "total_r": -1.0,
+    "avg_r": -1.0,
+    "pnl": -5.9,
+    "first": "2026-10-20 06:35",
+    "last": "2026-10-20 06:35"
+  },
+  "difference_r": -6.0,
+  "n_strategies_both_arms": 1,
+  "within_strategy": {
+    "rl_total_r": -3.0,
+    "control_total_r": -1.0
+  },
+  "open_by_arm": {
+    "RL": 1
+  },
+  "per_strategy": {
+    "5020pullback": {
+      "RL": {
+        "n": 2,
+        "wins": 0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "total_r": -2.0,
+        "avg_r": -1.0,
+        "pnl": -348.18,
+        "first": "2026-10-20 12:05",
+        "last": "2026-10-20 13:25"
+      }
+    },
+    "crt": {
+      "RL": {
+        "n": 2,
+        "wins": 0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "total_r": -2.0,
+        "avg_r": -1.0,
+        "pnl": -21.99,
+        "first": "2026-10-20 09:45",
+        "last": "2026-10-20 09:45"
+      }
+    },
+    "stair": {
+      "CONTROL": {
+        "n": 1,
+        "wins": 0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "total_r": -1.0,
+        "avg_r": -1.0,
+        "pnl": -5.9,
+        "first": "2026-10-20 06:35",
+        "last": "2026-10-20 06:35"
+      },
+      "RL": {
+        "n": 3,
+        "wins": 0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "total_r": -3.0,
+        "avg_r": -1.0,
+        "pnl": -57.18,
+        "first": "2026-10-20 08:20",
+        "last": "2026-10-20 08:35"
+      }
+    }
+  },
+  "caveat": "The arm alternates inside each strategy, so strategy quality cancels out of the comparison. The market regime is NOT controlled: the two arms do not see the same price path, and each arm's date span is reported so the reader can judge it. This is a crossover, not a randomised trial."
+}
