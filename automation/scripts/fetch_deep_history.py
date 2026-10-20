@@ -35,7 +35,7 @@ import time
 import csv
 import urllib.request
 import urllib.error
-from datetime import datetime, timezone, timedelta
+from datetime import date, datetime, timezone, timedelta
 from pathlib import Path
 
 if "GITHUB_WORKSPACE" in os.environ:
@@ -102,7 +102,7 @@ def fetch_window(ticker: str, mult: str, span: str, frm: str, to: str,
     return bars, pages
 
 
-def month_windows(start: datetime.date, end: datetime.date):
+def month_windows(start: date, end: date):
     """Yield (from_date, to_date) month by month."""
     cur = start
     while cur < end:
@@ -139,7 +139,7 @@ def main() -> int:
     args = ap.parse_args()
 
     mult, span = INTERVALS[args.interval]
-    end = datetime.date.today()
+    end = date.today()
     start = end - timedelta(days=args.days)
 
     log(f"fetching {args.interval}m history for {args.tickers}, "
