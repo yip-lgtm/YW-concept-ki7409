@@ -1,14 +1,35 @@
 {
-  "ts": "2026-10-20T09:50:59.388005+08:00",
+  "ts": "2026-10-20T13:27:10.765338+08:00",
   "ticker": "BTC-USD",
-  "h4_bars": 175,
-  "m15_bars": 582,
+  "h4_bars": 176,
+  "m15_bars": 598,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
-      "stage": "no POI",
-      "detail": "C2 [81743, 82165] misses nearest swing 83890 by 1725",
-      "direction": "short",
+      "stage": "CISD not confirmed",
+      "detail": "no break",
+      "direction": "long",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 81589.0,
+        "swing_levels": [
+          81589.0,
+          82715.5,
+          82876.9921875,
+          83042.546875,
+          83195.703125
+        ],
+        "pivot_count": 26,
+        "fvg_count": 11
+      },
+      "cisd": {
+        "confirmed": false,
+        "opposing_open": 83255.8828125,
+        "series_length": 2,
+        "last_close": 81886.171875,
+        "reason": "no break"
+      },
       "strategy": "TTrades-L12",
       "has_levels": false
     },
@@ -21,8 +42,8 @@
     "TTrades-L14": {
       "fired": false,
       "stage": "no POI",
-      "detail": "C2 [81656, 82063] misses nearest swing 81589 by 67",
-      "direction": "long",
+      "detail": "C2 [81743, 82165] misses nearest swing 83890 by 1725",
+      "direction": "short",
       "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false

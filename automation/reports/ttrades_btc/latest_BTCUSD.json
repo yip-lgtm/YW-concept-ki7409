@@ -1,35 +1,35 @@
 {
-  "ts": "2026-10-19T21:50:59.037110-04:00",
+  "ts": "2026-10-20T01:27:10.407427-04:00",
   "ticker": "BTC-USD",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
-  "side": "bearish",
+  "side": "bullish",
   "swing": {
     "type": "c2_closure",
-    "side": "bearish",
-    "c2_high": 82164.5390625,
-    "c2_low": 81743.2421875,
-    "c2_close": 81926.2890625,
-    "c2_eq": 81953.890625,
-    "c3_close": 81664.34375,
-    "swing_level": 82164.5390625,
-    "direction": "short"
+    "side": "bullish",
+    "c2_high": 82039.0078125,
+    "c2_low": 81096.953125,
+    "c2_close": 82032.0,
+    "c2_eq": 81567.98046875,
+    "c3_close": 81886.171875,
+    "swing_level": 81096.953125,
+    "direction": "long"
   },
   "cisd": {
-    "confirmed": true,
-    "opposing_open": 83239.203125,
-    "series_length": 3,
-    "last_close": 81664.34375,
-    "reason": "cisd_short"
+    "confirmed": false,
+    "opposing_open": 83255.8828125,
+    "series_length": 2,
+    "last_close": 81886.171875,
+    "reason": "no break"
   },
   "eq_respected": true,
   "d1_trend": {
-    "aligned": false,
+    "aligned": true,
     "trend": "uptrend",
-    "d1_close": 81664.34375,
-    "d1_ema50": 80526.80248230074,
-    "d1_ema20": 82479.20297639178,
-    "reason": "D1 uptrend (counter-trend)"
+    "d1_close": 81886.171875,
+    "d1_ema50": 80535.50162445761,
+    "d1_ema20": 82500.32946448702,
+    "reason": "D1 uptrend"
   },
   "weekly_profile": {
     "profile": "early_week",
@@ -37,15 +37,14 @@
     "notes": "day 2 - too early, not blocking"
   },
   "daily_profile": {
-    "london_expanded": true,
-    "london_range": 1147.3984375,
-    "skip_ny": true
+    "london_expanded": false,
+    "skip_ny": false
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "D1 counter-trend (uptrend); London expanded (skip NY)",
+  "reason": "CISD not confirmed",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
