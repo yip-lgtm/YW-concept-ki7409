@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-10-20 07:55 HKT",
-  "hkt_timestamp": "2026-10-20T07:55:18.380116+08:00",
+  "generated_at": "2026-10-20 09:11 HKT",
+  "hkt_timestamp": "2026-10-20T09:11:43.320779+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 12,
-    "trades_today": 4,
-    "wins_24h": 7,
-    "R_24h": 6.32,
-    "signals_24h": 72,
-    "wr_24h": 58.3
+    "trades_24h": 14,
+    "trades_today": 6,
+    "wins_24h": 8,
+    "R_24h": 6.94,
+    "signals_24h": 70,
+    "wr_24h": 57.1
   },
   "ranking_24h": [
     {
@@ -40,45 +40,31 @@
       "medal_eligible": false
     },
     {
-      "strategy": "CRT",
-      "ticker": "MNQ=F",
-      "n_trades": 4,
-      "n_wins": 3,
-      "n_losses": 1,
-      "win_rate": 75.0,
-      "total_R": 3.85,
-      "avg_R": 0.964,
-      "total_pnl_usd": 81.32,
-      "profit_factor": 4.85,
+      "strategy": "Stair",
+      "ticker": "M2K=F",
+      "n_trades": 6,
+      "n_wins": 4,
+      "n_losses": 2,
+      "win_rate": 66.7,
+      "total_R": 4.47,
+      "avg_R": 0.745,
+      "total_pnl_usd": 136.07,
+      "profit_factor": 3.24,
       "rank": 3,
       "medal_eligible": false
     },
     {
-      "strategy": "Stair",
-      "ticker": "M2K=F",
+      "strategy": "CRT",
+      "ticker": "MNQ=F",
       "n_trades": 5,
       "n_wins": 3,
       "n_losses": 2,
       "win_rate": 60.0,
       "total_R": 2.85,
       "avg_R": 0.571,
-      "total_pnl_usd": 47.45,
+      "total_pnl_usd": 79.58,
       "profit_factor": 2.43,
       "rank": 4,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "B1",
-      "ticker": "MGC=F",
-      "n_trades": 1,
-      "n_wins": 1,
-      "n_losses": 0,
-      "win_rate": 100.0,
-      "total_R": 1.62,
-      "avg_R": 1.618,
-      "total_pnl_usd": 9.01,
-      "profit_factor": 10.0,
-      "rank": 5,
       "medal_eligible": false
     },
     {
@@ -92,7 +78,7 @@
       "avg_R": -1.0,
       "total_pnl_usd": -9.31,
       "profit_factor": 0.0,
-      "rank": 6,
+      "rank": 5,
       "medal_eligible": false
     },
     {
@@ -106,18 +92,18 @@
       "avg_R": -1.0,
       "total_pnl_usd": -56.37,
       "profit_factor": 0.0,
-      "rank": 7,
+      "rank": 6,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 20,
+    "n_trades": 21,
     "n_wins": 12,
-    "win_rate": 60.0,
-    "total_R": 11.41,
-    "total_pnl_usd": 863.56
+    "win_rate": 57.1,
+    "total_R": 10.41,
+    "total_pnl_usd": 941.43
   },
-  "ranking_24h_updated": "2026-10-19T23:55:18.380135+00:00",
+  "ranking_24h_updated": "2026-10-20T01:11:43.320798+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -204,7 +190,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 10,
+      "signals_24h": 7,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -447,22 +433,22 @@
         5
       ],
       "live_24h": {
-        "n": 5,
-        "wins": 3,
+        "n": 6,
+        "wins": 4,
         "losses": 2,
-        "wr": 60.0,
-        "R": 2.85,
-        "pf": 2.43,
-        "pnl": 47.45
+        "wr": 66.7,
+        "R": 4.47,
+        "pf": 3.24,
+        "pnl": 136.07
       },
       "live_today": {
-        "n": 1,
-        "wins": 1,
+        "n": 2,
+        "wins": 2,
         "losses": 0,
         "wr": 100.0,
-        "R": 1.62,
+        "R": 3.24,
         "pf": 10.0,
-        "pnl": 5.42
+        "pnl": 94.04
       },
       "signals_24h": 25,
       "backtest_4d": {
@@ -499,24 +485,24 @@
         5
       ],
       "live_24h": {
-        "n": 4,
+        "n": 5,
         "wins": 3,
-        "losses": 1,
-        "wr": 75.0,
-        "R": 3.85,
-        "pf": 4.85,
-        "pnl": 81.32
+        "losses": 2,
+        "wr": 60.0,
+        "R": 2.85,
+        "pf": 2.43,
+        "pnl": 79.58
       },
       "live_today": {
-        "n": 1,
+        "n": 2,
         "wins": 0,
-        "losses": 1,
+        "losses": 2,
         "wr": 0.0,
-        "R": -1.0,
+        "R": -2.0,
         "pf": 0.0,
-        "pnl": -5.8
+        "pnl": -7.54
       },
-      "signals_24h": 30,
+      "signals_24h": 31,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -800,12 +786,84 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-10-20T07:41:24.293988+08:00",
+        "updated": "2026-10-20T08:45:37.648884+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "D1 counter-trend (ranging); London expanded (skip NY)",
-          "ts": "2026-10-19T19:41:23.922510-04:00"
+          "reason": "CISD not confirmed; EQ not respected; D1 counter-trend (ranging); London expanded (skip NY)",
+          "ts": "2026-10-19T20:45:37.295112-04:00"
+        },
+        "l_series": [
+          {
+            "strategy": "TTrades-L12",
+            "fired": false,
+            "stage": "no POI",
+            "detail": "C2 [29701, 29804] misses nearest swing 30792 by 988",
+            "direction": "long",
+            "closure": null,
+            "trade_candle": null,
+            "poi_note": null,
+            "entry_ref": null,
+            "swing_level": null,
+            "target_r": null,
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
+          },
+          {
+            "strategy": "TTrades-L13",
+            "fired": false,
+            "stage": "C2 not an expansion candle (wick too large)",
+            "detail": null,
+            "direction": null,
+            "closure": null,
+            "trade_candle": null,
+            "poi_note": null,
+            "entry_ref": null,
+            "swing_level": null,
+            "target_r": null,
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
+          },
+          {
+            "strategy": "TTrades-L14",
+            "fired": false,
+            "stage": "no sweep and no body break \u2014 outside the model, no subjective fill",
+            "detail": null,
+            "direction": null,
+            "closure": null,
+            "trade_candle": null,
+            "poi_note": null,
+            "entry_ref": null,
+            "swing_level": null,
+            "target_r": null,
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
+          }
+        ]
+      },
+      {
+        "ticker": "MGC=F",
+        "updated": "2026-10-20T08:45:39.499178+08:00",
+        "base": {
+          "strategy": "TTrades-Fractal",
+          "actionable": false,
+          "reason": "no H4 C3 closure (Fractal quiet)",
+          "ts": "2026-10-19T20:45:39.135845-04:00"
         },
         "l_series": [
           {
@@ -852,7 +910,7 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [29653, 29983] misses nearest swing 30952 by 969",
+            "detail": "C2 [4156, 4169] misses nearest swing 4174 by 4",
             "direction": "long",
             "closure": "c2_closure",
             "trade_candle": null,
@@ -871,134 +929,62 @@
         ]
       },
       {
-        "ticker": "MGC=F",
-        "updated": "2026-10-20T07:41:26.171504+08:00",
+        "ticker": "BTC-USD",
+        "updated": "2026-10-20T08:45:41.344489+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "CISD not confirmed; EQ not respected; D1 counter-trend (downtrend); London expanded (skip NY)",
-          "ts": "2026-10-19T19:41:25.806602-04:00"
+          "reason": "D1 counter-trend (uptrend); London expanded (skip NY)",
+          "ts": "2026-10-19T20:45:40.981171-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [4156, 4169] misses nearest swing 4174 by 4",
+            "detail": "C2 [81743, 82165] misses nearest swing 83890 by 1725",
+            "direction": "short",
+            "closure": null,
+            "trade_candle": null,
+            "poi_note": null,
+            "entry_ref": null,
+            "swing_level": null,
+            "target_r": null,
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
+          },
+          {
+            "strategy": "TTrades-L13",
+            "fired": false,
+            "stage": "C2 not an expansion candle (wick too large)",
+            "detail": null,
+            "direction": null,
+            "closure": null,
+            "trade_candle": null,
+            "poi_note": null,
+            "entry_ref": null,
+            "swing_level": null,
+            "target_r": null,
+            "has_levels": false,
+            "entry": null,
+            "sl": null,
+            "t1": null,
+            "t2_close": null,
+            "risk": null,
+            "sl_basis": null
+          },
+          {
+            "strategy": "TTrades-L14",
+            "fired": false,
+            "stage": "no POI",
+            "detail": "C2 [81656, 82063] misses nearest swing 81589 by 67",
             "direction": "long",
-            "closure": null,
-            "trade_candle": null,
-            "poi_note": null,
-            "entry_ref": null,
-            "swing_level": null,
-            "target_r": null,
-            "has_levels": false,
-            "entry": null,
-            "sl": null,
-            "t1": null,
-            "t2_close": null,
-            "risk": null,
-            "sl_basis": null
-          },
-          {
-            "strategy": "TTrades-L13",
-            "fired": false,
-            "stage": "C2 not an expansion candle (wick too large)",
-            "detail": null,
-            "direction": null,
-            "closure": null,
-            "trade_candle": null,
-            "poi_note": null,
-            "entry_ref": null,
-            "swing_level": null,
-            "target_r": null,
-            "has_levels": false,
-            "entry": null,
-            "sl": null,
-            "t1": null,
-            "t2_close": null,
-            "risk": null,
-            "sl_basis": null
-          },
-          {
-            "strategy": "TTrades-L14",
-            "fired": false,
-            "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
-            "detail": null,
-            "direction": null,
-            "closure": null,
-            "trade_candle": null,
-            "poi_note": null,
-            "entry_ref": null,
-            "swing_level": null,
-            "target_r": null,
-            "has_levels": false,
-            "entry": null,
-            "sl": null,
-            "t1": null,
-            "t2_close": null,
-            "risk": null,
-            "sl_basis": null
-          }
-        ]
-      },
-      {
-        "ticker": "BTC-USD",
-        "updated": "2026-10-20T07:41:27.957315+08:00",
-        "base": {
-          "strategy": "TTrades-Fractal",
-          "actionable": false,
-          "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-10-19T19:41:27.584325-04:00"
-        },
-        "l_series": [
-          {
-            "strategy": "TTrades-L12",
-            "fired": false,
-            "stage": "no C2 closure (sweep+reclaim) on C2",
-            "detail": null,
-            "direction": null,
-            "closure": null,
-            "trade_candle": null,
-            "poi_note": null,
-            "entry_ref": null,
-            "swing_level": null,
-            "target_r": null,
-            "has_levels": false,
-            "entry": null,
-            "sl": null,
-            "t1": null,
-            "t2_close": null,
-            "risk": null,
-            "sl_basis": null
-          },
-          {
-            "strategy": "TTrades-L13",
-            "fired": false,
-            "stage": "C2 not an expansion candle (wick too large)",
-            "detail": null,
-            "direction": null,
-            "closure": null,
-            "trade_candle": null,
-            "poi_note": null,
-            "entry_ref": null,
-            "swing_level": null,
-            "target_r": null,
-            "has_levels": false,
-            "entry": null,
-            "sl": null,
-            "t1": null,
-            "t2_close": null,
-            "risk": null,
-            "sl_basis": null
-          },
-          {
-            "strategy": "TTrades-L14",
-            "fired": false,
-            "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
-            "detail": null,
-            "direction": null,
-            "closure": null,
+            "closure": "c2_closure",
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
