@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-20T06:28:39.603110+00:00",
+  "timestamp": "2026-10-20T12:02:06.716774+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -73,22 +73,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 39378909277,
-          "conclusion": "success",
-          "created_at": "2026-10-20T06:10:49Z",
+          "id": 39419147778,
+          "conclusion": "running",
+          "created_at": "2026-10-20T12:01:25Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 39356328960,
+          "id": 39415359049,
           "conclusion": "success",
-          "created_at": "2026-10-20T01:58:04Z",
+          "created_at": "2026-10-20T11:29:53Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 39385382921,
+          "conclusion": "success",
+          "created_at": "2026-10-20T07:15:57Z",
           "event": "schedule"
-        },
-        {
-          "id": 39355325011,
-          "conclusion": "success",
-          "created_at": "2026-10-20T01:46:54Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -96,6 +96,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 39380579205,
+          "conclusion": "success",
+          "created_at": "2026-10-20T06:28:40Z",
+          "event": "workflow_dispatch"
+        },
         {
           "id": 39355385562,
           "conclusion": "success",
@@ -107,12 +113,6 @@
           "conclusion": "success",
           "created_at": "2026-10-20T01:11:48Z",
           "event": "workflow_dispatch"
-        },
-        {
-          "id": 39322986769,
-          "conclusion": "success",
-          "created_at": "2026-10-19T20:52:53Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -152,9 +152,9 @@
     "n_open": 1,
     "n_stale_24h": 0,
     "issues": [],
-    "long_count": 1,
-    "short_count": 0,
-    "total_risk": 137.77053571428573,
+    "long_count": 0,
+    "short_count": 1,
+    "total_risk": 5.897154017857144,
     "deep_loss_positions": []
   }
 }
