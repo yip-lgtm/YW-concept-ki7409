@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-10-21 05:56 HKT",
-  "hkt_timestamp": "2026-10-21T05:56:28.877637+08:00",
+  "generated_at": "2026-10-21 07:28 HKT",
+  "hkt_timestamp": "2026-10-21T07:28:05.146265+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 13,
-    "trades_today": 1,
+    "trades_24h": 14,
+    "trades_today": 3,
     "wins_24h": 1,
-    "R_24h": -10.38,
-    "signals_24h": 71,
-    "wr_24h": 7.7
+    "R_24h": -11.38,
+    "signals_24h": 66,
+    "wr_24h": 7.1
   },
   "ranking_24h": [
     {
@@ -27,15 +27,15 @@
     },
     {
       "strategy": "Stair",
-      "ticker": "MGC=F",
-      "n_trades": 7,
-      "n_wins": 2,
+      "ticker": "MNQ=F",
+      "n_trades": 6,
+      "n_wins": 1,
       "n_losses": 5,
-      "win_rate": 28.6,
-      "total_R": -1.76,
-      "avg_R": -0.252,
-      "total_pnl_usd": 23.29,
-      "profit_factor": 0.65,
+      "win_rate": 16.7,
+      "total_R": -3.38,
+      "avg_R": -0.564,
+      "total_pnl_usd": 17.87,
+      "profit_factor": 0.32,
       "rank": 2,
       "medal_eligible": false
     },
@@ -56,40 +56,40 @@
     {
       "strategy": "50-20-Pullback",
       "ticker": "BTC-USD",
-      "n_trades": 4,
+      "n_trades": 3,
       "n_wins": 0,
-      "n_losses": 4,
+      "n_losses": 3,
       "win_rate": 0.0,
-      "total_R": -4.0,
+      "total_R": -3.0,
       "avg_R": -1.0,
-      "total_pnl_usd": -470.27,
+      "total_pnl_usd": -362.21,
       "profit_factor": 0.0,
       "rank": 4,
       "medal_eligible": false
     },
     {
       "strategy": "CRT",
-      "ticker": "MES=F",
-      "n_trades": 9,
+      "ticker": "M2K=F",
+      "n_trades": 10,
       "n_wins": 1,
-      "n_losses": 8,
-      "win_rate": 11.1,
-      "total_R": -6.38,
-      "avg_R": -0.709,
-      "total_pnl_usd": -476.61,
-      "profit_factor": 0.2,
+      "n_losses": 9,
+      "win_rate": 10.0,
+      "total_R": -7.38,
+      "avg_R": -0.738,
+      "total_pnl_usd": -479.05,
+      "profit_factor": 0.18,
       "rank": 5,
-      "medal_eligible": false
+      "medal_eligible": true
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 24,
-    "n_wins": 3,
-    "win_rate": 12.5,
-    "total_R": -16.14,
-    "total_pnl_usd": -872.9
+    "n_trades": 23,
+    "n_wins": 2,
+    "win_rate": 8.7,
+    "total_R": -17.76,
+    "total_pnl_usd": -772.7
   },
-  "ranking_24h_updated": "2026-10-20T21:56:28.877654+00:00",
+  "ranking_24h_updated": "2026-10-20T23:28:05.146286+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -138,9 +138,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "D",
-        "confidence": 20,
-        "reason": "0 trades, strategy completely dormant, no edge data to evaluate"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -190,9 +190,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "D",
-        "confidence": 78,
-        "reason": "132 trades\u4f46PF 0.86\u3001WR\u50c535%\uff0cBTC 3min\u566a\u97f3\u592a\u5927\u5c0e\u81f4\u9023\u7e8c\u8667\u640d\uff0c\u9700\u964d\u6b0a\u91cd\u4e26\u63db\u66f4\u9ad8\u6642\u6846\u904e\u6ffe\u96dc\u8a0a\u3002"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -228,7 +228,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 5,
+      "signals_24h": 4,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -242,9 +242,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 62,
-        "reason": "\u7e3d\u9ad4\u5fae\u5229\u4f46\u56b4\u91cd\u4f9d\u8cf4MNQ(+50R\u4f54\u7e3d+34.8R)\uff0c\u5176\u99183\u500b\u6a19\u7684\u8667\u640d\uff0cPF\u50c51.14\u504f\u5f31\u3002"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -294,9 +294,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "D",
-        "confidence": 62,
-        "reason": "MES\u4f5496%\u8667\u640d\uff0cWR 34%\u904e\u4f4e\uff0cPF<1\uff0c\u9700\u7e2e\u6b0a\u91cd+\u52a0\u6ffe\u7db2"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -346,9 +346,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "B",
-        "confidence": 65,
-        "reason": "\u6574\u9ad4\u7372\u5229+47.9R\u4f463\u6a19\u7684\u62d6\u7d2f\uff0cMGC/MES/MNQ\u5408\u8a08\u8755-11.8R\uff0c\u9700\u512a\u5316"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -398,9 +398,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "D",
-        "confidence": 88,
-        "reason": "PF\u50c50.90\u4e14\u932f\u8aa4\u7387\u9ad8\uff0c\u9700\u964d\u6b0a\u53ca\u6e1b\u5c115\u5206\u9418\u96dc\u8a0a\u3002"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -436,7 +436,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 20,
+      "signals_24h": 19,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -450,9 +450,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 91,
-        "reason": "PF\u4f4e\u65bc1\u4e14\u50c5MNQ\u76c8\u5229\uff0c\u6574\u9ad4\u6a23\u672c\u504f\u5f31\uff0c\u61c9\u964d\u98a8\u96aa\u800c\u975e\u653e\u5927\u3002"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -471,24 +471,24 @@
         5
       ],
       "live_24h": {
-        "n": 8,
+        "n": 9,
         "wins": 1,
-        "losses": 7,
-        "wr": 12.5,
-        "R": -5.38,
-        "pf": 0.23,
-        "pnl": -470.81
+        "losses": 8,
+        "wr": 11.1,
+        "R": -6.38,
+        "pf": 0.2,
+        "pnl": -477.31
       },
       "live_today": {
-        "n": 1,
+        "n": 3,
         "wins": 0,
-        "losses": 1,
+        "losses": 3,
         "wr": 0.0,
-        "R": -1.0,
+        "R": -3.0,
         "pf": 0.0,
-        "pnl": -49.8
+        "pnl": -58.04
       },
-      "signals_24h": 41,
+      "signals_24h": 38,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -502,9 +502,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 62,
-        "reason": "PF 1.07 marginal edge; MNQ/M2K\u62d6\u7d2f,MES/BTC\u7368\u6490,\u9700\u964d\u5009\u52a0\u8da8\u52e2\u6ffe\u7db2"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -554,9 +554,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 62,
-        "reason": "PF 1.08\u6975\u5f31,MGC/MES\u62d6\u5f8c\u817f,\u50c5BTC\u52c9\u5f37\u6490\u5834,\u6a23\u672c\u8db3\u4f46\u6548\u7387\u5dee"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -606,9 +606,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 58,
-        "reason": "BTC 5/7\u6557\u62d6\u7d2f\u6574\u9ad4\uff0cMNQ/MGC\u5065\u5eb7\u4f4615\u6a23\u672c\u904e\u5c0f\uff0c\u9700\u4fdd\u5b88\u8abf\u6574"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -658,9 +658,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 58,
-        "reason": "BTC 5/7\u6557\u62d6\u7d2f\u6574\u9ad4\uff0cMNQ/MGC\u5065\u5eb7\u4f4615\u6a23\u672c\u904e\u5c0f\uff0c\u9700\u4fdd\u5b88\u8abf\u6574"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -710,9 +710,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 58,
-        "reason": "BTC 5/7\u6557\u62d6\u7d2f\u6574\u9ad4\uff0cMNQ/MGC\u5065\u5eb7\u4f4615\u6a23\u672c\u904e\u5c0f\uff0c\u9700\u4fdd\u5b88\u8abf\u6574"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     },
     {
@@ -762,9 +762,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 58,
-        "reason": "BTC 5/7\u6557\u62d6\u7d2f\u6574\u9ad4\uff0cMNQ/MGC\u5065\u5eb7\u4f4615\u6a23\u672c\u904e\u5c0f\uff0c\u9700\u4fdd\u5b88\u8abf\u6574"
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
       }
     }
   ],
@@ -772,12 +772,12 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-10-21T05:15:48.734412+08:00",
+        "updated": "2026-10-21T06:38:06.355262+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "EQ not respected; D1 counter-trend (ranging); London expanded (skip NY)",
-          "ts": "2026-10-20T17:15:48.413803-04:00"
+          "ts": "2026-10-20T18:38:06.008772-04:00"
         },
         "l_series": [
           {
@@ -809,15 +809,15 @@
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
-            "entry_ref": 29893.5,
+            "entry_ref": 29973.25,
             "swing_level": 29798.0,
             "target_r": 2.0,
             "has_levels": true,
-            "entry": 29893.5,
-            "sl": 29923.06,
-            "t1": 29863.94,
-            "t2_close": 29845.67,
-            "risk": 29.56,
+            "entry": 29973.25,
+            "sl": 30008.47,
+            "t1": 29938.03,
+            "t2_close": 29916.27,
+            "risk": 35.22,
             "sl_basis": "outside continuation order block (L13 \u00a72)"
           },
           {
@@ -844,12 +844,12 @@
       },
       {
         "ticker": "MGC=F",
-        "updated": "2026-10-21T05:15:50.986388+08:00",
+        "updated": "2026-10-21T06:38:08.234501+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "London expanded (skip NY)",
-          "ts": "2026-10-20T17:15:50.672630-04:00"
+          "ts": "2026-10-20T18:38:07.884679-04:00"
         },
         "l_series": [
           {
@@ -881,15 +881,15 @@
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
-            "entry_ref": 4142.5,
+            "entry_ref": 4148.7998046875,
             "swing_level": 4151.39990234375,
             "target_r": 2.0,
             "has_levels": true,
-            "entry": 4142.5,
-            "sl": 4146.99,
-            "t1": 4138.01,
-            "t2_close": 4135.24,
-            "risk": 4.49,
+            "entry": 4148.8,
+            "sl": 4153.46,
+            "t1": 4144.14,
+            "t2_close": 4141.26,
+            "risk": 4.66,
             "sl_basis": "outside continuation order block (L13 \u00a72)"
           },
           {
@@ -916,12 +916,12 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-10-21T05:15:53.561407+08:00",
+        "updated": "2026-10-21T06:38:10.015350+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-10-20T17:15:53.240916-04:00"
+          "ts": "2026-10-20T18:38:09.665036-04:00"
         },
         "l_series": [
           {
@@ -1013,15 +1013,15 @@
       },
       {
         "strategy": "TTrades-L13",
-        "n": 23,
-        "pf": 0.86,
-        "wr": 34.8,
-        "total_r": -2.06,
-        "pnl": -83.03,
+        "n": 25,
+        "pf": 0.76,
+        "wr": 32.0,
+        "total_r": -4.06,
+        "pnl": -100.06,
         "tickers": {
           "BTC-USD": 6,
-          "MNQ=F": 14,
-          "MGC=F": 3
+          "MNQ=F": 15,
+          "MGC=F": 4
         }
       },
       {
@@ -1042,24 +1042,24 @@
         "strategy": "TTrades-L13",
         "ticker": "MGC=F",
         "direction": "short",
-        "entry": 4142.5,
-        "sl": 4146.99,
-        "t2": 4135.24,
-        "entry_time": "2026-10-21T05:15:50.986388+08:00",
+        "entry": 4148.8,
+        "sl": 4153.46,
+        "t2": 4141.26,
+        "entry_time": "2026-10-21T06:38:08.234501+08:00",
         "status": "open"
       },
       {
         "strategy": "TTrades-L13",
         "ticker": "MNQ=F",
         "direction": "short",
-        "entry": 29893.5,
-        "sl": 29923.06,
-        "t2": 29845.67,
-        "entry_time": "2026-10-21T05:15:48.734412+08:00",
+        "entry": 29973.25,
+        "sl": 30008.47,
+        "t2": 29916.27,
+        "entry_time": "2026-10-21T06:38:06.355262+08:00",
         "status": "open"
       }
     ],
-    "n_closed": 48,
+    "n_closed": 50,
     "note": "All four agents publish entry/SL/T1/T2 (T2 closes at 1.618R) as of 2026-10-09, so the whole family is trackable and scoreable. A fired row with has_levels=false means the stop reference sat on the wrong side of entry, which is reported rather than papered over."
   },
   "agent_control": {

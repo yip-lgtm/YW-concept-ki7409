@@ -22,10 +22,10 @@ For each agent, over the **14d** rolling window:
 |-------|-------|---|-----|-----|-----|----------------------------|
 | 3-Pushes | 2 | 14 | 2.16 | 57.1% | 1.62 | NOT promoted: — | NOT demoted: PF 2.16 > 1.0; WR 57.1% > 50.0%; RR 1.62 > 1.0 |
 | Two-Yang | 1 | 10 | 0.41 | 20.0% | 1.62 | NOT promoted: PF 0.41 ≤ 1.0; WR 20.0% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0; at min_level |
-| 50-20-Pullback | 2 | 79 | 0.94 | 36.7% | 1.62 | NOT promoted: PF 0.94 ≤ 1.0; WR 36.7% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0 |
-| Stair | 3 | 36 | 1.03 | 38.9% | 1.62 | NOT promoted: WR 38.9% ≤ 50.0% | NOT demoted: PF 1.03 > 1.0; RR 1.62 > 1.0 |
+| 50-20-Pullback | 2 | 78 | 0.96 | 37.2% | 1.62 | NOT promoted: PF 0.96 ≤ 1.0; WR 37.2% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0 |
+| Stair | 3 | 35 | 1.08 | 40.0% | 1.62 | NOT promoted: WR 40.0% ≤ 50.0% | NOT demoted: PF 1.08 > 1.0; RR 1.62 > 1.0 |
 | B1-3in1 | 1 | 15 | 0.00 | 0.0% | 0.00 | NOT promoted: PF 0.00 ≤ 1.0; WR 0.0% ≤ 50.0%; RR 0.00 ≤ 1.0 | NOT demoted: at min_level |
-| CRT | 1 | 47 | 0.83 | 34.0% | 1.62 | NOT promoted: PF 0.83 ≤ 1.0; WR 34.0% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0; at min_level |
+| CRT | 1 | 50 | 0.76 | 32.0% | 1.62 | NOT promoted: PF 0.76 ≤ 1.0; WR 32.0% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0; at min_level |
 
 ## Insufficient data (n<10) (10 agents)
 | Agent | Level | n | Note |
