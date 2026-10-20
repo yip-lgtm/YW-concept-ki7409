@@ -7,6 +7,11 @@ User directive (9/22 → 10/07):
   AND n_trades >= 10
   THEN level += 1 (升 1 lv). Level is UNBOUNDED (2026-10-14).
 
+  Window is 14 days (2026-10-20, was 7). A trust level decided on a handful
+  of trades is not a trust level — on 2026-10-20 RSI-Div held the best
+  lifetime record and was graded B by the iteration, yet sat at lv1 because
+  its 7-day window held 3 trades.
+
   Two guards keep an unbounded level from becoming meaningless:
     - a promotion requires NEW evidence: n must exceed the n at the last
       promotion, so the same sample cannot promote twice
@@ -76,7 +81,7 @@ def load_ranking_settings() -> dict:
 
 _DEFAULTS = {
     "enabled": True,
-    "window_days": 7,
+    "window_days": 14,
     "min_trades": 10,
     "min_PF": 1.0,
     "min_WR": 0.5,
