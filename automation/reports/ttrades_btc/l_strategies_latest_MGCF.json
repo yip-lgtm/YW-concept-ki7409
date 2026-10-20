@@ -1,26 +1,60 @@
 {
-  "ts": "2026-10-20T15:33:05.524856+08:00",
+  "ts": "2026-10-20T18:24:09.409384+08:00",
   "ticker": "MGC=F",
-  "h4_bars": 150,
-  "m15_bars": 474,
+  "h4_bars": 151,
+  "m15_bars": 485,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
       "stage": "no POI",
-      "detail": "C2 [4134, 4166] misses nearest swing 4174 by 8",
-      "direction": "long",
+      "detail": "C2 [4137, 4166] misses nearest swing 4220 by 54",
+      "direction": "short",
       "strategy": "TTrades-L12",
       "has_levels": false
     },
     "TTrades-L13": {
-      "fired": false,
-      "stage": "C2 not an expansion candle (wick too large)",
+      "fired": true,
       "strategy": "TTrades-L13",
-      "has_levels": false
+      "direction": "short",
+      "stage": "C3 continuation order block",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 4215.39990234375,
+        "series_length": 1,
+        "last_close": 4132.7998046875,
+        "reason": "cisd_short"
+      },
+      "order_block": {
+        "ob_high": 4133.89990234375,
+        "ob_low": 4130.0,
+        "ob_eq": 4131.949951171875,
+        "rule": "opposing (bullish) candle confirms HTF wick"
+      },
+      "c2_eq": 4151.5,
+      "c2_high": 4166.39990234375,
+      "c2_low": 4136.60009765625,
+      "c3_high": 4145.7001953125,
+      "c3_low": 4130.0,
+      "swing_level": 4166.39990234375,
+      "entry_ref": 4132.7998046875,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 4132.8,
+      "sl": 4137.35,
+      "t1": 4128.25,
+      "t2_close": 4125.44,
+      "t3": 4120.9,
+      "risk": 4.55,
+      "sl_basis": "outside continuation order block (L13 \u00a72)",
+      "sl_buffer": 3.45,
+      "atr_h4": 22.97
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "stage": "no POI",
+      "detail": "C2 [4134, 4166] misses nearest swing 4174 by 8",
+      "direction": "long",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
