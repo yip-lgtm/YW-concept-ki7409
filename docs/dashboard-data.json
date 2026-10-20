@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-10-21 01:55 HKT",
-  "hkt_timestamp": "2026-10-21T01:55:39.721549+08:00",
+  "generated_at": "2026-10-21 02:41 HKT",
+  "hkt_timestamp": "2026-10-21T02:41:51.800944+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 15,
     "trades_today": 0,
     "wins_24h": 3,
     "R_24h": -7.14,
-    "signals_24h": 74,
+    "signals_24h": 81,
     "wr_24h": 20.0
   },
   "ranking_24h": [
@@ -54,20 +54,6 @@
       "medal_eligible": false
     },
     {
-      "strategy": "50-20-Pullback",
-      "ticker": "BTC-USD",
-      "n_trades": 7,
-      "n_wins": 2,
-      "n_losses": 5,
-      "win_rate": 28.6,
-      "total_R": -1.76,
-      "avg_R": -0.252,
-      "total_pnl_usd": -372.26,
-      "profit_factor": 0.65,
-      "rank": 4,
-      "medal_eligible": false
-    },
-    {
       "strategy": "CRT",
       "ticker": "MES=F",
       "n_trades": 8,
@@ -78,18 +64,32 @@
       "avg_R": -0.673,
       "total_pnl_usd": -426.81,
       "profit_factor": 0.23,
+      "rank": 4,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "50-20-Pullback",
+      "ticker": "BTC-USD",
+      "n_trades": 5,
+      "n_wins": 0,
+      "n_losses": 5,
+      "win_rate": 0.0,
+      "total_R": -5.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -616.33,
+      "profit_factor": 0.0,
       "rank": 5,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 27,
-    "n_wins": 5,
-    "win_rate": 18.5,
-    "total_R": -13.9,
-    "total_pnl_usd": -772.26
+    "n_trades": 25,
+    "n_wins": 3,
+    "win_rate": 12.0,
+    "total_R": -17.14,
+    "total_pnl_usd": -1016.33
   },
-  "ranking_24h_updated": "2026-10-20T17:55:39.721593+00:00",
+  "ranking_24h_updated": "2026-10-20T18:41:51.800963+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -150,7 +150,7 @@
       "ticker": "MNQ=F",
       "weight": 1.2,
       "optim_date": "\u2014",
-      "timeframe": "5min",
+      "timeframe": "3min/5min",
       "r_multiples": [
         1,
         1.618,
@@ -202,7 +202,7 @@
       "ticker": "MNQ=F",
       "weight": 1.0,
       "optim_date": "\u2014",
-      "timeframe": "5min",
+      "timeframe": "5min/15min",
       "r_multiples": [
         1,
         1.618,
@@ -254,13 +254,13 @@
       "ticker": "MNQ=F",
       "weight": 0.3,
       "optim_date": "2026-08-25 v2",
-      "timeframe": "5min",
+      "timeframe": "5min/15min",
       "r_multiples": [
-        1,
-        1.618,
-        2.618,
-        3.618,
-        5
+        1.5,
+        2.5,
+        4.0,
+        6.0,
+        8.0
       ],
       "live_24h": {
         "n": 0,
@@ -306,13 +306,13 @@
       "ticker": "MNQ=F",
       "weight": 0.7,
       "optim_date": "2026-08-25",
-      "timeframe": "5min",
+      "timeframe": "15min",
       "r_multiples": [
-        1,
-        1.618,
-        2.618,
-        3.618,
-        5
+        1.5,
+        2.0,
+        3.0,
+        4.0,
+        5.0
       ],
       "live_24h": {
         "n": 0,
@@ -358,7 +358,7 @@
       "ticker": "MNQ=F",
       "weight": 1.0,
       "optim_date": "\u2014",
-      "timeframe": "5min",
+      "timeframe": "5min/15min/60min",
       "r_multiples": [
         1,
         1.618,
@@ -410,7 +410,7 @@
       "ticker": "MNQ=F",
       "weight": 1.2,
       "optim_date": "2026-08-25 v3",
-      "timeframe": "5min",
+      "timeframe": "5min/15min/1hr",
       "r_multiples": [
         1,
         1.618,
@@ -436,7 +436,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 21,
+      "signals_24h": 23,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -462,7 +462,7 @@
       "ticker": "MNQ=F",
       "weight": 1.2,
       "optim_date": "2026-08-26 v5",
-      "timeframe": "5min",
+      "timeframe": "4H range / 5min execution",
       "r_multiples": [
         1,
         1.618,
@@ -488,7 +488,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 42,
+      "signals_24h": 47,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -514,7 +514,7 @@
       "ticker": "MNQ=F",
       "weight": 0.6,
       "optim_date": "2026-08-26 v4",
-      "timeframe": "5min",
+      "timeframe": "5min/15min/1H/Daily",
       "r_multiples": [
         1,
         1.618,
