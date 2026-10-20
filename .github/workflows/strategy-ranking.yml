@@ -83,6 +83,15 @@ jobs:
           echo "--- learned exit overrides ---"
           cat ../automation/config/exit_overrides.json 2>/dev/null | head -60 || true
 
+      - name: RL exit policy A/B report
+        id: rl-ab
+        if: always()
+        working-directory: automation
+        run: |
+          .venv/bin/python scripts/rl_arm_report.py 2>&1 | tee /tmp/rl_ab_log.txt || true
+          echo "--- A/B report ---"
+          cat reports/rl_iteration/ab_*.md 2>/dev/null | tail -40 || true
+
       - name: LLM iteration per-agent (9 strategies in parallel)
         id: iterate-all
         working-directory: automation

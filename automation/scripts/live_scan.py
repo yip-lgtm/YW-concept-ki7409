@@ -849,6 +849,38 @@ def load_exit_overrides() -> dict:
 EXIT_OVERRIDES = load_exit_overrides()
 
 
+def load_arm_state() -> dict:
+    p = Path(__file__).resolve().parents[1] / "config" / "exit_arm_state.json"
+    if not p.exists():
+        return {}
+    try:
+        return json.loads(p.read_text())
+    except Exception:
+        return {}
+
+
+ARM_STATE = load_arm_state()
+
+
+def resolve_exit_config(strategy: str):
+    """Return (exit_cfg, arm) for a strategy.
+
+    A strategy with a learned override trades under one of two arms: the RL
+    configuration or the book's shared template, alternating on a fixed
+    period.  The arm is decided here, at position-open time, and frozen
+    into the position so a trade cannot switch rules halfway through.
+    """
+    from rl_arm import arm_for_strategy, ARM_CONTROL
+    ov = EXIT_OVERRIDES.get(strategy)
+    if not ov:
+        return None, ARM_CONTROL
+    arm, _reason = arm_for_strategy(strategy, overrides=EXIT_OVERRIDES,
+                                     state=ARM_STATE)
+    if arm == ARM_CONTROL:
+        return None, arm
+    return ov, arm
+
+
 def calc_sl_tp(entry, atr, direction, exit_cfg=None):
     """Calculate SL/TP using 1.6x ATR stop + R-multiple targets.
 
@@ -907,7 +939,7 @@ def open_live_position(sig, atr):
     # A detector that ships its own levels (Argon Gold SOP) wins over the
     # generic 1.6xATR template, otherwise the SOP's stop cap and its
     # 1.5R target would both be silently discarded.
-    _ecfg = EXIT_OVERRIDES.get(sig.get("strategy"))
+    _ecfg, _arm = resolve_exit_config(sig.get("strategy"))
     sl_tp = sig.get("sl_tp_preset") or calc_sl_tp(entry, atr, direction, _ecfg)
     if not sl_tp:
         return None
@@ -937,6 +969,7 @@ def open_live_position(sig, atr):
         "t1_r": sl_tp.get("t1_r", 1.0),
         "breakeven_at_r": sl_tp.get("breakeven_at_r", 0.0),
         "partial_at_r": sl_tp.get("partial_at_r", 0.0),
+        "exit_arm": _arm,
         "status": "open",
     }
     # Load existing + dedupe
@@ -1533,9 +1566,10 @@ def main() -> int:
         sig["atr"] = atr
         # Compute SL/TP. A detector-provided preset (Argon Gold SOP) takes
         # precedence over the generic ATR template.
-        _ecfg = EXIT_OVERRIDES.get(sig.get("strategy"))
+        _ecfg, _arm = resolve_exit_config(sig.get("strategy"))
         sl_tp = sig.get("sl_tp_preset") or calc_sl_tp(
             sig.get("last_close", 0), atr, sig.get("direction", "long"), _ecfg)
+        sig["exit_arm"] = _arm
         if sl_tp:
             sig.update(sl_tp)
         # Open position (DEDUPED)

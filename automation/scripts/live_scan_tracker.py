@@ -202,6 +202,10 @@ def check_position_exit(pos, df):
             "R_multiple": R_multiple,
             "pnl_usd": round(pnl_usd, 2),
             "bars_held": i + 1,
+            # Which arm this trade ran under, frozen at open time. The
+            # comparison report groups closed trades by this.
+            "exit_arm": pos.get("exit_arm", "CONTROL"),
+            "t2_r": t2_r,
         }
     return None
 
