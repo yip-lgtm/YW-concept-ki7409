@@ -223,11 +223,33 @@ def _model_b_double_bottom_msb(df_5m: pd.DataFrame) -> dict:
 
 
 def detect_argon_gold(df_5m: pd.DataFrame, df_1h: pd.DataFrame,
-                      df_15m: pd.DataFrame | None = None) -> dict:
+                      df_15m: pd.DataFrame | None = None,
+                      max_age_bars: int = 6) -> dict:
     """Argon Gold SOP — 15M box + M5 confirmation.
 
     Returns the same shape as the other detectors: a dict with
     `present`, `direction`, and the structural fields the gates need.
+
+    WHY max_age_bars EXISTS
+
+      Unlike the other eleven detectors, this one is triggered by a
+      specific bar: the M5 candle whose body breaks the box edge. The
+      earlier version only ever examined the LAST bar of the frame, and
+      live_scan runs every 15 minutes, which is every third five-minute
+      bar. Two of every three bars were therefore never examined as the
+      trigger bar, and the strategy could not fire at all — a walk-forward
+      test over the last 200 GC=F bars found four qualifying moments, all
+      of which fell on bars the scanner never looked at.
+
+      So the detector now scans the last `max_age_bars` bars and takes the
+      most recent one that qualifies. The window is deliberately wider than
+      the scan interval: a 15-minute scan samples every third five-minute
+      bar, so a window of three bars still steps over some triggers. Six
+      bars (30 minutes) covers the interval with margin, and the reported
+      `bars_ago` says how stale the trigger is.
+      The reported entry is still the current close — the SOP enters at
+      market on the confirming bar's close — but the levels are resolved
+      from that bar's own structure.
     """
     out = {"present": False, "strategy": "Argon-Gold", "model": None}
 
@@ -257,74 +279,97 @@ def detect_argon_gold(df_5m: pd.DataFrame, df_1h: pd.DataFrame,
         out["skip"] = "no 15m box"
         return out
 
-    last = df_5m.iloc[-1]
+    # Scan the last max_age_bars bars for the most recent qualifying one.
+    # Only the trigger bar varies; the bias and the box are the same for the
+    # whole window, because the box is built from completed 15M bars.
+    current_close = float(df_5m.iloc[-1]["Close"])
+    window = df_5m.iloc[-(max_age_bars + 1):-1] if len(df_5m) > max_age_bars else df_5m.iloc[:-1]
+    if window.empty:
+        out["skip"] = "no bars in the trigger window"
+        return out
+
+    last_reason = None
+    for bar_ts, last in window.iloc[::-1].iterrows():
+        res = _evaluate_bar(last, df_5m, box, direction)
+        if res.get("ok"):
+            fields = res["fields"]
+            # The trigger bar supplies the structure; the entry is the
+            # CURRENT close, because the SOP enters at market once the
+            # confirming bar has closed. Using the trigger bar's own close
+            # would pretend we were filled several bars ago.
+            fields["entry"] = round(current_close, 2)
+            fields["last_close"] = round(current_close, 2)
+            # Re-derive the stop distance from the new entry.
+            if fields["direction"] == "long":
+                fields["risk"] = round(current_close - fields["sl"], 2)
+            else:
+                fields["risk"] = round(fields["sl"] - current_close, 2)
+            if fields["risk"] <= 0:
+                out["skip"] = "the trigger bar's stop is on the wrong side of the current price"
+                return out
+            fields["sl_dist"] = fields["risk"]
+            sign = 1 if fields["direction"] == "long" else -1
+            fields["t1"] = round(current_close + sign * fields["risk"] * 1.0, 2)
+            fields["t2_close"] = round(current_close + sign * fields["risk"] * 1.5, 2)
+            fields["t3"] = round(current_close + sign * fields["risk"] * 2.0, 2)
+            fields["spot_equiv_stop_usd"] = round(fields["risk"] * MGC_TICK_USD, 2)
+            out.update(fields)
+            out["present"] = True
+            out["trigger_bar"] = str(bar_ts)
+            out["bars_ago"] = int(len(df_5m) - 1 - df_5m.index.get_loc(bar_ts))
+            return out
+        last_reason = res.get("reason")
+    out["skip"] = last_reason or "no qualifying bar in the trigger window"
+    return out
+
+
+def _evaluate_bar(last, df_5m, box, direction) -> dict:
+    """Evaluate one bar against the SOP. Returns {ok, fields, reason}."""
+    out = {"present": False, "strategy": "Argon-Gold", "model": None}
+    box_high, box_low = box["high"], box["low"]
+
     if direction == "long":
-        box_high, box_low = box["high"], box["low"]
-        # Step 3 — M5 body breakout of the box high
         body_top = max(float(last["Open"]), float(last["Close"]))
         if body_top <= box_high:
-            out["skip"] = (f"M5 body did not clear the box high "
-                           f"({body_top:.2f} <= {box_high:.2f})")
-            out["scenario"] = "B_wick_only" if float(last["High"]) > box_high else "no_break"
-            return out
-        # Confirmation model
+            return {"ok": False, "reason": "M5 body did not clear the box high"}
         conf = _model_a_sweep_rejection(df_5m, box_low)
         if not conf.get("found"):
             conf = _model_b_double_bottom_msb(df_5m)
         if not conf.get("found"):
-            out["skip"] = (f"box broken but no confirmation model "
-                           f"({conf.get('reason', 'unknown')})")
-            out["scenario"] = "A_no_confirmation"
-            return out
+            return {"ok": False,
+                    "reason": f"box broken but no confirmation model ({conf.get('reason', 'unknown')})"}
         sl_ref = float(conf.get("sweep_low", box_low))
         entry = body_top
     else:
-        box_high, box_low = box["high"], box["low"]
         body_bot = min(float(last["Open"]), float(last["Close"]))
         if body_bot >= box_low:
-            out["skip"] = (f"M5 body did not break the box low "
-                           f"({body_bot:.2f} >= {box_low:.2f})")
-            out["scenario"] = "B_wick_only" if float(last["Low"]) < box_low else "no_break"
-            return out
-        # Short-side mirror: sweep of the box high + rejection, or an
-        # M5 double top with a break of the prior Lower Low.
+            return {"ok": False, "reason": "M5 body did not break the box low"}
         conf = _model_a_sweep_rejection(df_5m, box_high)
         if not conf.get("found"):
             conf = _model_b_double_bottom_msb(df_5m)
         if not conf.get("found"):
-            out["skip"] = (f"box broken but no confirmation model "
-                           f"({conf.get('reason', 'unknown')})")
-            out["scenario"] = "A_no_confirmation"
-            return out
+            return {"ok": False,
+                    "reason": f"box broken but no confirmation model ({conf.get('reason', 'unknown')})"}
         sl_ref = float(conf.get("sweep_low", box_high))
         entry = body_bot
 
-    # Step 4 — stop below/above the reference, capped at the SOP width
     sl_dist = abs(entry - sl_ref)
     if sl_dist <= 0:
-        out["skip"] = "degenerate stop distance"
-        return out
+        return {"ok": False, "reason": "degenerate stop distance"}
     if sl_dist > MGC_STOP_CAP:
-        # Scenario C — the stop is too wide, abandon the trade entirely.
-        out["skip"] = (f"stop ${sl_dist:.2f} exceeds the SOP cap "
-                       f"${MGC_STOP_CAP:.2f} (spot ${sl_dist * MGC_TICK_USD:.2f} > "
-                       f"${SPOT_STOP_CAP_USD:.2f})")
-        out["scenario"] = "C_stop_too_wide"
-        out["sl_dist"] = sl_dist
-        return out
+        return {"ok": False,
+                "reason": f"stop ${sl_dist:.2f} exceeds the SOP cap ${MGC_STOP_CAP:.2f}"}
 
     sl = sl_ref - 0.01 if direction == "long" else sl_ref + 0.01
     risk = abs(entry - sl)
     if risk <= 0:
-        out["skip"] = "degenerate risk"
-        return out
+        return {"ok": False, "reason": "degenerate risk"}
 
-    # SOP targets: 1R moves the stop to breakeven, 1.5R is the take profit
     t1 = entry + risk * 1.0 * (1 if direction == "long" else -1)
     t2 = entry + risk * 1.5 * (1 if direction == "long" else -1)
     t3 = entry + risk * 2.0 * (1 if direction == "long" else -1)
 
-    out.update({
+    return {"ok": True, "reason": None, "fields": {
         "present": True,
         "direction": direction,
         "signal": "buy" if direction == "long" else "sell",
@@ -340,10 +385,9 @@ def detect_argon_gold(df_5m: pd.DataFrame, df_1h: pd.DataFrame,
         "t3": round(t3, 2),
         "risk": round(risk, 2),
         "sl_dist": round(risk, 2),
-        "bias_1h": bias,
+        "bias_1h": direction,
         "confirmation": conf,
         "sop": "docs/21-Argon-Gold-SOP.md",
         "spot_equiv_stop_usd": round(risk * MGC_TICK_USD, 2),
         "last_close": float(last["Close"]),
-    })
-    return out
+    }}

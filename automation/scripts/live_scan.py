@@ -1397,6 +1397,27 @@ def main() -> int:
     n_signals = sum(1 for d in detections if d.get("present"))
     n_errors = sum(1 for d in detections if "err" in d)
     print(f"  Total: {len(detections)} | Signals: {n_signals} | Errors: {n_errors}")
+
+    # Log the gate state of detectors that did NOT fire. Without this, a
+    # strategy that is running but permanently blocked is indistinguishable
+    # from one that is not running at all. Argon-Gold in particular is
+    # selective by design (15M box + M5 body breakout + 1H bias + a stop
+    # width cap) and was silent for days with no indication why.
+    for d in detections:
+        if d.get("present") or "err" in d:
+            continue
+        sk = d.get("skip")
+        if not sk:
+            continue
+        # Only the gate-blocked ones are interesting; "gold only" and
+        # "insufficient data" are expected on most tickers.
+        if sk in ("BTC only", "insufficient data", "no 4h data"):
+            continue
+        if "gold-only" in sk or "B1 only runs on" in sk:
+            continue
+        scenario = d.get("scenario")
+        extra = f"  [scenario {scenario}]" if scenario else ""
+        print(f"  [gated] {d.get('strategy','?'):15s} {d.get('ticker','?'):7s} {sk}{extra}")
     # Step 3: LLM grading on detector signals
     fired = []
     for det in detections:
