@@ -9,7 +9,7 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     env:
       POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
     steps:
@@ -17,17 +17,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Probe
+      - name: Probe pagination depth
         run: |
           python - <<'PY'
-          import os, json, urllib.request, urllib.error, datetime
+          import os, json, time, urllib.request, urllib.error, datetime
 
           key = os.environ.get("POLYGON_API_KEY", "")
-          print(f"key present: {bool(key)} len {len(key)}", flush=True)
-          if not key:
-              raise SystemExit(1)
-
-          today = datetime.date.today()
+          print(f"key present: {bool(key)}", flush=True)
 
           def get(url):
               try:
@@ -41,46 +37,38 @@ jobs:
               except Exception as e:
                   return 0, {"message": f"{type(e).__name__}: {e}"}
 
-          def probe(t, mult, days, verbose=False):
-              frm = (today - datetime.timedelta(days=days)).isoformat()
-              to = today.isoformat()
-              url = (f"https://api.polygon.io/v2/aggs/ticker/{t}/range/{mult}/minute/{frm}/{to}"
-                     f"?apiKey={key}&limit=50000&sort=asc")
-              code, j = get(url)
-              if not isinstance(j, dict):
-                  return f"HTTP {code} non-json body"
-              res = j.get("results") or []
-              if res:
-                  d0 = datetime.datetime.utcfromtimestamp(res[0]["t"]/1000).date()
-                  d1 = datetime.datetime.utcfromtimestamp(res[-1]["t"]/1000).date()
-                  return f"HTTP {code} {len(res):>6} bars {d0} -> {d1}"
-              body = json.dumps(j)[:160]
-              return f"HTTP {code} empty body={body}"
-
-          # First: does the key work at all? X:BTCUSD is crypto, always in the
-          # free tier's asset coverage.
-          print("--- control: crypto, known to be covered ---", flush=True)
-          for mult, days, lbl in [(5, 60, "5m/60d"), (5, 400, "5m/400d"), (60, 730, "1h/730d")]:
-              print(f"  X:BTCUSD  {lbl:<9} {probe('X:BTCUSD', mult, days)}", flush=True)
-          print(flush=True)
-
-          print("--- futures: candidate ticker spellings ---", flush=True)
-          cands = {
-              "MNQ=F": ["MNQ", "MNQ1!", "X:MNQ", "MNQ26"],
-              "MES=F": ["MES", "MES1!", "X:MES"],
-              "M2K=F": ["M2K", "M2K1!", "X:M2K"],
-              "MGC=F": ["MGC", "MGC1!", "X:MGC", "GC", "GC1!"],
-          }
-          for label, tickers in cands.items():
-              for t in tickers:
-                  print(f"  {label:<9} {t:<9} 5m/400d  {probe(t, 5, 400)}", flush=True)
-              print(flush=True)
-
-          print("--- reference endpoints (plan / coverage hints) ---", flush=True)
-          for path in ["/v2/reference/tickers?market=stocks&limit=5",
-                       "/v2/subscribe?status=active",
-                       "/v2/aggs/ticker/X:BTCUSD/range/1/minute/2026-10-01/2026-10-02?limit=10&sort=asc&apiKey=" + key]:
-              code, j = get(f"https://api.polygon.io{path}" if "apiKey=" not in path else f"https://api.polygon.io{path}")
-              s = json.dumps(j)[:200] if isinstance(j, (dict, list)) else str(j)[:200]
-              print(f"  {path[:52]:<54} HTTP {code} {s}", flush=True)
+          # Walk the pagination chain backwards and see how deep the 5-minute
+          # history actually goes for crypto.
+          for ticker in ["X:BTCUSD"]:
+              to = datetime.date.today()
+              frm = to - datetime.timedelta(days=800)
+              url = (f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/5/minute/"
+                     f"{frm}/{to}?apiKey={key}&limit=50000&sort=asc")
+              pages = 0
+              total = 0
+              oldest = None
+              newest = None
+              while url and pages < 40:
+                  code, j = get(url)
+                  if not isinstance(j, dict):
+                      print(f"  {ticker}: non-json at page {pages}", flush=True)
+                      break
+                  res = j.get("results") or []
+                  if res:
+                      if oldest is None:
+                          oldest = res[0]["t"]
+                      newest = res[-1]["t"]
+                      total += len(res)
+                  pages += 1
+                  url = j.get("next_url")
+                  if url:
+                      if "apiKey" not in url:
+                          url += f"&apiKey={key}"
+                      time.sleep(1.2)   # stay under the per-minute cap
+              if oldest:
+                  d0 = datetime.datetime.utcfromtimestamp(oldest/1000).date()
+                  d1 = datetime.datetime.utcfromtimestamp(newest/1000).date()
+                  print(f"  {ticker}: {pages} pages, {total} bars, {d0} -> {d1}", flush=True)
+              else:
+                  print(f"  {ticker}: no results over 800 days", flush=True)
           PY
