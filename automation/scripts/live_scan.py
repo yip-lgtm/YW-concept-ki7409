@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""9 Strategy Live Scanner — runs all 9 detectors every 5 min, 24/7.
+"""12 Strategy Live Scanner — runs all 12 detectors every 15 min, 24/7.
 
 Pipeline:
   1. Fetch latest bars (5m + 1h) for each ticker in parallel
-  2. Run 9 detectors in parallel (no LLM, pure technical)
+  2. Run 12 detectors in parallel (no LLM, pure technical)
   3. If any detector signals → invoke LLM grader for confirmation
   4. If LLM grades A or B → fire signal:
      - Send TG alert
@@ -11,7 +11,7 @@ Pipeline:
      - Log to signals.jsonl
   5. Save state for supervisor monitor
 
-Detectors (9):
+Detectors (12):
   1. H-Pattern        (5m)
   2. 3-Pushes         (5m/15m)
   3. Two-Yang-One-Yin (15m)
@@ -103,6 +103,13 @@ TICKERS = [
     ("MES=F", "Micro S&P"),
     ("M2K=F", "Micro Russell"),
     ("MGC=F", "Micro Gold"),
+    # Gold front-month, quoted per troy ounce. There is no XAUUSD spot feed
+    # available (yfinance has no XAUUSD=X / XAU=X), and GC=F is the closest
+    # proxy: same per-ounce quoting as spot, with a basis that normally
+    # stays under half a percent. Argon-Gold runs on GC=F rather than MGC=F
+    # because both track the same gold — running the Argon SOP on both
+    # would open the same trade twice.
+    ("GC=F", "Gold Front-Month (XAUUSD proxy)"),
     ("BTC-USD", "BTC USD"),
 ]
 
@@ -150,10 +157,15 @@ def get_active_tickers() -> list:
 # B1 战法: 右侧交易，专攻 3 个标的 (MNQ, MGC, BTC)
 B1_TICKERS = {"MNQ=F", "MGC=F", "BTC-USD"}
 
-# Argon Gold SOP (docs/21) is written for spot gold. On MGC=F (Micro Gold
-# futures, 10 troy oz per contract) the SOP's $5.00 spot stop cap maps to
-# $0.50 of price distance, which is what the detector applies.
-ARGON_GOLD_TICKERS = {"MGC=F"}
+# Argon Gold SOP (docs/21) targets spot gold XAUUSD. There is no spot feed
+# here, so the SOP runs on GC=F, the COMEX front-month gold future, which
+# is quoted per troy ounce exactly like spot and therefore carries the
+# SOP's absolute $5.00 stop cap over unchanged.
+#
+# It deliberately does NOT also run on MGC=F: both contracts track the same
+# gold (their closes agree only about a quarter of the time, but they are
+# the same underlying), so the same setup would be opened twice.
+ARGON_GOLD_TICKERS = {"GC=F"}
 
 # Strategy name → (detector_fn, required_args, weight, timeframe)
 STRATEGIES = {

@@ -1,4 +1,4 @@
-name: '11 Strategy Live Scan — 24/7 Detector Sweep'
+name: '12 Strategy Live Scan — 24/7 Detector Sweep'
 
 # Runs all 11 YW detectors every 15 min, 24/7, across 5 tickers
 # (MNQ, MES, M2K, MGC, BTC-USD).
@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   live-scan:
-    name: 9 Strategy live scan (288/day)
+    name: 12 Strategy live scan (72 detector-runs/scan)
     runs-on: ubuntu-latest
     timeout-minutes: 4
     env:

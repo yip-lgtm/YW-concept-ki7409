@@ -25,7 +25,8 @@ Entry discipline from the SOP:
 INSTRUMENT NOTE
 
   The SOP is written for spot gold XAUUSD with an absolute $5.00 stop cap.
-  This detector runs on MGC=F (Micro Gold futures).
+  There is no XAUUSD feed available, so this detector runs on GC=F, the
+  COMEX front-month gold future.
 
   CME quotes gold futures PER TROY OUNCE, the same as spot. The contract's
   10x is its dollar multiplier (10 oz per contract), NOT the quote. So
@@ -34,15 +35,16 @@ INSTRUMENT NOTE
   over directly: a $5.00 spot stop is a $5.00 MGC price distance.
 
   An earlier version of this file assumed a 10x quote and set the cap to
-  $0.50. That was wrong: MGC's 15M box has a median range of 17.40
-  points, so a 0.50 cap rejected 293 of 293 boxes and the strategy could
-  never fire. The conversion is now 1:1 and verified against the live
-  feed.
+  $0.50. That was wrong: gold futures are quoted per troy ounce and the
+  contract's 10x is its dollar multiplier, not the quote. A 0.50 cap
+  rejected 293 of 293 boxes on MGC and the strategy could never fire.
+  The conversion is now 1:1 and verified against the live feed.
 
-  MGC=F is still a futures contract, not spot: the session hours are not
-  24/7 and the price level is the futures basis rather than the spot
-  price. The box and confirmation logic is instrument-agnostic, but
-  absolute levels are not directly comparable with XAUUSD.
+  GC=F is still a futures contract, not spot: the session hours are not
+  24/7 and the price level carries the futures basis rather than the
+  exact spot print. The box and confirmation logic is instrument-agnostic,
+  but the absolute stop cap should be read as a proxy for the SOP's
+  spot intent rather than an identical XAUUSD instruction.
 """
 from __future__ import annotations
 
