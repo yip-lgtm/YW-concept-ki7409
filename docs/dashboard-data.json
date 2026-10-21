@@ -1,35 +1,16 @@
 {
-<<<<<<< Updated upstream
-  "generated_at": "2026-10-21 23:23 HKT",
-  "hkt_timestamp": "2026-10-21T23:23:53.662916+08:00",
-=======
-  "generated_at": "2026-10-21 23:25 HKT",
-  "hkt_timestamp": "2026-10-21T23:25:00.749758+08:00",
->>>>>>> Stashed changes
+  "generated_at": "2026-10-22 03:16 HKT",
+  "hkt_timestamp": "2026-10-22T03:16:35.253105+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 5,
-    "trades_today": 5,
+    "trades_24h": 3,
+    "trades_today": 0,
     "wins_24h": 2,
-    "R_24h": 0.24,
-    "signals_24h": 24,
-    "wr_24h": 40.0
+    "R_24h": 2.24,
+    "signals_24h": 21,
+    "wr_24h": 66.7
   },
   "ranking_24h": [
-    {
-      "strategy": "Two-Yang",
-      "ticker": "MES=F",
-      "n_trades": 1,
-      "n_wins": 0,
-      "n_losses": 1,
-      "win_rate": 0.0,
-      "total_R": -1.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -9.2,
-      "profit_factor": 0.0,
-      "rank": 1,
-      "medal_eligible": false
-    },
     {
       "strategy": "CRT",
       "ticker": "MNQ=F",
@@ -41,36 +22,32 @@
       "avg_R": 0.047,
       "total_pnl_usd": -43.5,
       "profit_factor": 1.08,
-      "rank": 2,
+      "rank": 1,
       "medal_eligible": false
     },
     {
       "strategy": "50-20-Pullback",
       "ticker": "BTC-USD",
-      "n_trades": 1,
-      "n_wins": 0,
-      "n_losses": 1,
-      "win_rate": 0.0,
-      "total_R": -1.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -134.36,
-      "profit_factor": 0.0,
-      "rank": 3,
+      "n_trades": 4,
+      "n_wins": 1,
+      "n_losses": 3,
+      "win_rate": 25.0,
+      "total_R": 1.0,
+      "avg_R": 0.25,
+      "total_pnl_usd": -118.53,
+      "profit_factor": 2.0,
+      "rank": 2,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 7,
-    "n_wins": 2,
-    "win_rate": 28.6,
-    "total_R": -1.76,
-    "total_pnl_usd": -187.06
+    "n_trades": 9,
+    "n_wins": 3,
+    "win_rate": 33.3,
+    "total_R": 1.24,
+    "total_pnl_usd": -162.03
   },
-<<<<<<< Updated upstream
-  "ranking_24h_updated": "2026-10-21T15:23:53.662937+00:00",
-=======
-  "ranking_24h_updated": "2026-10-21T15:25:00.749776+00:00",
->>>>>>> Stashed changes
+  "ranking_24h_updated": "2026-10-21T19:16:35.253123+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -119,9 +96,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "D",
-        "confidence": 96,
-        "reason": "\u96f6\u6210\u4ea4\u4e14\u6a23\u672c\u4e0d\u8db3\uff0c\u61c9\u6539\u5584\u8a0a\u865f\u8986\u84cb\u4e26\u964d\u4f4e\u98a8\u96aa\u3002"
+        "grade": "C",
+        "confidence": 95,
+        "reason": "0 trades\uff0c\u6a23\u672c\u4e0d\u8db3\uff0c\u66ab\u4e0d\u8abf\u6574\u53c3\u6578"
       }
     },
     {
@@ -172,8 +149,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 78,
-        "reason": "PF<1\u4e14R\u56b4\u91cd\u8ca0\u503c\uff0c35%\u52dd\u7387\u4e0d\u8db3\u4ee5cover\u8667\u640d\uff0cpivot+momentum\u65bc3/5min\u77ed\u7dda\u566a\u97f3\u904e\u591a"
+        "confidence": 72,
+        "reason": "PF<1, WR 35%, \u96c6\u4e2dBTC\u8667\u640d\u56b4\u91cd\uff0c\u9700\u5927\u5e45\u7e2e\u6e1b\u4e26\u91cd\u65b0\u6821\u6e96"
       }
     },
     {
@@ -209,7 +186,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 0,
+      "signals_24h": 3,
       "backtest_4d": {
         "n_trades": 17,
         "wr": 35.3,
@@ -224,8 +201,8 @@
       },
       "iteration": {
         "grade": "B",
-        "confidence": 88,
-        "reason": "\u6574\u9ad4\u76c8\u5229\u4f46PF\u504f\u4f4e\uff0c\u8868\u73fe\u4f9d\u8cf4MNQ\uff0cMES\u62d6\u7d2f\u660e\u986f"
+        "confidence": 84,
+        "reason": "\u76c8\u5229\u96c6\u4e2dMNQ\uff0cPF\u50c51.14\uff0c\u5b9c\u964d\u5009\u6e1b\u5c11\u4f4e\u6548\u4ea4\u6613"
       }
     },
     {
@@ -276,8 +253,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 96,
-        "reason": "\u52dd\u738734%\u3001PF 0.83\u4e14MES\u8ca2\u737b\u4e3b\u8981\u8667\u640d\uff0c\u672a\u9054\u53ef\u4ea4\u6613\u6a19\u6e96"
+        "confidence": 95,
+        "reason": "MES\u8ca2\u737b\u8fd1\u5168\u90e8\u8667\u640d\uff0c\u6574\u9ad4\u52dd\u7387\u4f4e\u4e14PF\u4f4e\u65bc1\u3002"
       }
     },
     {
@@ -327,9 +304,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "B",
-        "confidence": 72,
-        "reason": "\u6574\u9ad4\u6b63\u56de\u5831\u4f46instruments\u8868\u73fe\u5169\u6975\uff0cMNQ/MGC/MES\u62d6\u7d2f\uff0c\u9700\u904e\u6ffe\u5f31\u6a19\u7684\u3002"
+        "grade": "C",
+        "confidence": 65,
+        "reason": "74%\u4ea4\u6613\u96c6\u4e2dBTC\u4e14\u7368\u529b\u8ca2\u737b\u76c8\u5229\uff1bMGC/MES/MNQ\u52dd\u7387\u904e\u4f4e\u62d6\u7d2f\u6574\u9ad4\uff0c\u9700\u7cbe\u7c21\u6a19\u7684"
       }
     },
     {
@@ -380,8 +357,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 98,
-        "reason": "\u6a23\u672c\u904e\u5343\u4ecd\u4f4e\u52dd\u7387\u3001PF\u4f4e\u65bc1\u4e14\u7e3dR\u70ba\u8ca0"
+        "confidence": 96,
+        "reason": "PF\u50c50.89\u4e14\u7e3dR\u70ba\u8ca0\uff0c5min\u4ea4\u6613\u904e\u5bc6\uff0c\u9700\u964d\u6b0a\u964d\u566a"
       }
     },
     {
@@ -417,7 +394,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 5,
+      "signals_24h": 2,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -431,9 +408,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": "no parse"
+        "grade": "D",
+        "confidence": 45,
+        "reason": "\u7b56\u7565\u6574\u9ad4\u8667\u640d\uff0cPF 0.91\uff0c\u50c5 MNQ \u76c8\u5229\uff0c\u5176\u9918\u5168\u8755\uff1bWR 36%\u904e\u4f4e\uff0c\u9700\u5f37\u5316\u904e\u6ffe\u5668\u3002"
       }
     },
     {
@@ -452,24 +429,24 @@
         5
       ],
       "live_24h": {
-        "n": 5,
+        "n": 3,
         "wins": 2,
-        "losses": 3,
-        "wr": 40.0,
-        "R": 0.24,
-        "pf": 1.08,
-        "pnl": -43.5
+        "losses": 1,
+        "wr": 66.7,
+        "R": 2.24,
+        "pf": 3.24,
+        "pnl": -35.26
       },
       "live_today": {
-        "n": 5,
-        "wins": 2,
-        "losses": 3,
-        "wr": 40.0,
-        "R": 0.24,
-        "pf": 1.08,
-        "pnl": -43.5
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
       },
-      "signals_24h": 19,
+      "signals_24h": 16,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -484,8 +461,8 @@
       },
       "iteration": {
         "grade": "C",
-        "confidence": 62,
-        "reason": "701 trades\u4f46\u53ea+27.9R\uff0cPF 1.07\u6975\u5f31\u908a\u969b\u3002MNQ 33.6%WR\u62d6\u7d2f-19.19R\uff0cM2K/MGC\u8667\u640d\u3002\u4e3b\u8981profit\u9760MES+BTC\u96c6\u4e2d\u3002"
+        "confidence": 58,
+        "reason": "40% WR\u540cPF 1.07\u504f\u5f31\uff0cMNQ\u540cM2K\u62d6\u5f8c\u817f\uff0c\u7e3dR\u50c5+27.9\u908a\u7de3\u3002"
       }
     },
     {
@@ -535,9 +512,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 86,
-        "reason": "\u6a23\u672c\u8db3\u5920\u4f46PF\u50c51.08\uff1bMGC\u3001MES\u62d6\u7d2f\uff0c\u5b9c\u964d\u6b0a\u3002"
+        "grade": "?",
+        "confidence": 0,
+        "reason": "no parse"
       }
     },
     {
@@ -587,9 +564,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "B",
-        "confidence": 42,
-        "reason": "\u6b63R\u4f46BTC\u62d6\u5f8c\u817f\uff0c\u6a23\u672c\u7d30\uff0c\u5206\u6563\u5ea6\u9ad8\uff0c\u9700\u964d\u6b0a\u907f\u96aa"
+        "grade": "C",
+        "confidence": 68,
+        "reason": "\u5fae\u5229\u4f46BTC\u56b4\u91cd\u8667\u640d\u62d6\u7d2f\uff0cWR<50%\u9700\u8abf\u6574\u6301\u5009\u7d50\u69cb"
       }
     },
     {
@@ -639,9 +616,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "B",
-        "confidence": 42,
-        "reason": "\u6b63R\u4f46BTC\u62d6\u5f8c\u817f\uff0c\u6a23\u672c\u7d30\uff0c\u5206\u6563\u5ea6\u9ad8\uff0c\u9700\u964d\u6b0a\u907f\u96aa"
+        "grade": "C",
+        "confidence": 68,
+        "reason": "\u5fae\u5229\u4f46BTC\u56b4\u91cd\u8667\u640d\u62d6\u7d2f\uff0cWR<50%\u9700\u8abf\u6574\u6301\u5009\u7d50\u69cb"
       }
     },
     {
@@ -691,9 +668,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "B",
-        "confidence": 42,
-        "reason": "\u6b63R\u4f46BTC\u62d6\u5f8c\u817f\uff0c\u6a23\u672c\u7d30\uff0c\u5206\u6563\u5ea6\u9ad8\uff0c\u9700\u964d\u6b0a\u907f\u96aa"
+        "grade": "C",
+        "confidence": 68,
+        "reason": "\u5fae\u5229\u4f46BTC\u56b4\u91cd\u8667\u640d\u62d6\u7d2f\uff0cWR<50%\u9700\u8abf\u6574\u6301\u5009\u7d50\u69cb"
       }
     },
     {
@@ -743,9 +720,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "B",
-        "confidence": 42,
-        "reason": "\u6b63R\u4f46BTC\u62d6\u5f8c\u817f\uff0c\u6a23\u672c\u7d30\uff0c\u5206\u6563\u5ea6\u9ad8\uff0c\u9700\u964d\u6b0a\u907f\u96aa"
+        "grade": "C",
+        "confidence": 68,
+        "reason": "\u5fae\u5229\u4f46BTC\u56b4\u91cd\u8667\u640d\u62d6\u7d2f\uff0cWR<50%\u9700\u8abf\u6574\u6301\u5009\u7d50\u69cb"
       }
     }
   ],
@@ -753,20 +730,20 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-10-21T22:41:43.151343+08:00",
+        "updated": "2026-10-22T02:57:23.855063+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "CISD not confirmed; D1 counter-trend (ranging)",
-          "ts": "2026-10-21T10:41:42.831029-04:00"
+          "reason": "no H4 C3 closure (Fractal quiet)",
+          "ts": "2026-10-21T14:57:23.434684-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no POI",
-            "detail": "C2 [29727, 29914] misses nearest swing 30706 by 791",
-            "direction": "long",
+            "stage": "no C2 closure (sweep+reclaim) on C2",
+            "detail": null,
+            "direction": null,
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -784,7 +761,7 @@
           {
             "strategy": "TTrades-L13",
             "fired": false,
-            "stage": "C2 not an expansion candle (wick too large)",
+            "stage": "C3 not an expansion candle (wick too large)",
             "detail": null,
             "direction": null,
             "closure": null,
@@ -805,7 +782,7 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [29808, 29920] misses nearest swing 30706 by 786",
+            "detail": "C2 [29727, 29914] misses nearest swing 30706 by 791",
             "direction": "long",
             "closure": "c2_closure",
             "trade_candle": null,
@@ -825,20 +802,20 @@
       },
       {
         "ticker": "MGC=F",
-        "updated": "2026-10-21T22:41:45.203785+08:00",
+        "updated": "2026-10-22T02:57:26.662902+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-10-21T10:41:44.867245-04:00"
+          "reason": "EQ not respected",
+          "ts": "2026-10-21T14:57:26.283482-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no C2 closure (sweep+reclaim) on C2",
-            "detail": null,
-            "direction": null,
+            "stage": "no POI",
+            "detail": "C2 [4140, 4161] misses nearest swing 4220 by 60",
+            "direction": "short",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -876,10 +853,10 @@
           {
             "strategy": "TTrades-L14",
             "fired": false,
-            "stage": "no POI",
-            "detail": "C2 [4128, 4148] misses nearest swing 4220 by 73",
-            "direction": "short",
-            "closure": "c2_closure",
+            "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+            "detail": null,
+            "direction": null,
+            "closure": null,
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
@@ -897,12 +874,12 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-10-21T22:41:47.578604+08:00",
+        "updated": "2026-10-22T02:57:29.554743+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-10-21T10:41:47.207193-04:00"
+          "ts": "2026-10-21T14:57:29.200720-04:00"
         },
         "l_series": [
           {
@@ -928,7 +905,7 @@
           {
             "strategy": "TTrades-L13",
             "fired": false,
-            "stage": "C2 not an expansion candle (wick too large)",
+            "stage": "C3 not an expansion candle (wick too large)",
             "detail": null,
             "direction": null,
             "closure": null,
@@ -948,10 +925,10 @@
           {
             "strategy": "TTrades-L14",
             "fired": false,
-            "stage": "no POI",
-            "detail": "C2 [82537, 83153] misses nearest swing 83900 by 747",
-            "direction": "short",
-            "closure": "c2_closure",
+            "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+            "detail": null,
+            "direction": null,
+            "closure": null,
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
