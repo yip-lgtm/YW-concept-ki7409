@@ -163,8 +163,10 @@ B1_TICKERS = {"MNQ=F", "MGC=F", "BTC-USD"}
 # SOP's absolute $5.00 stop cap over unchanged.
 #
 # It deliberately does NOT also run on MGC=F: both contracts track the same
-# gold (their closes agree only about a quarter of the time, but they are
-# the same underlying), so the same setup would be opened twice.
+# gold and are quoted per troy ounce, so the same setup would be opened
+# twice. (An earlier version of this comment said their closes "agree only
+# about a quarter of the time" — measured, that is wrong: the median
+# difference is $0.10 on ~$4,140, and every sample was inside 0.05%.)
 ARGON_GOLD_TICKERS = {"GC=F"}
 
 # Strategy name → (detector_fn, required_args, weight, timeframe)
@@ -308,6 +310,21 @@ BLOCK_STACKING_PER_TICKER = True
 STAIR_BAN_TICKERS = {"BTC-USD", "MES=F"}
 PUSHES_BAN_TICKERS = {"BTC-USD"}
 PULLBACK_5020_BAN_TICKERS = {"MGC=F"}
+
+# CRT on gold: MGC=F and GC=F are the SAME metal, quoted per troy ounce.
+# Measured over 10 minutes where both fired, the median price difference
+# was $0.10 on ~$4,140 — 0.0024% — and every sample was inside 0.05%.
+# (The old comment here claimed the closes "agree only about a quarter of
+# the time"; that was wrong, and it is why this rule was never applied
+# to CRT.) The Argon SOP already runs on GC=F only, for exactly this
+# reason. CRT did not, and on 2026-10-21 it opened the same gold setup
+# twice: MGC=F long @ 4150.60 and GC=F long @ 4150.30, same bar, same
+# direction, two positions on one underlying.
+#
+# CRT keeps MGC=F — it has 112 closed trades of history there, and MGC's
+# 10-oz contract sizes a $50-risk book ten times finer than GC's 100 oz.
+# GC=F stays for Argon, which needs the front-month contract.
+CRT_BAN_TICKERS = {"GC=F"}
 
 # Session tags to ban per strategy (v5)
 STAIR_BAN_SESSIONS = {"RTH_Close", "AsiaLate", "Lunch"}
@@ -640,6 +657,21 @@ def _apply_open_gates(fired_signals: list) -> tuple:
                 )
                 gated.append(sig)
                 print(f"[gate] 50-20-Pullback ban ticker {tk} → SKIP")
+                continue
+        # === Gate 2.14: CRT gold ticker ban (2026-10-21) ===
+        # MGC=F and GC=F are the same metal quoted per troy ounce, so a
+        # setup on both opens the same trade twice. Argon-Gold already
+        # runs on GC=F only. CRT did not, and opened MGC=F long @ 4150.60
+        # and GC=F long @ 4150.30 on the same bar on 2026-10-21.
+        if strat == "CRT":
+            tk = sig.get("ticker", "")
+            if tk in CRT_BAN_TICKERS:
+                sig["gate_skip"] = (
+                    f"CRT ban ticker {tk}: same gold as MGC=F — the setup "
+                    f"would be opened twice"
+                )
+                gated.append(sig)
+                print(f"[gate] CRT ban ticker {tk} → SKIP")
                 continue
         # === Gate 2.13: RSI-Div paper-only default (v5 — 2026-09-23) ===
         # 7-day: 6 trades -$1000 (4 BTC + 2 MGC); all 4 BTC losses. Until LLM dumps the
