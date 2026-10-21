@@ -27,6 +27,8 @@
 | [OCS-SETUP.md](OCS-SETUP.md) | OCS BTC 5m auto-signal pipeline — setup guide |
 | [AUTO-ITERATION.md](AUTO-ITERATION.md) | 自動迭代說明手冊 — 9-agent LLM-iter system (架構、流程、歷史) |
 | [STRATEGY-SETUP.md](STRATEGY-SETUP.md) | 9 strategy sub-agents 最新 setup (weights, tf, R-multiples, LLM history) |
+| [STRATEGY-PARAM-SETUPS.md](STRATEGY-PARAM-SETUPS.md) | 各策略最強參數 setup — 生效值、偵測閾值、三樣本證據、值唔值得 tune |
+| [OPS-NOTES.md](OPS-NOTES.md) | Ops 記錄 — 事故、CI 實況、sandbox 實操坑 |
 
 ## Live Dashboards
 | URL | Description |
