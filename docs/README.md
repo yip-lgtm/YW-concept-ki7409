@@ -29,6 +29,7 @@
 | [STRATEGY-SETUP.md](STRATEGY-SETUP.md) | 9 strategy sub-agents 最新 setup (weights, tf, R-multiples, LLM history) |
 | [STRATEGY-PARAM-SETUPS.md](STRATEGY-PARAM-SETUPS.md) | 各策略最強參數 setup — 生效值、偵測閾值、三樣本證據、值唔值得 tune |
 | [OPS-NOTES.md](OPS-NOTES.md) | Ops 記錄 — 事故、CI 實況、sandbox 實操坑 |
+| [TTRADES-STATUS.md](TTRADES-STATUS.md) | TTrades 家族狀態 — 四個 agent 做齊咗啲乜、仲欠啲乜、點解 L 系列冇得 backtest |
 
 ## Live Dashboards
 | URL | Description |
