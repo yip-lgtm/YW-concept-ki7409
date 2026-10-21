@@ -59,4 +59,8 @@ jobs:
           git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
           git add automation/reports/strategy_ranking/ || true
           git commit -m "auto(reward): daily top 3 PnL awards $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          # Rebase before pushing: other workflows commit to main every few
+          # minutes, so a push from a stale base is rejected as
+          # non-fast-forward and the awards log is silently lost.
+          git fetch origin main && git pull --rebase origin main || true
           git push origin main || true

@@ -60,7 +60,6 @@ import re
 from datetime import datetime, timezone, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-import requests
 
 if "GITHUB_WORKSPACE" in os.environ:
     REPO = Path(os.environ["GITHUB_WORKSPACE"])
@@ -214,28 +213,13 @@ def recently_revised(overrides: dict, min_days: int = MIN_REVISION_DAYS) -> set[
 
 
 def call_minimax(prompt: str, system: str) -> str:
-    api_key = os.environ.get("MINIMAX_API_KEY", "")
-    if not api_key:
-        return ""
-    try:
-        r = requests.post(
-            "https://api.minimax.io/v1/chat/completions",
-            headers={"Authorization": f"Bearer {api_key}"},
-            json={
-                "model": "MiniMax-M3",
-                "max_tokens": 2048,   # room for think + JSON
-                "temperature": 0.2,   # less rambling, more format-compliant
-                "messages": [
-                    {"role": "system", "content": system},
-                    {"role": "user", "content": prompt},
-                ],
-            },
-            timeout=60,
-        )
-        return chat(prompt, system=system)[0]
-    except Exception as e:
-        log(f"  LLM call failed: {e}")
-        return ""
+    """One LLM call, through the shared client.
+
+    The dead requests.post that used to sit in front of chat() doubled the
+    token spend per intervention for no benefit; the shared client also
+    returns the real API error instead of hiding it behind an empty string.
+    """
+    return chat(prompt, system=system)[0]
 
 
 def parse_thresholds(content: str) -> dict | None:

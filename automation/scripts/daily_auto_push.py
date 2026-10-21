@@ -100,6 +100,21 @@ def log(msg: str):
     print(f"[auto-push {ts}] {msg}", flush=True)
 
 
+def _porcelain_path(line: str) -> str:
+    """Extract the path from a `git status --porcelain` line.
+
+    The status code is two characters plus a space, so the path starts at
+    index 3. Renames are "R  old -> new" and the new path is the one that
+    exists on disk. Paths with spaces are quoted by git.
+    """
+    path = line[3:].strip()
+    if " -> " in path:
+        path = path.split(" -> ", 1)[1]
+    if path.startswith('"') and path.endswith('"'):
+        path = path[1:-1]
+    return path
+
+
 def main() -> int:
     HKT = timezone(timedelta(hours=8))
     today = datetime.now(HKT).strftime("%Y-%m-%d")
@@ -126,34 +141,75 @@ def main() -> int:
 
     # 3. Fetch + rebase to avoid rejection from concurrent commits.
     #
-    # Order matters: the tree must be clean before a rebase, and the branch
-    # must be on top of origin/main before we commit. On 2026-10-20 this
-    # step failed with "cannot pull with rebase: You have unstaged changes"
-    # and the script carried on to commit against a stale base. The push
-    # was then rejected as non-fast-forward, and because this script had no
-    # retry the settlement's level update was lost for the day.
+    # Order matters, and the previous order was actively harmful.
     #
-    # So: stage first, rebase second, and if the rebase still fails, abort
-    # and hard-reset onto origin/main before continuing.
+    # It ran `git add -A` and then `git pull --rebase`. A rebase refuses to
+    # run with a dirty index ("Your index contains uncommitted changes"), so
+    # that rebase ALWAYS failed. The fallback then did
+    # `git reset --hard origin/main`, which moves HEAD onto the remote tip
+    # and throws away every local commit that had not been pushed yet —
+    # including the commit the previous workflow step had just made holding
+    # today's ranking files. That is how ranking_<today>.json could be
+    # generated, committed, and then vanish from main.
+    #
+    # The fallback's `git stash pop` then conflicted on
+    # docs/dashboard-data.json and left it unmerged ("UU"), and the script
+    # went on to `git add` and commit that file — publishing the conflict
+    # markers to main and to the public dashboard.
+    #
+    # The fix: stash the working tree first (a stash preserves local
+    # commits, unlike reset --hard), rebase the local commits onto
+    # origin/main, then restore the stash. And never commit an unmerged path.
     log("git fetch origin")
     run(["git", "fetch", "origin"], timeout=60)
-    run(["git", "add", "-A"], timeout=60)
+
+    stash_ok = False
+    if run(["git", "status", "--porcelain"]).stdout.strip():
+        log("  working tree dirty -> stashing before rebase")
+        st = run(["git", "stash", "push", "--include-untracked",
+                  "-m", "auto-push-pre-rebase"], timeout=60)
+        stash_ok = st.returncode == 0
+        if not stash_ok:
+            log(f"WARN: stash failed: {st.stderr[:200]}")
+
     log("git pull --rebase onto origin")
-    pull = run(["git", "pull", "--rebase", "origin", branch], timeout=60)
+    pull = run(["git", "pull", "--rebase", "origin", branch], timeout=120)
     if pull.returncode != 0:
         log(f"WARN: pull --rebase failed (rc={pull.returncode}); "
             f"stderr: {pull.stderr[:300]}")
-        run(["git", "rebase", "--abort"])
-        # Hard reset onto the remote tip, keeping the working tree. Anything
-        # we were carrying is re-staged below, so no work is lost.
-        log("git reset --hard origin/<branch> (keep working tree via stash)")
-        stash = run(["git", "stash", "push", "--include-untracked",
-                     "-m", "auto-push-pre-reset"], timeout=60)
-        run(["git", "reset", "--hard", f"origin/{branch}"], timeout=60)
-        if stash.returncode == 0:
-            pop = run(["git", "stash", "pop"], timeout=60)
-            if pop.returncode != 0:
-                log(f"WARN: stash pop failed: {pop.stderr[:200]}")
+        run(["git", "rebase", "--abort"], timeout=60)
+        # Fall back to a mixed reset, NOT a hard one. A mixed reset moves
+        # HEAD onto the remote tip and leaves the working tree alone, so
+        # the content of the discarded local commits survives as unstaged
+        # modifications and gets picked up by the commit below. `reset
+        # --hard` would have deleted it.
+        log("git reset --mixed origin/<branch> (keep working tree contents)")
+        run(["git", "reset", "--mixed", f"origin/{branch}"], timeout=60)
+    else:
+        log("  rebased onto origin/main")
+
+    if stash_ok:
+        pop = run(["git", "stash", "pop"], timeout=60)
+        if pop.returncode != 0:
+            log(f"WARN: stash pop failed: {pop.stderr[:200]}")
+
+    # 3b. Never publish a conflicted file. A stash pop or a rebase can
+    # leave paths unmerged; committing those writes the conflict markers
+    # into the file, and for docs/dashboard-data.json that breaks the
+    # public dashboard. Restore the conflicted paths from origin instead.
+    unmerged = run(["git", "diff", "--name-only", "--diff-filter=U"]).stdout.split()
+    if unmerged:
+        log(f"  {len(unmerged)} unmerged path(s) - restoring from origin:")
+        for p in unmerged:
+            log(f"    {p}")
+            co = run(["git", "checkout", "--force", f"origin/{branch}", "--", p],
+                     timeout=60)
+            if co.returncode != 0:
+                # Not present in origin (a brand-new file) - drop the
+                # conflicted copy instead of committing conflict markers.
+                run(["git", "rm", "--force", "--", p], timeout=60)
+            else:
+                run(["git", "reset", "HEAD", "--", p], timeout=60)
 
     # 4. Detect changes in watched paths
     # Filter to paths that actually exist locally (git add fails hard on
@@ -168,33 +224,74 @@ def main() -> int:
     changed = [l for l in res.stdout.splitlines() if l.strip()]
     log(f"  {len(changed)} changed entries")
 
+    # 4b. Refuse to publish JSON that does not parse. The public dashboard
+    # serves docs/dashboard-data.json directly, so a malformed file breaks
+    # the site. Restore anything unparseable from origin and carry on with
+    # the rest.
+    broken = []
+    for line in changed:
+        path = _porcelain_path(line)
+        if not path or not path.endswith(".json"):
+            continue
+        f = REPO / path
+        if not f.exists():
+            continue
+        try:
+            json.loads(f.read_text())
+        except Exception as e:
+            broken.append(path)
+            log(f"  INVALID JSON: {path} ({e})")
+    for path in broken:
+        co = run(["git", "checkout", "--force", f"origin/{branch}", "--", path],
+                 timeout=60)
+        if co.returncode != 0:
+            run(["git", "rm", "--force", "--", path], timeout=60)
+        else:
+            run(["git", "reset", "HEAD", "--", path], timeout=60)
+    if broken:
+        # Re-detect: the restored files are no longer part of the change set.
+        res = run(["git", "status", "--porcelain", "--"] + existing_paths)
+        changed = [l for l in res.stdout.splitlines() if l.strip()]
+        log(f"  {len(changed)} changed entries after dropping invalid JSON")
+
     if not changed:
-        log("No changes to commit. Exiting cleanly (idempotent).")
-        return 0
-
-    # Show first 10 for context
-    for line in changed[:10]:
-        log(f"  {line}")
-    if len(changed) > 10:
-        log(f"  ... and {len(changed) - 10} more")
-
-    # 5. Add watched paths
-    log("git add <watched paths>")
-    add = run(["git", "add", "--"] + existing_paths)
-    if add.returncode != 0:
-        log(f"ERROR: git add failed: {add.stderr[:500]}")
-        return 2
-
-    # 6. Commit
-    msg = f"auto(daily-push): {today} reports + levels ({len(changed)} files)"
-    log(f"git commit -m '{msg}'")
-    commit = run(["git", "commit", "-m", msg])
-    if commit.returncode != 0:
-        if "nothing to commit" in (commit.stdout + commit.stderr):
-            log("Nothing to commit (race condition with another workflow). Exiting 0.")
+        # There may still be local commits that have never been pushed —
+        # after the rebase above, the ranking commit (and any other commit
+        # made earlier in the same workflow) sits in HEAD, ahead of
+        # origin/main, with a clean working tree. Exiting here would leave
+        # it unpushed, which is exactly how the daily ranking file went
+        # missing. Only stop if there is genuinely nothing to push.
+        ahead = run(["git", "rev-list", "--count", f"origin/{branch}..HEAD"]).stdout.strip()
+        if ahead and ahead != "0":
+            log(f"No new file changes, but {ahead} local commit(s) ahead of "
+                f"origin — pushing them.")
+        else:
+            log("No changes to commit and nothing to push. Exiting cleanly (idempotent).")
             return 0
-        log(f"ERROR: git commit failed: {commit.stderr[:500]}")
-        return 3
+    else:
+        # Show first 10 for context
+        for line in changed[:10]:
+            log(f"  {line}")
+        if len(changed) > 10:
+            log(f"  ... and {len(changed) - 10} more")
+
+        # 5. Add watched paths
+        log("git add <watched paths>")
+        add = run(["git", "add", "--"] + existing_paths)
+        if add.returncode != 0:
+            log(f"ERROR: git add failed: {add.stderr[:500]}")
+            return 2
+
+        # 6. Commit
+        msg = f"auto(daily-push): {today} reports + levels ({len(changed)} files)"
+        log(f"git commit -m '{msg}'")
+        commit = run(["git", "commit", "-m", msg])
+        if commit.returncode != 0:
+            if "nothing to commit" in (commit.stdout + commit.stderr):
+                log("Nothing to commit (race condition with another workflow). Continuing to push.")
+            else:
+                log(f"ERROR: git commit failed: {commit.stderr[:500]}")
+                return 3
 
     # 7. Push, with retry.
     #
@@ -202,6 +299,12 @@ def main() -> int:
     # every few minutes, so a push that is correct when it starts can be
     # rejected as non-fast-forward a second later. Each attempt re-syncs
     # with origin and replays the commit on top.
+    #
+    # The re-sync here must also preserve the local commit. `git pull
+    # --rebase` alone refuses to run with a dirty index, so the old code
+    # ran `git add -A` first — and if the rebase then failed, the commit
+    # was left in an unmergeable state. Stash, rebase, pop: same shape as
+    # step 3, and it keeps the commit intact.
     push = None
     for attempt in range(1, PUSH_ATTEMPTS + 1):
         log(f"git push origin main (attempt {attempt}/{PUSH_ATTEMPTS})")
@@ -211,8 +314,20 @@ def main() -> int:
         log(f"  push rejected: {push.stderr.strip().splitlines()[0][:120] if push.stderr.strip() else 'unknown'}")
         if attempt < PUSH_ATTEMPTS:
             log(f"  re-syncing with origin/{branch} and retrying in 5s")
-            run(["git", "add", "-A"], timeout=60)
-            run(["git", "pull", "--rebase", "origin", branch], timeout=60)
+            run(["git", "fetch", "origin"], timeout=60)
+            retry_stash = False
+            if run(["git", "status", "--porcelain"]).stdout.strip():
+                st = run(["git", "stash", "push", "--include-untracked",
+                          "-m", "auto-push-pre-retry"], timeout=60)
+                retry_stash = st.returncode == 0
+            rb = run(["git", "pull", "--rebase", "origin", branch], timeout=120)
+            if rb.returncode != 0:
+                run(["git", "rebase", "--abort"], timeout=60)
+                # Mixed, not hard: keep the working tree contents so the
+                # commit is not silently destroyed by the retry.
+                run(["git", "reset", "--mixed", f"origin/{branch}"], timeout=60)
+            if retry_stash:
+                run(["git", "stash", "pop"], timeout=60)
             time.sleep(5)
 
     if push is None or push.returncode != 0:
