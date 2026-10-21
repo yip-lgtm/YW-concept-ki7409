@@ -30,10 +30,22 @@ from pathlib import Path
 
 import pandas as pd
 
-if "GITHUB_WORKSPACE" in os.environ:
-    REPO = Path(os.environ["GITHUB_WORKSPACE"])
-else:
-    REPO = Path("/workspace/YW-concept-ki7409")
+def _find_repo() -> Path:
+    """Locate the repo root without hard-coding one machine's path.
+
+    GITHUB_WORKSPACE wins, because that is where CI checks the repo out.
+    Otherwise walk up from this file until a directory containing
+    "automation" is found, so any clone or worktree works.
+    """
+    if "GITHUB_WORKSPACE" in os.environ:
+        return Path(os.environ["GITHUB_WORKSPACE"])
+    for _parent in Path(__file__).resolve().parents:
+        if (_parent / "automation").is_dir():
+            return _parent
+    return Path("/workspace/YW-concept-ki7409")
+
+
+REPO = _find_repo()
 
 sys.path.insert(0, str(REPO / "automation" / "scripts"))
 HKT = timezone(timedelta(hours=8))
@@ -56,6 +68,30 @@ MAX_BARS_HELD = 96          # 96 x 5m = 8h
 T1_REDUCE_FRACTION = 0.5
 T2_R_MULTIPLE = 1.618
 
+# Re-entry cooldown.
+#
+# The tracker used to dedupe only on signal_id, so a setup that had just
+# been stopped out was re-entered on the very next scan: different
+# timestamp, different signal_id, same trade. On 2026-10-14 that happened
+# six times in a row on MGC=F long — TTrades-L12 entered the identical
+# setup at 4179-4185 and every one of them stopped out at 4166.8. The
+# result was L12's live record: 7 trades, 0 wins, -7R.
+#
+# The main book already blocks this: live_scan.COOLDOWN_HOURS = 4 for the
+# same (strategy, ticker, normalized direction). The TTrades family had no
+# equivalent, so the rule is applied here on the same terms.
+COOLDOWN_HOURS = 4
+
+
+def _norm_dir(direction: str) -> str:
+    """Normalise a direction string to long/short/other."""
+    d = str(direction or "").strip().lower()
+    if d in ("long", "buy", "up", "bullish", "l"):
+        return "long"
+    if d in ("short", "sell", "down", "bearish", "s"):
+        return "short"
+    return d or "none"
+
 
 def log(msg: str):
     print(f"[tt-tracker] {msg}", flush=True)
@@ -72,6 +108,39 @@ def load_positions() -> dict:
         return json.loads(POSITIONS_FILE.read_text())
     except Exception:
         return {}
+
+
+def load_closed_times() -> dict:
+    """Most recent exit time per (strategy, ticker, direction).
+
+    Used to enforce the re-entry cooldown. A closed trade is the evidence
+    that the setup just failed, so the same setup must not be taken again
+    for COOLDOWN_HOURS.
+    """
+    out: dict[tuple, datetime] = {}
+    if not TRADES_FILE.exists():
+        return out
+    try:
+        lines = TRADES_FILE.read_text(errors="ignore").splitlines()
+    except Exception:
+        return out
+    for line in lines:
+        line = line.strip()
+        if not line or line[0] in "<=>":
+            continue
+        try:
+            d = json.loads(line)
+        except Exception:
+            continue
+        if d.get("status") != "closed":
+            continue
+        key = (d.get("strategy"), d.get("ticker"), _norm_dir(d.get("direction")))
+        t = parse_ts(d.get("exit_time")) or parse_ts(d.get("entry_time"))
+        if not t:
+            continue
+        if key not in out or t > out[key]:
+            out[key] = t
+    return out
 
 
 def save_positions(pos: dict):
@@ -193,17 +262,36 @@ def main() -> int:
 
     positions = load_positions()
     signals = read_signals()
+    closed_times = load_closed_times()
+    now = datetime.now(timezone.utc)
     log(f"{len(signals)} actionable signal(s) in per-ticker logs; "
         f"{len(positions)} open position(s)")
 
     # --- open new positions -------------------------------------------------
     opened = 0
+    # (strategy, ticker, direction) already in the book
+    open_combos = {
+        (p.get("strategy"), p.get("ticker"), _norm_dir(p.get("direction")))
+        for p in positions.values()
+        if p.get("status") == "open"
+    }
     for sig in signals:
         sid = signal_id(sig)
         if sid in positions:
             continue
         if sig.get("strategy") not in LEVEL_BEARING_AGENTS:
             continue
+        combo = (sig.get("strategy"), sig.get("ticker"),
+                 _norm_dir(sig.get("direction")))
+        if combo in open_combos:
+            continue
+        last_exit = closed_times.get(combo)
+        if last_exit is not None:
+            age_h = (now - last_exit).total_seconds() / 3600.0
+            if age_h < COOLDOWN_HOURS:
+                log(f"  SKIP {combo[0]} {combo[1]} {combo[2]} — closed "
+                    f"{age_h:.1f}h ago, cooldown {COOLDOWN_HOURS}h")
+                continue
         try:
             entry = float(sig["entry"]); sl = float(sig["sl"])
             t1 = float(sig["t1"]); t2 = float(sig.get("t2_close") or sig["t1"])
@@ -245,6 +333,7 @@ def main() -> int:
             "swing_type": sig.get("swing_type"),
         }
         opened += 1
+        open_combos.add(combo)
         log(f"  OPEN {sig.get('strategy')} {sig.get('ticker')} {sig.get('direction')} "
             f"@{entry:,.2f} SL {sl:,.2f} T2 {t2:,.2f}")
 

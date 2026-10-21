@@ -42,10 +42,22 @@ import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-if "GITHUB_WORKSPACE" in os.environ:
-    REPO = Path(os.environ["GITHUB_WORKSPACE"])
-else:
-    REPO = Path("/workspace/YW-concept-ki7409")
+def _find_repo() -> Path:
+    """Locate the repo root without hard-coding one machine's path.
+
+    GITHUB_WORKSPACE wins, because that is where CI checks the repo out.
+    Otherwise walk up from this file until a directory containing
+    "automation" is found, so any clone or worktree works.
+    """
+    if "GITHUB_WORKSPACE" in os.environ:
+        return Path(os.environ["GITHUB_WORKSPACE"])
+    for _parent in Path(__file__).resolve().parents:
+        if (_parent / "automation").is_dir():
+            return _parent
+    return Path("/workspace/YW-concept-ki7409")
+
+
+REPO = _find_repo()
 
 ITER_DIR = REPO / "automation/reports/strategy_ranking/iterations"
 OVERRIDES_FILE = REPO / "automation/config/strategy_overrides.json"
