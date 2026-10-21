@@ -59,6 +59,13 @@ WATCHED_PATHS = [
     "automation/reports/live_scan/",
     "automation/reports/ocs_btc_5m/",
     "automation/reports/ttrades_btc/",
+    # The 180-day one-hour backtest — the optimiser's second independent
+    # track. The workflow recomputes it every night, but until this path
+    # was watched its output was never committed, so the copy in the repo
+    # stayed frozen at whatever was last committed by hand. Anyone reading
+    # it (and the optimiser itself, when it is run outside CI) was reading
+    # a stale sample.
+    "automation/reports/historical_backtest/",
     # Config (state + settings)
     "automation/config/strategy_levels.json",
     "automation/config/ranking_settings.json",
