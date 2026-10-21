@@ -1,10 +1,11 @@
 # LLM Iteration Scientist — Deep 4D Analysis
 
 **Date:** 2026-10-21 (HKT)  
-**Source:** `automation/reports/live_scan/trades.jsonl` — 3265 closed trades (7d: 117 | 30d: 494 | all-time: 3265)  
-**Window cutoff (7d):** 2026-10-14T02:46:38.882740+00:00  
+**Source:** `automation/reports/live_scan/trades.jsonl` — 3265 closed trades (7d: 115 | 30d: 493 | all-time: 3265)  
+**Window cutoff (7d):** 2026-10-14T05:34:02.458882+00:00  
 **Dimensions:** aggregate · by grade · by direction · by ticker  
 **Strategies covered:** 10  
+**Optimiser reconciled:** `backtest_optimizer.py` / `btopt_2026-10-20.md` — replayed on its own holdout  
 
 > **Scope:** analysis only. No detector logic, `live_scan.py`, `strategy_overrides.json` or `weight_overrides.json` was modified. Parameter changes below are *proposals*, not applied changes.
 
@@ -20,12 +21,13 @@
 | SF-6 | The holdout-validated optimiser — the system's best levers — is completely dormant | 🔴 critical |
 | SF-7 | The +1.618R monoculture is the *pre-override* regime — the new exits are untested | 🟡 medium |
 | SF-8 | The scientist's LLM parser can never yield a parameter — auto-apply is structurally impossible | 🔴 critical |
+| SF-9 | The optimiser's ticker keep/drop decisions are inverted on the data they were tuned on | 🔴 critical |
 
 **Strategy league table (7d):**
 
 | Strategy | n(7d) | WR | PF | Total R | Avg R | MaxDD | 30d PF | 30d R | All-time R |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|--:|
-| **CRT** | 35 | 31.4% | 0.742 | -6.20 | -0.177 | -10.06 | 0.907 | -6.13 | +27.86 |
+| **CRT** | 33 | 30.3% | 0.703 | -6.82 | -0.207 | -10.06 | 0.907 | -6.13 | +27.86 |
 | **B1-3in1** | 5 | 0.0% | 0.0 | -5.00 | -1.000 | -5.0 | 0.0 | -23.00 | -39.00 |
 | **RSI-Div** | 3 | 0.0% | 0.0 | -3.00 | -1.000 | -3.0 | 0.27 | -4.38 | +47.91 |
 | **50-20-Pullback** | 39 | 35.9% | 0.906 | -2.35 | -0.060 | -8.53 | 0.929 | -8.21 | -69.17 |
@@ -33,7 +35,7 @@
 | **Kell-Cycle** | 1 | 0.0% | 0.0 | -1.00 | -1.000 | -1.0 | 1.079 | +0.24 | +9.59 |
 | **Stair** | 19 | 36.8% | 0.944 | -0.67 | -0.035 | -5.0 | 0.861 | -8.61 | -19.84 |
 | **H-Pattern** | 1 | 100.0% | 1.618 | +1.62 | +1.618 | 0.0 | 2.589 | +7.94 | -12.19 |
-| **3-Pushes** | 8 | 50.0% | 1.618 | +2.47 | +0.309 | -2.0 | 1.375 | +7.51 | +34.82 |
+| **3-Pushes** | 8 | 50.0% | 1.618 | +2.47 | +0.309 | -2.0 | 1.448 | +8.51 | +34.82 |
 | **B1** | 2 | 100.0% | 3.236 | +3.24 | +1.618 | 0.0 | 1.618 | +1.85 | +3.33 |
 
 ## 2. Cross-cutting structural findings
@@ -58,13 +60,13 @@ live_scan.py order is: LLM grade (1505) → BTC boost (1511) → `conf < min_con
 
 ### SF-4 — The 7d window is statistically thin
 
-117 trades in 7d across 10 strategies (median 4.5 per strategy), versus 494 in 30d and 3265 all-time. 6 of the 10 strategies have fewer than 8 trades in 7d. Per-strategy 7d numbers are directional, not conclusive; every recommendation in this report is therefore cross-checked against the 30d and all-time windows, and confidence is capped where the windows disagree.
+115 trades in 7d across 10 strategies (median 4.5 per strategy), versus 493 in 30d and 3265 all-time. 6 of the 10 strategies have fewer than 8 trades in 7d. Per-strategy 7d numbers are directional, not conclusive; every recommendation in this report is therefore cross-checked against the 30d and all-time windows, and confidence is capped where the windows disagree.
 
 *Impact:* Confidence must be discounted, and per-strategy n<8 findings are labelled anecdotal.
 
 ### SF-5 — Production scientist script reports all-time numbers as '7d'
 
-`automation/scripts/llm_iteration_scientist.py:139-183` filters signals to 7d but applies **no date filter at all to trades**. Its 'PERFORMANCE (7d window)' block therefore reports the full history — 1011 trades for 50-20-Pullback vs 39 in the real 7d window, 701 for CRT vs 35. It also computes `profit_factor` as wins/losses (line 190 — a win/loss *ratio*, not gross profit ÷ gross loss), and it pattern-matches 'B1' such that the B1 agent absorbs all 39 B1-3in1 trades (B1 shows 54 trades instead of 15). Because the 'profit factor' is really a win-rate ratio, **profitable strategies are graded D**: in the manual run of 2026-10-21 09:44 HKT CRT was graded D while showing +27.62R, and 3-Pushes was graded D while showing +34.82R. Seven of ten strategies came out as grade D.
+`automation/scripts/llm_iteration_scientist.py:139-183` filters signals to 7d but applies **no date filter at all to trades**. Its 'PERFORMANCE (7d window)' block therefore reports the full history — 1011 trades for 50-20-Pullback vs 39 in the real 7d window, 701 for CRT vs 33. It also computes `profit_factor` as wins/losses (line 190 — a win/loss *ratio*, not gross profit ÷ gross loss), and it pattern-matches 'B1' such that the B1 agent absorbs all 39 B1-3in1 trades (B1 shows 54 trades instead of 15). Because the 'profit factor' is really a win-rate ratio, **profitable strategies are graded D**: in the manual run of 2026-10-21 09:44 HKT CRT was graded D while showing +27.62R, and 3-Pushes was graded D while showing +34.82R. Seven of ten strategies came out as grade D.
 
 *Impact:* The daily 00:00 HKT run has been grading strategies on wrong data, and its D grades are not evidence that a strategy loses money.
 
@@ -72,7 +74,7 @@ live_scan.py order is: LLM grade (1505) → BTC boost (1511) → `conf < min_con
 
 `automation/config/agent_params.json` holds per-(strategy, ticker) cell configs for 9 strategies, each with `drop_tickers`/`keep_tickers`, `min_conf`, `grade_filter`, `direction`, `weekday_exclude`, `hours` and the exit set (`t2_r`, `breakeven_at_r`, `partial_at_r`, `stop_mult`, `max_bars_held`). These are exactly the levers the 4D analysis needs. But **every entry has `_validated` unset and `validated_on_holdout: false`**, each carrying the note *"not published: did not improve on both the live track and the independent 180-day one-hour track"* (0/9 validated). `live_scan.py:1663` gates the whole block behind `if _ap and _ap.get("_validated")`, so **not one of these levers is applied at runtime**. Matching commit: `1733faa3 feat(optimizer): second independent track — 0 of 9 configurations survive it`.
 
-*Impact:* The system has a correct, holdout-gated optimiser and an LLM loop that pushes mostly-dead parameters. The high-value move is to make the validated path usable, not to keep tuning `weight`.
+*Impact:* The system has a correct, holdout-gated optimiser and an LLM loop that pushes mostly-dead parameters. The high-value move is to make the validated path usable, not to keep tuning `weight` — but note SF-9: the *current* configs must not be published as-is. The gate is doing its job; the fix is a better search, not a weaker gate.
 
 ### SF-7 — The +1.618R monoculture is the *pre-override* regime — the new exits are untested
 
@@ -85,6 +87,12 @@ live_scan.py order is: LLM grade (1505) → BTC boost (1511) → `conf < min_con
 `llm_iteration_scientist.py:291` parses the LLM reply with a single regex that demands **pipe-delimited** fields (`GRADE: A|B|C|D | CONFIDENCE: n | DIAGNOSIS: … | REASON: … | SUGGESTED_PARAMS: {…}`). MiniMax-M3 actually answers with **newline-delimited** fields, so the main regex never matches; the partial fallback at lines 306-312 recovers GRADE and CONFIDENCE but leaves `reason` and `suggested_params` empty. `auto_apply` (line 302) requires a non-empty `suggested_params`, so **the scientist can never auto-apply anything**, no matter how confident the model is. Measured on the manual run of 2026-10-21 09:44 HKT (`iteration_scientist_20261021_094417.json`): 10/10 agents have `suggested_params: {}` and `n_auto_applied: 0` — including `yw-two-yang`, which was graded **B with confidence 95** and whose reply explicitly carried `SUGGESTED_PARAMS: {"min_grad…` (truncated out of the diagnosis field). The sibling script `llm_iterate_all.py:91` gets this right — it scrapes `weight` with a loose regex (`r"weight['\"]?\s*[:=]\s*([0-9.]+)"`) that survives any format, which is why `strategy_overrides.json` does contain real applied changes (3 applications, last 2026-10-20) while the scientist's own proposals are always empty. The parser itself was **not** among the changes the remote made on 2026-10-21 (commits `c3ea8421`, `9a05168e`) — those only routed the call through the new shared `automation/src/llm_client.py`, which now returns `(content, error)` and lets the caller see the real cause instead of `KeyError: 'choices'`. But the scientist **discards that error** (`content, _llm_err = chat(...)`, lines 279-281), so a rate-limited call is now reported as *"[Rule-based - LLM unavailable]"* with the HTTP 429 detail thrown away, and `llm_client` itself has **no retry or backoff** for 429. Compounding everything, the script fans out to 10 workers (line 437) against a 5-hour Token Plan window: 8 of 10 calls in the 09:44 run returned HTTP 429 and were replaced by the rule-based fallback, which reuses the broken win/loss-ratio 'profit factor' from SF-5.
 
 *Impact:* The workflow advertises 'Auto-applies high-confidence (>= 60%) parameter changes', but that path has never fired from the scientist. Every 'optimisation' in the audit log came from the other script, and half of those changes were to a dead parameter (SF-2).
+
+### SF-9 — The optimiser's ticker keep/drop decisions are inverted on the data they were tuned on
+
+`backtest_optimizer.py` reports **0 of 9 configurations survive** on both tracks, and that verdict is correct — but the reason is sharper than 'overfitting'. Replaying each published config on the optimiser's **own holdout** (the last 30% of that strategy's A/B trades, the same split the optimiser used) shows the ticker filter is the problem, and that it points the wrong way: **50-20-Pullback** — base holdout PF 0.942 / -10.5R becomes PF 0.844 / -25.1R once the optimiser's own keep/drop set is applied (-14.6R): drops MES=F which is +10.0R (PF 1.912, n=24) on the very holdout it was tuned on; drops M2K=F which is +4.6R (PF 1.456, n=19) on the very holdout it was tuned on; keeps BTC-USD which is -35.9R (PF 0.767, n=227). **CRT** — base holdout PF 1.019 / +2.4R becomes PF 0.916 / -7.0R once the optimiser's own keep/drop set is applied (-9.4R): drops MNQ=F which is +10.1R (PF 1.533, n=37) on the very holdout it was tuned on; keeps MGC=F which is -5.4R (PF 0.728, n=29); keeps MES=F which is -4.3R (PF 0.839, n=41). **3-Pushes** — base holdout PF 1.179 / +12.5R becomes PF 1.192 / +7.3R once the optimiser's own keep/drop set is applied (-5.2R): drops BTC-USD which is +7.3R (PF 1.428, n=32) on the very holdout it was tuned on. The optimiser never evaluated **B1-3in1** (39 trades, -39.0R, 0.0% win rate) at all: `backtest_optimizer.py` drops every trade whose `direction` is `'none'`, so a strategy that never resolves a direction is invisible to it. The exit-lever search contributes nothing in the live book, because the live exit model is binary (SF-1) — every cell's chosen config is `t2=1.618 be=0.0 pa=0.0`, i.e. the book default. So the only lever that actually moves is the ticker list, and it is being selected on a train sample of 21-379 trades against a per-cell exit-combo search space that can only fit noise.
+
+*Impact:* Do NOT flip the `_validated` gate on these configs — for 50-20-Pullback the published config loses 15R more than doing nothing on the very holdout it was selected for. The gate is currently protecting the book. What is worth doing is the two ticker restrictions that BOTH this report and the optimiser's own holdout data agree on (50-20-Pullback drop BTC-USD, Stair keep MNQ=F only).
 
 ## 3. Per-strategy 4D analysis
 
@@ -155,7 +163,7 @@ live_scan.py order is: LLM grade (1505) → BTC boost (1511) → `conf < min_con
 
 | Window | n | Wins | Losses | WR | PF | Total R | Avg R | Avg win | Avg loss | Payoff | MaxDD | Loss streak |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|
-| 7d | 35 | 11 | 24 | 31.4% | 0.742 | -6.20 | -0.177 | 1.618 | 1.0 | 1.618 | -10.06 | 0 |
+| 7d | 33 | 10 | 23 | 30.3% | 0.703 | -6.82 | -0.207 | 1.618 | 1.0 | 1.618 | -10.06 | 0 |
 | 30d | 103 | 37 | 66 | 35.9% | 0.907 | -6.13 | -0.060 | 1.618 | 1.0 | 1.618 | -10.82 | 0 |
 | all-time | 701 | 281 | 420 | 40.1% | 1.066 | +27.86 | +0.040 | 1.594 | 1.0 | 1.594 | -38.56 | 0 |
 
@@ -164,52 +172,50 @@ live_scan.py order is: LLM grade (1505) → BTC boost (1511) → `conf < min_con
 | Bucket | n(7d) | WR(7d) | PF(7d) | R(7d) | n(30d) | WR(30d) | PF(30d) | R(30d) |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|
 | A | 7 | 42.9% | 1.214 | +0.85 | 21 | 33.3% | 0.809 | -2.67 |
-| B | 28 | 28.6% | 0.647 | -7.06 | 82 | 36.6% | 0.933 | -3.46 |
+| B | 26 | 26.9% | 0.596 | -7.67 | 82 | 36.6% | 0.933 | -3.46 |
 
 **D3 · By direction**
 
 | Bucket | n(7d) | WR(7d) | PF(7d) | R(7d) | n(30d) | WR(30d) | PF(30d) | R(30d) |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|
-| LONG | 19 | 15.8% | 0.303 | -11.15 | 53 | 28.3% | 0.639 | -13.73 |
+| LONG | 17 | 11.8% | 0.216 | -11.76 | 53 | 28.3% | 0.639 | -13.73 |
 | SHORT | 16 | 50.0% | 1.618 | +4.94 | 50 | 44.0% | 1.271 | +7.60 |
 
 **D4 · By ticker**
 
 | Bucket | n(7d) | WR(7d) | PF(7d) | R(7d) | n(30d) | WR(30d) | PF(30d) | R(30d) |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|
-| BTC-USD | 6 | 16.7% | 0.324 | -3.38 | 22 | 31.8% | 0.755 | -3.67 |
+| BTC-USD | 5 | 0.0% | 0.0 | -5.00 | 22 | 31.8% | 0.755 | -3.67 |
 | GC=F | 3 | 33.3% | 0.809 | -0.38 | 3 | 33.3% | 0.809 | -0.38 |
 | M2K=F | 6 | 16.7% | 0.324 | -3.38 | 21 | 28.6% | 0.647 | -5.29 |
 | MES=F | 9 | 55.6% | 2.022 | +4.09 | 23 | 47.8% | 1.483 | +5.80 |
 | MGC=F | 4 | 25.0% | 0.539 | -1.38 | 17 | 29.4% | 0.674 | -3.91 |
-| MNQ=F | 7 | 28.6% | 0.647 | -1.76 | 17 | 41.2% | 1.133 | +1.33 |
+| MNQ=F | 6 | 33.3% | 0.809 | -0.76 | 17 | 41.2% | 1.133 | +1.33 |
 
 **Top 3 issues (deterministic, evidence-ranked):**
 
 1. **[direction · high]** LONG side loses while the other side wins  
-   7d LONG: n=19, PF=0.303, -11.1R. 30d opposite side: n=50, PF=1.271, +7.6R. The edge is direction-specific, not setup-specific.
-2. **[ticker · high]** MNQ=F is a persistent drag (PF=0.647, -1.8R)  
-   7d MNQ=F: n=7, PF=0.647, -1.8R, WR 28.6%. 30d best other ticker: PF=1.483 over n=23. Concentrating on the stronger instrument should lift the blend.
-3. **[ticker · high]** BTC-USD is a persistent drag (PF=0.324, -3.4R)  
-   7d BTC-USD: n=6, PF=0.324, -3.4R, WR 16.7%. 30d best other ticker: PF=1.483 over n=23. Concentrating on the stronger instrument should lift the blend.
+   7d LONG: n=17, PF=0.216, -11.8R. 30d opposite side: n=50, PF=1.271, +7.6R. The edge is direction-specific, not setup-specific.
+2. **[ticker · high]** M2K=F is a persistent drag (PF=0.324, -3.4R)  
+   7d M2K=F: n=6, PF=0.324, -3.4R, WR 16.7%. 30d best other ticker: PF=1.483 over n=23. Concentrating on the stronger instrument should lift the blend.
+3. **[ticker · high]** BTC-USD is a persistent drag (PF=0.0, -5.0R)  
+   7d BTC-USD: n=5, PF=0.0, -5.0R, WR 0.0%. 30d best other ticker: PF=1.483 over n=23. Concentrating on the stronger instrument should lift the blend.
 
 **LLM scientist verdict:**
 
-> **Grade C · confidence 45% · evidence moderate**  
-> LONG side is structurally unprofitable (7d PF=0.303 n=19, 30d PF=0.639 n=53) while SHORT works (30d PF=1.271 n=50); weight=1.3 over-amplifies during drawdown  
-> *Why:* Halve weight to cap exposure to bleeding LONG signals during drawdown; cannot filter direction/ticker directly with live params
+> **Grade C · confidence 65% · evidence moderate**  
+> Sustained losing streak with clear asymmetric weakness on LONG side and weak tickers (BTC, M2K); only SHORT and MES=F show edge that weight cannot filter.  
+> *Why:* Cut exposure to slow bleeding from LONG/BTC/M2K drag since direction and ticker asymmetry cannot be filtered with weight alone.
 >
-> *Consensus over 3/3 samples* — confidence samples [55, 58, 61] (spread 6), param samples [0.8, 0.7, 0.5] (agreement 0.33).
+> *Consensus over 3/3 samples* — confidence samples [62, 65, 68] (spread 6), param samples [0.7, 0.8, 0.7] (agreement 0.67).
 >
-> ⚠️ proposal not stable across samples ([0.5, 0.7, 0.8]), confidence capped at 45
->
-> **Suggested params:** `{"weight": 0.5}`  
-> Cutting weight from 1.3 to 0.7 scales 7d loss from -6.20R to ~-3.34R and 30d from -6.13R to ~-3.30R; preserves SHORT edge while limiting LONG damage; all-time +27.86R still positive at ~+15R
+> **Suggested params:** `{"weight": 0.7}`  
+> Lower weight from 1.3 to 0.7 (~46% reduction) to dampen drawdown during losing streak while keeping the working SHORT and MES=F edge in play; smallest defensive change.
 >
 > LLM-listed issues:
-> - LONG direction bleeds -11.15R (7d) and -13.73R (30d); SHORT contributes +4.94R / +7.60R — direction-specific edge, not setup-specific
-> - BTC-USD and M2K=F each lost -3.38R at PF=0.324 (7d) while MES=F gained +4.09R at PF=2.022 — ticker concentration drag
-> - Dead params `min_strength`/`resample_tf` block surgical direction/ticker filtering; weight is the only runtime lever
+> - LONG trades persistently losing — 7d PF=0.216 (n=17), 30d PF=0.639 (n=53), confirmed both windows
+> - BTC-USD bleeding — 7d 0% WR n=5, 30d PF=0.755 n=22; cannot be filtered with weight
+> - M2K=F is a persistent drag — 7d PF=0.324 n=6, 30d PF=0.647 n=21; cannot be filtered with weight
 
 ### Stair
 
@@ -282,21 +288,21 @@ live_scan.py order is: LLM grade (1505) → BTC boost (1511) → `conf < min_con
 | Window | n | Wins | Losses | WR | PF | Total R | Avg R | Avg win | Avg loss | Payoff | MaxDD | Loss streak |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|
 | 7d | 8 | 4 | 4 | 50.0% | 1.618 | +2.47 | +0.309 | 1.618 | 1.0 | 1.618 | -2.0 | 2 |
-| 30d | 37 | 17 | 20 | 45.9% | 1.375 | +7.51 | +0.203 | 1.618 | 1.0 | 1.618 | -6.0 | 2 |
+| 30d | 36 | 17 | 19 | 47.2% | 1.448 | +8.51 | +0.236 | 1.618 | 1.0 | 1.618 | -6.0 | 2 |
 | all-time | 425 | 178 | 247 | 41.9% | 1.141 | +34.82 | +0.082 | 1.583 | 1.0 | 1.583 | -24.44 | 2 |
 
 **D2 · By grade**
 
 | Bucket | n(7d) | WR(7d) | PF(7d) | R(7d) | n(30d) | WR(30d) | PF(30d) | R(30d) |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|
-| B | 8 | 50.0% | 1.618 | +2.47 | 37 | 45.9% | 1.375 | +7.51 |
+| B | 8 | 50.0% | 1.618 | +2.47 | 36 | 47.2% | 1.448 | +8.51 |
 
 **D3 · By direction**
 
 | Bucket | n(7d) | WR(7d) | PF(7d) | R(7d) | n(30d) | WR(30d) | PF(30d) | R(30d) |
 |---|--:|--:|--:|--:|--:|--:|--:|--:|
 | LONG | 1 | 100.0% | 1.618 | +1.62 | 15 | 53.3% | 1.849 | +5.94 |
-| SHORT | 7 | 42.9% | 1.214 | +0.85 | 22 | 40.9% | 1.12 | +1.56 |
+| SHORT | 7 | 42.9% | 1.214 | +0.85 | 21 | 42.9% | 1.214 | +2.56 |
 
 **D4 · By ticker**
 
@@ -310,7 +316,7 @@ live_scan.py order is: LLM grade (1505) → BTC boost (1511) → `conf < min_con
 **Top 3 issues (deterministic, evidence-ranked):**
 
 1. **[aggregate · low]** No dominant 4D drag detected  
-   7d n=8, PF=1.618, +2.5R; 30d n=37, PF=1.375. No grade/direction/ticker bucket clears the significance thresholds.
+   7d n=8, PF=1.618, +2.5R; 30d n=36, PF=1.448. No grade/direction/ticker bucket clears the significance thresholds.
 2. **[direction · low]** No actionable direction split in 7d — dimension checked, nothing to filter on  
    7d direction buckets: LONG n=1 PF=1.618 R=+1.6R; SHORT n=7 PF=1.214 R=+0.9R. No bucket clears the significance threshold (n≥5 and PF<0.8 for a drag, or PF≥1.1 elsewhere for a keeper), so no filter is proposed on this dimension. It is reported so the dimension is accounted for.
 3. **[grade · low]** No actionable grade split in 7d — dimension checked, nothing to filter on  
@@ -318,22 +324,20 @@ live_scan.py order is: LLM grade (1505) → BTC boost (1511) → `conf < min_con
 
 **LLM scientist verdict:**
 
-> **Grade C · confidence 38% · evidence weak**  
-> Strategy posts positive expectancy but with elevated maxDD relative to total R across all windows and only marginal all-time edge (avgR=+0.082R), with no specific bucket-level drag identifiable.  
-> *Why:* Trim weight from 1.2 to 1.0 to dampen the overall exposure gap that produced -24R maxDD on only +34.8R all-time.
+> **Grade B · confidence 55% · evidence moderate**  
+> Thin all-time edge (n=425, PF=1.141, avgR=+0.082, maxDD=-24.44R) overweights the strategy at weight=1.2 despite strong 7d/30d prints; 30d direction split shows LONG PF=1.849 vs SHORT PF=1.214 (weak).  
+> *Why:* Trim weight ~17% to better match long-term thin edge while preserving exposure during strong recent regime
 >
-> *Consensus over 3/3 samples* — confidence samples [25, 38, 48] (spread 23), param samples [1.0, 1.0] (agreement 1.0).
+> *Consensus over 3/3 samples* — confidence samples [25, 55, 64] (spread 39), param samples [1.0] (agreement 1.0).
 >
 > **Suggested params:** `{"weight": 1.0}`  
-> Reduces exposure ~17% to better match the strategy's modest all-time edge (avgR=0.082R) and high DD-to-gain ratio while preserving positive 7d/30d expectancy; smallest change consistent with risk-on-risk profile.
+> weight=1.0 (down from 1.2) aligns exposure with all-time PF=1.141 edge profile; recent 7d PF=1.618 and 30d PF=1.448 justify holding above neutral but the all-time sample (n=425) is the most reliable estimator and shows only thin expectancy.
 >
 > LLM-listed issues:
-> - no dominant bucket-level drag identified across grade/direction/ticker in 7d or 30d
-> - maxDD/TotalR ratio is high in all windows (7d 0.81, 30d 0.80, all-time 0.70), indicating over-exposure
-> - all-time PF=1.141 with avgR=0.082R shows only a thin long-run edge
-> - 30d SHORT (n=22, PF=1.120) materially lags LONG (n=15, PF=1.849) but no live param can filter direction
-> - 7d sample is small (n=8) and confidence buckets below 80 lack statistical strength
-> - min_strength and resample_tf are dead config so no selection filter is actionable
+> - all-time avgR=+0.082 with PF=1.141 indicates marginal long-term edge vs current 1.2x exposure
+> - maxDD=-24.44R is ~70% of lifetime +34.82R, indicating tail risk vs reward imbalance
+> - SHORT 30d n=21 PF=1.214 barely clears breakeven, diluting the stronger LONG contribution
+> - 80-89 confidence 7d PF=0.809 (n=3 anecdotal) is inconclusive but matches decay pattern
 
 ### B1-3in1
 
@@ -707,10 +711,35 @@ Before recommending a parameter change it has to be established that changing it
 | RSI-Div | BTC-USD, M2K=F, MES=F, MGC=F, MNQ=F | — | BTC-USD=thin, M2K=F=thin, MES=F=loser, MGC=F=thin, MNQ=F=thin | optimiser KEEPS MES=F, live 4D says loser |
 | CRT | BTC-USD, MES=F, MGC=F | M2K=F, MNQ=F | BTC-USD=loser, M2K=F=loser, MES=F=winner, MGC=F=loser, MNQ=F=loser | optimiser KEEPS MGC=F, live 4D says loser; optimiser KEEPS BTC-USD, live 4D says loser |
 | Stair | MES=F, MGC=F, MNQ=F | BTC-USD, M2K=F | BTC-USD=loser, M2K=F=loser, MES=F=loser, MGC=F=loser, MNQ=F=winner | optimiser KEEPS MES=F, live 4D says loser; optimiser KEEPS MGC=F, live 4D says loser |
-| Two-Yang | BTC-USD, MES=F, MGC=F, MNQ=F | M2K=F | BTC-USD=loser, M2K=F=thin, MES=F=loser, MGC=F=thin, MNQ=F=loser | optimiser KEEPS MNQ=F, live 4D says loser; optimiser KEEPS MES=F, live 4D says loser; optimiser KEEPS BTC-USD, live 4D says loser |
+| Two-Yang | BTC-USD, MES=F, MGC=F, MNQ=F | M2K=F | BTC-USD=loser, M2K=F=thin, MES=F=loser, MGC=F=thin, MNQ=F=loser | optimiser KEEPS MES=F, live 4D says loser; optimiser KEEPS MNQ=F, live 4D says loser; optimiser KEEPS BTC-USD, live 4D says loser |
 | 50-20-Pullback | BTC-USD, MGC=F, MNQ=F | M2K=F, MES=F | BTC-USD=loser, M2K=F=loser, MES=F=winner, MGC=F=thin, MNQ=F=loser | optimiser KEEPS MNQ=F, live 4D says loser; optimiser KEEPS BTC-USD, live 4D says loser; optimiser DROPS MES=F, live 4D says winner |
 
 **7 of 7 strategies have a live-trade disagreement with the optimiser's ticker selection.** The optimiser's numbers are out-of-sample and holdout-validated in design; the 4D numbers here are realised live trades. They are answering different questions, and the disagreement itself is the signal: the optimiser's track has not been able to reproduce the live book, which is exactly why `0 of 9 configurations survive it`.
+
+### 5.1 The published configs replayed on the optimiser's OWN holdout
+
+`backtest_optimizer.py:632-636` splits **each strategy's own A/B trades** 70/30 chronologically and keeps the last 30% as the holdout. This report reconstructs exactly that set and replays the published `keep_tickers` / `drop_tickers` decision on it — i.e. *does the config beat doing nothing on the very data it was selected for?* (The exit-lever half cannot be replayed: the live book has no partial exits, so every published cell is already at the book default `t2=1.618 be=0.0 pa=0.0`.)
+
+| Strategy | HO n | Base holdout PF / R | After the optimiser's keep-drop | ΔR | Inverted? |
+|---|--:|---|---|--:|---|
+| **50-20-Pullback** | 288 | 0.942 / -10.5R | 0.844 / -25.1R | -14.6R | ⚠️ **yes** |
+| **CRT** | 207 | 1.019 / +2.4R | 0.916 / -7.0R | -9.4R | ⚠️ **yes** |
+| **3-Pushes** | 121 | 1.179 / +12.5R | 1.192 / +7.3R | -5.2R | loses vs base |
+| **RSI-Div** | 10 | 0.18 / -7.4R | 0.18 / -7.4R | +0.0R | — |
+| **B1** | 5 | 2.427 / +2.9R | 2.43 / +2.9R | -0.0R | — |
+| **H-Pattern** | 12 | 2.265 / +6.3R | 2.266 / +6.3R | +0.0R | — |
+| **Kell-Cycle** | 15 | 1.416 / +3.3R | 1.416 / +3.3R | +0.0R | — |
+| **Two-Yang** | 40 | 0.871 / -3.3R | 0.883 / -2.6R | +0.8R | — |
+| **Stair** | 104 | 0.894 / -7.1R | 0.935 / -2.9R | +4.2R | — |
+
+- **50-20-Pullback** — **drops MES=F** which is +10.0R (PF 1.912, n=24) on that holdout; **drops M2K=F** which is +4.6R (PF 1.456, n=19) on that holdout; **keeps BTC-USD** which is -35.9R (PF 0.767, n=227).
+- **CRT** — **drops MNQ=F** which is +10.1R (PF 1.533, n=37) on that holdout; **keeps MGC=F** which is -5.4R (PF 0.728, n=29); **keeps MES=F** which is -4.3R (PF 0.839, n=41).
+- **3-Pushes** — **drops BTC-USD** which is +7.3R (PF 1.428, n=32) on that holdout.
+- **Kell-Cycle** — **keeps MGC=F** which is -1.8R (PF 0.647, n=7).
+- **Two-Yang** — **keeps MNQ=F** which is -2.4R (PF 0.405, n=5); **keeps MES=F** which is -1.8R (PF 0.647, n=7).
+- **Stair** — **keeps MGC=F** which is -9.4R (PF 0.607, n=33); **keeps MES=F** which is -1.8R (PF 0.647, n=7).
+
+**Strategies the optimiser never evaluated at all:** **B1-3in1** (39 trades, -39.0R, 0.0% win rate, PF 0.0). `backtest_optimizer.py` drops every trade whose `direction` is `'none'`, so a strategy that never resolves a direction is invisible to it. The `0 of 9` verdict says nothing about these.
 
 ## 6. Recommended changes
 
@@ -719,9 +748,9 @@ Before recommending a parameter change it has to be established that changing it
 | Strategy | Grade | Conf | Proposed | Live now | Auto-apply? | Rationale |
 |---|---|--:|---|---|---|---|
 | 50-20-Pullback | D | 82% | weight 0.948 → 0.9 | weight=0.948 | ✅ yes | consistently negative across 7d/30d/all-time (-2.3R / -8.2R / -69.2R); n=181 (30d), 1011 (all-time) — a weight cut cuts exposure to a demonstrably losing strategy. |
-| CRT | C | 45% | weight 1.3 → 0.5 | weight=1.3 | ⏸️ no | confidence 45% < 60% threshold. |
+| CRT | C | 65% | weight 1.3 → 0.7 | weight=1.3 | ⏸️ no | windows disagree on sign — needs another 7d of confirmation. |
 | Stair | C | 45% | weight 1.1 → 0.5 | weight=1.1 | ⏸️ no | confidence 45% < 60% threshold. |
-| 3-Pushes | C | 38% | weight 1.2 → 1.0 | weight=1.2 | ⏸️ no | confidence 38% < 60% threshold. |
+| 3-Pushes | B | 55% | weight 1.2 → 1.0 | weight=1.2 | ⏸️ no | confidence 55% < 60% threshold. |
 | B1-3in1 | D | 95% | weight 1.0 → 0.0 | weight=1.0 | ⏸️ no | mechanical detector defect — `weight` cannot fix it (weight is applied after the signal gate, so the strategy would keep opening positions with a reported confidence of 0). Use the code-change route instead. |
 | Two-Yang | D | 62% | weight 1.0 → 0.5 | weight=1.0 | ✅ yes | consistently negative across 7d/30d/all-time (-1.4R / -8.3R / -24.3R); n=24 (30d), 222 (all-time) — a weight cut cuts exposure to a demonstrably losing strategy. |
 | RSI-Div | C | 28% | weight 0.6 → 0.4 | weight=0.6 | ⏸️ no | confidence 28% < 60% threshold. |
@@ -737,23 +766,23 @@ These are the changes the four dimensions actually point at: drop the instrument
 
 | # | Strategy | Lever | Proposed change | Evidence (7d / 30d / all-time) | Conf | Auto-apply? |
 |--:|---|---|---|---|--:|---|
-| 1 | **50-20-Pullback** | `drop_tickers` | drop BTC-USD (keep MES=F, MGC=F, MNQ=F) | BTC PF 0.774 / 0.826 / 0.867, R -5.2 / -16.7 / -37.7 across 7d/30d/all | 80% | ✅ yes — direct conflict with the optimiser, which keeps BTC and drops MES |
-| 2 | **Stair** | `keep_tickers` | keep_tickers = [MNQ=F] only | MNQ PF 3.236 / 1.618 / 1.618, R +4.5 / +8.7 / +26.0; every other ticker negative all-time | 75% | ✅ yes — conflicts with the optimiser, which keeps MES and MGC |
-| 3 | **3-Pushes** | `keep_tickers` | keep_tickers = [MNQ=F] only | MNQ PF 2.319 / +50.1R all-time; BTC-USD -2.9R, MES=F -11.4R, MGC=F -8.9R | 72% | ✅ yes — conflicts with the optimiser, which keeps M2K and MGC |
-| 4 | **RSI-Div** | `min_conf / keep_tickers` | keep_tickers = ['BTC-USD', 'M2K=F'] (drop ['MES=F', 'MGC=F', 'MNQ=F']) | BTC +54.6R at PF 1.896 all-time; M2K=F PF 2.697, MES=F PF 0.607, MGC=F PF 0.747, MNQ=F PF 0.231 — but 7d/30d samples are n=3 / 7, so this is a 30d+all-time call, not a 7d one | 55% | ⏸️ no — sample too thin in 7d/30d to auto-apply |
+| 1 | **50-20-Pullback** | `drop_tickers` | drop BTC-USD | M2K=F — all-time M2K=F PF 0.689 R -32.7 (n=152) · holdout M2K=F PF 1.456 R +4.6 (n=19); MES=F — all-time MES=F PF 0.73 R -35.4 (n=192) · holdout MES=F PF 1.912 R +10.0 (n=24); MGC=F — all-time MGC=F PF 1.675 R +31.0 (n=94) · holdout MGC=F PF 1.618 R +1.9 (n=6); MNQ=F — all-time MNQ=F PF 1.068 R +5.5 (n=136) · holdout MNQ=F PF 3.236 R +8.9 (n=12); BTC-USD — all-time BTC-USD PF 0.867 R -37.7 (n=437) · holdout BTC-USD PF 0.767 R -35.9 (n=227) | 80% | ✅ yes — BTC-USD is negative in BOTH the all-time book and the optimiser's own holdout — the only ticker where that is true. The tickers the optimiser drops instead (MES=F, M2K=F) are positive in the holdout, so its choice is inverted on this strategy. |
+| 2 | **Stair** | `keep_tickers` | keep MNQ=F only (drop BTC-USD, M2K=F, MES=F, MGC=F) | MNQ=F — all-time MNQ=F PF 1.618 R +26.0 (n=84) · holdout MNQ=F PF 1.517 R +8.3 (n=31); BTC-USD — all-time BTC-USD PF 0.772 R -9.1 (n=61) · holdout BTC-USD PF 0.809 R -0.8 (n=6); M2K=F — all-time M2K=F PF 0.79 R -9.0 (n=64) · holdout M2K=F PF 0.857 R -2.4 (n=26); MES=F — all-time MES=F PF 0.588 R -18.1 (n=60) · holdout MES=F PF 0.647 R -1.8 (n=7); MGC=F — all-time MGC=F PF 0.829 R -8.6 (n=76) · holdout MGC=F PF 0.607 R -9.4 (n=33) | 75% | ✅ yes — MNQ=F is the only ticker positive in both windows; every other ticker is negative in the all-time book. The optimiser keeps MGC=F and MES=F, which are its two worst recent contributors. |
+| 3 | **3-Pushes** | `drop_tickers` | drop MES=F | BTC-USD — all-time BTC-USD PF 0.959 R -2.9 (n=113) · holdout BTC-USD PF 1.428 R +7.3 (n=32); M2K=F — all-time M2K=F PF 1.198 R +7.9 (n=70) · holdout M2K=F PF 1.12 R +1.6 (n=22); MGC=F — all-time MGC=F PF 0.825 R -8.9 (n=77) · holdout MGC=F PF 1.245 R +3.2 (n=23); MNQ=F — all-time MNQ=F PF 2.319 R +50.1 (n=94) · holdout MNQ=F PF 1.214 R +2.6 (n=21); MES=F — all-time MES=F PF 0.762 R -11.4 (n=71) · holdout MES=F PF 0.863 R -2.1 (n=23) | 65% | ✅ yes — Only MES=F is negative in both windows. BTC-USD is flat all-time (-2.9R over 113 trades) and positive in the optimiser's holdout (+7.3R, PF 1.428), so the earlier 'MNQ only' recommendation was over-aggressive: it would have dropped a currently-profitable ticker. |
+| 4 | **RSI-Div** | `min_conf / keep_tickers` | keep BTC-USD, M2K=F only (drop MES=F, MGC=F, MNQ=F) | BTC-USD — all-time BTC-USD PF 1.896 R +54.6 (n=134) · holdout BTC-USD PF 0.0 R -2.0 (n=2); M2K=F — all-time M2K=F PF 2.697 R +5.1 (n=8) · holdout M2K=F n=0; MES=F — all-time MES=F PF 0.607 R -3.1 (n=11) · holdout MES=F PF 0.539 R -1.4 (n=4); MGC=F — all-time MGC=F PF 0.747 R -3.3 (n=19) · holdout MGC=F PF 0.0 R -4.0 (n=4); MNQ=F — all-time MNQ=F PF 0.231 R -5.4 (n=8) · holdout MNQ=F n=0 | 55% | ⏸️ no — BTC-USD is the only ticker with a large positive all-time result; 7d/30d samples are n=3 / n=7, so this is a 30d+all-time call, not a 7d one. |
 | 5 | **Two-Yang** | `weight + drop_tickers` | weight 0.8 → 0.5; drop MES=F (PF 0.539, -23.5R all-time) | 30d PF 0.539 / -8.3R (n=24), all-time PF 0.834 / -24.3R (n=222); MES is the clear drag | 62% | ✅ yes — 7d n=4 — the 30d and all-time windows carry the call |
-| 6 | **CRT** | `direction / keep_tickers` | direction = short only for the 7d/30d window; keep MES=F, drop BTC-USD and MGC=F | 7d LONG -11.1R (PF 0.303) vs SHORT +4.9R (PF 1.618) | 55% | ⏸️ no — all-time direction reverses (LONG +32.2R) — regime-dependent, so below the auto-apply bar |
-| 7 | **B1-3in1** | `disable strategy` | remove from STRATEGIES until the direction bug is fixed (weight 0 is not enough — SF-3) | 39/39 trades are -1.0R stop-outs, 0% win rate, -39.0R all-time, all direction='none' | 95% | ✅ yes — mechanical defect, not a parameter problem |
+| 6 | **CRT** | `direction / keep_tickers` | direction = short only for the 7d/30d window; keep MES=F, drop BTC-USD and MGC=F | 7d LONG -11.8R (PF 0.216) vs SHORT +4.9R (PF 1.618) | 55% | ⏸️ no — all-time direction reverses (LONG +32.2R) — regime-dependent, so below the auto-apply bar |
+| 7 | **B1-3in1** | `disable strategy` | remove from STRATEGIES until the direction bug is fixed (weight 0 is not enough — SF-3) | 39/39 trades are -1.0R stop-outs, 0% win rate, -39.0R all-time, all direction='none' | 95% | ✅ yes — mechanical defect, not a parameter problem — and it is EXCLUDED from the optimiser's scope entirely (backtest_optimizer.py drops every trade whose direction is 'none'), so no optimiser run ever evaluated it |
 
 ### 6.3 Code-change recommendations (need a detector / config-gate edit)
 
 | Strategy | Change needed | Evidence | Conf |
 |---|---|---|--:|
 | B1-3in1 | Fix the detector's direction field — every one of its 39 trades carries `direction: 'none'`, so no target is ever placed and the position is always closed at the stop (-1.0R each). Until fixed, remove it from `STRATEGIES`; setting `weight: 0` is **not** sufficient, because the weight is applied after the signal gate and the strategy would keep opening positions with a reported confidence of 0 (SF-3). | 7d n=5, 30d n=23, all-time n=39 — 0.0% win rate, -39.0R, every exit at the stop, median bars_held=1 | 95% |
-| CRT | Add a direction gate: suppress LONG entries for CRT. In the 7d window LONG lost 11.1R (PF 0.303, n=19) while SHORT made +4.9R (PF 1.618, n=16); the 30d window agrees (LONG -13.7R / PF 0.639 vs SHORT +7.6R / PF 1.271). | 7d and 30d by-direction split — **but all-time reverses** (LONG +32.2R, PF 1.181), so treat as a recent-regime effect, not a structural one | 60% |
-| 50-20-Pullback | Restrict to the instruments that actually work. BTC-USD drove 87% of 7d volume at PF 0.774 (-5.2R) and is a drag in every window (30d PF 0.826 / -16.7R, all-time PF 0.867 / -37.7R), while MES=F is the strongest instrument in 7d (PF 1.618, +1.2R). | 7d n=34 of 39 on BTC-USD; BTC negative in 7d, 30d and all-time; MES=F wins 7d — **conflicts with the optimiser, which keeps BTC and drops MES** | 80% |
+| CRT | Add a direction gate: suppress LONG entries for CRT. In the 7d window LONG lost 11.8R (PF 0.216, n=17) while SHORT made +4.9R (PF 1.618, n=16); the 30d window agrees (LONG -13.7R / PF 0.639 vs SHORT +7.6R / PF 1.271). | 7d and 30d by-direction split — **but all-time reverses** (LONG +32.2R, PF 1.181), so treat as a recent-regime effect, not a structural one | 60% |
+| 50-20-Pullback | Restrict to the instruments that actually work. BTC-USD drove 87% of 7d volume at PF 0.774 (-5.2R) and is a drag in every window (30d PF 0.826 / -16.7R, all-time PF 0.867 / -37.7R), while MES=F is the strongest instrument in 7d (PF 1.618, +1.2R). | 7d n=34 of 39 on BTC-USD; BTC negative in 7d, 30d and all-time; MES=F wins 7d — **the optimiser's choice is inverted here: it KEEPS BTC-USD and drops MES=F and M2K=F, which are positive on its own holdout (SF-9)** | 80% |
 | Stair | Restrict Stair to MNQ=F. MNQ is the only instrument that makes money in any window (PF 3.236 / 1.618 / 1.618; +25.96R all-time) while the other tickers are negative all-time. | 7d by-ticker split: MNQ PF 3.236 (+4.5R); all-time MNQ +25.96R vs every other ticker negative — **conflicts with the optimiser, which keeps MES and MGC** | 75% |
-| 3-Pushes | Restrict 3-Pushes to MNQ=F and drop the rest. MNQ is +50.1R all-time at PF 2.319 while BTC-USD -2.9R, MES=F -11.4R, MGC=F -8.9R are all negative. | all-time by-ticker: MNQ PF 2.319 / +50.1R vs BTC-USD -2.9R, MES=F -11.4R, MGC=F -8.9R — **conflicts with the optimiser, which keeps M2K and MGC** | 72% |
+| 3-Pushes | Drop MES=F from 3-Pushes. MES=F -11.4R all-time / -2.1R holdout is negative in BOTH the all-time book and the optimiser's own holdout. Tickers whose sign flips between the two windows are kept: BTC-USD (-2.9R all-time but +7.3R on the holdout), MGC=F (-8.9R all-time but +3.2R on the holdout). | only MES=F is negative in both windows; the earlier 'MNQ only' recommendation was over-aggressive because BTC-USD is flat all-time but positive on the holdout | 65% |
 | H-Pattern | Investigate why the strategy is barely firing (7d n=1, 30d n=13) before drawing any conclusion about its edge. | sample too thin in every window | 40% |
 | Kell-Cycle | Same as H-Pattern — 7d n=1, 30d n=5. Its most recent 'optimisation' (weight 0.9→0.7 + resample_tf) was applied off all-time data and the resample_tf half was a no-op (SF-2). | sample too thin in every window | 40% |
 
@@ -763,12 +792,12 @@ These are the changes the four dimensions actually point at: drop the instrument
 |--:|---|--:|---|---|---|
 | 1 | **B1-3in1** | 95% | `disable strategy` + `code change` | remove from STRATEGIES until the direction bug is fixed (weight 0 is not enough — SF-3) | 7d n=5, 30d n=23, all-time n=39 — 0.0% win rate, -39.0R, every exit at the stop, median bars_held=1 |
 | 2 | **50-20-Pullback** | 82% | `weight` | weight 0.948 → 0.9 | consistently negative across 7d/30d/all-time (-2.3R / -8.2R / -69.2R); n=181 (30d), 1011 (all-time) — a weight cut cuts exposure to a demonstrably losing strategy. |
-| 3 | **50-20-Pullback** | 80% | `drop_tickers` + `code change` | drop BTC-USD (keep MES=F, MGC=F, MNQ=F) | 7d n=34 of 39 on BTC-USD; BTC negative in 7d, 30d and all-time; MES=F wins 7d — **conflicts with the optimiser, which keeps BTC and drops MES** |
-| 4 | **Stair** | 75% | `keep_tickers` + `code change` | keep_tickers = [MNQ=F] only | 7d by-ticker split: MNQ PF 3.236 (+4.5R); all-time MNQ +25.96R vs every other ticker negative — **conflicts with the optimiser, which keeps MES and MGC** |
-| 5 | **3-Pushes** | 72% | `keep_tickers` + `code change` | keep_tickers = [MNQ=F] only | all-time by-ticker: MNQ PF 2.319 / +50.1R vs BTC-USD -2.9R, MES=F -11.4R, MGC=F -8.9R — **conflicts with the optimiser, which keeps M2K and MGC** |
+| 3 | **50-20-Pullback** | 80% | `drop_tickers` + `code change` | drop BTC-USD | M2K=F — all-time M2K=F PF 0.689 R -32.7 (n=152) · holdout M2K=F PF 1.456 R +4.6 (n=19); MES=F — all-time MES=F PF 0.73 R -35.4 (n=192) · holdout MES=F PF 1.912 R +10.0 (n=24); MGC=F — all-time MGC=F PF 1.675 R +31.0 (n=94) · holdout MGC=F PF 1.618 R +1.9 (n=6); MNQ=F — all-time MNQ=F PF 1.068 R +5.5 (n=136) · holdout MNQ=F PF 3.236 R +8.9 (n=12); BTC-USD — all-time BTC-USD PF 0.867 R -37.7 (n=437) · holdout BTC-USD PF 0.767 R -35.9 (n=227) |
+| 4 | **Stair** | 75% | `keep_tickers` + `code change` | keep MNQ=F only (drop BTC-USD, M2K=F, MES=F, MGC=F) | MNQ=F — all-time MNQ=F PF 1.618 R +26.0 (n=84) · holdout MNQ=F PF 1.517 R +8.3 (n=31); BTC-USD — all-time BTC-USD PF 0.772 R -9.1 (n=61) · holdout BTC-USD PF 0.809 R -0.8 (n=6); M2K=F — all-time M2K=F PF 0.79 R -9.0 (n=64) · holdout M2K=F PF 0.857 R -2.4 (n=26); MES=F — all-time MES=F PF 0.588 R -18.1 (n=60) · holdout MES=F PF 0.647 R -1.8 (n=7); MGC=F — all-time MGC=F PF 0.829 R -8.6 (n=76) · holdout MGC=F PF 0.607 R -9.4 (n=33) |
+| 5 | **3-Pushes** | 65% | `drop_tickers` + `code change` | drop MES=F | BTC-USD — all-time BTC-USD PF 0.959 R -2.9 (n=113) · holdout BTC-USD PF 1.428 R +7.3 (n=32); M2K=F — all-time M2K=F PF 1.198 R +7.9 (n=70) · holdout M2K=F PF 1.12 R +1.6 (n=22); MGC=F — all-time MGC=F PF 0.825 R -8.9 (n=77) · holdout MGC=F PF 1.245 R +3.2 (n=23); MNQ=F — all-time MNQ=F PF 2.319 R +50.1 (n=94) · holdout MNQ=F PF 1.214 R +2.6 (n=21); MES=F — all-time MES=F PF 0.762 R -11.4 (n=71) · holdout MES=F PF 0.863 R -2.1 (n=23) |
 | 6 | **Two-Yang** | 62% | `weight` | weight 1.0 → 0.5 | consistently negative across 7d/30d/all-time (-1.4R / -8.3R / -24.3R); n=24 (30d), 222 (all-time) — a weight cut cuts exposure to a demonstrably losing strategy. |
 | 7 | **Two-Yang** | 62% | `weight + drop_tickers` | weight 0.8 → 0.5; drop MES=F (PF 0.539, -23.5R all-time) | 30d PF 0.539 / -8.3R (n=24), all-time PF 0.834 / -24.3R (n=222); MES is the clear drag |
-| 8 | **CRT** | 60% | `code change` | Add a direction gate: suppress LONG entries for CRT. In the 7d window LONG lost 11.1R (PF 0.303, n=19) while SHORT made +4.9R (PF 1.618, n=16); the 30d window agrees (LONG -13.7R / PF 0.639 vs SHORT +7.6R / PF 1.271). | 7d and 30d by-direction split — **but all-time reverses** (LONG +32.2R, PF 1.181), so treat as a recent-regime effect, not a structural one |
+| 8 | **CRT** | 60% | `code change` | Add a direction gate: suppress LONG entries for CRT. In the 7d window LONG lost 11.8R (PF 0.216, n=17) while SHORT made +4.9R (PF 1.618, n=16); the 30d window agrees (LONG -13.7R / PF 0.639 vs SHORT +7.6R / PF 1.271). | 7d and 30d by-direction split — **but all-time reverses** (LONG +32.2R, PF 1.181), so treat as a recent-regime effect, not a structural one |
 
 **8 distinct actionable recommendations at confidence ≥ 60%** (target: ≥ 3). Recommendations that appear under more than one lever are the same action reached by two routes and are listed once.
 
@@ -782,14 +811,16 @@ These are the changes the four dimensions actually point at: drop the instrument
 
 ## 7. Methodology and caveats
 
-- **Windows.** `7d` = trades whose `entry_time` falls inside the last 7 days (cutoff 2026-10-14T02:46:38.882740+00:00); `30d` and `all-time` are the same rule extended. All 3,257 trades are `status: closed`, so no open-position mark-to-market is mixed in.
-- **Profit factor** = gross winning R ÷ gross losing R (not wins/losses). Where there are no losses, PF is reported as gross win R with a note.
+- **Windows.** `7d` = trades whose `entry_time` falls inside the last 7 days (cutoff 2026-10-14T05:34:02.458882+00:00); `30d` and `all-time` are the same rule extended. All 3,265 trades are `status: closed`, so no open-position mark-to-market is mixed in.
+- **`opt_holdout`** = the optimiser's own evaluation set: the last 30% of that strategy's A/B trades, split per strategy the way `backtest_optimizer.py` does it. Used in §5.1 to replay the published configs.
+- **Profit factor** = gross winning R ÷ gross losing R (not wins/losses). Where there are no losses, PF is reported as gross win R with a note. This is the same definition `backtest_optimizer.py` uses (`_agg`), so the two reports are directly comparable.
 - **Direction** is normalised: `long/bullish/up` → LONG, `short/bearish/down` → SHORT, `none` → FLAT.
 - **Payoff ratio** = avg win R ÷ avg loss R.
 - **MaxDD** is the worst peak-to-trough move of the cumulative R curve, in R units.
-- **Confidence** is the LLM's own 0-100 figure, then discounted by the evidence gate in §4. The 7d window contains only 117 trades across 10 strategies (SF-4); 7d-only conclusions are labelled anecdotal.
+- **Ticker keep/drop rule** (§6.2): a ticker is dropped only when it is negative in BOTH the all-time book and the optimiser's holdout. A ticker whose sign flips between the two windows is kept — that is the correction applied to the 3-Pushes recommendation after the optimiser reconciliation (SF-9).
+- **Confidence** is the LLM's own 0-100 figure, then discounted by the evidence gate in §4. The 7d window contains only 115 trades across 10 strategies (SF-4); 7d-only conclusions are labelled anecdotal.
 - **No live code was changed.** `live_scan.py`, the detectors, `strategy_overrides.json` and `weight_overrides.json` are untouched by this analysis.
 
 ---
 
-_Generated by the LLM Iteration Scientist (deep 4D mode) at 2026-10-21T10:53:23.401816+08:00. Analysis only — no parameter was applied._
+_Generated by the LLM Iteration Scientist (deep 4D mode) at 2026-10-21T13:34:32.636285+08:00. Analysis only — no parameter was applied._

@@ -1,11 +1,11 @@
 {
-  "generated_at_hkt": "2026-10-21T10:53:23.401816+08:00",
+  "generated_at_hkt": "2026-10-21T13:34:32.636285+08:00",
   "type": "deep_4d_analysis",
   "source": "automation/reports/live_scan/trades.jsonl",
-  "window_cutoff_utc": "2026-10-14T02:46:38.882740+00:00",
+  "window_cutoff_utc": "2026-10-14T05:34:02.458882+00:00",
   "n_trades_total": 3265,
-  "n_trades_7d": 117,
-  "n_trades_30d": 494,
+  "n_trades_7d": 115,
+  "n_trades_30d": 493,
   "dimensions": [
     "aggregate",
     "by_grade",
@@ -39,14 +39,14 @@
       "id": "SF-4",
       "severity": "\ud83d\udfe0 high",
       "title": "The 7d window is statistically thin",
-      "detail": "117 trades in 7d across 10 strategies (median 4.5 per strategy), versus 494 in 30d and 3265 all-time. 6 of the 10 strategies have fewer than 8 trades in 7d. Per-strategy 7d numbers are directional, not conclusive; every recommendation in this report is therefore cross-checked against the 30d and all-time windows, and confidence is capped where the windows disagree.",
+      "detail": "115 trades in 7d across 10 strategies (median 4.5 per strategy), versus 493 in 30d and 3265 all-time. 6 of the 10 strategies have fewer than 8 trades in 7d. Per-strategy 7d numbers are directional, not conclusive; every recommendation in this report is therefore cross-checked against the 30d and all-time windows, and confidence is capped where the windows disagree.",
       "impact": "Confidence must be discounted, and per-strategy n<8 findings are labelled anecdotal."
     },
     {
       "id": "SF-5",
       "severity": "\ud83d\udd34 critical",
       "title": "Production scientist script reports all-time numbers as '7d'",
-      "detail": "`automation/scripts/llm_iteration_scientist.py:139-183` filters signals to 7d but applies **no date filter at all to trades**. Its 'PERFORMANCE (7d window)' block therefore reports the full history \u2014 1011 trades for 50-20-Pullback vs 39 in the real 7d window, 701 for CRT vs 35. It also computes `profit_factor` as wins/losses (line 190 \u2014 a win/loss *ratio*, not gross profit \u00f7 gross loss), and it pattern-matches 'B1' such that the B1 agent absorbs all 39 B1-3in1 trades (B1 shows 54 trades instead of 15). Because the 'profit factor' is really a win-rate ratio, **profitable strategies are graded D**: in the manual run of 2026-10-21 09:44 HKT CRT was graded D while showing +27.62R, and 3-Pushes was graded D while showing +34.82R. Seven of ten strategies came out as grade D.",
+      "detail": "`automation/scripts/llm_iteration_scientist.py:139-183` filters signals to 7d but applies **no date filter at all to trades**. Its 'PERFORMANCE (7d window)' block therefore reports the full history \u2014 1011 trades for 50-20-Pullback vs 39 in the real 7d window, 701 for CRT vs 33. It also computes `profit_factor` as wins/losses (line 190 \u2014 a win/loss *ratio*, not gross profit \u00f7 gross loss), and it pattern-matches 'B1' such that the B1 agent absorbs all 39 B1-3in1 trades (B1 shows 54 trades instead of 15). Because the 'profit factor' is really a win-rate ratio, **profitable strategies are graded D**: in the manual run of 2026-10-21 09:44 HKT CRT was graded D while showing +27.62R, and 3-Pushes was graded D while showing +34.82R. Seven of ten strategies came out as grade D.",
       "impact": "The daily 00:00 HKT run has been grading strategies on wrong data, and its D grades are not evidence that a strategy loses money."
     },
     {
@@ -54,7 +54,7 @@
       "severity": "\ud83d\udd34 critical",
       "title": "The holdout-validated optimiser \u2014 the system's best levers \u2014 is completely dormant",
       "detail": "`automation/config/agent_params.json` holds per-(strategy, ticker) cell configs for 9 strategies, each with `drop_tickers`/`keep_tickers`, `min_conf`, `grade_filter`, `direction`, `weekday_exclude`, `hours` and the exit set (`t2_r`, `breakeven_at_r`, `partial_at_r`, `stop_mult`, `max_bars_held`). These are exactly the levers the 4D analysis needs. But **every entry has `_validated` unset and `validated_on_holdout: false`**, each carrying the note *\"not published: did not improve on both the live track and the independent 180-day one-hour track\"* (0/9 validated). `live_scan.py:1663` gates the whole block behind `if _ap and _ap.get(\"_validated\")`, so **not one of these levers is applied at runtime**. Matching commit: `1733faa3 feat(optimizer): second independent track \u2014 0 of 9 configurations survive it`.",
-      "impact": "The system has a correct, holdout-gated optimiser and an LLM loop that pushes mostly-dead parameters. The high-value move is to make the validated path usable, not to keep tuning `weight`."
+      "impact": "The system has a correct, holdout-gated optimiser and an LLM loop that pushes mostly-dead parameters. The high-value move is to make the validated path usable, not to keep tuning `weight` \u2014 but note SF-9: the *current* configs must not be published as-is. The gate is doing its job; the fix is a better search, not a weaker gate."
     },
     {
       "id": "SF-7",
@@ -69,6 +69,13 @@
       "title": "The scientist's LLM parser can never yield a parameter \u2014 auto-apply is structurally impossible",
       "detail": "`llm_iteration_scientist.py:291` parses the LLM reply with a single regex that demands **pipe-delimited** fields (`GRADE: A|B|C|D | CONFIDENCE: n | DIAGNOSIS: \u2026 | REASON: \u2026 | SUGGESTED_PARAMS: {\u2026}`). MiniMax-M3 actually answers with **newline-delimited** fields, so the main regex never matches; the partial fallback at lines 306-312 recovers GRADE and CONFIDENCE but leaves `reason` and `suggested_params` empty. `auto_apply` (line 302) requires a non-empty `suggested_params`, so **the scientist can never auto-apply anything**, no matter how confident the model is. Measured on the manual run of 2026-10-21 09:44 HKT (`iteration_scientist_20261021_094417.json`): 10/10 agents have `suggested_params: {}` and `n_auto_applied: 0` \u2014 including `yw-two-yang`, which was graded **B with confidence 95** and whose reply explicitly carried `SUGGESTED_PARAMS: {\"min_grad\u2026` (truncated out of the diagnosis field). The sibling script `llm_iterate_all.py:91` gets this right \u2014 it scrapes `weight` with a loose regex (`r\"weight['\\\"]?\\s*[:=]\\s*([0-9.]+)\"`) that survives any format, which is why `strategy_overrides.json` does contain real applied changes (3 applications, last 2026-10-20) while the scientist's own proposals are always empty. The parser itself was **not** among the changes the remote made on 2026-10-21 (commits `c3ea8421`, `9a05168e`) \u2014 those only routed the call through the new shared `automation/src/llm_client.py`, which now returns `(content, error)` and lets the caller see the real cause instead of `KeyError: 'choices'`. But the scientist **discards that error** (`content, _llm_err = chat(...)`, lines 279-281), so a rate-limited call is now reported as *\"[Rule-based - LLM unavailable]\"* with the HTTP 429 detail thrown away, and `llm_client` itself has **no retry or backoff** for 429. Compounding everything, the script fans out to 10 workers (line 437) against a 5-hour Token Plan window: 8 of 10 calls in the 09:44 run returned HTTP 429 and were replaced by the rule-based fallback, which reuses the broken win/loss-ratio 'profit factor' from SF-5.",
       "impact": "The workflow advertises 'Auto-applies high-confidence (>= 60%) parameter changes', but that path has never fired from the scientist. Every 'optimisation' in the audit log came from the other script, and half of those changes were to a dead parameter (SF-2)."
+    },
+    {
+      "id": "SF-9",
+      "severity": "\ud83d\udd34 critical",
+      "title": "The optimiser's ticker keep/drop decisions are inverted on the data they were tuned on",
+      "detail": "`backtest_optimizer.py` reports **0 of 9 configurations survive** on both tracks, and that verdict is correct \u2014 but the reason is sharper than 'overfitting'. Replaying each published config on the optimiser's **own holdout** (the last 30% of that strategy's A/B trades, the same split the optimiser used) shows the ticker filter is the problem, and that it points the wrong way: **50-20-Pullback** \u2014 base holdout PF 0.942 / -10.5R becomes PF 0.844 / -25.1R once the optimiser's own keep/drop set is applied (-14.6R): drops MES=F which is +10.0R (PF 1.912, n=24) on the very holdout it was tuned on; drops M2K=F which is +4.6R (PF 1.456, n=19) on the very holdout it was tuned on; keeps BTC-USD which is -35.9R (PF 0.767, n=227). **CRT** \u2014 base holdout PF 1.019 / +2.4R becomes PF 0.916 / -7.0R once the optimiser's own keep/drop set is applied (-9.4R): drops MNQ=F which is +10.1R (PF 1.533, n=37) on the very holdout it was tuned on; keeps MGC=F which is -5.4R (PF 0.728, n=29); keeps MES=F which is -4.3R (PF 0.839, n=41). **3-Pushes** \u2014 base holdout PF 1.179 / +12.5R becomes PF 1.192 / +7.3R once the optimiser's own keep/drop set is applied (-5.2R): drops BTC-USD which is +7.3R (PF 1.428, n=32) on the very holdout it was tuned on. The optimiser never evaluated **B1-3in1** (39 trades, -39.0R, 0.0% win rate) at all: `backtest_optimizer.py` drops every trade whose `direction` is `'none'`, so a strategy that never resolves a direction is invisible to it. The exit-lever search contributes nothing in the live book, because the live exit model is binary (SF-1) \u2014 every cell's chosen config is `t2=1.618 be=0.0 pa=0.0`, i.e. the book default. So the only lever that actually moves is the ticker list, and it is being selected on a train sample of 21-379 trades against a per-cell exit-combo search space that can only fit noise.",
+      "impact": "Do NOT flip the `_validated` gate on these configs \u2014 for 50-20-Pullback the published config loses 15R more than doing nothing on the very holdout it was selected for. The gate is currently protecting the book. What is worth doing is the two ticker restrictions that BOTH this report and the optimiser's own holdout data agree on (50-20-Pullback drop BTC-USD, Stair keep MNQ=F only)."
     }
   ],
   "lever_map": [
@@ -243,8 +250,8 @@
         "MNQ=F": "loser"
       },
       "conflicts": [
-        "optimiser KEEPS MNQ=F, live 4D says loser",
         "optimiser KEEPS MES=F, live 4D says loser",
+        "optimiser KEEPS MNQ=F, live 4D says loser",
         "optimiser KEEPS BTC-USD, live 4D says loser"
       ],
       "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
@@ -275,6 +282,304 @@
       "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
     }
   ],
+  "optimiser_replay": [
+    {
+      "strategy": "50-20-Pullback",
+      "keep": [
+        "BTC-USD",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "drop": [
+        "M2K=F",
+        "MES=F"
+      ],
+      "ho_n": 288,
+      "ho_pf": 0.942,
+      "ho_R": -10.492,
+      "replay_n": 245,
+      "replay_pf": 0.844,
+      "replay_R": -25.09,
+      "delta_R": -14.6,
+      "dropped_positive": [
+        [
+          "MES=F",
+          10.0,
+          24,
+          1.912
+        ],
+        [
+          "M2K=F",
+          4.6,
+          19,
+          1.456
+        ]
+      ],
+      "kept_negative": [
+        [
+          "BTC-USD",
+          -35.9,
+          227,
+          0.767
+        ]
+      ],
+      "inverted": true,
+      "note": "not published: did not improve on both the live track and the independent 180-day one-hour track",
+      "validated": false
+    },
+    {
+      "strategy": "CRT",
+      "keep": [
+        "BTC-USD",
+        "MES=F",
+        "MGC=F"
+      ],
+      "drop": [
+        "M2K=F",
+        "MNQ=F"
+      ],
+      "ho_n": 207,
+      "ho_pf": 1.019,
+      "ho_R": 2.44,
+      "replay_n": 130,
+      "replay_pf": 0.916,
+      "replay_R": -6.95,
+      "delta_R": -9.39,
+      "dropped_positive": [
+        [
+          "MNQ=F",
+          10.1,
+          37,
+          1.533
+        ]
+      ],
+      "kept_negative": [
+        [
+          "MGC=F",
+          -5.4,
+          29,
+          0.728
+        ],
+        [
+          "MES=F",
+          -4.3,
+          41,
+          0.839
+        ]
+      ],
+      "inverted": true,
+      "note": "not published: did not improve on both the live track and the independent 180-day one-hour track",
+      "validated": false
+    },
+    {
+      "strategy": "Stair",
+      "keep": [
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "drop": [
+        "BTC-USD",
+        "M2K=F"
+      ],
+      "ho_n": 104,
+      "ho_pf": 0.894,
+      "ho_R": -7.134,
+      "replay_n": 71,
+      "replay_pf": 0.935,
+      "replay_R": -2.93,
+      "delta_R": 4.2,
+      "dropped_positive": [],
+      "kept_negative": [
+        [
+          "MGC=F",
+          -9.4,
+          33,
+          0.607
+        ],
+        [
+          "MES=F",
+          -1.8,
+          7,
+          0.647
+        ]
+      ],
+      "inverted": false,
+      "note": "not published: did not improve on both the live track and the independent 180-day one-hour track",
+      "validated": false
+    },
+    {
+      "strategy": "3-Pushes",
+      "keep": [
+        "M2K=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "drop": [
+        "BTC-USD",
+        "MES=F"
+      ],
+      "ho_n": 121,
+      "ho_pf": 1.179,
+      "ho_R": 12.518,
+      "replay_n": 66,
+      "replay_pf": 1.192,
+      "replay_R": 7.3,
+      "delta_R": -5.22,
+      "dropped_positive": [
+        [
+          "BTC-USD",
+          7.3,
+          32,
+          1.428
+        ]
+      ],
+      "kept_negative": [],
+      "inverted": false,
+      "note": "not published: did not improve on both the live track and the independent 180-day one-hour track",
+      "validated": false
+    },
+    {
+      "strategy": "Two-Yang",
+      "keep": [
+        "BTC-USD",
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "drop": [
+        "M2K=F"
+      ],
+      "ho_n": 40,
+      "ho_pf": 0.871,
+      "ho_R": -3.348,
+      "replay_n": 34,
+      "replay_pf": 0.883,
+      "replay_R": -2.58,
+      "delta_R": 0.77,
+      "dropped_positive": [],
+      "kept_negative": [
+        [
+          "MNQ=F",
+          -2.4,
+          5,
+          0.405
+        ],
+        [
+          "MES=F",
+          -1.8,
+          7,
+          0.647
+        ]
+      ],
+      "inverted": false,
+      "note": "not published: did not improve on both the live track and the independent 180-day one-hour track",
+      "validated": false
+    },
+    {
+      "strategy": "RSI-Div",
+      "keep": [
+        "BTC-USD",
+        "M2K=F",
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "drop": [],
+      "ho_n": 10,
+      "ho_pf": 0.18,
+      "ho_R": -7.382,
+      "replay_n": 10,
+      "replay_pf": 0.18,
+      "replay_R": -7.38,
+      "delta_R": 0.0,
+      "dropped_positive": [],
+      "kept_negative": [],
+      "inverted": false,
+      "note": "not published: did not improve on both the live track and the independent 180-day one-hour track",
+      "validated": false
+    },
+    {
+      "strategy": "B1",
+      "keep": [
+        "BTC-USD",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "drop": [],
+      "ho_n": 5,
+      "ho_pf": 2.427,
+      "ho_R": 2.854,
+      "replay_n": 5,
+      "replay_pf": 2.43,
+      "replay_R": 2.85,
+      "delta_R": -0.0,
+      "dropped_positive": [],
+      "kept_negative": [],
+      "inverted": false,
+      "note": "not published: did not improve on both the live track and the independent 180-day one-hour track",
+      "validated": false
+    },
+    {
+      "strategy": "H-Pattern",
+      "keep": [
+        "BTC-USD"
+      ],
+      "drop": [],
+      "ho_n": 12,
+      "ho_pf": 2.265,
+      "ho_R": 6.326,
+      "replay_n": 12,
+      "replay_pf": 2.266,
+      "replay_R": 6.33,
+      "delta_R": 0.0,
+      "dropped_positive": [],
+      "kept_negative": [],
+      "inverted": false,
+      "note": "not published: did not improve on both the live track and the independent 180-day one-hour track",
+      "validated": false
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "keep": [
+        "BTC-USD",
+        "M2K=F",
+        "MES=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "drop": [],
+      "ho_n": 15,
+      "ho_pf": 1.416,
+      "ho_R": 3.326,
+      "replay_n": 15,
+      "replay_pf": 1.416,
+      "replay_R": 3.33,
+      "delta_R": 0.0,
+      "dropped_positive": [],
+      "kept_negative": [
+        [
+          "MGC=F",
+          -1.8,
+          7,
+          0.647
+        ]
+      ],
+      "inverted": false,
+      "note": "not published: did not improve on both the live track and the independent 180-day one-hour track",
+      "validated": false
+    }
+  ],
+  "optimiser_scope_gaps": [
+    {
+      "strategy": "B1-3in1",
+      "n_all": 39,
+      "total_R": -39.0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0
+    }
+  ],
+  "optimiser_book_definition": "backtest_optimizer.py load_trades(): closed trades, direction not in ('none',''), grade != 'C'. Per-strategy chronological 70/30 split (HOLDOUT_FRACTION=0.30), holdout = last 30% of that strategy's A/B trades. Reproduced exactly for H-Pattern (n=12, PF 2.265), Kell-Cycle (n=15, PF 1.416) and RSI-Div (n=10, PF 0.18).",
   "strategies": {
     "50-20-Pullback": {
       "strategy": "50-20-Pullback",
@@ -1064,25 +1369,288 @@
             "mean": 9.76,
             "n_le_2": 316
           }
+        },
+        "opt_holdout": {
+          "aggregate": {
+            "n": 288,
+            "wins": 106,
+            "losses": 182,
+            "flats": 0,
+            "win_rate": 36.8,
+            "total_R": -10.492,
+            "avg_R": -0.036,
+            "median_R": -1.0,
+            "gross_win_R": 171.51,
+            "gross_loss_R": 182.0,
+            "profit_factor": 0.942,
+            "avg_win_R": 1.618,
+            "avg_loss_R": 1.0,
+            "payoff": 1.618,
+            "max_dd_R": -25.15,
+            "max_consec_loss": 6,
+            "max_consec_win": 0
+          },
+          "by_grade": {
+            "A": {
+              "n": 9,
+              "wins": 3,
+              "losses": 6,
+              "flats": 0,
+              "win_rate": 33.3,
+              "total_R": -1.146,
+              "avg_R": -0.127,
+              "median_R": -1.0,
+              "gross_win_R": 4.85,
+              "gross_loss_R": 6.0,
+              "profit_factor": 0.809,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.38,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "B": {
+              "n": 279,
+              "wins": 103,
+              "losses": 176,
+              "flats": 0,
+              "win_rate": 36.9,
+              "total_R": -9.346,
+              "avg_R": -0.033,
+              "median_R": -1.0,
+              "gross_win_R": 166.65,
+              "gross_loss_R": 176.0,
+              "profit_factor": 0.947,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -24.15,
+              "max_consec_loss": 6,
+              "max_consec_win": 0
+            }
+          },
+          "by_direction": {
+            "LONG": {
+              "n": 165,
+              "wins": 56,
+              "losses": 109,
+              "flats": 0,
+              "win_rate": 33.9,
+              "total_R": -18.392,
+              "avg_R": -0.111,
+              "median_R": -1.0,
+              "gross_win_R": 90.61,
+              "gross_loss_R": 109.0,
+              "profit_factor": 0.831,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -28.17,
+              "max_consec_loss": 5,
+              "max_consec_win": 0
+            },
+            "SHORT": {
+              "n": 123,
+              "wins": 50,
+              "losses": 73,
+              "flats": 0,
+              "win_rate": 40.7,
+              "total_R": 7.9,
+              "avg_R": 0.064,
+              "median_R": -1.0,
+              "gross_win_R": 80.9,
+              "gross_loss_R": 73.0,
+              "profit_factor": 1.108,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -12.38,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "by_ticker": {
+            "BTC-USD": {
+              "n": 227,
+              "wins": 73,
+              "losses": 154,
+              "flats": 0,
+              "win_rate": 32.2,
+              "total_R": -35.886,
+              "avg_R": -0.158,
+              "median_R": -1.0,
+              "gross_win_R": 118.11,
+              "gross_loss_R": 154.0,
+              "profit_factor": 0.767,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -39.59,
+              "max_consec_loss": 5,
+              "max_consec_win": 0
+            },
+            "M2K=F": {
+              "n": 19,
+              "wins": 9,
+              "losses": 10,
+              "flats": 0,
+              "win_rate": 47.4,
+              "total_R": 4.562,
+              "avg_R": 0.24,
+              "median_R": -1.0,
+              "gross_win_R": 14.56,
+              "gross_loss_R": 10.0,
+              "profit_factor": 1.456,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -8.38,
+              "max_consec_loss": 0,
+              "max_consec_win": 5
+            },
+            "MES=F": {
+              "n": 24,
+              "wins": 13,
+              "losses": 11,
+              "flats": 0,
+              "win_rate": 54.2,
+              "total_R": 10.034,
+              "avg_R": 0.418,
+              "median_R": 1.618,
+              "gross_win_R": 21.03,
+              "gross_loss_R": 11.0,
+              "profit_factor": 1.912,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.76,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "MGC=F": {
+              "n": 6,
+              "wins": 3,
+              "losses": 3,
+              "flats": 0,
+              "win_rate": 50.0,
+              "total_R": 1.854,
+              "avg_R": 0.309,
+              "median_R": 0.309,
+              "gross_win_R": 4.85,
+              "gross_loss_R": 3.0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "MNQ=F": {
+              "n": 12,
+              "wins": 8,
+              "losses": 4,
+              "flats": 0,
+              "win_rate": 66.7,
+              "total_R": 8.944,
+              "avg_R": 0.745,
+              "median_R": 1.618,
+              "gross_win_R": 12.94,
+              "gross_loss_R": 4.0,
+              "profit_factor": 3.236,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            }
+          },
+          "by_confidence": {
+            "70-79": {
+              "n": 148,
+              "wins": 47,
+              "losses": 101,
+              "flats": 0,
+              "win_rate": 31.8,
+              "total_R": -24.954,
+              "avg_R": -0.169,
+              "median_R": -1.0,
+              "gross_win_R": 76.05,
+              "gross_loss_R": 101.0,
+              "profit_factor": 0.753,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -33.52,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "80-89": {
+              "n": 59,
+              "wins": 19,
+              "losses": 40,
+              "flats": 0,
+              "win_rate": 32.2,
+              "total_R": -9.258,
+              "avg_R": -0.157,
+              "median_R": -1.0,
+              "gross_win_R": 30.74,
+              "gross_loss_R": 40.0,
+              "profit_factor": 0.769,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -11.49,
+              "max_consec_loss": 5,
+              "max_consec_win": 0
+            },
+            "<70": {
+              "n": 81,
+              "wins": 40,
+              "losses": 41,
+              "flats": 0,
+              "win_rate": 49.4,
+              "total_R": 23.72,
+              "avg_R": 0.293,
+              "median_R": -1.0,
+              "gross_win_R": 64.72,
+              "gross_loss_R": 41.0,
+              "profit_factor": 1.579,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -7.0,
+              "max_consec_loss": 4,
+              "max_consec_win": 0
+            }
+          },
+          "bars_held": {
+            "median": null,
+            "mean": null,
+            "n_le_2": 0
+          }
         }
-      }
+      },
+      "book_n": 959
     },
     "CRT": {
       "strategy": "CRT",
       "windows": {
         "7d": {
           "aggregate": {
-            "n": 35,
-            "wins": 11,
-            "losses": 24,
+            "n": 33,
+            "wins": 10,
+            "losses": 23,
             "flats": 0,
-            "win_rate": 31.4,
-            "total_R": -6.202,
-            "avg_R": -0.177,
+            "win_rate": 30.3,
+            "total_R": -6.82,
+            "avg_R": -0.207,
             "median_R": -1.0,
-            "gross_win_R": 17.8,
-            "gross_loss_R": 24.0,
-            "profit_factor": 0.742,
+            "gross_win_R": 16.18,
+            "gross_loss_R": 23.0,
+            "profit_factor": 0.703,
             "avg_win_R": 1.618,
             "avg_loss_R": 1.0,
             "payoff": 1.618,
@@ -1111,17 +1679,17 @@
               "max_consec_win": 0
             },
             "B": {
-              "n": 28,
-              "wins": 8,
-              "losses": 20,
+              "n": 26,
+              "wins": 7,
+              "losses": 19,
               "flats": 0,
-              "win_rate": 28.6,
-              "total_R": -7.056,
-              "avg_R": -0.252,
+              "win_rate": 26.9,
+              "total_R": -7.674,
+              "avg_R": -0.295,
               "median_R": -1.0,
-              "gross_win_R": 12.94,
-              "gross_loss_R": 20.0,
-              "profit_factor": 0.647,
+              "gross_win_R": 11.33,
+              "gross_loss_R": 19.0,
+              "profit_factor": 0.596,
               "avg_win_R": 1.618,
               "avg_loss_R": 1.0,
               "payoff": 1.618,
@@ -1132,17 +1700,17 @@
           },
           "by_direction": {
             "LONG": {
-              "n": 19,
-              "wins": 3,
-              "losses": 16,
+              "n": 17,
+              "wins": 2,
+              "losses": 15,
               "flats": 0,
-              "win_rate": 15.8,
-              "total_R": -11.146,
-              "avg_R": -0.587,
+              "win_rate": 11.8,
+              "total_R": -11.764,
+              "avg_R": -0.692,
               "median_R": -1.0,
-              "gross_win_R": 4.85,
-              "gross_loss_R": 16.0,
-              "profit_factor": 0.303,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 15.0,
+              "profit_factor": 0.216,
               "avg_win_R": 1.618,
               "avg_loss_R": 1.0,
               "payoff": 1.618,
@@ -1172,20 +1740,20 @@
           },
           "by_ticker": {
             "BTC-USD": {
-              "n": 6,
-              "wins": 1,
+              "n": 5,
+              "wins": 0,
               "losses": 5,
               "flats": 0,
-              "win_rate": 16.7,
-              "total_R": -3.382,
-              "avg_R": -0.564,
+              "win_rate": 0.0,
+              "total_R": -5.0,
+              "avg_R": -1.0,
               "median_R": -1.0,
-              "gross_win_R": 1.62,
+              "gross_win_R": 0,
               "gross_loss_R": 5.0,
-              "profit_factor": 0.324,
-              "avg_win_R": 1.618,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
               "avg_loss_R": 1.0,
-              "payoff": 1.618,
+              "payoff": 0.0,
               "max_dd_R": -5.0,
               "max_consec_loss": 5,
               "max_consec_win": 0
@@ -1267,21 +1835,21 @@
               "max_consec_win": 1
             },
             "MNQ=F": {
-              "n": 7,
+              "n": 6,
               "wins": 2,
-              "losses": 5,
+              "losses": 4,
               "flats": 0,
-              "win_rate": 28.6,
-              "total_R": -1.764,
-              "avg_R": -0.252,
+              "win_rate": 33.3,
+              "total_R": -0.764,
+              "avg_R": -0.127,
               "median_R": -1.0,
               "gross_win_R": 3.24,
-              "gross_loss_R": 5.0,
-              "profit_factor": 0.647,
+              "gross_loss_R": 4.0,
+              "profit_factor": 0.809,
               "avg_win_R": 1.618,
               "avg_loss_R": 1.0,
               "payoff": 1.618,
-              "max_dd_R": -3.0,
+              "max_dd_R": -2.0,
               "max_consec_loss": 2,
               "max_consec_win": 0
             }
@@ -1326,17 +1894,17 @@
               "max_consec_win": 0
             },
             "90+": {
-              "n": 21,
-              "wins": 9,
-              "losses": 12,
+              "n": 19,
+              "wins": 8,
+              "losses": 11,
               "flats": 0,
-              "win_rate": 42.9,
-              "total_R": 2.562,
-              "avg_R": 0.122,
+              "win_rate": 42.1,
+              "total_R": 1.944,
+              "avg_R": 0.102,
               "median_R": -1.0,
-              "gross_win_R": 14.56,
-              "gross_loss_R": 12.0,
-              "profit_factor": 1.214,
+              "gross_win_R": 12.94,
+              "gross_loss_R": 11.0,
+              "profit_factor": 1.177,
               "avg_win_R": 1.618,
               "avg_loss_R": 1.0,
               "payoff": 1.618,
@@ -1347,8 +1915,8 @@
           },
           "bars_held": {
             "median": 7,
-            "mean": 10.46,
-            "n_le_2": 6
+            "mean": 10.03,
+            "n_le_2": 5
           }
         },
         "30d": {
@@ -1969,8 +2537,309 @@
             "mean": 10.68,
             "n_le_2": 209
           }
+        },
+        "opt_holdout": {
+          "aggregate": {
+            "n": 207,
+            "wins": 80,
+            "losses": 127,
+            "flats": 0,
+            "win_rate": 38.6,
+            "total_R": 2.44,
+            "avg_R": 0.012,
+            "median_R": -1.0,
+            "gross_win_R": 129.44,
+            "gross_loss_R": 127.0,
+            "profit_factor": 1.019,
+            "avg_win_R": 1.618,
+            "avg_loss_R": 1.0,
+            "payoff": 1.618,
+            "max_dd_R": -15.35,
+            "max_consec_loss": 0,
+            "max_consec_win": 2
+          },
+          "by_grade": {
+            "A": {
+              "n": 39,
+              "wins": 12,
+              "losses": 27,
+              "flats": 0,
+              "win_rate": 30.8,
+              "total_R": -7.584,
+              "avg_R": -0.194,
+              "median_R": -1.0,
+              "gross_win_R": 19.42,
+              "gross_loss_R": 27.0,
+              "profit_factor": 0.719,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -11.91,
+              "max_consec_loss": 3,
+              "max_consec_win": 0
+            },
+            "B": {
+              "n": 168,
+              "wins": 68,
+              "losses": 100,
+              "flats": 0,
+              "win_rate": 40.5,
+              "total_R": 10.024,
+              "avg_R": 0.06,
+              "median_R": -1.0,
+              "gross_win_R": 110.02,
+              "gross_loss_R": 100.0,
+              "profit_factor": 1.1,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -13.11,
+              "max_consec_loss": 0,
+              "max_consec_win": 2
+            }
+          },
+          "by_direction": {
+            "LONG": {
+              "n": 106,
+              "wins": 41,
+              "losses": 65,
+              "flats": 0,
+              "win_rate": 38.7,
+              "total_R": 1.338,
+              "avg_R": 0.013,
+              "median_R": -1.0,
+              "gross_win_R": 66.34,
+              "gross_loss_R": 65.0,
+              "profit_factor": 1.021,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -14.73,
+              "max_consec_loss": 8,
+              "max_consec_win": 0
+            },
+            "SHORT": {
+              "n": 101,
+              "wins": 39,
+              "losses": 62,
+              "flats": 0,
+              "win_rate": 38.6,
+              "total_R": 1.102,
+              "avg_R": 0.011,
+              "median_R": -1.0,
+              "gross_win_R": 63.1,
+              "gross_loss_R": 62.0,
+              "profit_factor": 1.018,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -12.97,
+              "max_consec_loss": 0,
+              "max_consec_win": 2
+            }
+          },
+          "by_ticker": {
+            "BTC-USD": {
+              "n": 60,
+              "wins": 24,
+              "losses": 36,
+              "flats": 0,
+              "win_rate": 40.0,
+              "total_R": 2.832,
+              "avg_R": 0.047,
+              "median_R": -1.0,
+              "gross_win_R": 38.83,
+              "gross_loss_R": 36.0,
+              "profit_factor": 1.079,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -9.67,
+              "max_consec_loss": 5,
+              "max_consec_win": 0
+            },
+            "GC=F": {
+              "n": 3,
+              "wins": 1,
+              "losses": 2,
+              "flats": 0,
+              "win_rate": 33.3,
+              "total_R": -0.382,
+              "avg_R": -0.127,
+              "median_R": -1.0,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 2.0,
+              "profit_factor": 0.809,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "M2K=F": {
+              "n": 37,
+              "wins": 14,
+              "losses": 23,
+              "flats": 0,
+              "win_rate": 37.8,
+              "total_R": -0.348,
+              "avg_R": -0.009,
+              "median_R": -1.0,
+              "gross_win_R": 22.65,
+              "gross_loss_R": 23.0,
+              "profit_factor": 0.985,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -7.15,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "MES=F": {
+              "n": 41,
+              "wins": 14,
+              "losses": 27,
+              "flats": 0,
+              "win_rate": 34.1,
+              "total_R": -4.348,
+              "avg_R": -0.106,
+              "median_R": -1.0,
+              "gross_win_R": 22.65,
+              "gross_loss_R": 27.0,
+              "profit_factor": 0.839,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -12.38,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "MGC=F": {
+              "n": 29,
+              "wins": 9,
+              "losses": 20,
+              "flats": 0,
+              "win_rate": 31.0,
+              "total_R": -5.438,
+              "avg_R": -0.188,
+              "median_R": -1.0,
+              "gross_win_R": 14.56,
+              "gross_loss_R": 20.0,
+              "profit_factor": 0.728,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -7.67,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "MNQ=F": {
+              "n": 37,
+              "wins": 18,
+              "losses": 19,
+              "flats": 0,
+              "win_rate": 48.6,
+              "total_R": 10.124,
+              "avg_R": 0.274,
+              "median_R": -1.0,
+              "gross_win_R": 29.12,
+              "gross_loss_R": 19.0,
+              "profit_factor": 1.533,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -4.38,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            }
+          },
+          "by_confidence": {
+            "70-79": {
+              "n": 81,
+              "wins": 32,
+              "losses": 49,
+              "flats": 0,
+              "win_rate": 39.5,
+              "total_R": 2.776,
+              "avg_R": 0.034,
+              "median_R": -1.0,
+              "gross_win_R": 51.78,
+              "gross_loss_R": 49.0,
+              "profit_factor": 1.057,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -14.91,
+              "max_consec_loss": 3,
+              "max_consec_win": 0
+            },
+            "80-89": {
+              "n": 58,
+              "wins": 22,
+              "losses": 36,
+              "flats": 0,
+              "win_rate": 37.9,
+              "total_R": -0.404,
+              "avg_R": -0.007,
+              "median_R": -1.0,
+              "gross_win_R": 35.6,
+              "gross_loss_R": 36.0,
+              "profit_factor": 0.989,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -8.06,
+              "max_consec_loss": 3,
+              "max_consec_win": 0
+            },
+            "90+": {
+              "n": 30,
+              "wins": 11,
+              "losses": 19,
+              "flats": 0,
+              "win_rate": 36.7,
+              "total_R": -1.202,
+              "avg_R": -0.04,
+              "median_R": -1.0,
+              "gross_win_R": 17.8,
+              "gross_loss_R": 19.0,
+              "profit_factor": 0.937,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -6.38,
+              "max_consec_loss": 0,
+              "max_consec_win": 2
+            },
+            "<70": {
+              "n": 38,
+              "wins": 15,
+              "losses": 23,
+              "flats": 0,
+              "win_rate": 39.5,
+              "total_R": 1.27,
+              "avg_R": 0.033,
+              "median_R": -1.0,
+              "gross_win_R": 24.27,
+              "gross_loss_R": 23.0,
+              "profit_factor": 1.055,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -7.53,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "bars_held": {
+            "median": null,
+            "mean": null,
+            "n_le_2": 0
+          }
         }
-      }
+      },
+      "book_n": 689
     },
     "Stair": {
       "strategy": "Stair",
@@ -2760,8 +3629,290 @@
             "mean": 9.26,
             "n_le_2": 117
           }
+        },
+        "opt_holdout": {
+          "aggregate": {
+            "n": 104,
+            "wins": 37,
+            "losses": 67,
+            "flats": 0,
+            "win_rate": 35.6,
+            "total_R": -7.134,
+            "avg_R": -0.069,
+            "median_R": -1.0,
+            "gross_win_R": 59.87,
+            "gross_loss_R": 67.0,
+            "profit_factor": 0.894,
+            "avg_win_R": 1.618,
+            "avg_loss_R": 1.0,
+            "payoff": 1.618,
+            "max_dd_R": -14.31,
+            "max_consec_loss": 5,
+            "max_consec_win": 0
+          },
+          "by_grade": {
+            "A": {
+              "n": 71,
+              "wins": 25,
+              "losses": 46,
+              "flats": 0,
+              "win_rate": 35.2,
+              "total_R": -5.55,
+              "avg_R": -0.078,
+              "median_R": -1.0,
+              "gross_win_R": 40.45,
+              "gross_loss_R": 46.0,
+              "profit_factor": 0.879,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -10.88,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "B": {
+              "n": 33,
+              "wins": 12,
+              "losses": 21,
+              "flats": 0,
+              "win_rate": 36.4,
+              "total_R": -1.584,
+              "avg_R": -0.048,
+              "median_R": -1.0,
+              "gross_win_R": 19.42,
+              "gross_loss_R": 21.0,
+              "profit_factor": 0.925,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -7.91,
+              "max_consec_loss": 4,
+              "max_consec_win": 0
+            }
+          },
+          "by_direction": {
+            "SHORT": {
+              "n": 104,
+              "wins": 37,
+              "losses": 67,
+              "flats": 0,
+              "win_rate": 35.6,
+              "total_R": -7.134,
+              "avg_R": -0.069,
+              "median_R": -1.0,
+              "gross_win_R": 59.87,
+              "gross_loss_R": 67.0,
+              "profit_factor": 0.894,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -14.31,
+              "max_consec_loss": 5,
+              "max_consec_win": 0
+            }
+          },
+          "by_ticker": {
+            "BTC-USD": {
+              "n": 6,
+              "wins": 2,
+              "losses": 4,
+              "flats": 0,
+              "win_rate": 33.3,
+              "total_R": -0.764,
+              "avg_R": -0.127,
+              "median_R": -1.0,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 4.0,
+              "profit_factor": 0.809,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.38,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "GC=F": {
+              "n": 1,
+              "wins": 0,
+              "losses": 1,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -1.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 1.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -1.0,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "M2K=F": {
+              "n": 26,
+              "wins": 9,
+              "losses": 17,
+              "flats": 0,
+              "win_rate": 34.6,
+              "total_R": -2.438,
+              "avg_R": -0.094,
+              "median_R": -1.0,
+              "gross_win_R": 14.56,
+              "gross_loss_R": 17.0,
+              "profit_factor": 0.857,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -6.91,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "MES=F": {
+              "n": 7,
+              "wins": 2,
+              "losses": 5,
+              "flats": 0,
+              "win_rate": 28.6,
+              "total_R": -1.764,
+              "avg_R": -0.252,
+              "median_R": -1.0,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 5.0,
+              "profit_factor": 0.647,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -4.0,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "MGC=F": {
+              "n": 33,
+              "wins": 9,
+              "losses": 24,
+              "flats": 0,
+              "win_rate": 27.3,
+              "total_R": -9.438,
+              "avg_R": -0.286,
+              "median_R": -1.0,
+              "gross_win_R": 14.56,
+              "gross_loss_R": 24.0,
+              "profit_factor": 0.607,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -11.67,
+              "max_consec_loss": 3,
+              "max_consec_win": 0
+            },
+            "MNQ=F": {
+              "n": 31,
+              "wins": 15,
+              "losses": 16,
+              "flats": 0,
+              "win_rate": 48.4,
+              "total_R": 8.27,
+              "avg_R": 0.267,
+              "median_R": -1.0,
+              "gross_win_R": 24.27,
+              "gross_loss_R": 16.0,
+              "profit_factor": 1.517,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -4.38,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "by_confidence": {
+            "70-79": {
+              "n": 36,
+              "wins": 13,
+              "losses": 23,
+              "flats": 0,
+              "win_rate": 36.1,
+              "total_R": -1.966,
+              "avg_R": -0.055,
+              "median_R": -1.0,
+              "gross_win_R": 21.03,
+              "gross_loss_R": 23.0,
+              "profit_factor": 0.915,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -8.67,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "80-89": {
+              "n": 40,
+              "wins": 16,
+              "losses": 24,
+              "flats": 0,
+              "win_rate": 40.0,
+              "total_R": 1.888,
+              "avg_R": 0.047,
+              "median_R": -1.0,
+              "gross_win_R": 25.89,
+              "gross_loss_R": 24.0,
+              "profit_factor": 1.079,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -5.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "90+": {
+              "n": 25,
+              "wins": 6,
+              "losses": 19,
+              "flats": 0,
+              "win_rate": 24.0,
+              "total_R": -9.292,
+              "avg_R": -0.372,
+              "median_R": -1.0,
+              "gross_win_R": 9.71,
+              "gross_loss_R": 19.0,
+              "profit_factor": 0.511,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -12.15,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "<70": {
+              "n": 3,
+              "wins": 2,
+              "losses": 1,
+              "flats": 0,
+              "win_rate": 66.7,
+              "total_R": 2.236,
+              "avg_R": 0.745,
+              "median_R": 1.618,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 1.0,
+              "profit_factor": 3.236,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -1.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            }
+          },
+          "bars_held": {
+            "median": null,
+            "mean": null,
+            "n_le_2": 0
+          }
         }
-      }
+      },
+      "book_n": 346
     },
     "3-Pushes": {
       "strategy": "3-Pushes",
@@ -2973,17 +4124,17 @@
         },
         "30d": {
           "aggregate": {
-            "n": 37,
+            "n": 36,
             "wins": 17,
-            "losses": 20,
+            "losses": 19,
             "flats": 0,
-            "win_rate": 45.9,
-            "total_R": 7.506,
-            "avg_R": 0.203,
+            "win_rate": 47.2,
+            "total_R": 8.506,
+            "avg_R": 0.236,
             "median_R": -1.0,
             "gross_win_R": 27.51,
-            "gross_loss_R": 20.0,
-            "profit_factor": 1.375,
+            "gross_loss_R": 19.0,
+            "profit_factor": 1.448,
             "avg_win_R": 1.618,
             "avg_loss_R": 1.0,
             "payoff": 1.618,
@@ -2993,17 +4144,17 @@
           },
           "by_grade": {
             "B": {
-              "n": 37,
+              "n": 36,
               "wins": 17,
-              "losses": 20,
+              "losses": 19,
               "flats": 0,
-              "win_rate": 45.9,
-              "total_R": 7.506,
-              "avg_R": 0.203,
+              "win_rate": 47.2,
+              "total_R": 8.506,
+              "avg_R": 0.236,
               "median_R": -1.0,
               "gross_win_R": 27.51,
-              "gross_loss_R": 20.0,
-              "profit_factor": 1.375,
+              "gross_loss_R": 19.0,
+              "profit_factor": 1.448,
               "avg_win_R": 1.618,
               "avg_loss_R": 1.0,
               "payoff": 1.618,
@@ -3033,45 +4184,26 @@
               "max_consec_win": 1
             },
             "SHORT": {
-              "n": 22,
+              "n": 21,
               "wins": 9,
-              "losses": 13,
+              "losses": 12,
               "flats": 0,
-              "win_rate": 40.9,
-              "total_R": 1.562,
-              "avg_R": 0.071,
+              "win_rate": 42.9,
+              "total_R": 2.562,
+              "avg_R": 0.122,
               "median_R": -1.0,
               "gross_win_R": 14.56,
-              "gross_loss_R": 13.0,
-              "profit_factor": 1.12,
+              "gross_loss_R": 12.0,
+              "profit_factor": 1.214,
               "avg_win_R": 1.618,
               "avg_loss_R": 1.0,
               "payoff": 1.618,
-              "max_dd_R": -3.15,
+              "max_dd_R": -2.38,
               "max_consec_loss": 2,
               "max_consec_win": 0
             }
           },
           "by_ticker": {
-            "BTC-USD": {
-              "n": 1,
-              "wins": 0,
-              "losses": 1,
-              "flats": 0,
-              "win_rate": 0.0,
-              "total_R": -1.0,
-              "avg_R": -1.0,
-              "median_R": -1.0,
-              "gross_win_R": 0,
-              "gross_loss_R": 1.0,
-              "profit_factor": 0.0,
-              "avg_win_R": 0.0,
-              "avg_loss_R": 1.0,
-              "payoff": 0.0,
-              "max_dd_R": -1.0,
-              "max_consec_loss": 1,
-              "max_consec_win": 0
-            },
             "M2K=F": {
               "n": 5,
               "wins": 2,
@@ -3189,17 +4321,17 @@
               "max_consec_win": 0
             },
             "<70": {
-              "n": 23,
+              "n": 22,
               "wins": 9,
-              "losses": 14,
+              "losses": 13,
               "flats": 0,
-              "win_rate": 39.1,
-              "total_R": 0.562,
-              "avg_R": 0.024,
+              "win_rate": 40.9,
+              "total_R": 1.562,
+              "avg_R": 0.071,
               "median_R": -1.0,
               "gross_win_R": 14.56,
-              "gross_loss_R": 14.0,
-              "profit_factor": 1.04,
+              "gross_loss_R": 13.0,
+              "profit_factor": 1.12,
               "avg_win_R": 1.618,
               "avg_loss_R": 1.0,
               "payoff": 1.618,
@@ -3209,8 +4341,8 @@
             }
           },
           "bars_held": {
-            "median": 10,
-            "mean": 22.78,
+            "median": 9.0,
+            "mean": 22.75,
             "n_le_2": 7
           }
         },
@@ -3494,8 +4626,252 @@
             "mean": 14.41,
             "n_le_2": 122
           }
+        },
+        "opt_holdout": {
+          "aggregate": {
+            "n": 121,
+            "wins": 51,
+            "losses": 70,
+            "flats": 0,
+            "win_rate": 42.1,
+            "total_R": 12.518,
+            "avg_R": 0.103,
+            "median_R": -1.0,
+            "gross_win_R": 82.52,
+            "gross_loss_R": 70.0,
+            "profit_factor": 1.179,
+            "avg_win_R": 1.618,
+            "avg_loss_R": 1.0,
+            "payoff": 1.618,
+            "max_dd_R": -14.44,
+            "max_consec_loss": 2,
+            "max_consec_win": 0
+          },
+          "by_grade": {
+            "B": {
+              "n": 121,
+              "wins": 51,
+              "losses": 70,
+              "flats": 0,
+              "win_rate": 42.1,
+              "total_R": 12.518,
+              "avg_R": 0.103,
+              "median_R": -1.0,
+              "gross_win_R": 82.52,
+              "gross_loss_R": 70.0,
+              "profit_factor": 1.179,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -14.44,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            }
+          },
+          "by_direction": {
+            "LONG": {
+              "n": 52,
+              "wins": 17,
+              "losses": 35,
+              "flats": 0,
+              "win_rate": 32.7,
+              "total_R": -7.494,
+              "avg_R": -0.144,
+              "median_R": -1.0,
+              "gross_win_R": 27.51,
+              "gross_loss_R": 35.0,
+              "profit_factor": 0.786,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -15.2,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "SHORT": {
+              "n": 69,
+              "wins": 34,
+              "losses": 35,
+              "flats": 0,
+              "win_rate": 49.3,
+              "total_R": 20.012,
+              "avg_R": 0.29,
+              "median_R": -1.0,
+              "gross_win_R": 55.01,
+              "gross_loss_R": 35.0,
+              "profit_factor": 1.572,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -8.29,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            }
+          },
+          "by_ticker": {
+            "BTC-USD": {
+              "n": 32,
+              "wins": 15,
+              "losses": 17,
+              "flats": 0,
+              "win_rate": 46.9,
+              "total_R": 7.27,
+              "avg_R": 0.227,
+              "median_R": -1.0,
+              "gross_win_R": 24.27,
+              "gross_loss_R": 17.0,
+              "profit_factor": 1.428,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.38,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "M2K=F": {
+              "n": 22,
+              "wins": 9,
+              "losses": 13,
+              "flats": 0,
+              "win_rate": 40.9,
+              "total_R": 1.562,
+              "avg_R": 0.071,
+              "median_R": -1.0,
+              "gross_win_R": 14.56,
+              "gross_loss_R": 13.0,
+              "profit_factor": 1.12,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -5.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "MES=F": {
+              "n": 23,
+              "wins": 8,
+              "losses": 15,
+              "flats": 0,
+              "win_rate": 34.8,
+              "total_R": -2.056,
+              "avg_R": -0.089,
+              "median_R": -1.0,
+              "gross_win_R": 12.94,
+              "gross_loss_R": 15.0,
+              "profit_factor": 0.863,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -10.0,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "MGC=F": {
+              "n": 23,
+              "wins": 10,
+              "losses": 13,
+              "flats": 0,
+              "win_rate": 43.5,
+              "total_R": 3.18,
+              "avg_R": 0.138,
+              "median_R": -1.0,
+              "gross_win_R": 16.18,
+              "gross_loss_R": 13.0,
+              "profit_factor": 1.245,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -5.0,
+              "max_consec_loss": 3,
+              "max_consec_win": 0
+            },
+            "MNQ=F": {
+              "n": 21,
+              "wins": 9,
+              "losses": 12,
+              "flats": 0,
+              "win_rate": 42.9,
+              "total_R": 2.562,
+              "avg_R": 0.122,
+              "median_R": -1.0,
+              "gross_win_R": 14.56,
+              "gross_loss_R": 12.0,
+              "profit_factor": 1.214,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -5.38,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "by_confidence": {
+            "70-79": {
+              "n": 46,
+              "wins": 25,
+              "losses": 21,
+              "flats": 0,
+              "win_rate": 54.3,
+              "total_R": 19.45,
+              "avg_R": 0.423,
+              "median_R": 1.618,
+              "gross_win_R": 40.45,
+              "gross_loss_R": 21.0,
+              "profit_factor": 1.926,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -4.38,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "80-89": {
+              "n": 4,
+              "wins": 2,
+              "losses": 2,
+              "flats": 0,
+              "win_rate": 50.0,
+              "total_R": 1.236,
+              "avg_R": 0.309,
+              "median_R": 0.309,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 2.0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "<70": {
+              "n": 71,
+              "wins": 24,
+              "losses": 47,
+              "flats": 0,
+              "win_rate": 33.8,
+              "total_R": -8.168,
+              "avg_R": -0.115,
+              "median_R": -1.0,
+              "gross_win_R": 38.83,
+              "gross_loss_R": 47.0,
+              "profit_factor": 0.826,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -19.91,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            }
+          },
+          "bars_held": {
+            "median": null,
+            "mean": null,
+            "n_le_2": 0
+          }
         }
-      }
+      },
+      "book_n": 401
     },
     "B1-3in1": {
       "strategy": "B1-3in1",
@@ -4209,8 +5585,39 @@
             "mean": 1,
             "n_le_2": 39
           }
+        },
+        "opt_holdout": {
+          "aggregate": {
+            "n": 0,
+            "wins": 0,
+            "losses": 0,
+            "flats": 0,
+            "win_rate": 0.0,
+            "total_R": 0.0,
+            "avg_R": 0.0,
+            "median_R": 0.0,
+            "gross_win_R": 0.0,
+            "gross_loss_R": 0.0,
+            "profit_factor": 0.0,
+            "avg_win_R": 0.0,
+            "avg_loss_R": 0.0,
+            "payoff": 0.0,
+            "max_dd_R": 0.0,
+            "max_consec_loss": 0,
+            "max_consec_win": 0
+          },
+          "by_grade": {},
+          "by_direction": {},
+          "by_ticker": {},
+          "by_confidence": {},
+          "bars_held": {
+            "median": null,
+            "mean": null,
+            "n_le_2": 0
+          }
         }
-      }
+      },
+      "book_n": 0
     },
     "Two-Yang": {
       "strategy": "Two-Yang",
@@ -4829,8 +6236,252 @@
             "mean": 16.42,
             "n_le_2": 54
           }
+        },
+        "opt_holdout": {
+          "aggregate": {
+            "n": 40,
+            "wins": 14,
+            "losses": 26,
+            "flats": 0,
+            "win_rate": 35.0,
+            "total_R": -3.348,
+            "avg_R": -0.084,
+            "median_R": -1.0,
+            "gross_win_R": 22.65,
+            "gross_loss_R": 26.0,
+            "profit_factor": 0.871,
+            "avg_win_R": 1.618,
+            "avg_loss_R": 1.0,
+            "payoff": 1.618,
+            "max_dd_R": -10.91,
+            "max_consec_loss": 1,
+            "max_consec_win": 0
+          },
+          "by_grade": {
+            "A": {
+              "n": 1,
+              "wins": 1,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 1.618,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "B": {
+              "n": 39,
+              "wins": 13,
+              "losses": 26,
+              "flats": 0,
+              "win_rate": 33.3,
+              "total_R": -4.966,
+              "avg_R": -0.127,
+              "median_R": -1.0,
+              "gross_win_R": 21.03,
+              "gross_loss_R": 26.0,
+              "profit_factor": 0.809,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -10.91,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "by_direction": {
+            "LONG": {
+              "n": 40,
+              "wins": 14,
+              "losses": 26,
+              "flats": 0,
+              "win_rate": 35.0,
+              "total_R": -3.348,
+              "avg_R": -0.084,
+              "median_R": -1.0,
+              "gross_win_R": 22.65,
+              "gross_loss_R": 26.0,
+              "profit_factor": 0.871,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -10.91,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "by_ticker": {
+            "BTC-USD": {
+              "n": 15,
+              "wins": 6,
+              "losses": 9,
+              "flats": 0,
+              "win_rate": 40.0,
+              "total_R": 0.708,
+              "avg_R": 0.047,
+              "median_R": -1.0,
+              "gross_win_R": 9.71,
+              "gross_loss_R": 9.0,
+              "profit_factor": 1.079,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -7.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "M2K=F": {
+              "n": 6,
+              "wins": 2,
+              "losses": 4,
+              "flats": 0,
+              "win_rate": 33.3,
+              "total_R": -0.764,
+              "avg_R": -0.127,
+              "median_R": -1.0,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 4.0,
+              "profit_factor": 0.809,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "MES=F": {
+              "n": 7,
+              "wins": 2,
+              "losses": 5,
+              "flats": 0,
+              "win_rate": 28.6,
+              "total_R": -1.764,
+              "avg_R": -0.252,
+              "median_R": -1.0,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 5.0,
+              "profit_factor": 0.647,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "MGC=F": {
+              "n": 7,
+              "wins": 3,
+              "losses": 4,
+              "flats": 0,
+              "win_rate": 42.9,
+              "total_R": 0.854,
+              "avg_R": 0.122,
+              "median_R": -1.0,
+              "gross_win_R": 4.85,
+              "gross_loss_R": 4.0,
+              "profit_factor": 1.214,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "MNQ=F": {
+              "n": 5,
+              "wins": 1,
+              "losses": 4,
+              "flats": 0,
+              "win_rate": 20.0,
+              "total_R": -2.382,
+              "avg_R": -0.476,
+              "median_R": -1.0,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 4.0,
+              "profit_factor": 0.405,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.0,
+              "max_consec_loss": 3,
+              "max_consec_win": 0
+            }
+          },
+          "by_confidence": {
+            "70-79": {
+              "n": 5,
+              "wins": 2,
+              "losses": 3,
+              "flats": 0,
+              "win_rate": 40.0,
+              "total_R": 0.236,
+              "avg_R": 0.047,
+              "median_R": -1.0,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 3.0,
+              "profit_factor": 1.079,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "80-89": {
+              "n": 1,
+              "wins": 1,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 1.618,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "<70": {
+              "n": 34,
+              "wins": 11,
+              "losses": 23,
+              "flats": 0,
+              "win_rate": 32.4,
+              "total_R": -5.202,
+              "avg_R": -0.153,
+              "median_R": -1.0,
+              "gross_win_R": 17.8,
+              "gross_loss_R": 23.0,
+              "profit_factor": 0.774,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -8.91,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "bars_held": {
+            "median": null,
+            "mean": null,
+            "n_le_2": 0
+          }
         }
-      }
+      },
+      "book_n": 131
     },
     "RSI-Div": {
       "strategy": "RSI-Div",
@@ -5487,8 +7138,252 @@
             "mean": 12.58,
             "n_le_2": 43
           }
+        },
+        "opt_holdout": {
+          "aggregate": {
+            "n": 10,
+            "wins": 1,
+            "losses": 9,
+            "flats": 0,
+            "win_rate": 10.0,
+            "total_R": -7.382,
+            "avg_R": -0.738,
+            "median_R": -1.0,
+            "gross_win_R": 1.62,
+            "gross_loss_R": 9.0,
+            "profit_factor": 0.18,
+            "avg_win_R": 1.618,
+            "avg_loss_R": 1.0,
+            "payoff": 1.618,
+            "max_dd_R": -7.38,
+            "max_consec_loss": 5,
+            "max_consec_win": 0
+          },
+          "by_grade": {
+            "A": {
+              "n": 8,
+              "wins": 1,
+              "losses": 7,
+              "flats": 0,
+              "win_rate": 12.5,
+              "total_R": -5.382,
+              "avg_R": -0.673,
+              "median_R": -1.0,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 7.0,
+              "profit_factor": 0.231,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -5.38,
+              "max_consec_loss": 5,
+              "max_consec_win": 0
+            },
+            "B": {
+              "n": 2,
+              "wins": 0,
+              "losses": 2,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -2.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 2.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            }
+          },
+          "by_direction": {
+            "LONG": {
+              "n": 6,
+              "wins": 1,
+              "losses": 5,
+              "flats": 0,
+              "win_rate": 16.7,
+              "total_R": -3.382,
+              "avg_R": -0.564,
+              "median_R": -1.0,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 5.0,
+              "profit_factor": 0.324,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.38,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "SHORT": {
+              "n": 4,
+              "wins": 0,
+              "losses": 4,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -4.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 4.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -4.0,
+              "max_consec_loss": 4,
+              "max_consec_win": 0
+            }
+          },
+          "by_ticker": {
+            "BTC-USD": {
+              "n": 2,
+              "wins": 0,
+              "losses": 2,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -2.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 2.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "MES=F": {
+              "n": 4,
+              "wins": 1,
+              "losses": 3,
+              "flats": 0,
+              "win_rate": 25.0,
+              "total_R": -1.382,
+              "avg_R": -0.345,
+              "median_R": -1.0,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 3.0,
+              "profit_factor": 0.539,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.0,
+              "max_consec_loss": 3,
+              "max_consec_win": 0
+            },
+            "MGC=F": {
+              "n": 4,
+              "wins": 0,
+              "losses": 4,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -4.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 4.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -4.0,
+              "max_consec_loss": 4,
+              "max_consec_win": 0
+            }
+          },
+          "by_confidence": {
+            "70-79": {
+              "n": 2,
+              "wins": 0,
+              "losses": 2,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -2.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 2.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "80-89": {
+              "n": 1,
+              "wins": 1,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 1.618,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "90+": {
+              "n": 2,
+              "wins": 0,
+              "losses": 2,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -2.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 2.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "<70": {
+              "n": 5,
+              "wins": 0,
+              "losses": 5,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -5.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 5.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -5.0,
+              "max_consec_loss": 5,
+              "max_consec_win": 0
+            }
+          },
+          "bars_held": {
+            "median": null,
+            "mean": null,
+            "n_le_2": 0
+          }
         }
-      }
+      },
+      "book_n": 32
     },
     "B1": {
       "strategy": "B1",
@@ -6088,8 +7983,214 @@
             "mean": 32.67,
             "n_le_2": 2
           }
+        },
+        "opt_holdout": {
+          "aggregate": {
+            "n": 5,
+            "wins": 3,
+            "losses": 2,
+            "flats": 0,
+            "win_rate": 60.0,
+            "total_R": 2.854,
+            "avg_R": 0.571,
+            "median_R": 1.618,
+            "gross_win_R": 4.85,
+            "gross_loss_R": 2.0,
+            "profit_factor": 2.427,
+            "avg_win_R": 1.618,
+            "avg_loss_R": 1.0,
+            "payoff": 1.618,
+            "max_dd_R": -2.0,
+            "max_consec_loss": 0,
+            "max_consec_win": 2
+          },
+          "by_grade": {
+            "A": {
+              "n": 2,
+              "wins": 2,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 3.236,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 0,
+              "profit_factor": 3.236,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 2
+            },
+            "B": {
+              "n": 3,
+              "wins": 1,
+              "losses": 2,
+              "flats": 0,
+              "win_rate": 33.3,
+              "total_R": -0.382,
+              "avg_R": -0.127,
+              "median_R": -1.0,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 2.0,
+              "profit_factor": 0.809,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            }
+          },
+          "by_direction": {
+            "LONG": {
+              "n": 5,
+              "wins": 3,
+              "losses": 2,
+              "flats": 0,
+              "win_rate": 60.0,
+              "total_R": 2.854,
+              "avg_R": 0.571,
+              "median_R": 1.618,
+              "gross_win_R": 4.85,
+              "gross_loss_R": 2.0,
+              "profit_factor": 2.427,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 2
+            }
+          },
+          "by_ticker": {
+            "BTC-USD": {
+              "n": 1,
+              "wins": 1,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 1.618,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "MGC=F": {
+              "n": 3,
+              "wins": 2,
+              "losses": 1,
+              "flats": 0,
+              "win_rate": 66.7,
+              "total_R": 2.236,
+              "avg_R": 0.745,
+              "median_R": 1.618,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 1.0,
+              "profit_factor": 3.236,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -1.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "MNQ=F": {
+              "n": 1,
+              "wins": 0,
+              "losses": 1,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -1.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 1.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -1.0,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "by_confidence": {
+            "70-79": {
+              "n": 2,
+              "wins": 1,
+              "losses": 1,
+              "flats": 0,
+              "win_rate": 50.0,
+              "total_R": 0.618,
+              "avg_R": 0.309,
+              "median_R": 0.309,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 1.0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -1.0,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "80-89": {
+              "n": 1,
+              "wins": 1,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 1.618,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "<70": {
+              "n": 2,
+              "wins": 1,
+              "losses": 1,
+              "flats": 0,
+              "win_rate": 50.0,
+              "total_R": 0.618,
+              "avg_R": 0.309,
+              "median_R": 0.309,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 1.0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -1.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            }
+          },
+          "bars_held": {
+            "median": null,
+            "mean": null,
+            "n_le_2": 0
+          }
         }
-      }
+      },
+      "book_n": 15
     },
     "H-Pattern": {
       "strategy": "H-Pattern",
@@ -6651,8 +8752,195 @@
             "mean": 10.17,
             "n_le_2": 23
           }
+        },
+        "opt_holdout": {
+          "aggregate": {
+            "n": 12,
+            "wins": 7,
+            "losses": 5,
+            "flats": 0,
+            "win_rate": 58.3,
+            "total_R": 6.326,
+            "avg_R": 0.527,
+            "median_R": 1.618,
+            "gross_win_R": 11.33,
+            "gross_loss_R": 5.0,
+            "profit_factor": 2.265,
+            "avg_win_R": 1.618,
+            "avg_loss_R": 1.0,
+            "payoff": 1.618,
+            "max_dd_R": -3.0,
+            "max_consec_loss": 0,
+            "max_consec_win": 3
+          },
+          "by_grade": {
+            "B": {
+              "n": 12,
+              "wins": 7,
+              "losses": 5,
+              "flats": 0,
+              "win_rate": 58.3,
+              "total_R": 6.326,
+              "avg_R": 0.527,
+              "median_R": 1.618,
+              "gross_win_R": 11.33,
+              "gross_loss_R": 5.0,
+              "profit_factor": 2.265,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 3
+            }
+          },
+          "by_direction": {
+            "LONG": {
+              "n": 11,
+              "wins": 7,
+              "losses": 4,
+              "flats": 0,
+              "win_rate": 63.6,
+              "total_R": 7.326,
+              "avg_R": 0.666,
+              "median_R": 1.618,
+              "gross_win_R": 11.33,
+              "gross_loss_R": 4.0,
+              "profit_factor": 2.832,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 5
+            },
+            "SHORT": {
+              "n": 1,
+              "wins": 0,
+              "losses": 1,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -1.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 1.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -1.0,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "by_ticker": {
+            "BTC-USD": {
+              "n": 12,
+              "wins": 7,
+              "losses": 5,
+              "flats": 0,
+              "win_rate": 58.3,
+              "total_R": 6.326,
+              "avg_R": 0.527,
+              "median_R": 1.618,
+              "gross_win_R": 11.33,
+              "gross_loss_R": 5.0,
+              "profit_factor": 2.265,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 3
+            }
+          },
+          "by_confidence": {
+            "70-79": {
+              "n": 3,
+              "wins": 2,
+              "losses": 1,
+              "flats": 0,
+              "win_rate": 66.7,
+              "total_R": 2.236,
+              "avg_R": 0.745,
+              "median_R": 1.618,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 1.0,
+              "profit_factor": 3.236,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -1.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 2
+            },
+            "80-89": {
+              "n": 3,
+              "wins": 2,
+              "losses": 1,
+              "flats": 0,
+              "win_rate": 66.7,
+              "total_R": 2.236,
+              "avg_R": 0.745,
+              "median_R": 1.618,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 1.0,
+              "profit_factor": 3.236,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -1.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "90+": {
+              "n": 1,
+              "wins": 1,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 1.618,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "<70": {
+              "n": 5,
+              "wins": 2,
+              "losses": 3,
+              "flats": 0,
+              "win_rate": 40.0,
+              "total_R": 0.236,
+              "avg_R": 0.047,
+              "median_R": -1.0,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 3.0,
+              "profit_factor": 1.079,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "bars_held": {
+            "median": null,
+            "mean": null,
+            "n_le_2": 0
+          }
         }
-      }
+      },
+      "book_n": 40
     },
     "Kell-Cycle": {
       "strategy": "Kell-Cycle",
@@ -7290,8 +9578,252 @@
             "mean": 9.81,
             "n_le_2": 55
           }
+        },
+        "opt_holdout": {
+          "aggregate": {
+            "n": 15,
+            "wins": 7,
+            "losses": 8,
+            "flats": 0,
+            "win_rate": 46.7,
+            "total_R": 3.326,
+            "avg_R": 0.222,
+            "median_R": -1.0,
+            "gross_win_R": 11.33,
+            "gross_loss_R": 8.0,
+            "profit_factor": 1.416,
+            "avg_win_R": 1.618,
+            "avg_loss_R": 1.0,
+            "payoff": 1.618,
+            "max_dd_R": -4.0,
+            "max_consec_loss": 1,
+            "max_consec_win": 0
+          },
+          "by_grade": {
+            "A": {
+              "n": 1,
+              "wins": 1,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 1.618,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "B": {
+              "n": 14,
+              "wins": 6,
+              "losses": 8,
+              "flats": 0,
+              "win_rate": 42.9,
+              "total_R": 1.708,
+              "avg_R": 0.122,
+              "median_R": -1.0,
+              "gross_win_R": 9.71,
+              "gross_loss_R": 8.0,
+              "profit_factor": 1.214,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -4.0,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "by_direction": {
+            "LONG": {
+              "n": 9,
+              "wins": 4,
+              "losses": 5,
+              "flats": 0,
+              "win_rate": 44.4,
+              "total_R": 1.472,
+              "avg_R": 0.164,
+              "median_R": -1.0,
+              "gross_win_R": 6.47,
+              "gross_loss_R": 5.0,
+              "profit_factor": 1.294,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "SHORT": {
+              "n": 6,
+              "wins": 3,
+              "losses": 3,
+              "flats": 0,
+              "win_rate": 50.0,
+              "total_R": 1.854,
+              "avg_R": 0.309,
+              "median_R": 0.309,
+              "gross_win_R": 4.85,
+              "gross_loss_R": 3.0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            }
+          },
+          "by_ticker": {
+            "BTC-USD": {
+              "n": 1,
+              "wins": 1,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 1.618,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            },
+            "M2K=F": {
+              "n": 3,
+              "wins": 3,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 4.854,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 4.85,
+              "gross_loss_R": 0,
+              "profit_factor": 4.854,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 3
+            },
+            "MES=F": {
+              "n": 3,
+              "wins": 0,
+              "losses": 3,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -3.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 3.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -3.0,
+              "max_consec_loss": 3,
+              "max_consec_win": 0
+            },
+            "MGC=F": {
+              "n": 7,
+              "wins": 2,
+              "losses": 5,
+              "flats": 0,
+              "win_rate": 28.6,
+              "total_R": -1.764,
+              "avg_R": -0.252,
+              "median_R": -1.0,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 5.0,
+              "profit_factor": 0.647,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -3.38,
+              "max_consec_loss": 2,
+              "max_consec_win": 0
+            },
+            "MNQ=F": {
+              "n": 1,
+              "wins": 1,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 1.618,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 0,
+              "profit_factor": 1.618,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            }
+          },
+          "by_confidence": {
+            "70-79": {
+              "n": 2,
+              "wins": 2,
+              "losses": 0,
+              "flats": 0,
+              "win_rate": 100.0,
+              "total_R": 3.236,
+              "avg_R": 1.618,
+              "median_R": 1.618,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 0,
+              "profit_factor": 3.236,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 0.0,
+              "payoff": 0.0,
+              "max_dd_R": 0.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 2
+            },
+            "<70": {
+              "n": 13,
+              "wins": 5,
+              "losses": 8,
+              "flats": 0,
+              "win_rate": 38.5,
+              "total_R": 0.09,
+              "avg_R": 0.007,
+              "median_R": -1.0,
+              "gross_win_R": 8.09,
+              "gross_loss_R": 8.0,
+              "profit_factor": 1.011,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -4.38,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            }
+          },
+          "bars_held": {
+            "median": null,
+            "mean": null,
+            "n_le_2": 0
+          }
         }
-      }
+      },
+      "book_n": 47
     }
   },
   "findings": {
@@ -7447,6 +9979,232 @@
           "param_rationale": "0.9 is a conservative 5.1% cut from 0.948; a larger reduction lacks comparative evidence and would also suppress profitable SHORT trades.",
           "evidence_strength": "moderate",
           "_attempts": 1
+        }
+      ]
+    },
+    "CRT": {
+      "deterministic_issues": [
+        {
+          "dim": "direction",
+          "severity": "high",
+          "title": "LONG side loses while the other side wins",
+          "detail": "7d LONG: n=17, PF=0.216, -11.8R. 30d opposite side: n=50, PF=1.271, +7.6R. The edge is direction-specific, not setup-specific.",
+          "metric": {
+            "side_7d": {
+              "n": 17,
+              "wins": 2,
+              "losses": 15,
+              "flats": 0,
+              "win_rate": 11.8,
+              "total_R": -11.764,
+              "avg_R": -0.692,
+              "median_R": -1.0,
+              "gross_win_R": 3.24,
+              "gross_loss_R": 15.0,
+              "profit_factor": 0.216,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -11.76,
+              "max_consec_loss": 8,
+              "max_consec_win": 0
+            },
+            "other_30d": {
+              "n": 50,
+              "wins": 22,
+              "losses": 28,
+              "flats": 0,
+              "win_rate": 44.0,
+              "total_R": 7.596,
+              "avg_R": 0.152,
+              "median_R": -1.0,
+              "gross_win_R": 35.6,
+              "gross_loss_R": 28.0,
+              "profit_factor": 1.271,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -5.38,
+              "max_consec_loss": 0,
+              "max_consec_win": 2
+            }
+          }
+        },
+        {
+          "dim": "ticker",
+          "severity": "high",
+          "title": "M2K=F is a persistent drag (PF=0.324, -3.4R)",
+          "detail": "7d M2K=F: n=6, PF=0.324, -3.4R, WR 16.7%. 30d best other ticker: PF=1.483 over n=23. Concentrating on the stronger instrument should lift the blend.",
+          "metric": {
+            "ticker_7d": {
+              "n": 6,
+              "wins": 1,
+              "losses": 5,
+              "flats": 0,
+              "win_rate": 16.7,
+              "total_R": -3.382,
+              "avg_R": -0.564,
+              "median_R": -1.0,
+              "gross_win_R": 1.62,
+              "gross_loss_R": 5.0,
+              "profit_factor": 0.324,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -4.0,
+              "max_consec_loss": 1,
+              "max_consec_win": 0
+            },
+            "best_other_30d": {
+              "n": 23,
+              "wins": 11,
+              "losses": 12,
+              "flats": 0,
+              "win_rate": 47.8,
+              "total_R": 5.798,
+              "avg_R": 0.252,
+              "median_R": -1.0,
+              "gross_win_R": 17.8,
+              "gross_loss_R": 12.0,
+              "profit_factor": 1.483,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            }
+          }
+        },
+        {
+          "dim": "ticker",
+          "severity": "high",
+          "title": "BTC-USD is a persistent drag (PF=0.0, -5.0R)",
+          "detail": "7d BTC-USD: n=5, PF=0.0, -5.0R, WR 0.0%. 30d best other ticker: PF=1.483 over n=23. Concentrating on the stronger instrument should lift the blend.",
+          "metric": {
+            "ticker_7d": {
+              "n": 5,
+              "wins": 0,
+              "losses": 5,
+              "flats": 0,
+              "win_rate": 0.0,
+              "total_R": -5.0,
+              "avg_R": -1.0,
+              "median_R": -1.0,
+              "gross_win_R": 0,
+              "gross_loss_R": 5.0,
+              "profit_factor": 0.0,
+              "avg_win_R": 0.0,
+              "avg_loss_R": 1.0,
+              "payoff": 0.0,
+              "max_dd_R": -5.0,
+              "max_consec_loss": 5,
+              "max_consec_win": 0
+            },
+            "best_other_30d": {
+              "n": 23,
+              "wins": 11,
+              "losses": 12,
+              "flats": 0,
+              "win_rate": 47.8,
+              "total_R": 5.798,
+              "avg_R": 0.252,
+              "median_R": -1.0,
+              "gross_win_R": 17.8,
+              "gross_loss_R": 12.0,
+              "profit_factor": 1.483,
+              "avg_win_R": 1.618,
+              "avg_loss_R": 1.0,
+              "payoff": 1.618,
+              "max_dd_R": -2.0,
+              "max_consec_loss": 0,
+              "max_consec_win": 1
+            }
+          }
+        }
+      ],
+      "llm": {
+        "grade": "C",
+        "confidence": 65,
+        "diagnosis": "Sustained losing streak with clear asymmetric weakness on LONG side and weak tickers (BTC, M2K); only SHORT and MES=F show edge that weight cannot filter.",
+        "reason": "Cut exposure to slow bleeding from LONG/BTC/M2K drag since direction and ticker asymmetry cannot be filtered with weight alone.",
+        "issues": [
+          "LONG trades persistently losing \u2014 7d PF=0.216 (n=17), 30d PF=0.639 (n=53), confirmed both windows",
+          "BTC-USD bleeding \u2014 7d 0% WR n=5, 30d PF=0.755 n=22; cannot be filtered with weight",
+          "M2K=F is a persistent drag \u2014 7d PF=0.324 n=6, 30d PF=0.647 n=21; cannot be filtered with weight"
+        ],
+        "param_rationale": "Lower weight from 1.3 to 0.7 (~46% reduction) to dampen drawdown during losing streak while keeping the working SHORT and MES=F edge in play; smallest defensive change.",
+        "evidence_strength": "moderate",
+        "suggested_params": {
+          "weight": 0.7
+        },
+        "n_samples": 3,
+        "n_ok": 3,
+        "conf_samples": [
+          62,
+          65,
+          68
+        ],
+        "conf_spread": 6,
+        "param_samples": [
+          0.7,
+          0.8,
+          0.7
+        ],
+        "param_agreement": 0.67
+      },
+      "samples": [
+        {
+          "grade": "C",
+          "confidence": 68,
+          "diagnosis": "LONG side plus BTC-USD and M2K=F are the primary drags in recent windows; only weight is available as a live lever.",
+          "issues": [
+            "LONG side catastrophic 7d (n=17, PF=0.216, -11.76R) confirmed in 30d (PF=0.639, -13.73R)",
+            "BTC-USD 0% WR 7d (n=5, PF=0.0, -5.0R) and still negative 30d (PF=0.755)",
+            "M2K=F persistent drag 7d PF=0.324 and 30d PF=0.647 (-5.29R)",
+            "Net 7d -6.82R and 30d -6.13R against all-time +27.86R base indicates a drawdown regime"
+          ],
+          "reason": "Cut weight ~46% to dampen LONG/weak-ticker drag while preserving the working SHORT edge (7d PF=1.618) and all-time base.",
+          "suggested_params": {
+            "weight": 0.7
+          },
+          "param_rationale": "Live `weight` is the only runtime knob. Halving exposure (1.3->0.7) scales 7d loss from -6.82R to ~-3.67R and 30d from -6.13R to ~-3.30R; direction/ticker filters are dead config so cannot be tightened. 0.7 is the smallest meaningful cut that still leaves headroom for SHORT (PF=1.618) and MES (PF=2.022) to compound when regime normalizes.",
+          "evidence_strength": "moderate",
+          "_attempts": 1
+        },
+        {
+          "grade": "C",
+          "confidence": 62,
+          "diagnosis": "Direction- and ticker-specific weaknesses (LONG side, BTC-USD, M2K=F) cause the 7d/30d drawdown, but `weight` cannot filter direction or ticker so the only lever is to scale overall exposure down.",
+          "issues": [
+            "LONG side consistently loses (7d PF=0.216 -11.76R; 30d PF=0.639 -13.73R) while SHORT wins (7d +4.94R; 30d +7.60R) \u2014 `weight` cannot separate these",
+            "BTC-USD (7d PF=0.000 -5.0R) and M2K=F (7d PF=0.324 -3.4R) are persistent drags \u2014 `weight` cannot exclude tickers",
+            "`weight=1.3` over-allocates during a drawdown where the all-time edge (+27.86R, PF=1.066) has degraded to PF=0.907 over 30d"
+          ],
+          "reason": "`weight` is the only live knob; reducing it dampens aggregate drawdown from direction/ticker drags that cannot be filtered at runtime.",
+          "suggested_params": {
+            "weight": 0.8
+          },
+          "param_rationale": "Cut from 1.3 to 0.8 (~38% reduction) to shrink exposure to the LONG/BTC/M2K bleed while preserving participation for the working SHORT/MES edge; 30d maxDD of -10.82R justifies defensive trim without neutralizing the all-time positive expectancy.",
+          "evidence_strength": "moderate",
+          "_attempts": 1
+        },
+        {
+          "grade": "D",
+          "confidence": 65,
+          "diagnosis": "Sustained losing streak with clear asymmetric weakness on LONG side and weak tickers (BTC, M2K); only SHORT and MES=F show edge that weight cannot filter.",
+          "issues": [
+            "LONG trades persistently losing \u2014 7d PF=0.216 (n=17), 30d PF=0.639 (n=53), confirmed both windows",
+            "BTC-USD bleeding \u2014 7d 0% WR n=5, 30d PF=0.755 n=22; cannot be filtered with weight",
+            "M2K=F is a persistent drag \u2014 7d PF=0.324 n=6, 30d PF=0.647 n=21; cannot be filtered with weight"
+          ],
+          "reason": "Cut exposure to slow bleeding from LONG/BTC/M2K drag since direction and ticker asymmetry cannot be filtered with weight alone.",
+          "suggested_params": {
+            "weight": 0.7
+          },
+          "param_rationale": "Lower weight from 1.3 to 0.7 (~46% reduction) to dampen drawdown during losing streak while keeping the working SHORT and MES=F edge in play; smallest defensive change.",
+          "evidence_strength": "moderate",
+          "_attempts": 2
         }
       ]
     },
@@ -7653,7 +10411,7 @@
           "dim": "aggregate",
           "severity": "low",
           "title": "No dominant 4D drag detected",
-          "detail": "7d n=8, PF=1.618, +2.5R; 30d n=37, PF=1.375. No grade/direction/ticker bucket clears the significance thresholds.",
+          "detail": "7d n=8, PF=1.618, +2.5R; 30d n=36, PF=1.448. No grade/direction/ticker bucket clears the significance thresholds.",
           "metric": {
             "n_7d": 8
           }
@@ -7695,20 +10453,18 @@
         }
       ],
       "llm": {
-        "grade": "C",
-        "confidence": 38,
-        "diagnosis": "Strategy posts positive expectancy but with elevated maxDD relative to total R across all windows and only marginal all-time edge (avgR=+0.082R), with no specific bucket-level drag identifiable.",
-        "reason": "Trim weight from 1.2 to 1.0 to dampen the overall exposure gap that produced -24R maxDD on only +34.8R all-time.",
+        "grade": "B",
+        "confidence": 55,
+        "diagnosis": "Thin all-time edge (n=425, PF=1.141, avgR=+0.082, maxDD=-24.44R) overweights the strategy at weight=1.2 despite strong 7d/30d prints; 30d direction split shows LONG PF=1.849 vs SHORT PF=1.214 (weak).",
+        "reason": "Trim weight ~17% to better match long-term thin edge while preserving exposure during strong recent regime",
         "issues": [
-          "no dominant bucket-level drag identified across grade/direction/ticker in 7d or 30d",
-          "maxDD/TotalR ratio is high in all windows (7d 0.81, 30d 0.80, all-time 0.70), indicating over-exposure",
-          "all-time PF=1.141 with avgR=0.082R shows only a thin long-run edge",
-          "30d SHORT (n=22, PF=1.120) materially lags LONG (n=15, PF=1.849) but no live param can filter direction",
-          "7d sample is small (n=8) and confidence buckets below 80 lack statistical strength",
-          "min_strength and resample_tf are dead config so no selection filter is actionable"
+          "all-time avgR=+0.082 with PF=1.141 indicates marginal long-term edge vs current 1.2x exposure",
+          "maxDD=-24.44R is ~70% of lifetime +34.82R, indicating tail risk vs reward imbalance",
+          "SHORT 30d n=21 PF=1.214 barely clears breakeven, diluting the stronger LONG contribution",
+          "80-89 confidence 7d PF=0.809 (n=3 anecdotal) is inconclusive but matches decay pattern"
         ],
-        "param_rationale": "Reduces exposure ~17% to better match the strategy's modest all-time edge (avgR=0.082R) and high DD-to-gain ratio while preserving positive 7d/30d expectancy; smallest change consistent with risk-on-risk profile.",
-        "evidence_strength": "weak",
+        "param_rationale": "weight=1.0 (down from 1.2) aligns exposure with all-time PF=1.141 edge profile; recent 7d PF=1.618 and 30d PF=1.448 justify holding above neutral but the all-time sample (n=425) is the most reliable estimator and shows only thin expectancy.",
+        "evidence_strength": "moderate",
         "suggested_params": {
           "weight": 1.0
         },
@@ -7716,12 +10472,11 @@
         "n_ok": 3,
         "conf_samples": [
           25,
-          38,
-          48
+          55,
+          64
         ],
-        "conf_spread": 23,
+        "conf_spread": 39,
         "param_samples": [
-          1.0,
           1.0
         ],
         "param_agreement": 1.0
@@ -7729,57 +10484,52 @@
       "samples": [
         {
           "grade": "B",
-          "confidence": 48,
-          "diagnosis": "Positive R-multiple edge in recent windows (7d PF=1.618, 30d PF=1.375) but all-time maxDD of -24.44R against +34.82R total and degrading PF to 1.141 indicate current weight=1.2 is over-sized for a ~42% WR / 1.58 payoff strategy.",
+          "confidence": 64,
+          "diagnosis": "The strategy is profitable in 7d, 30d, and all-time, with no demonstrated persistent drag that justifies changing its live weight.",
           "issues": [
-            "All-time maxDD of -24.44R is ~70% of total gains, signaling sizing risk on a thin edge",
-            "PF degrades sharply from 1.618 (7d) \u2192 1.375 (30d) \u2192 1.141 (all-time), edge appears to be eroding",
-            "30d SHORT n=22 PF=1.120 lags LONG n=15 PF=1.849, but no direction filter is live",
-            "7d MGC=F n=2 at 0% WR and 80-89 confidence n=3 at 33% WR are warning signs but samples too small to act on",
-            "Only 8 trades in 7d and SHORT bucket maxDD -2.38R vs avgR +0.122R show noisy risk/reward"
+            "The recent sample is small at n=8, while all-time performance is weaker at PF 1.141 with -24.44R max drawdown.",
+            "Grade B and SHORT meet the stated PF\u22651.1 keeper threshold, but B is the only grade and no all-time direction split supports a filter.",
+            "resample_tf and min_strength are dead config, and no weight-response evidence is provided."
           ],
-          "reason": "Trim weight 1.2\u21921.0 to cut drawdown ~17% while preserving the positive recent R-multiple edge; protects against edge erosion.",
-          "suggested_params": {
-            "weight": 1.0
-          },
-          "param_rationale": "A modest 17% reduction in size directly scales the -24.44R all-time maxDD lower (to ~-20.4R) without altering strategy R-multiples or signal logic; appropriate given the all-time PF of only 1.141 and degrading recency profile, while still capturing the strong 7d/30d performance.",
+          "reason": "Keep weight unchanged: all windows are profitable, with no significant persistent drag.",
+          "suggested_params": {},
+          "param_rationale": "Retain weight=1.2; without counterfactual weight results, changing the only live parameter would be speculative.",
           "evidence_strength": "weak",
           "_attempts": 1
         },
         {
           "grade": "C",
           "confidence": 25,
-          "diagnosis": "The data show positive recent performance but no isolated, persistent drag that supports changing the only live parameter.",
+          "diagnosis": "\u8fd1\u671f\u7b56\u7565\u7dad\u6301\u6b63\u671f\u671b\u4e14\u6c92\u6709\u53ef\u9a57\u8b49\u7684\u62d6\u7d2f\u6876\uff0c\u56e0\u6b64\u8b49\u64da\u4e0d\u8db3\u4ee5\u8abf\u6574\u552f\u4e00\u6709\u6548\u53c3\u6578 weight\u3002",
           "issues": [
-            "The 7d sample is small (n=8), limiting reliable parameter tuning despite PF=1.618 and +2.47R.",
-            "LONG is stronger over 30d, but 7d LONG has n=1 and all-time direction data are absent.",
-            "SHORT remains profitable at 7d and 30d (PF=1.214 and 1.120), so no adverse direction bucket supports filtering or reweighting."
+            "7d \u50c5 8 \u7b46\u4ea4\u6613\uff0c\u6a23\u672c\u4e0d\u8db3\u4ee5\u652f\u6301\u6b0a\u91cd\u8b8a\u66f4\u3002",
+            "MGC \u7684 7d \u5169\u7b46\u5168\u6557\u5c6c\u8efc\u4e8b\uff0c\u4e14 30d PF=1.348\u3001\u7e3d\u8a08 +2.09R\uff0c\u672a\u5f62\u6210\u4e00\u81f4\u62d6\u7d2f\u3002",
+            "\u65b9\u5411\u3001ticker \u8207\u4fe1\u865f\u5206\u6876\u7f3a\u4e4f\u8de8 7d\u300130d \u53ca all-time \u7684\u4e00\u81f4\u5f31\u52e2\u8b49\u64da\u3002",
+            "all-time maxDD \u9054 -24.44R\uff0c\u4f46\u6c92\u6709\u6578\u64da\u8b49\u660e\u964d\u4f4e weight \u80fd\u6539\u5584\u56de\u64a4\u6216 expectancy\u3002"
           ],
-          "reason": "Recent and 30d results are profitable; no persistent segment drag supports changing the only live parameter.",
+          "reason": "7d \u8207 30d \u5747\u70ba\u6b63\u4e14\u7121\u7a69\u5b9a\u5f31\u52e2\u6876\uff0c\u7dad\u6301\u6b0a\u91cd\u53ef\u907f\u514d\u7121\u8b49\u64da\u5e72\u9810\u3002",
           "suggested_params": {},
-          "param_rationale": "Retain weight=1.2 because no weight comparison or significant adverse bucket is available to justify a live change.",
+          "param_rationale": "\u7dad\u6301 weight=1.2\uff1b\u76ee\u524d\u6c92\u6709\u4e0d\u540c\u6b0a\u91cd\u7684\u5c0d\u7167\u7d50\u679c\uff0c\u4e5f\u6c92\u6709\u8de8\u7a97\u4e00\u81f4\u4e14\u53ef\u64cd\u4f5c\u7684\u62d6\u7d2f\u53ef\u4fee\u5fa9\u3002",
           "evidence_strength": "weak",
           "_attempts": 1
         },
         {
-          "grade": "C",
-          "confidence": 38,
-          "diagnosis": "Strategy posts positive expectancy but with elevated maxDD relative to total R across all windows and only marginal all-time edge (avgR=+0.082R), with no specific bucket-level drag identifiable.",
+          "grade": "B",
+          "confidence": 55,
+          "diagnosis": "Thin all-time edge (n=425, PF=1.141, avgR=+0.082, maxDD=-24.44R) overweights the strategy at weight=1.2 despite strong 7d/30d prints; 30d direction split shows LONG PF=1.849 vs SHORT PF=1.214 (weak).",
           "issues": [
-            "no dominant bucket-level drag identified across grade/direction/ticker in 7d or 30d",
-            "maxDD/TotalR ratio is high in all windows (7d 0.81, 30d 0.80, all-time 0.70), indicating over-exposure",
-            "all-time PF=1.141 with avgR=0.082R shows only a thin long-run edge",
-            "30d SHORT (n=22, PF=1.120) materially lags LONG (n=15, PF=1.849) but no live param can filter direction",
-            "7d sample is small (n=8) and confidence buckets below 80 lack statistical strength",
-            "min_strength and resample_tf are dead config so no selection filter is actionable"
+            "all-time avgR=+0.082 with PF=1.141 indicates marginal long-term edge vs current 1.2x exposure",
+            "maxDD=-24.44R is ~70% of lifetime +34.82R, indicating tail risk vs reward imbalance",
+            "SHORT 30d n=21 PF=1.214 barely clears breakeven, diluting the stronger LONG contribution",
+            "80-89 confidence 7d PF=0.809 (n=3 anecdotal) is inconclusive but matches decay pattern"
           ],
-          "reason": "Trim weight from 1.2 to 1.0 to dampen the overall exposure gap that produced -24R maxDD on only +34.8R all-time.",
+          "reason": "Trim weight ~17% to better match long-term thin edge while preserving exposure during strong recent regime",
           "suggested_params": {
             "weight": 1.0
           },
-          "param_rationale": "Reduces exposure ~17% to better match the strategy's modest all-time edge (avgR=0.082R) and high DD-to-gain ratio while preserving positive 7d/30d expectancy; smallest change consistent with risk-on-risk profile.",
-          "evidence_strength": "weak",
-          "_attempts": 1
+          "param_rationale": "weight=1.0 (down from 1.2) aligns exposure with all-time PF=1.141 edge profile; recent 7d PF=1.618 and 30d PF=1.448 justify holding above neutral but the all-time sample (n=425) is the most reliable estimator and shows only thin expectancy.",
+          "evidence_strength": "moderate",
+          "_attempts": 2
         }
       ]
     },
@@ -8058,230 +10808,138 @@
         }
       ]
     },
-    "CRT": {
+    "RSI-Div": {
       "deterministic_issues": [
         {
+          "dim": "sample",
+          "severity": "high",
+          "title": "7d sample too thin (n=3)",
+          "detail": "Only 3 trades in the 7d window. 30d n=7, all-time n=180. Per-strategy 7d conclusions are statistically unreliable; base any param change on the 30d/all-time evidence instead.",
+          "metric": {
+            "n_7d": 3,
+            "n_30d": 7,
+            "n_all": 180
+          }
+        },
+        {
           "dim": "direction",
-          "severity": "high",
-          "title": "LONG side loses while the other side wins",
-          "detail": "7d LONG: n=19, PF=0.303, -11.1R. 30d opposite side: n=50, PF=1.271, +7.6R. The edge is direction-specific, not setup-specific.",
+          "severity": "low",
+          "title": "No actionable direction split in 7d \u2014 dimension checked, nothing to filter on",
+          "detail": "7d direction buckets: LONG n=2 PF=0.0 R=-2.0R; SHORT n=1 PF=0.0 R=-1.0R. No bucket clears the significance threshold (n\u22655 and PF<0.8 for a drag, or PF\u22651.1 elsewhere for a keeper), so no filter is proposed on this dimension. It is reported so the dimension is accounted for.",
           "metric": {
-            "side_7d": {
-              "n": 19,
-              "wins": 3,
-              "losses": 16,
-              "flats": 0,
-              "win_rate": 15.8,
-              "total_R": -11.146,
-              "avg_R": -0.587,
-              "median_R": -1.0,
-              "gross_win_R": 4.85,
-              "gross_loss_R": 16.0,
-              "profit_factor": 0.303,
-              "avg_win_R": 1.618,
-              "avg_loss_R": 1.0,
-              "payoff": 1.618,
-              "max_dd_R": -11.76,
-              "max_consec_loss": 8,
-              "max_consec_win": 0
-            },
-            "other_30d": {
-              "n": 50,
-              "wins": 22,
-              "losses": 28,
-              "flats": 0,
-              "win_rate": 44.0,
-              "total_R": 7.596,
-              "avg_R": 0.152,
-              "median_R": -1.0,
-              "gross_win_R": 35.6,
-              "gross_loss_R": 28.0,
-              "profit_factor": 1.271,
-              "avg_win_R": 1.618,
-              "avg_loss_R": 1.0,
-              "payoff": 1.618,
-              "max_dd_R": -5.38,
-              "max_consec_loss": 0,
-              "max_consec_win": 2
+            "buckets": {
+              "LONG": {
+                "n": 2,
+                "profit_factor": 0.0,
+                "total_R": -2.0
+              },
+              "SHORT": {
+                "n": 1,
+                "profit_factor": 0.0,
+                "total_R": -1.0
+              }
             }
           }
         },
         {
-          "dim": "ticker",
-          "severity": "high",
-          "title": "MNQ=F is a persistent drag (PF=0.647, -1.8R)",
-          "detail": "7d MNQ=F: n=7, PF=0.647, -1.8R, WR 28.6%. 30d best other ticker: PF=1.483 over n=23. Concentrating on the stronger instrument should lift the blend.",
+          "dim": "grade",
+          "severity": "low",
+          "title": "No actionable grade split in 7d \u2014 dimension checked, nothing to filter on",
+          "detail": "7d grade buckets: A n=3 PF=0.0 R=-3.0R. No bucket clears the significance threshold (n\u22655 and PF<0.8 for a drag, or PF\u22651.1 elsewhere for a keeper), so no filter is proposed on this dimension. It is reported so the dimension is accounted for.",
           "metric": {
-            "ticker_7d": {
-              "n": 7,
-              "wins": 2,
-              "losses": 5,
-              "flats": 0,
-              "win_rate": 28.6,
-              "total_R": -1.764,
-              "avg_R": -0.252,
-              "median_R": -1.0,
-              "gross_win_R": 3.24,
-              "gross_loss_R": 5.0,
-              "profit_factor": 0.647,
-              "avg_win_R": 1.618,
-              "avg_loss_R": 1.0,
-              "payoff": 1.618,
-              "max_dd_R": -3.0,
-              "max_consec_loss": 2,
-              "max_consec_win": 0
-            },
-            "best_other_30d": {
-              "n": 23,
-              "wins": 11,
-              "losses": 12,
-              "flats": 0,
-              "win_rate": 47.8,
-              "total_R": 5.798,
-              "avg_R": 0.252,
-              "median_R": -1.0,
-              "gross_win_R": 17.8,
-              "gross_loss_R": 12.0,
-              "profit_factor": 1.483,
-              "avg_win_R": 1.618,
-              "avg_loss_R": 1.0,
-              "payoff": 1.618,
-              "max_dd_R": -2.0,
-              "max_consec_loss": 0,
-              "max_consec_win": 1
-            }
-          }
-        },
-        {
-          "dim": "ticker",
-          "severity": "high",
-          "title": "BTC-USD is a persistent drag (PF=0.324, -3.4R)",
-          "detail": "7d BTC-USD: n=6, PF=0.324, -3.4R, WR 16.7%. 30d best other ticker: PF=1.483 over n=23. Concentrating on the stronger instrument should lift the blend.",
-          "metric": {
-            "ticker_7d": {
-              "n": 6,
-              "wins": 1,
-              "losses": 5,
-              "flats": 0,
-              "win_rate": 16.7,
-              "total_R": -3.382,
-              "avg_R": -0.564,
-              "median_R": -1.0,
-              "gross_win_R": 1.62,
-              "gross_loss_R": 5.0,
-              "profit_factor": 0.324,
-              "avg_win_R": 1.618,
-              "avg_loss_R": 1.0,
-              "payoff": 1.618,
-              "max_dd_R": -5.0,
-              "max_consec_loss": 5,
-              "max_consec_win": 0
-            },
-            "best_other_30d": {
-              "n": 23,
-              "wins": 11,
-              "losses": 12,
-              "flats": 0,
-              "win_rate": 47.8,
-              "total_R": 5.798,
-              "avg_R": 0.252,
-              "median_R": -1.0,
-              "gross_win_R": 17.8,
-              "gross_loss_R": 12.0,
-              "profit_factor": 1.483,
-              "avg_win_R": 1.618,
-              "avg_loss_R": 1.0,
-              "payoff": 1.618,
-              "max_dd_R": -2.0,
-              "max_consec_loss": 0,
-              "max_consec_win": 1
+            "buckets": {
+              "A": {
+                "n": 3,
+                "profit_factor": 0.0,
+                "total_R": -3.0
+              }
             }
           }
         }
       ],
       "llm": {
         "grade": "C",
-        "confidence": 45,
-        "diagnosis": "LONG side is structurally unprofitable (7d PF=0.303 n=19, 30d PF=0.639 n=53) while SHORT works (30d PF=1.271 n=50); weight=1.3 over-amplifies during drawdown",
-        "reason": "Halve weight to cap exposure to bleeding LONG signals during drawdown; cannot filter direction/ticker directly with live params",
+        "confidence": 28,
+        "diagnosis": "\u53ef\u78ba\u8a8d\u7684\u662f 7d \u6a23\u672c\u904e\u8584\uff0c\u4e14 7d/30d \u8ca0\u7e3e\u8207 all-time \u6b63\u7e3e\u885d\u7a81\uff0c\u8cc7\u6599\u4e0d\u8db3\u4ee5\u5b9a\u4f4d\u53c3\u6578\u6839\u56e0\u3002",
+        "reason": "7d/30d \u8207 all-time \u8a0a\u865f\u76f8\u53cd\uff0c\u4e14\u7121 weight \u5c0d\u7167\uff1b\u76ee\u524d\u8abf\u6b0a\u7f3a\u4e4f\u8b49\u64da\u3002",
         "issues": [
-          "LONG direction bleeds -11.15R (7d) and -13.73R (30d); SHORT contributes +4.94R / +7.60R \u2014 direction-specific edge, not setup-specific",
-          "BTC-USD and M2K=F each lost -3.38R at PF=0.324 (7d) while MES=F gained +4.09R at PF=2.022 \u2014 ticker concentration drag",
-          "Dead params `min_strength`/`resample_tf` block surgical direction/ticker filtering; weight is the only runtime lever"
+          "7d \u50c5 3 \u7b46\u300130d \u50c5 7 \u7b46\uff1b\u8fd1\u671f\u7d50\u679c\u53ef\u9760\u5ea6\u6709\u9650\uff0c7d \u5c24\u5176\u5c6c anecdote\u3002",
+          "30d \u7e3d\u8a08 -4.38R\u3001PF 0.27\uff0c\u4f46 all-time n=180\u3001PF 1.521\u3001+47.91R\uff0c\u8de8\u7a97\u53e3\u8a0a\u865f\u76f8\u53cd\u3002",
+          "\u65b9\u5411\u3001grade \u8207 ticker \u6876\u5747\u7f3a\u4e4f n\u22655 \u4e14\u6709 all-time \u540c\u5411\u9a57\u8b49\u7684\u53ef\u7528\u62c6\u5206\uff1b\u4ea6\u7121\u4e0d\u540c weight \u7684\u5c0d\u7167\u7d50\u679c\u3002"
         ],
-        "param_rationale": "Cutting weight from 1.3 to 0.7 scales 7d loss from -6.20R to ~-3.34R and 30d from -6.13R to ~-3.30R; preserves SHORT edge while limiting LONG damage; all-time +27.86R still positive at ~+15R",
-        "evidence_strength": "moderate",
+        "param_rationale": "\u7dad\u6301 weight=0.6\uff1ball-time \u6b63 expectancy \u652f\u6301\u4fdd\u7559\u7b56\u7565\uff0c\u4f46\u8fd1\u671f\u6a23\u672c\u4e0d\u8db3\uff0c\u7121\u6cd5\u8b49\u660e\u8abf\u9ad8\u6216\u8abf\u4f4e\u6b0a\u91cd\u6703\u6539\u5584\u7d50\u679c\u3002",
+        "evidence_strength": "weak",
         "suggested_params": {
-          "weight": 0.5
+          "weight": 0.4
         },
         "n_samples": 3,
         "n_ok": 3,
         "conf_samples": [
-          55,
-          58,
-          61
+          28,
+          28,
+          40
         ],
-        "conf_spread": 6,
+        "conf_spread": 12,
         "param_samples": [
-          0.8,
-          0.7,
-          0.5
+          0.5,
+          0.4
         ],
-        "param_agreement": 0.33,
-        "confidence_capped_reason": "proposal not stable across samples ([0.5, 0.7, 0.8]), confidence capped at 45"
+        "param_agreement": 0.5
       },
       "samples": [
         {
           "grade": "C",
-          "confidence": 55,
-          "diagnosis": "Direction-specific edge: LONG side bleeds persistently (7d PF 0.303, 30d PF 0.639) while SHORT wins (7d PF 1.618, 30d PF 1.271); weight can only dampen exposure, not filter direction.",
+          "confidence": 28,
+          "diagnosis": "\u53ef\u78ba\u8a8d\u7684\u662f 7d \u6a23\u672c\u904e\u8584\uff0c\u4e14 7d/30d \u8ca0\u7e3e\u8207 all-time \u6b63\u7e3e\u885d\u7a81\uff0c\u8cc7\u6599\u4e0d\u8db3\u4ee5\u5b9a\u4f4d\u53c3\u6578\u6839\u56e0\u3002",
           "issues": [
-            "LONG direction is persistent drag across both 7d (-11.15R) and 30d (-13.73R); SHORT direction is the actual edge",
-            "BTC-USD (7d PF 0.324, 30d PF 0.755) and M2K=F (7d PF 0.324, 30d PF 0.647) are consistent losers",
-            "B-grade signals losing badly (7d PF 0.647, -7.06R) while A-grade profitable (7d PF 1.214, +0.85R); weight cannot filter by grade",
-            "n<5 buckets (70-79 conf n=3) are anecdotal and skipped"
+            "7d \u50c5 3 \u7b46\u300130d \u50c5 7 \u7b46\uff1b\u8fd1\u671f\u7d50\u679c\u53ef\u9760\u5ea6\u6709\u9650\uff0c7d \u5c24\u5176\u5c6c anecdote\u3002",
+            "30d \u7e3d\u8a08 -4.38R\u3001PF 0.27\uff0c\u4f46 all-time n=180\u3001PF 1.521\u3001+47.91R\uff0c\u8de8\u7a97\u53e3\u8a0a\u865f\u76f8\u53cd\u3002",
+            "\u65b9\u5411\u3001grade \u8207 ticker \u6876\u5747\u7f3a\u4e4f n\u22655 \u4e14\u6709 all-time \u540c\u5411\u9a57\u8b49\u7684\u53ef\u7528\u62c6\u5206\uff1b\u4ea6\u7121\u4e0d\u540c weight \u7684\u5c0d\u7167\u7d50\u679c\u3002"
           ],
-          "reason": "Reduce weight to limit loss exposure while LONG-direction drag persists; SHORT/MES=F edge preserved at lower sizing.",
-          "suggested_params": {
-            "weight": 0.8
-          },
-          "param_rationale": "Cutting weight from 1.3 to 0.8 (~38% reduction) shrinks bleeding LONG-trade contributions by ~38% while still capturing the profitable SHORT (PF 1.618) and MES=F (PF 2.022) edges. Larger cuts would sacrifice the SHORT alpha; full restoration to 1.3 would re-amplify the documented LONG drag.",
-          "evidence_strength": "moderate",
-          "_attempts": 2
+          "reason": "7d/30d \u8207 all-time \u8a0a\u865f\u76f8\u53cd\uff0c\u4e14\u7121 weight \u5c0d\u7167\uff1b\u76ee\u524d\u8abf\u6b0a\u7f3a\u4e4f\u8b49\u64da\u3002",
+          "suggested_params": {},
+          "param_rationale": "\u7dad\u6301 weight=0.6\uff1ball-time \u6b63 expectancy \u652f\u6301\u4fdd\u7559\u7b56\u7565\uff0c\u4f46\u8fd1\u671f\u6a23\u672c\u4e0d\u8db3\uff0c\u7121\u6cd5\u8b49\u660e\u8abf\u9ad8\u6216\u8abf\u4f4e\u6b0a\u91cd\u6703\u6539\u5584\u7d50\u679c\u3002",
+          "evidence_strength": "weak",
+          "_attempts": 1
         },
         {
           "grade": "C",
-          "confidence": 58,
-          "diagnosis": "LONG side is structurally unprofitable (7d PF=0.303 n=19, 30d PF=0.639 n=53) while SHORT works (30d PF=1.271 n=50); weight=1.3 over-amplifies during drawdown",
+          "confidence": 40,
+          "diagnosis": "Recent 7d/30d drawdown (-3R/-4.4R, 0%/14% WR) is a sharp departure from all-time +47.91R at PF=1.52; n is too thin to diagnose, but losses cluster in low-confidence (<70) signals and appear to be 1R stop-outs, suggesting regime-specific divergence failure rather than broken edge.",
           "issues": [
-            "LONG direction bleeds -11.15R (7d) and -13.73R (30d); SHORT contributes +4.94R / +7.60R \u2014 direction-specific edge, not setup-specific",
-            "BTC-USD and M2K=F each lost -3.38R at PF=0.324 (7d) while MES=F gained +4.09R at PF=2.022 \u2014 ticker concentration drag",
-            "Dead params `min_strength`/`resample_tf` block surgical direction/ticker filtering; weight is the only runtime lever"
+            "7d sample is anecdotal (n=3) \u2014 cannot statistically prove decay, but coincident with n=7 in 30d showing longest losing streak of 5",
+            "All 7d (and all direction slices) are <70 confidence signals uniformly losing \u2014 consistent with low-conf divergence signals failing in current regime",
+            "SHORT direction 30d n=3 PF=0.000 is anecdotal but all-stop-out pattern matches low-conviction chops; not enough n to filter without risking overfit",
+            "Only `weight` is live; `resample_tf=15min` and `min_strength` are dead config \u2014 cannot act on them",
+            "Bars-held median 10 with n_le_2=1 indicates stops firing rather than time exits, so payoff 7d=0.0 (no winners) is mechanical, not configuration"
           ],
-          "reason": "Halve weight to cap exposure to bleeding LONG signals during drawdown; cannot filter direction/ticker directly with live params",
-          "suggested_params": {
-            "weight": 0.7
-          },
-          "param_rationale": "Cutting weight from 1.3 to 0.7 scales 7d loss from -6.20R to ~-3.34R and 30d from -6.13R to ~-3.30R; preserves SHORT edge while limiting LONG damage; all-time +27.86R still positive at ~+15R",
-          "evidence_strength": "moderate",
-          "_attempts": 2
-        },
-        {
-          "grade": "C",
-          "confidence": 61,
-          "diagnosis": "Recent underperformance is concentrated in LONG trades and non-MES tickers, while the only live control can reduce exposure but cannot remove those segments.",
-          "issues": [
-            "LONG loses in both recent windows: PF 0.303/-11.15R over 7d and PF 0.639/-13.73R over 30d.",
-            "SHORT is profitable in both windows: PF 1.618/+4.94R over 7d and PF 1.271/+7.60R over 30d.",
-            "MES is the only ticker profitable in both windows; all-time direction and weight-sensitivity data are unavailable."
-          ],
-          "reason": "Cuts recent loss and drawdown exposure, but also scales back profitable SHORT and MES trades.",
+          "reason": "Lower weight further to cap drawdown while preserving eventual recovery tail; smallest step from current 0.6.",
           "suggested_params": {
             "weight": 0.5
           },
-          "param_rationale": "Use the allowed floor as a temporary risk cap because both recent windows are negative; the positive all-time result and absent weight-sweep data argue against treating it as optimal.",
-          "evidence_strength": "moderate",
-          "_attempts": 2
+          "param_rationale": "Live weight already defensive at 0.6 with -5R 30d maxDD vs all-time +47.91R PF 1.52. Reducing to 0.5 cuts marginal exposure ~17% during the 5-trade losing streak without disabling a historically profitable edge (180 trades, WR 48.9%). Smallest meaningful step; 0.4 would be premature without regime confirmation.",
+          "evidence_strength": "weak",
+          "_attempts": 1
+        },
+        {
+          "grade": "C",
+          "confidence": 28,
+          "diagnosis": "RSI-Div is in a severe recent drawdown (7d 0/3 losses, 30d PF=0.27 WR=14.3%) despite a strong all-time track record (n=180 PF=1.52), so allocation should be trimmed to limit further bleed until the streak breaks.",
+          "issues": [
+            "7d sample thin (n=3) and all 3 trades hit full -1R stop, maxDD -3R",
+            "30d PF=0.27 WR=14.3% confirms the 7d weakness is not noise \u2014 same direction in both recent windows",
+            "All 7d signals had confidence <70 and all lost; low-conviction entries are dragging",
+            "30d SHORT direction is 0/3 with PF=0.0; MGC=F is 0/3 with PF=0.0 \u2014 but neither bucket clears n>=5 to act as a filter",
+            "All-time PF=1.52 over 180 trades is strong, so this reads as a drawdown within a profitable strategy, not a broken edge",
+            "Only `weight` is a live lever; direction/ticker/confidence filters cannot be applied at runtime"
+          ],
+          "reason": "Halve live allocation to cap drawdown while all-time expectancy (PF 1.52) keeps the strategy in the rotation for a rebound.",
+          "suggested_params": {
+            "weight": 0.4
+          },
+          "param_rationale": "0.6 \u2192 0.4 is a 33% allocation cut, the smallest meaningful step down that materially shrinks risk per signal given 30d PF=0.27; not lower (e.g. 0.3) because all-time edge suggests full disable is premature, and not 0.5 because the 7d 0% WR demands a more decisive trim than a marginal nudge.",
+          "evidence_strength": "weak",
+          "_attempts": 1
         }
       ]
     },
@@ -8664,141 +11322,6 @@
           "reason": "Recent evidence is anecdotal and longer aggregates remain positive; no weight-sensitivity data supports changing 0.7.",
           "suggested_params": {},
           "param_rationale": "Keep weight at 0.7 because the recent loss is isolated and no alternative weight is shown to improve the modest positive aggregate edge or drawdown.",
-          "evidence_strength": "weak",
-          "_attempts": 1
-        }
-      ]
-    },
-    "RSI-Div": {
-      "deterministic_issues": [
-        {
-          "dim": "sample",
-          "severity": "high",
-          "title": "7d sample too thin (n=3)",
-          "detail": "Only 3 trades in the 7d window. 30d n=7, all-time n=180. Per-strategy 7d conclusions are statistically unreliable; base any param change on the 30d/all-time evidence instead.",
-          "metric": {
-            "n_7d": 3,
-            "n_30d": 7,
-            "n_all": 180
-          }
-        },
-        {
-          "dim": "direction",
-          "severity": "low",
-          "title": "No actionable direction split in 7d \u2014 dimension checked, nothing to filter on",
-          "detail": "7d direction buckets: LONG n=2 PF=0.0 R=-2.0R; SHORT n=1 PF=0.0 R=-1.0R. No bucket clears the significance threshold (n\u22655 and PF<0.8 for a drag, or PF\u22651.1 elsewhere for a keeper), so no filter is proposed on this dimension. It is reported so the dimension is accounted for.",
-          "metric": {
-            "buckets": {
-              "LONG": {
-                "n": 2,
-                "profit_factor": 0.0,
-                "total_R": -2.0
-              },
-              "SHORT": {
-                "n": 1,
-                "profit_factor": 0.0,
-                "total_R": -1.0
-              }
-            }
-          }
-        },
-        {
-          "dim": "grade",
-          "severity": "low",
-          "title": "No actionable grade split in 7d \u2014 dimension checked, nothing to filter on",
-          "detail": "7d grade buckets: A n=3 PF=0.0 R=-3.0R. No bucket clears the significance threshold (n\u22655 and PF<0.8 for a drag, or PF\u22651.1 elsewhere for a keeper), so no filter is proposed on this dimension. It is reported so the dimension is accounted for.",
-          "metric": {
-            "buckets": {
-              "A": {
-                "n": 3,
-                "profit_factor": 0.0,
-                "total_R": -3.0
-              }
-            }
-          }
-        }
-      ],
-      "llm": {
-        "grade": "C",
-        "confidence": 28,
-        "diagnosis": "\u53ef\u78ba\u8a8d\u7684\u662f 7d \u6a23\u672c\u904e\u8584\uff0c\u4e14 7d/30d \u8ca0\u7e3e\u8207 all-time \u6b63\u7e3e\u885d\u7a81\uff0c\u8cc7\u6599\u4e0d\u8db3\u4ee5\u5b9a\u4f4d\u53c3\u6578\u6839\u56e0\u3002",
-        "reason": "7d/30d \u8207 all-time \u8a0a\u865f\u76f8\u53cd\uff0c\u4e14\u7121 weight \u5c0d\u7167\uff1b\u76ee\u524d\u8abf\u6b0a\u7f3a\u4e4f\u8b49\u64da\u3002",
-        "issues": [
-          "7d \u50c5 3 \u7b46\u300130d \u50c5 7 \u7b46\uff1b\u8fd1\u671f\u7d50\u679c\u53ef\u9760\u5ea6\u6709\u9650\uff0c7d \u5c24\u5176\u5c6c anecdote\u3002",
-          "30d \u7e3d\u8a08 -4.38R\u3001PF 0.27\uff0c\u4f46 all-time n=180\u3001PF 1.521\u3001+47.91R\uff0c\u8de8\u7a97\u53e3\u8a0a\u865f\u76f8\u53cd\u3002",
-          "\u65b9\u5411\u3001grade \u8207 ticker \u6876\u5747\u7f3a\u4e4f n\u22655 \u4e14\u6709 all-time \u540c\u5411\u9a57\u8b49\u7684\u53ef\u7528\u62c6\u5206\uff1b\u4ea6\u7121\u4e0d\u540c weight \u7684\u5c0d\u7167\u7d50\u679c\u3002"
-        ],
-        "param_rationale": "\u7dad\u6301 weight=0.6\uff1ball-time \u6b63 expectancy \u652f\u6301\u4fdd\u7559\u7b56\u7565\uff0c\u4f46\u8fd1\u671f\u6a23\u672c\u4e0d\u8db3\uff0c\u7121\u6cd5\u8b49\u660e\u8abf\u9ad8\u6216\u8abf\u4f4e\u6b0a\u91cd\u6703\u6539\u5584\u7d50\u679c\u3002",
-        "evidence_strength": "weak",
-        "suggested_params": {
-          "weight": 0.4
-        },
-        "n_samples": 3,
-        "n_ok": 3,
-        "conf_samples": [
-          28,
-          28,
-          40
-        ],
-        "conf_spread": 12,
-        "param_samples": [
-          0.5,
-          0.4
-        ],
-        "param_agreement": 0.5
-      },
-      "samples": [
-        {
-          "grade": "C",
-          "confidence": 28,
-          "diagnosis": "\u53ef\u78ba\u8a8d\u7684\u662f 7d \u6a23\u672c\u904e\u8584\uff0c\u4e14 7d/30d \u8ca0\u7e3e\u8207 all-time \u6b63\u7e3e\u885d\u7a81\uff0c\u8cc7\u6599\u4e0d\u8db3\u4ee5\u5b9a\u4f4d\u53c3\u6578\u6839\u56e0\u3002",
-          "issues": [
-            "7d \u50c5 3 \u7b46\u300130d \u50c5 7 \u7b46\uff1b\u8fd1\u671f\u7d50\u679c\u53ef\u9760\u5ea6\u6709\u9650\uff0c7d \u5c24\u5176\u5c6c anecdote\u3002",
-            "30d \u7e3d\u8a08 -4.38R\u3001PF 0.27\uff0c\u4f46 all-time n=180\u3001PF 1.521\u3001+47.91R\uff0c\u8de8\u7a97\u53e3\u8a0a\u865f\u76f8\u53cd\u3002",
-            "\u65b9\u5411\u3001grade \u8207 ticker \u6876\u5747\u7f3a\u4e4f n\u22655 \u4e14\u6709 all-time \u540c\u5411\u9a57\u8b49\u7684\u53ef\u7528\u62c6\u5206\uff1b\u4ea6\u7121\u4e0d\u540c weight \u7684\u5c0d\u7167\u7d50\u679c\u3002"
-          ],
-          "reason": "7d/30d \u8207 all-time \u8a0a\u865f\u76f8\u53cd\uff0c\u4e14\u7121 weight \u5c0d\u7167\uff1b\u76ee\u524d\u8abf\u6b0a\u7f3a\u4e4f\u8b49\u64da\u3002",
-          "suggested_params": {},
-          "param_rationale": "\u7dad\u6301 weight=0.6\uff1ball-time \u6b63 expectancy \u652f\u6301\u4fdd\u7559\u7b56\u7565\uff0c\u4f46\u8fd1\u671f\u6a23\u672c\u4e0d\u8db3\uff0c\u7121\u6cd5\u8b49\u660e\u8abf\u9ad8\u6216\u8abf\u4f4e\u6b0a\u91cd\u6703\u6539\u5584\u7d50\u679c\u3002",
-          "evidence_strength": "weak",
-          "_attempts": 1
-        },
-        {
-          "grade": "C",
-          "confidence": 40,
-          "diagnosis": "Recent 7d/30d drawdown (-3R/-4.4R, 0%/14% WR) is a sharp departure from all-time +47.91R at PF=1.52; n is too thin to diagnose, but losses cluster in low-confidence (<70) signals and appear to be 1R stop-outs, suggesting regime-specific divergence failure rather than broken edge.",
-          "issues": [
-            "7d sample is anecdotal (n=3) \u2014 cannot statistically prove decay, but coincident with n=7 in 30d showing longest losing streak of 5",
-            "All 7d (and all direction slices) are <70 confidence signals uniformly losing \u2014 consistent with low-conf divergence signals failing in current regime",
-            "SHORT direction 30d n=3 PF=0.000 is anecdotal but all-stop-out pattern matches low-conviction chops; not enough n to filter without risking overfit",
-            "Only `weight` is live; `resample_tf=15min` and `min_strength` are dead config \u2014 cannot act on them",
-            "Bars-held median 10 with n_le_2=1 indicates stops firing rather than time exits, so payoff 7d=0.0 (no winners) is mechanical, not configuration"
-          ],
-          "reason": "Lower weight further to cap drawdown while preserving eventual recovery tail; smallest step from current 0.6.",
-          "suggested_params": {
-            "weight": 0.5
-          },
-          "param_rationale": "Live weight already defensive at 0.6 with -5R 30d maxDD vs all-time +47.91R PF 1.52. Reducing to 0.5 cuts marginal exposure ~17% during the 5-trade losing streak without disabling a historically profitable edge (180 trades, WR 48.9%). Smallest meaningful step; 0.4 would be premature without regime confirmation.",
-          "evidence_strength": "weak",
-          "_attempts": 1
-        },
-        {
-          "grade": "C",
-          "confidence": 28,
-          "diagnosis": "RSI-Div is in a severe recent drawdown (7d 0/3 losses, 30d PF=0.27 WR=14.3%) despite a strong all-time track record (n=180 PF=1.52), so allocation should be trimmed to limit further bleed until the streak breaks.",
-          "issues": [
-            "7d sample thin (n=3) and all 3 trades hit full -1R stop, maxDD -3R",
-            "30d PF=0.27 WR=14.3% confirms the 7d weakness is not noise \u2014 same direction in both recent windows",
-            "All 7d signals had confidence <70 and all lost; low-conviction entries are dragging",
-            "30d SHORT direction is 0/3 with PF=0.0; MGC=F is 0/3 with PF=0.0 \u2014 but neither bucket clears n>=5 to act as a filter",
-            "All-time PF=1.52 over 180 trades is strong, so this reads as a drawdown within a profitable strategy, not a broken edge",
-            "Only `weight` is a live lever; direction/ticker/confidence filters cannot be applied at runtime"
-          ],
-          "reason": "Halve live allocation to cap drawdown while all-time expectancy (PF 1.52) keeps the strategy in the rotation for a rebound.",
-          "suggested_params": {
-            "weight": 0.4
-          },
-          "param_rationale": "0.6 \u2192 0.4 is a 33% allocation cut, the smallest meaningful step down that materially shrinks risk per signal given 30d PF=0.27; not lower (e.g. 0.3) because all-time edge suggests full disable is premature, and not 0.5 because the 7d 0% WR demands a more decisive trim than a marginal nudge.",
           "evidence_strength": "weak",
           "_attempts": 1
         }
