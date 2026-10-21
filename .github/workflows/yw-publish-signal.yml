@@ -55,4 +55,8 @@ jobs:
           git config --global user.email "mavis@MiniMax"
           git add automation/reports/daily/ || true
           git commit -m "auto(yw): published signal $(date -u +%Y-%m-%d)" --allow-empty || true
+          # Rebase before pushing: other workflows commit to main every few
+          # minutes, so a push from a stale base is rejected as
+          # non-fast-forward and the published signal is silently lost.
+          git fetch origin main && git pull --rebase origin main || true
           git push origin main || true

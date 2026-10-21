@@ -167,8 +167,24 @@ jobs:
           git config --global user.name "Mavis bot"
           git config --global user.email "mavis@MiniMax"
           git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
+          # Never publish a file that does not parse. docs/dashboard-data.json
+          # is served directly by the public site, so a malformed file (a
+          # half-resolved merge, conflict markers) breaks the dashboard for
+          # everyone. Validate before staging, and skip the file if it is bad.
+          for f in docs/dashboard-data.json docs/charts-manifest.json docs/trades-manifest.json docs/rankings-manifest.json docs/llm-iterations-manifest.json; do
+            if [ -f "$f" ]; then
+              if ! python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$f" 2>/dev/null; then
+                echo "SKIP invalid JSON: $f"
+                git checkout --force origin/main -- "$f" 2>/dev/null || git rm --force -- "$f" 2>/dev/null || true
+              fi
+            fi
+          done
           git add docs/dashboard-data.json docs/charts-manifest.json docs/trades-manifest.json docs/rankings-manifest.json docs/llm-iterations-manifest.json docs/review.html automation/reports/llm_iteration/ || true
           git commit -m "auto(dashboard): daily web data update $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          # Rebase before pushing: the dashboard data is published straight
+          # to the public site, so a push rejected as non-fast-forward means
+          # the site keeps serving yesterday's data.
+          git fetch origin main && git pull --rebase origin main || true
           git push origin main || true
 
       - name: "Send final completion TG"
@@ -211,6 +227,13 @@ jobs:
           git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
           git add automation/reports/strategy_ranking/ || true
           git commit -m "auto(ranking): daily strategy PnL ranking + LLM iteration $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          # Rebase onto the remote tip before pushing. Other workflows commit
+          # to main every few minutes, so a push from a stale base is
+          # rejected as non-fast-forward — and the rejected push took the
+          # freshly generated ranking files down with it. `|| true` on the
+          # push used to hide this: the step went green and the ranking
+          # file for the day silently never reached main.
+          git fetch origin main && git pull --rebase origin main || true
           git push origin main || true
 
       - name: "Daily auto-push (catch-all: settlement + config + missing reports)"

@@ -22,7 +22,6 @@ import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
-import requests
 
 if "GITHUB_WORKSPACE" in os.environ:
     REPO = Path(os.environ["GITHUB_WORKSPACE"])
@@ -49,26 +48,14 @@ AGENTS = [
 
 
 def call_minimax(prompt: str, system: str = "") -> str:
-    api_key = os.environ.get("MINIMAX_API_KEY", "")
-    if not api_key:
-        return ""
-    r = requests.post(
-        "https://api.minimax.io/v1/chat/completions",
-        headers={"Authorization": f"Bearer {api_key}"},
-        json={
-            "model": "MiniMax-M3",
-            # 1024 was not enough once the model wrote a <think> block first:
-            # the 2026-10-15 CRT answer never reached GRADE because the
-            # reasoning consumed the whole budget.
-            "max_tokens": 2048,
-            "temperature": 0.2,
-            "messages": [
-                {"role": "system", "content": system or "你是策略 sub-agent。直接輸出 GRADE/CONFIDENCE/REASON + suggested_params。"},
-                {"role": "user", "content": prompt},
-            ],
-        },
-        timeout=45,
-    )
+    """One LLM call, through the shared client.
+
+    This used to fire a requests.post purely to read its status code, throw
+    the body away, and then make a second call through chat() — doubling the
+    token spend for every candidate signal, while the token plan is the
+    binding constraint. The shared client returns (text, error) so the real
+    API error is surfaced instead of being swallowed.
+    """
     return chat(prompt, system=system)[0]
 
 

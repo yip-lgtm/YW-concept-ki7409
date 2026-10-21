@@ -332,7 +332,11 @@ def main():
     # Write shared state file so live_scan.py can short-circuit when Analyst degraded.
     # Trip condition: charts_total ≥ 5 AND failure_rate > 0.5 (≥50% chart generation failed).
     # Recovery: charts_failed/charts_total < 0.2 increments counter; ≥3 consecutive clears.
-    from datetime import datetime, timezone, timedelta
+    # NOTE: do not re-import datetime here. A function-local `from datetime import
+    # ...` makes `datetime` a local variable for the whole of main(), so the
+    # earlier `datetime.now(HKT)` on the first line of main() raised
+    # UnboundLocalError and killed the entire Analyst power. The module-level
+    # import at the top of the file already provides datetime/timezone/timedelta.
     breaker_path = Path(__file__).parent.parent / "reports/live_scan/circuit_breaker.json"
     cb_state = {}
     try:

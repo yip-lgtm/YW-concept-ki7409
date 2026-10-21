@@ -53,5 +53,9 @@ jobs:
             echo "No README changes"
           else
             git commit -m "docs(readme): weekly strategy report $(date -u +%Y-%m-%d)"
+            # Rebase before pushing: other workflows commit to main every few
+            # minutes, so a push from a stale base is rejected as
+            # non-fast-forward and the README update is silently lost.
+            git fetch origin main && git pull --rebase origin main || true
             git push origin main || true
           fi
