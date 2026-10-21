@@ -6,6 +6,7 @@ performance and queries MiniMax-M3 for optimization suggestions specific to
 that strategy's behavior. Suggestions are logged + applied (if high confidence).
 """
 from __future__ import annotations
+from llm_client import chat  # noqa: E402
 import os
 import sys
 import json
@@ -60,7 +61,7 @@ def call_minimax(prompt: str, system: str = "") -> str:
         },
         timeout=45,
     )
-    return r.json()["choices"][0]["message"]["content"]
+    return chat(prompt, system=system)[0]
 
 
 def strip_think(content: str) -> str:

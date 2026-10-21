@@ -276,7 +276,10 @@ SUGGESTED_PARAMS: NONE
         )
         if r.status_code != 200:
             return {"grade": "?", "confidence": 0, "diagnosis": f"HTTP {r.status_code}", "suggested_params": {}, "auto_apply": False}
-        content = r.json()["choices"][0]["message"]["content"]
+        content, _llm_err = chat(prompt, system=system)
+        if _llm_err:
+            content = ""
+
         if "</think>" in content:
             content = content.split("</think>")[-1].strip()
         
@@ -410,6 +413,7 @@ def send_tg_summary(results: list):
 
 
 sys.path.insert(0, str(REPO / "automation/scripts"))
+from llm_client import chat  # noqa: E402
 from audit import log_action
 
 def main():

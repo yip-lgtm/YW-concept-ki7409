@@ -186,7 +186,10 @@ If auto-fixable, suggest the exact change. If not, say "MANUAL REVIEW: <reason>"
             timeout=30,
         )
         if r.status_code == 200:
-            content = r.json()["choices"][0]["message"]["content"]
+            content, _llm_err = chat(prompt, system=system)
+            if _llm_err:
+                content = ""
+
             return content
         return f"LLM error: HTTP {r.status_code}"
     except Exception as e:
@@ -298,6 +301,7 @@ def check_supervisor_health() -> dict:
 
 
 sys.path.insert(0, str(REPO / "automation/scripts"))
+from llm_client import chat  # noqa: E402
 from audit import log_action
 
 def main():

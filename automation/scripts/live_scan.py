@@ -1302,7 +1302,10 @@ Detector result: {json.dumps(det_summary, default=str)[:500]}
         )
         if r.status_code != 200:
             return {"grade": "?", "confidence": 0, "reason": f"http {r.status_code}"}
-        content = r.json()["choices"][0]["message"]["content"]
+        content, _llm_err = chat(prompt, system=system)
+        if _llm_err:
+            content = ""
+
         # Strip thinking
         if "</think>" in content:
             content = content.split("</think>")[-1].strip()
@@ -1382,6 +1385,7 @@ def publish_ai_trader(signal: dict) -> int:
 
 
 sys.path.insert(0, str(REPO / "automation/scripts"))
+from llm_client import chat  # noqa: E402
 from audit import log_action
 
 # Auto-generate chart for each signal

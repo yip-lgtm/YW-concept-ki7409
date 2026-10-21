@@ -44,6 +44,7 @@ GUARDRAILS (numeric, not LLM-judged):
 Schedule: runs right after daily_settlement.py in strategy-ranking.yml.
 """
 from __future__ import annotations
+from llm_client import chat  # noqa: E402
 import os
 import sys
 import json
@@ -223,7 +224,7 @@ def call_minimax(prompt: str, system: str) -> str:
             },
             timeout=60,
         )
-        return r.json()["choices"][0]["message"]["content"]
+        return chat(prompt, system=system)[0]
     except Exception as e:
         log(f"  LLM call failed: {e}")
         return ""

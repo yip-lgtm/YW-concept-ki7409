@@ -119,6 +119,21 @@ STRATEGY_CHARACTER = {
 }
 
 
+def _extract_content(r):
+    """Pull completion text without raising KeyError on an error payload."""
+    try:
+        payload = r.json()
+    except Exception:
+        return ""
+    if not isinstance(payload, dict):
+        return ""
+    choices = payload.get("choices")
+    if not choices:
+        return ""
+    try:
+        return (choices[0].get("message", {}).get("content") or "").strip()
+    except (AttributeError, IndexError, TypeError):
+        return ""
 def log(msg: str):
     print(f"[weight-opt] {msg}", flush=True)
 
@@ -331,7 +346,13 @@ REASON: <max 15 words>"""
             },
             timeout=45,
         )
-        text = r.json()["choices"][0]["message"]["content"]
+        text = _extract_content(r)
+        if not text:
+            return {
+                "llm": "VETO",
+                "llm_reason": f"llm call failed (http {r.status_code})",
+                "llm_ok": False,
+            }
         m2 = re.search(r"VERDICT:\s*(AGREE|VETO)", text, re.IGNORECASE)
         rm = re.search(r"REASON:\s*(.+)", text)
         verdict = (m2.group(1).upper() if m2 else "AGREE")

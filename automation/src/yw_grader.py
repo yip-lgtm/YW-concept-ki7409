@@ -392,7 +392,12 @@ def grade_strategy(strategy_key: str, ticker: str) -> dict:
                 "reason": f"http {r.status_code}",
                 "summary": summary,
             }
-        content = r.json()["choices"][0]["message"]["content"].strip()
+        _pl = r.json()
+        _ch = _pl.get("choices") or []
+        content = (_ch[0].get("message", {}).get("content") or "").strip() \
+            if _ch else ""
+        if not content:
+            raise RuntimeError(f"no choices in response: {str(_pl)[:200]}")
     except Exception as e:
         return {
             "strategy": strategy_key,
@@ -446,7 +451,8 @@ def grade_strategy(strategy_key: str, ticker: str) -> dict:
                         timeout=45,
                     )
                     if retry_r.status_code == 200:
-                        rcontent = retry_r.json()["choices"][0]["message"]["content"].strip()
+                        _rc = (retry_r.json().get("choices") or [{}])[0]
+                        rcontent = (_rc.get("message", {}).get("content") or "").strip()
                         rm = re.search(r"GRADE:\s*([ABC])\s*\|\s*CONFIDENCE:\s*(\d+)\s*\|\s*REASON:\s*(.+?)(?:\n|$)", rcontent, re.IGNORECASE)
                         if rm:
                             return {
