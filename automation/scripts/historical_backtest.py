@@ -109,6 +109,32 @@ GRADE_B_MIN = 58
 MIN_CONF = 40          # LLM_MIN_CONF in live_scan.py
 
 
+def _fallback_normalize_direction(direction: str) -> str:
+    """Local copy of live_scan._normalize_direction, used until live_scan loads.
+
+    The live system normalises a detector's direction string before it
+    builds a signal. The backtest has to do the same, or it silently drops
+    every trade from the detectors that report "up"/"down" or
+    "bullish"/"bearish" — 3-Pushes, RSI-Div and CRT, which are the three
+    largest signal generators in the live system. Before this, those three
+    strategies produced ZERO trades in either backtest track, which made
+    the "second independent track" a test of five strategies and not nine.
+    """
+    if not direction:
+        return "unknown"
+    d = str(direction).strip().lower()
+    if d in ("long", "buy", "up", "bullish", "l"):
+        return "long"
+    if d in ("short", "sell", "down", "bearish", "s"):
+        return "short"
+    return "unknown"
+
+
+# Replaced by live_scan's own function once that module is loaded, so there
+# is a single source of truth for the mapping.
+NORMALIZE_DIRECTION = _fallback_normalize_direction
+
+
 def log(msg: str):
     print(f"[hist-bt] {datetime.now().strftime('%H:%M:%S')} {msg}", flush=True)
 
@@ -200,6 +226,11 @@ def build_trade(strategy: str, ticker: str, det: dict, df: pd.DataFrame,
                 idx: int, atr: float, tf: str = "1h") -> dict | None:
     """Turn a detector hit at bar `idx` into a synthetic trade."""
     direction = det.get("direction")
+    # The live system normalises the direction string here (up/down,
+    # bullish/bearish, buy/sell all become long/short). The backtest used
+    # to require the canonical form and dropped anything else, which
+    # discarded 100% of the 3-Pushes, RSI-Div and CRT trades.
+    direction = NORMALIZE_DIRECTION(direction)
     if direction not in ("long", "short"):
         return None
     grade, conf = grade_from_strength(det)
@@ -295,6 +326,10 @@ def main() -> int:
         "live_scan", str(REPO / "automation" / "scripts" / "live_scan.py"))
     ls = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(ls)
+
+    # Use the live system's own direction mapping from here on.
+    global NORMALIZE_DIRECTION
+    NORMALIZE_DIRECTION = ls._normalize_direction
 
     log("=" * 60)
     if args.mode == "deep5m":
