@@ -13,7 +13,11 @@ from typing import Literal
 from yw_indicators import compute_rsi, compute_ma
 
 
-def detect_crt(df_4h: pd.DataFrame, df_5m: pd.DataFrame) -> dict:
+def detect_crt(df_4h: pd.DataFrame, df_5m: pd.DataFrame,
+               max_raid_depth_pct: float | None = None,
+               mss_bars: int = 1,
+               use_last_raid: bool = False,
+               min_crt_range_pct: float | None = None) -> dict:
     """CRT Candle Range Theory (4H range → 5min execution).
 
     Bullish CRT:
@@ -22,6 +26,20 @@ def detect_crt(df_4h: pd.DataFrame, df_5m: pd.DataFrame) -> dict:
       3. Confirm with MSS-like (close above raid candle's High)
 
     Bearish CRT: symmetric.
+
+    The optional parameters are the levers the 13-month five-minute
+    history says matter. The defaults reproduce the original behaviour
+    exactly, so a live system that does not set them is unaffected.
+
+      max_raid_depth_pct  reject a raid that ran more than this far
+                          past the level, in percent of the level. A
+                          raid that reaches deep into the range is a
+                          chase, not a liquidity sweep.
+      mss_bars            how many bars after the raid may carry the
+                          reclaim. One bar is the strict original.
+      use_last_raid       consider the most recent raid instead of the
+                          first one in the window.
+      min_crt_range_pct   ignore 4H ranges narrower than this percent.
     """
     if df_4h.empty or len(df_4h) < 2 or df_5m.empty or len(df_5m) < 20:
         return {"present": False, "direction": "none"}
@@ -35,15 +53,31 @@ def detect_crt(df_4h: pd.DataFrame, df_5m: pd.DataFrame) -> dict:
     recent_5m = df_5m.tail(48)
     crt_range_pct = (crt_high - crt_low) / crt_low * 100
 
+    if min_crt_range_pct is not None and crt_range_pct < min_crt_range_pct:
+        return {"present": False, "direction": "none",
+                "crt_high": crt_high, "crt_low": crt_low,
+                "crt_range_pct": round(crt_range_pct, 2),
+                "details": f"4H range {crt_range_pct:.2f}% below {min_crt_range_pct}%"}
+
+    def _depth_ok(raid_low: float, level: float) -> bool:
+        if max_raid_depth_pct is None:
+            return True
+        if level <= 0:
+            return True
+        depth_pct = (level - raid_low) / level * 100.0
+        return depth_pct <= max_raid_depth_pct
+
     # Bullish: 5min dipped below crt_low then closed back above
     raids_low = recent_5m[recent_5m["Low"] < crt_low]
     if not raids_low.empty:
-        raid_idx = raids_low.index[0]
+        raid_idx = raids_low.index[-1] if use_last_raid else raids_low.index[0]
         raid_candle = recent_5m.loc[raid_idx]
-        # Confirm: next candle closes above raid candle's High (MSS)
-        if raid_idx != recent_5m.index[-1]:
+        if not _depth_ok(float(raid_candle["Low"]), crt_low):
+            pass  # too deep — a chase, not a sweep
+        elif raid_idx != recent_5m.index[-1]:
             after = recent_5m[recent_5m.index > raid_idx]
-            if not after.empty and after.iloc[0]["Close"] > raid_candle["High"]:
+            window = after.head(max(1, int(mss_bars)))
+            if not window.empty and float(window.iloc[0]["Close"]) > float(raid_candle["High"]):
                 return {
                     "present": True,
                     "direction": "bullish",
@@ -51,17 +85,20 @@ def detect_crt(df_4h: pd.DataFrame, df_5m: pd.DataFrame) -> dict:
                     "crt_high": crt_high,
                     "crt_low": crt_low,
                     "raid_low": float(raid_candle["Low"]),
-                    "mss_confirm": float(after.iloc[0]["Close"]),
-                    "details": f"掃 CRT-L {float(raid_candle['Low']):.2f} + MSS 收 {float(after.iloc[0]['Close']):.2f}",
+                    "mss_confirm": float(window.iloc[0]["Close"]),
+                    "details": f"掃 CRT-L {float(raid_candle['Low']):.2f} + MSS 收 {float(window.iloc[0]['Close']):.2f}",
                 }
 
     raids_high = recent_5m[recent_5m["High"] > crt_high]
     if not raids_high.empty:
-        raid_idx = raids_high.index[0]
+        raid_idx = raids_high.index[-1] if use_last_raid else raids_high.index[0]
         raid_candle = recent_5m.loc[raid_idx]
-        if raid_idx != recent_5m.index[-1]:
+        if not _depth_ok(float(raid_candle["High"]), crt_high):
+            pass  # too deep — a chase, not a sweep
+        elif raid_idx != recent_5m.index[-1]:
             after = recent_5m[recent_5m.index > raid_idx]
-            if not after.empty and after.iloc[0]["Close"] < raid_candle["Low"]:
+            window = after.head(max(1, int(mss_bars)))
+            if not window.empty and float(window.iloc[0]["Close"]) < float(raid_candle["Low"]):
                 return {
                     "present": True,
                     "direction": "bearish",
@@ -69,8 +106,8 @@ def detect_crt(df_4h: pd.DataFrame, df_5m: pd.DataFrame) -> dict:
                     "crt_high": crt_high,
                     "crt_low": crt_low,
                     "raid_high": float(raid_candle["High"]),
-                    "mss_confirm": float(after.iloc[0]["Close"]),
-                    "details": f"掃 CRT-H {float(raid_candle['High']):.2f} + MSS 收 {float(after.iloc[0]['Close']):.2f}",
+                    "mss_confirm": float(window.iloc[0]["Close"]),
+                    "details": f"掃 CRT-H {float(raid_candle['High']):.2f} + MSS 收 {float(window.iloc[0]['Close']):.2f}",
                 }
 
     return {

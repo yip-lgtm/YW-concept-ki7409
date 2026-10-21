@@ -1282,7 +1282,11 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
                 out["present"] = False
                 out["skip"] = "no 4h data"
                 return out
-            res = detect_crt(df_4h, df)
+            res = detect_crt(df_4h, df,
+                             max_raid_depth_pct=cfg.get("args", {}).get("max_raid_depth_pct"),
+                             mss_bars=cfg.get("args", {}).get("mss_bars", 1),
+                             use_last_raid=bool(cfg.get("args", {}).get("use_last_raid", False)),
+                             min_crt_range_pct=cfg.get("args", {}).get("min_crt_range_pct"))
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         else:
             res = {"present": False, "skip": "unknown"}
