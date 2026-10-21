@@ -1,35 +1,35 @@
 {
-  "ts": "2026-10-21T03:30:08.375015-04:00",
+  "ts": "2026-10-21T07:41:06.512136-04:00",
   "ticker": "MGC=F",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
-  "side": "bullish",
+  "side": "bearish",
   "swing": {
     "type": "c2_closure",
-    "side": "bullish",
-    "c2_high": 4143.89990234375,
-    "c2_low": 4124.0,
-    "c2_close": 4135.5,
-    "c2_eq": 4133.949951171875,
-    "c3_close": 4135.60009765625,
-    "swing_level": 4124.0,
-    "direction": "long"
+    "side": "bearish",
+    "c2_high": 4147.7998046875,
+    "c2_low": 4128.10009765625,
+    "c2_close": 4142.2998046875,
+    "c2_eq": 4137.949951171875,
+    "c3_close": 4150.10009765625,
+    "swing_level": 4147.7998046875,
+    "direction": "short"
   },
   "cisd": {
-    "confirmed": false,
-    "opposing_open": 4189.60009765625,
-    "series_length": 6,
-    "last_close": 4135.60009765625,
-    "reason": "no break"
+    "confirmed": true,
+    "opposing_open": 4180.5,
+    "series_length": 3,
+    "last_close": 4150.10009765625,
+    "reason": "cisd_short"
   },
-  "eq_respected": true,
+  "eq_respected": false,
   "d1_trend": {
-    "aligned": false,
+    "aligned": true,
     "trend": "downtrend",
-    "d1_close": 4135.60009765625,
-    "d1_ema50": 4242.8109832718665,
-    "d1_ema20": 4176.574296524584,
-    "reason": "D1 downtrend (counter-trend)"
+    "d1_close": 4150.10009765625,
+    "d1_ema50": 4252.400800523927,
+    "d1_ema20": 4186.655595794319,
+    "reason": "D1 downtrend"
   },
   "weekly_profile": {
     "profile": "unknown",
@@ -37,15 +37,14 @@
     "notes": ""
   },
   "daily_profile": {
-    "london_expanded": true,
-    "london_range": 27.7998046875,
-    "skip_ny": true
+    "london_expanded": false,
+    "skip_ny": false
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "CISD not confirmed; D1 counter-trend (downtrend); London expanded (skip NY)",
+  "reason": "EQ not respected",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
