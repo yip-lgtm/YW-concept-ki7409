@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-21T12:22:31.920982+00:00",
+  "timestamp": "2026-10-21T17:25:57.128349+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -11,8 +11,8 @@
   "ranking": {
     "component": "strategy-ranking",
     "issues": [],
-    "latest_file": "ranking_2026-10-19.md",
-    "latest_date": "2026-10-19"
+    "latest_file": "ranking_2026-10-21.md",
+    "latest_date": "2026-10-21"
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
@@ -73,21 +73,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 39598997759,
+          "id": 39643636758,
           "conclusion": "running",
-          "created_at": "2026-10-21T12:21:53Z",
+          "created_at": "2026-10-21T17:25:18Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 39584686851,
+          "id": 39625922207,
           "conclusion": "success",
-          "created_at": "2026-10-21T10:27:11Z",
+          "created_at": "2026-10-21T15:27:52Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 39577647055,
+          "id": 39621808423,
           "conclusion": "success",
-          "created_at": "2026-10-21T09:31:39Z",
+          "created_at": "2026-10-21T15:00:00Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -97,21 +97,21 @@
       "workflow": "strategy-ranking.yml",
       "runs": [
         {
-          "id": 39577720717,
+          "id": 39624915118,
           "conclusion": "success",
-          "created_at": "2026-10-21T09:32:13Z",
+          "created_at": "2026-10-21T15:21:38Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 39556352230,
+          "id": 39623977545,
           "conclusion": "success",
-          "created_at": "2026-10-21T06:35:26Z",
+          "created_at": "2026-10-21T15:15:24Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 39543506464,
+          "id": 39621902793,
           "conclusion": "success",
-          "created_at": "2026-10-21T04:20:37Z",
+          "created_at": "2026-10-21T15:00:36Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -143,20 +143,21 @@
     }
   ],
   "health": {
-    "issues": [
-      "ranking stale: 2 days old"
-    ],
-    "status": "warning",
-    "n_issues": 1
+    "issues": [],
+    "status": "ok",
+    "n_issues": 0
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 0,
+    "n_open": 5,
     "n_stale_24h": 0,
-    "issues": [],
-    "long_count": 0,
+    "issues": [
+      "All 5 positions LONG (correlated bull risk)",
+      "High total risk: $244"
+    ],
+    "long_count": 5,
     "short_count": 0,
-    "total_risk": 0.0,
+    "total_risk": 243.9657924107143,
     "deep_loss_positions": []
   }
 }
