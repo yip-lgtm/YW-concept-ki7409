@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-21T06:35:25.516706+00:00",
+  "timestamp": "2026-10-21T09:32:12.572227+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -73,21 +73,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
+          "id": 39577647055,
+          "conclusion": "running",
+          "created_at": "2026-10-21T09:31:39Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 39562900203,
+          "conclusion": "success",
+          "created_at": "2026-10-21T07:34:09Z",
+          "event": "schedule"
+        },
+        {
           "id": 39556288925,
           "conclusion": "success",
           "created_at": "2026-10-21T06:34:50Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 39549838476,
-          "conclusion": "success",
-          "created_at": "2026-10-21T05:29:23Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 39543437091,
-          "conclusion": "success",
-          "created_at": "2026-10-21T04:19:53Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -96,6 +96,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 39556352230,
+          "conclusion": "success",
+          "created_at": "2026-10-21T06:35:26Z",
+          "event": "workflow_dispatch"
+        },
         {
           "id": 39543506464,
           "conclusion": "success",
@@ -106,12 +112,6 @@
           "id": 39529111824,
           "conclusion": "success",
           "created_at": "2026-10-21T01:45:04Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 39514938810,
-          "conclusion": "success",
-          "created_at": "2026-10-20T23:25:38Z",
           "event": "workflow_dispatch"
         }
       ],
