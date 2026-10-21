@@ -103,6 +103,11 @@ python3 automation/scripts/historical_backtest.py --mode deep5m --deep-step 12 \
 
 # 1h track（Yahoo 180 日，CI 每晚跑）
 python3 automation/scripts/historical_backtest.py --days 180
+
+# 三條 track 對比（自動限制到同一標的、同一期間）
+python3 automation/scripts/compare_backtest_tracks.py
 ```
 
 資料：`automation/data/deep_history/BTCUSD/5m/`（115,200 bars，2025-09-15 → 2026-10-19）
+
+過程記錄同相關缺陷見 `docs/OPS-NOTES.md`。
