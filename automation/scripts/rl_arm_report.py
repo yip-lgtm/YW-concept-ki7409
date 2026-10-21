@@ -30,10 +30,24 @@ from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
-if "GITHUB_WORKSPACE" in os.environ:
-    REPO = Path(os.environ["GITHUB_WORKSPACE"])
-else:
-    REPO = Path("/workspace/YW-concept-ki7409")
+def _find_repo() -> Path:
+    """Locate the repo root without hard-coding one machine's path.
+
+    The hard-coded fallback used to be /workspace/YW-concept-ki7409. On any
+    other checkout the trades file was never found, so the A/B report
+    printed "no closed trades" and looked like a data problem when it was
+    really a path problem. CI sets GITHUB_WORKSPACE and is unaffected.
+    """
+    if "GITHUB_WORKSPACE" in os.environ:
+        return Path(os.environ["GITHUB_WORKSPACE"])
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        if (parent / "automation" / "reports").is_dir():
+            return parent
+    return Path("/workspace/YW-concept-ki7409")
+
+
+REPO = _find_repo()
 
 HKT = timezone(timedelta(hours=8))
 TRADES_FILE = REPO / "automation/reports/live_scan/trades.jsonl"

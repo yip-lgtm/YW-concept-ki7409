@@ -61,10 +61,27 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-if "GITHUB_WORKSPACE" in os.environ:
-    REPO = Path(os.environ["GITHUB_WORKSPACE"])
-else:
-    REPO = Path("/workspace/YW-concept-ki7409")
+def _find_repo() -> Path:
+    """Locate the repo root without hard-coding one machine's path.
+
+    The hard-coded fallback used to be /workspace/YW-concept-ki7409, which
+    only exists on the machine that first wrote it. Every other checkout
+    (a fresh clone, a differently named worktree, a second agent sandbox)
+    died with FileNotFoundError on live_scan.py before a single bar was
+    evaluated. Deriving the root from this file's own location is the same
+    trick live_scan.py already uses, and GITHUB_WORKSPACE still wins because
+    CI checks the repo out there.
+    """
+    if "GITHUB_WORKSPACE" in os.environ:
+        return Path(os.environ["GITHUB_WORKSPACE"])
+    here = Path(__file__).resolve()
+    for parent in here.parents:
+        if (parent / "automation" / "scripts").is_dir():
+            return parent
+    return Path("/workspace/YW-concept-ki7409")
+
+
+REPO = _find_repo()
 
 sys.path.insert(0, str(REPO / "automation" / "scripts"))
 sys.path.insert(0, str(REPO / "automation" / "src"))
