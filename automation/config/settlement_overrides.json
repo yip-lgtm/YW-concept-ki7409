@@ -2,31 +2,31 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 13,
-    "last_run": "2026-10-21T15:01:15.928216+00:00",
-    "last_applied": 0,
+    "runs": 14,
+    "last_run": "2026-10-21T15:16:00.370251+00:00",
+    "last_applied": 2,
     "last_log": [
       {
         "agent": "CRT",
-        "action": "error"
+        "action": "relax"
       },
       {
         "agent": "3-Pushes",
-        "action": "error"
+        "action": "relax"
       }
     ]
   },
   "3-Pushes": {
-    "last_revised": "2026-10-10T19:46:58.498549+00:00",
+    "last_revised": "2026-10-21T15:16:00.370251+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "Only min_trades blocks promotion; metrics far exceed all other thresholds, and sample of 6 is meaningful given exceptional performance.</think>",
-    "response_raw": "<think>The agent 3-Pushes is stuck in neutral zone for 3 days. Looking at the metrics:\n- PF = 3.236 (well above promote threshold of 1.0)\n- WR = 66.7% (above 50%)\n- RR = 1.618 (above 1.0)\n- n = 6 (below required minimum of 10)\n\nThe strategy is an exhaustion reversal counter-trend strategy. Typically such strategies have low WR but high RR. However, this agent actually has both high WR (66.7%) and high RR (1.618), with excellent PF of 3.236. The only blocker is sample size n=6, which is below the minimum 10.\n\nThe min_trades can be lowered to minimum 5 (hard limit). Since n=6 is close to 5, and the metrics are exceptional (PF 3.236, WR 66.7%, RR 1.618), this strategy clearly deserves promotion. We only need to relax 1 metric (min_trades from 10 to 5).\n\nWe can relax only min_trades. The other",
+    "reasoning": "...",
+    "response_raw": "<think>We need answer exact format JSON only? They specify REASONING sentence then JSON, technically not JSON only contradictory \"EXACT format (JSON only, no other text)\" but template includes reasoning outside JSON. Need follow exact. Need decide thresholds. Metrics exceed current all: PF 2.157 >1, WR57.1 >50, RR1.618 >1, n14>=10, so why stuck? Maybe actual global ranges? Agent-specific override perhaps thresholds within allowed. Need recommend. Strategy exhaustion reversal countertrend, WR can low if RR high. But actual WR 57.1 is not low, RR 1.618. PF strong. Could set thresholds perhaps PF 1.2, WR .40, RR 1.2, n 10. Which indicators relaxed? Compare global stated promote thresholds: PF >1, WR>50, RR>1, n>=10. Relax WR to .40 and maybe n to? But n already qualifies. Need \"max only relax",
     "overrides": {
       "min_PF": 1.0,
-      "min_WR": 0.5,
+      "min_WR": 0.45,
       "min_RR": 1.0,
-      "min_trades": 5
+      "min_trades": 10
     },
     "relaxed_count": 1,
     "tightened_count": 0
@@ -76,18 +76,18 @@
     "response_raw": "<think>The agent has zero trades essentially - n=7, PF=0.000, WR=0.0%, RR=0.000. This is terrible performance, not a high-RR/low-WR strategy that's just below threshold. The note says \"Multi-asset combined. Diversified, expect moderate both\" - meaning this should have moderate PF and moderate WR, not zero everything.\n\nThe data shows essentially no winning trades at all. This is bad performance, not a strategy that's being unfairly penalized by thresholds. The agent shouldn't be promoted.\n\nI should hold or tighten. The global thresholds are already quite lenient (PF>1.0, WR>50%, RR>1.0). The fact that this agent can't even meet those with n=7 trades suggests genuine poor performance, not a profile mismatch.\n\nAction: hold - the global thresholds are appropriate for this strategy type. The ag"
   },
   "CRT": {
-    "last_revised": "2026-10-13T20:59:53.806093+00:00",
+    "last_revised": "2026-10-21T15:16:00.370251+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "呢個係 high-RR range reversal strategy，RR=1.618 已經好強，WR 43.8% 配呢個 RR 已經好正常（breakeven WR ≈ 38.5%），唔應該用一般 strategy 嘅 50% 門檻去卡佢；只有 WR 需要放寬，PF/RR/n 都已經過關唔使動。",
-    "response_raw": "<think>\nLet me analyze this carefully.\n\nThe agent CRT is stuck in neutral zone for 3 days. Let me look at the metrics:\n\n- PF = 1.258 (global promote threshold > 1.0) — ALREADY PASSES\n- WR = 43.8% (global promote threshold > 50%) — FAILS (43.8% < 50%)\n- RR = 1.618 (global promote threshold > 1.0) — ALREADY PASSES\n- n = 16 (min required ≥ 10) — ALREADY PASSES\n\nSo only WR is blocking promotion. \n\nThe strategy personality is \"High-RR range reversal. WR naturally moderate. RR is the edge.\" — This is a classic high-RR / low-WR strategy. WR 43.8% with RR 1.618 is actually quite good. The expected WR for such a strategy would be lower than 50%.\n\nThe task says: can relax up to 2 metrics (not 3). And min_trades minimum is 5.\n\nSince only WR is failing, and the strategy is designed to be low-WR/high-R",
+    "reasoning": "... { ... }\" Yet \"JSON only, 唔好其他文字\" means perhaps need JSON only, but exact format says reasoning line. Could include \"REASONING\" key? But template explicitly line. Need decide. They demand exact for",
+    "response_raw": "<think>We need answer exact JSON only? They include REASONING line then object, but say JSON only and exact format. Contradiction: exact format has reasoning outside JSON making not valid JSON. Need likely follow specified exact format literally? \"REASONING: ... { ... }\" Yet \"JSON only, 唔好其他文字\" means perhaps need JSON only, but exact format says reasoning line. Could include \"REASONING\" key? But template explicitly line. Need decide. They demand exact format likely output:\nREASONING: ...\n{\n...\n}\nBut that's not JSON. Maybe \"JSON only\" means no prose beyond prescribed reasoning. Yet \"REASONING: <一句話>\" is prose. They may be testing format. Highest priority user. We need satisfy exact formatting as closely as possible, perhaps reasoning line then JSON. But system says no constraints. Need asse",
     "overrides": {
-      "min_PF": 1.0,
-      "min_WR": 0.4,
+      "min_PF": 0.8,
+      "min_WR": 0.3,
       "min_RR": 1.0,
       "min_trades": 10
     },
-    "relaxed_count": 1,
+    "relaxed_count": 2,
     "tightened_count": 0
   },
   "H-Pattern": {

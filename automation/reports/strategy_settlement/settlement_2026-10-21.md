@@ -22,7 +22,7 @@ For each agent, over the **14d** rolling window:
 |-------|-------|---|-----|-----|-----|----------------------------|
 | 3-Pushes | 2 | 14 | 2.16 | 57.1% | 1.62 | NOT promoted: — | NOT demoted: PF 2.16 > 1.0; WR 57.1% > 50.0%; RR 1.62 > 1.0 |
 | Two-Yang | 1 | 10 | 0.41 | 20.0% | 1.62 | NOT promoted: PF 0.41 ≤ 1.0; WR 20.0% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0; at min_level |
-| 50-20-Pullback | 2 | 76 | 0.94 | 36.8% | 1.62 | NOT promoted: PF 0.94 ≤ 1.0; WR 36.8% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0 |
+| 50-20-Pullback | 2 | 75 | 0.91 | 36.0% | 1.62 | NOT promoted: PF 0.91 ≤ 1.0; WR 36.0% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0 |
 | Stair | 3 | 32 | 0.97 | 37.5% | 1.62 | NOT promoted: PF 0.97 ≤ 1.0; WR 37.5% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0 |
 | B1-3in1 | 1 | 15 | 0.00 | 0.0% | 0.00 | NOT promoted: PF 0.00 ≤ 1.0; WR 0.0% ≤ 50.0%; RR 0.00 ≤ 1.0 | NOT demoted: at min_level |
 | CRT | 1 | 48 | 0.81 | 33.3% | 1.62 | NOT promoted: PF 0.81 ≤ 1.0; WR 33.3% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0; at min_level |
