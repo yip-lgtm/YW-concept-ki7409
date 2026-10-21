@@ -64,9 +64,9 @@
       "has_override": true,
       "thresholds_used": {
         "min_PF": 1.0,
-        "min_WR": 0.5,
+        "min_WR": 0.45,
         "min_RR": 1.0,
-        "min_trades": 5
+        "min_trades": 10
       },
       "metrics": {
         "n_trades": 14,
@@ -328,23 +328,23 @@
     },
     {
       "strategy": "CRT",
-      "level": 1,
+      "level": 2,
       "old_level": 1,
-      "new_level": 1,
-      "promoted": false,
+      "new_level": 2,
+      "promoted": true,
       "demoted": false,
       "at_max_level": false,
       "at_min_level": true,
-      "promote_ok": false,
+      "promote_ok": true,
       "demote_ok": false,
-      "eligible_for_promote": false,
-      "streak": 0,
+      "eligible_for_promote": true,
+      "streak": 2,
       "streak_required": 2,
       "blocked_reason": null,
       "has_override": true,
       "thresholds_used": {
-        "min_PF": 1.0,
-        "min_WR": 0.4,
+        "min_PF": 0.8,
+        "min_WR": 0.3,
         "min_RR": 1.0,
         "min_trades": 10
       },
@@ -560,5 +560,5 @@
       }
     }
   ],
-  "n_promoted": 0
+  "n_promoted": 1
 }
