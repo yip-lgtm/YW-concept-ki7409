@@ -1,0 +1,10 @@
+{
+  "_comment": "Strategies the live scanner does not run, with the evidence for each. Edit this file to put a strategy back. A pause means the strategy has no measurable edge at the resolution the live system trades — it is not a removal, and the detector code is untouched.",
+  "_measured_on": "Polygon deep history, real 5-minute bars, BTCUSD, 2025-09-15 to 2026-10-19, evaluated every 3 bars (15 minutes) which is the live scan cadence. PF intervals are Wilson 95% on the win rate, mapped through the book's fixed -1R / +1.618R payoff.",
+  "_source": "automation/scripts/track_period_effect.py",
+  "paused": {
+    "50-20-Pullback": "PF 0.81 [0.75, 0.88] on the last 35% of the history (n=2864) — significantly below 1. Live record agrees: PF 0.91 [0.80, 1.03] over 1014 closed trades, -$1729. It is the largest signal generator in the book, so pausing it removes most of the live activity, and that is the point: the activity has no edge at real five-minute granularity.",
+    "Kell-Cycle": "PF 0.86 [0.79, 0.92] on the last 35% (n=2859) and 0.91 [0.86, 0.97] over the whole history — significantly below 1 in both. Live: PF 1.09 [0.82, 1.45] over 194 trades, not significant. Five sub-setups with no confluence requirement means it fires constantly into noise.",
+    "3-Pushes": "PF 0.88 [0.80, 0.96] on the last 35% (n=2057) and 0.89 [0.83, 0.95] over the whole history — significantly below 1 in both. Live: PF 1.17 [0.96, 1.41] over 425 trades, not significant."
+  }
+}

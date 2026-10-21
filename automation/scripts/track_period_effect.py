@@ -46,6 +46,19 @@ from yw_indicators import (detect_3_pushes, detect_5020_pullback,
                            detect_two_yang_one_yin)
 from yw_indicators_extra import detect_crt, detect_kell_setups, detect_stair_pattern
 
+# The live system runs every detector through live_scan._normalize_detector
+# before it uses the result. Three of the detectors do not return a
+# top-level "present" at all — 50-20 returns {cross_type, trend, ...},
+# RSI-Div returns {type, strength, ...} and Kell-Cycle returns a dict of
+# sub-setups — so a raw call sees no signal and the strategy looks dead.
+# Using the live normaliser keeps the backtest and the live system in
+# agreement, which is the whole point of the exercise.
+_ls_spec = importlib.util.spec_from_file_location(
+    "live_scan", str(SCRIPTS / "live_scan.py"))
+_ls = importlib.util.module_from_spec(_ls_spec)
+_ls_spec.loader.exec_module(_ls)
+_normalize = _ls._normalize_detector
+
 T2_R = 1.618
 STOP_MULT = 1.6
 FORWARD_BARS = 96
@@ -54,13 +67,20 @@ TRAIN_FRACTION = 0.65
 STRATEGIES = ["CRT", "Two-Yang", "Stair", "50-20-Pullback", "3-Pushes",
               "Kell-Cycle", "H-Pattern", "RSI-Div"]
 
+# The detector function name live_scan dispatches on.
+_FN_OF = {"CRT": "crt", "Two-Yang": "two_yang", "Stair": "stair",
+          "50-20-Pullback": "pb_5020", "3-Pushes": "3_pushes",
+          "Kell-Cycle": "kell", "H-Pattern": "h_pattern", "RSI-Div": "rsi_div"}
+
 
 def detect_for(name, df5, df15, df1h, df4h):
     """One detector call, with the same frames live_scan gives it."""
     if name == "CRT":
         return detect_crt(df4h, df5)
     if name == "Two-Yang":
-        return detect_two_yang_one_yin(df15)
+        # Live passes the 5-minute frame; the "tf": "15m" in the config is
+        # not wired to anything for this strategy.
+        return detect_two_yang_one_yin(df5)
     if name == "Stair":
         return detect_stair_pattern(df5)
     if name == "50-20-Pullback":
@@ -107,12 +127,15 @@ def run(df, name, step, start, end):
             det = detect_for(name, w5, w15, w1, w4)
         except Exception:
             continue
-        if not det.get("present"):
+        present, direction, _strength = _normalize(_FN_OF[name], det)
+        if not present:
             continue
-        d = det.get("direction")
-        if d not in ("long", "short", "bullish", "bearish"):
+        # _normalize_detector leaves 3-Pushes' "up"/"down" alone; the live
+        # system maps them with _normalize_direction a second time. Both
+        # steps are needed to see every strategy.
+        direction = _ls._normalize_direction(direction)
+        if direction not in ("long", "short"):
             continue
-        direction = "long" if d in ("long", "bullish") else "short"
         a = float(atr[idx])
         if a <= 0:
             continue
@@ -158,6 +181,7 @@ def run(df, name, step, start, end):
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--step", type=int, default=3, help="cadence to evaluate (3 = live)")
+    ap.add_argument("--only", default=None, help="only this strategy")
     args = ap.parse_args()
 
     df = swp.load_deep()
@@ -170,6 +194,8 @@ def main() -> int:
     print(f"{'strategy':16} | {'early n':>8} {'PF':>6} {'CI':>15} {'R':>8} | "
           f"{'recent n':>9} {'PF':>6} {'CI':>15} {'R':>8}  verdict")
     for name in STRATEGIES:
+        if args.only and name != args.only:
+            continue
         e = run(df, name, args.step, *halves[0][1:])
         r = run(df, name, args.step, *halves[1][1:])
         if not e or not r:

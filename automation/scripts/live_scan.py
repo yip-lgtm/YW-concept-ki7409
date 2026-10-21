@@ -1114,6 +1114,27 @@ def open_live_position(sig, atr):
     return pos
 
 
+def load_paused_strategies() -> set:
+    """Strategies that are not run at all, with the reason kept next to them.
+
+    A pause is a statement that a strategy has no measurable edge at the
+    resolution the live system trades, not a permanent removal. The file
+    is one edit away from putting a strategy back.
+
+    automation/config/strategy_pause.json
+      {"paused": {"Strategy-Name": "why it is paused"}}
+    """
+    p = Path(__file__).resolve().parents[1] / "config" / "strategy_pause.json"
+    if not p.exists():
+        return set()
+    try:
+        d = json.loads(p.read_text())
+    except Exception:
+        return set()
+    paused = d.get("paused") if isinstance(d, dict) else None
+    return set(paused) if isinstance(paused, (dict, list)) else set()
+
+
 def _normalize_detector(fn_name: str, res: dict) -> tuple:
     """Normalize detector output to (present, direction, strength).
 
@@ -1125,6 +1146,18 @@ def _normalize_detector(fn_name: str, res: dict) -> tuple:
       (present: bool, direction: str, strength: int)
     """
     if not res:
+        return False, "none", 0
+    # B1-3in1: {present, count, best, all_signals}. This shape has to be
+    # handled before the generic "present" branch below, because that branch
+    # looks for a top-level "direction" — which this result does not have.
+    # The generic branch therefore swallowed it and returned "none" every
+    # time, so every B1-3in1 position was opened with an unusable
+    # direction and stopped out immediately. The live record is 39 trades,
+    # 0 wins, all at -1R, every one of them with direction "none".
+    if fn_name == "b1_3in1":
+        if res.get("present") and res.get("best"):
+            best = res["best"]
+            return True, best.get("direction", "long"), int(best.get("strength", 70))
         return False, "none", 0
     # Already in standard format (or has present with optional direction/long_candle)
     if "present" in res:
@@ -1213,7 +1246,10 @@ def run_detector(name: str, cfg: dict, ticker: str, data: dict) -> dict:
             res = detect_3_pushes(df, ticker=ticker)
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "two_yang":
-            res = detect_two_yang_one_yin(df, ticker=ticker)
+            res = detect_two_yang_one_yin(df, ticker=ticker,
+                                          body_ratio=cfg.get("args", {}).get("body_ratio", 0.3),
+                                          volume_ratio=cfg.get("args", {}).get("volume_ratio", 1.2),
+                                          allow_short=bool(cfg.get("args", {}).get("allow_short", False)))
             out["last_close"] = float(df["Close"].iloc[-1]) if not df.empty else 0
         elif cfg["fn"] == "rsi_div":
             # LLM-iter 2026-08-25: resample 5m → 15m
@@ -1497,12 +1533,17 @@ def main() -> int:
         print(f"  {tk}: 5m={n5} 4h={n4}")
     # Step 2: Run 9 detectors × 4 tickers = 36 in parallel
     print("[live_scan] Running detectors on active tickers...")
+    paused = load_paused_strategies()
+    if paused:
+        print(f"  [pause] not running: {', '.join(sorted(paused))}")
     detections = []
     with ThreadPoolExecutor(max_workers=12) as pool:
         futs = []
         for ticker, _ in active_tickers:
             data = data_map[ticker]
             for name, cfg in STRATEGIES.items():
+                if name in paused:
+                    continue
                 futs.append(pool.submit(run_detector, name, cfg, ticker, data))
         for fut in as_completed(futs):
             r = fut.result()

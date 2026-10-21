@@ -84,6 +84,20 @@ def pf_of(wr):
 # --- the grids ---------------------------------------------------------------
 
 def grid_for(strategy: str, quick: bool):
+    if strategy == "Two-Yang":
+        ratios = [0.3] if quick else [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40]
+        # The short mirror was tested on the 15-minute frame and was
+        # clearly harmful (holdout PF 0.82-0.85 against a baseline of
+        # 1.16), so it is not re-run for every ratio.
+        shorts = [False]
+        vols = [False]
+        out = []
+        for r in ratios:
+            for sh in shorts:
+                for v in vols:
+                    out.append({"body_ratio": r, "allow_short": sh,
+                                "volume_filter": v, "volume_ratio": 1.2})
+        return out
     if strategy == "CRT":
         depths = [None, 1.0, 0.5] if quick else [None, 2.0, 1.5, 1.0, 0.5, 0.25]
         mss = [1] if quick else [1, 2, 3]
@@ -99,8 +113,18 @@ def grid_for(strategy: str, quick: bool):
 
 
 def make_detector(strategy: str):
-    from yw_indicators_extra import detect_crt
-    return detect_crt
+    """Return a callable(frames, cfg) -> detection dict."""
+    if strategy == "CRT":
+        from yw_indicators_extra import detect_crt
+        return lambda fr, cfg: detect_crt(fr["df_4h"], fr["df_5m"], **cfg)
+    if strategy == "Two-Yang":
+        from yw_indicators import detect_two_yang_one_yin
+        # The live system gives Two-Yang the 5-minute frame, not the
+        # 15-minute one its "tf" field claims. Only RSI-Div actually
+        # resamples. A backtest that used 15m here would be measuring a
+        # different strategy from the one that trades.
+        return lambda fr, cfg: detect_two_yang_one_yin(fr["df_5m"], **cfg)
+    raise SystemExit(f"no detector wired for {strategy}")
 
 
 def run_split(df, detector, cfg, step, start, end, split_name):
@@ -110,6 +134,8 @@ def run_split(df, detector, cfg, step, start, end, split_name):
                                    "Close": "last"}).dropna()
     df_1h = df.resample("1h").agg({"Open": "first", "High": "max", "Low": "min",
                                    "Close": "last"}).dropna()
+    df_15m = df.resample("15min").agg({"Open": "first", "High": "max", "Low": "min",
+                                       "Close": "last"}).dropna()
     df_4h = df_4h[df_4h.index <= end]
     df_1h = df_1h[df_1h.index <= end]
     if len(df_4h) < 40:
@@ -132,9 +158,12 @@ def run_split(df, detector, cfg, step, start, end, split_name):
             continue
         w1 = df_1h[df_1h.index <= ts].iloc[-720:]
         w4 = w4.iloc[-180:]
-        if len(w1) < 12:
+        w15 = df_15m[df_15m.index <= ts].iloc[-200:]
+        if len(w1) < 12 or len(w15) < 10:
             continue
-        det = detector(w4, df.iloc[idx - 1440 + 1: idx + 1], **cfg)
+        frames = {"df_5m": df.iloc[idx - 1440 + 1: idx + 1], "df_15m": w15,
+                  "df_1h": w1, "df_4h": w4}
+        det = detector(frames, cfg)
         if not det.get("present"):
             continue
         direction = det.get("direction")
@@ -208,22 +237,50 @@ def main() -> int:
     print(f"holdout    {holdout[0].date()} → {holdout[1].date()}  (step {args.holdout_step}, live cadence)")
 
     grid = grid_for(args.strategy, args.quick)
-    print(f"\n{len(grid)} configurations\n")
-    print(f"{'max_depth':>10} {'mss':>4} {'last':>6} | "
+
+    # Baseline first: the all-defaults configuration, run the same way.
+    base_cfg = {"CRT": {"max_raid_depth_pct": None, "mss_bars": 1,
+                        "use_last_raid": False, "min_crt_range_pct": None},
+                "Two-Yang": {"body_ratio": 0.3, "allow_short": False,
+                             "volume_filter": False, "volume_ratio": 1.2}}[args.strategy]
+    b_tr = run_split(df, detector, base_cfg, args.train_step, train[0], train[1], "train")
+    b_ho = run_split(df, detector, base_cfg, args.holdout_step, holdout[0], holdout[1], "holdout")
+    baselines = {args.strategy: b_ho}
+    print(f"\nBASELINE (defaults): train n={b_tr['n'] if b_tr else 0} "
+          f"PF={b_tr['pf']:.2f} [{b_tr['lo']:.2f},{b_tr['hi']:.2f}]  |  "
+          f"holdout n={b_ho['n'] if b_ho else 0} "
+          f"PF={b_ho['pf']:.2f} [{b_ho['lo']:.2f},{b_ho['hi']:.2f}]\n")
+    print(f"{len(grid)} configurations\n")
+    if args.strategy == "Two-Yang":
+        print(f"{'ratio':>7} {'short':>6} {'vol':>5} | ")
+    else:
+        print(f"{'max_depth':>10} {'mss':>4} {'last':>6} | "
           f"{'TRAIN n':>8} {'PF':>6} {'CI':>14} {'R':>8} | "
           f"{'HOLD n':>7} {'PF':>6} {'CI':>14} {'R':>8}  verdict")
     results = []
     for i, cfg in enumerate(grid, 1):
         tr = run_split(df, detector, cfg, args.train_step, train[0], train[1], "train")
         ho = run_split(df, detector, cfg, args.holdout_step, holdout[0], holdout[1], "holdout")
+        if args.strategy == "Two-Yang":
+            label = (f"{cfg.get('body_ratio'):>7} {str(cfg.get('allow_short')):>6} "
+                     f"{str(cfg.get('volume_filter')):>5} | ")
+        else:
+            label = (f"{str(cfg.get('max_raid_depth_pct')):>10} {cfg.get('mss_bars'):>4} "
+                     f"{str(cfg.get('use_last_raid')):>6} | ")
         if not tr or not ho:
-            print(f"{str(cfg.get('max_raid_depth_pct')):>10} {cfg.get('mss_bars'):>4} "
-                  f"{str(cfg.get('use_last_raid')):>6} | (no data)")
+            print(f"{label}(no data)")
             continue
-        accepted = ho["lo"] > 1.0 and ho["pf"] > tr["pf"]
-        verdict = "ACCEPT" if accepted else ""
-        print(f"{str(cfg.get('max_raid_depth_pct')):>10} {cfg.get('mss_bars'):>4} "
-              f"{str(cfg.get('use_last_raid')):>6} | "
+        # A configuration is only interesting if it beats the baseline on
+        # the holdout, and the holdout itself clears 1 with an interval
+        # that excludes 1. Comparing against the baseline rather than
+        # against the train sample is what stops a configuration from
+        # being "accepted" for the reason that the holdout is simply a
+        # nicer period.
+        base = baselines.get(args.strategy)
+        beats_base = (base is None) or (ho["pf"] > base["pf"] and ho["n"] > 0)
+        accepted = ho["lo"] > 1.0 and beats_base
+        verdict = "ACCEPT" if accepted else ("baseline" if base is None else "")
+        print(f"{label}"
               f"{tr['n']:>8} {tr['pf']:>6.2f} [{tr['lo']:>5.2f},{tr['hi']:>5.2f}] {tr['total_r']:>+8.2f} | "
               f"{ho['n']:>7} {ho['pf']:>6.2f} [{ho['lo']:>5.2f},{ho['hi']:>5.2f}] {ho['total_r']:>+8.2f}  {verdict}")
         results.append({"cfg": cfg, "train": tr, "holdout": ho, "accepted": accepted})

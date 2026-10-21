@@ -342,10 +342,27 @@ def detect_3_pushes(df: pd.DataFrame, ticker: str = "") -> dict:
     return {"present": False, "direction": "none"}
 
 
-def detect_two_yang_one_yin(df: pd.DataFrame, volume_filter: bool = False, ticker: str = "") -> dict:
+def detect_two_yang_one_yin(df: pd.DataFrame, volume_filter: bool = False, ticker: str = "",
+                            body_ratio: float = 0.3,
+                            volume_ratio: float = 1.2,
+                            allow_short: bool = False) -> dict:
     """Detect YW 兩陽夾一陰 (15min).
 
     Pattern: middle bearish candle body wrapped by 2 bullish candles' bodies.
+
+    The optional parameters are the levers the real five-minute history
+    says matter. The defaults reproduce the original behaviour exactly, so
+    a live system that does not set them is unaffected.
+
+      body_ratio    how large the middle candle's body must be, as a
+                    fraction of the three-candle close range, and how large
+                    each wrapping candle's body must be as a fraction of
+                    the middle one. 0.3 is the original.
+      volume_ratio  the volume multiple one of the wrapping candles must
+                    reach against the ten-candle average. Only used when
+                    volume_filter is on.
+      allow_short   also accept 陰夾兩陽, the mirror pattern, which the
+                    original never looked for.
     """
     # BTC mode: don't require volume filter (24/7 different patterns)
     if ticker == "BTC-USD":
@@ -369,43 +386,52 @@ def detect_two_yang_one_yin(df: pd.DataFrame, volume_filter: bool = False, ticke
         def body_range(c):
             return c["High"] - c["Low"]
 
-        # Middle must be bearish with significant body
-        if is_bullish(c2):
-            continue
+        # Middle must be a real body, and the two outer candles must wrap
+        # it. 兩陽夾一陰 is the long shape; 陰夾兩陽 is its mirror, which
+        # the original never looked for.
         b2 = body(c2)
-        if b2 < (df["Close"].iloc[i:i+3].max() - df["Close"].iloc[i:i+3].min()) * 0.3:
+        span = df["Close"].iloc[i:i + 3].max() - df["Close"].iloc[i:i + 3].min()
+        if b2 < span * body_ratio:
             continue  # body too small
 
-        # c1 and c3 must be bullish with bodies that wrap c2's body
-        if not is_bullish(c1) or not is_bullish(c3):
-            continue
         b1 = body(c1)
         b3 = body(c3)
-        if b1 < b2 * 0.3 or b3 < b2 * 0.3:
+        if b1 < b2 * body_ratio or b3 < b2 * body_ratio:
             continue
 
-        # Check wrap: c2 body range must be within c1+c3 body range
         c2_top = max(c2["Open"], c2["Close"])
         c2_bot = min(c2["Open"], c2["Close"])
         c1_top = max(c1["Open"], c1["Close"])
         c1_bot = min(c1["Open"], c1["Close"])
         c3_top = max(c3["Open"], c3["Close"])
         c3_bot = min(c3["Open"], c3["Close"])
-        # c2 must be wrapped by c1 above and c3 below (or vice versa)
-        if c2_top <= c1_top and c2_bot >= c3_bot:
-            # LLM-iter: volume filter — c1 or c3 must have volume > 1.2x avg
+
+        direction = None
+        if (not is_bullish(c2)) and is_bullish(c1) and is_bullish(c3) \
+                and c2_top <= c1_top and c2_bot >= c3_bot:
+            direction = "long"
+        elif allow_short and is_bullish(c2) and (not is_bullish(c1)) and (not is_bullish(c3)) \
+                and c2_bot >= c1_bot and c2_top <= c3_top:
+            direction = "short"
+
+        if direction:
+            # LLM-iter: volume filter — one of the wrapping candles must
+            # have volume above the average. This used to `return`, which
+            # abandoned the whole scan on the first low-volume candidate
+            # instead of looking at the next one.
             if volume_filter and "Volume" in df.columns and len(df) >= 10:
                 avg_vol = float(df["Volume"].tail(10).mean())
                 c1_vol = float(c1.get("Volume", 0))
                 c3_vol = float(c3.get("Volume", 0))
-                if avg_vol > 0 and max(c1_vol, c3_vol) < avg_vol * 1.2:
-                    return {"present": False, "direction": "none", "filtered": True,
-                            "filter_reason": f"low volume (max={max(c1_vol, c3_vol):.0f}, avg={avg_vol:.0f})"}
+                if avg_vol > 0 and max(c1_vol, c3_vol) < avg_vol * volume_ratio:
+                    continue
             return {
-                "present": True, "direction": "long",
+                "present": True, "direction": direction,
                 "strength": 70,
                 "filtered": False,
-                "details": f"兩陽夾一陰: c1 body {b1:.0f}, c2 body {b2:.0f}, c3 body {b3:.0f}",
+                "details": (f"兩陽夾一陰: c1 body {b1:.0f}, c2 body {b2:.0f}, c3 body {b3:.0f}"
+                            if direction == "long" else
+                            f"陰夾兩陽: c1 body {b1:.0f}, c2 body {b2:.0f}, c3 body {b3:.0f}"),
             }
 
     return {"present": False, "direction": "none"}

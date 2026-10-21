@@ -30,6 +30,7 @@
 | [STRATEGY-PARAM-SETUPS.md](STRATEGY-PARAM-SETUPS.md) | 各策略最強參數 setup — 生效值、偵測閾值、三樣本證據、值唔值得 tune |
 | [OPS-NOTES.md](OPS-NOTES.md) | Ops 記錄 — 事故、CI 實況、sandbox 實操坑 |
 | [TTRADES-STATUS.md](TTRADES-STATUS.md) | TTrades 家族狀態 — 四個 agent 做齊咗啲乜、仲欠啲乜、點解 L 系列冇得 backtest |
+| [BEST-SETUPS-2026-10-22.md](BEST-SETUPS-2026-10-22.md) | 各策略「最靚 setup」— 真實 5m 粒度、期間拆分、統計驗證後嘅結論 |
 
 ## Live Dashboards
 | URL | Description |
