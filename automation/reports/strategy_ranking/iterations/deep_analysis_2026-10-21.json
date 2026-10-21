@@ -1,8 +1,8 @@
 {
-  "generated_at_hkt": "2026-10-21T13:34:32.636285+08:00",
+  "generated_at_hkt": "2026-10-21T14:42:11.609893+08:00",
   "type": "deep_4d_analysis",
   "source": "automation/reports/live_scan/trades.jsonl",
-  "window_cutoff_utc": "2026-10-14T05:34:02.458882+00:00",
+  "window_cutoff_utc": "2026-10-14T06:41:41.448235+00:00",
   "n_trades_total": 3265,
   "n_trades_7d": 115,
   "n_trades_30d": 493,
@@ -60,7 +60,7 @@
       "id": "SF-7",
       "severity": "\ud83d\udfe1 medium",
       "title": "The +1.618R monoculture is the *pre-override* regime \u2014 the new exits are untested",
-      "detail": "`exit_overrides.json` (written 2026-10-20T14:00:02.325747+00:00, runs=6) carries learned `t2_r` (2.0\u20133.0) and `breakeven_at_r` (0.5\u20131.5) for 6 strategies, and `resolve_exit_config` (live_scan.py:902) does read it. But every one of the 1,189 winning trades in the file is exactly +1.618R, because the last trade was recorded at 2026-10-20T13:00Z and the overrides were written at 2026-10-20T14:00Z \u2014 **after** the data. Furthermore `rl_arm.assign_arm` only applies an override during that strategy's RL half-period, and 4 strategies (3-Pushes, CRT, B1, B1-3in1) have no override at all and are therefore permanently on the default template.",
+      "detail": "`exit_overrides.json` (written 2026-10-20T14:00:02.325747+00:00, runs=7) carries learned `t2_r` (2.0\u20133.0) and `breakeven_at_r` (0.5\u20131.5) for 6 strategies, and `resolve_exit_config` (live_scan.py:902) does read it. But every one of the 1,189 winning trades in the file is exactly +1.618R, because the last trade was recorded at 2026-10-20T13:00Z and the overrides were written at 2026-10-20T14:00Z \u2014 **after** the data. Furthermore `rl_arm.assign_arm` only applies an override during that strategy's RL half-period, and 4 strategies (3-Pushes, CRT, B1, B1-3in1) have no override at all and are therefore permanently on the default template.",
       "impact": "Do not read the +1.618R monoculture as proof that exits cannot be improved. The first 14-day RL window is the real test, and it has not happened yet."
     },
     {
@@ -76,6 +76,20 @@
       "title": "The optimiser's ticker keep/drop decisions are inverted on the data they were tuned on",
       "detail": "`backtest_optimizer.py` reports **0 of 9 configurations survive** on both tracks, and that verdict is correct \u2014 but the reason is sharper than 'overfitting'. Replaying each published config on the optimiser's **own holdout** (the last 30% of that strategy's A/B trades, the same split the optimiser used) shows the ticker filter is the problem, and that it points the wrong way: **50-20-Pullback** \u2014 base holdout PF 0.942 / -10.5R becomes PF 0.844 / -25.1R once the optimiser's own keep/drop set is applied (-14.6R): drops MES=F which is +10.0R (PF 1.912, n=24) on the very holdout it was tuned on; drops M2K=F which is +4.6R (PF 1.456, n=19) on the very holdout it was tuned on; keeps BTC-USD which is -35.9R (PF 0.767, n=227). **CRT** \u2014 base holdout PF 1.019 / +2.4R becomes PF 0.916 / -7.0R once the optimiser's own keep/drop set is applied (-9.4R): drops MNQ=F which is +10.1R (PF 1.533, n=37) on the very holdout it was tuned on; keeps MGC=F which is -5.4R (PF 0.728, n=29); keeps MES=F which is -4.3R (PF 0.839, n=41). **3-Pushes** \u2014 base holdout PF 1.179 / +12.5R becomes PF 1.192 / +7.3R once the optimiser's own keep/drop set is applied (-5.2R): drops BTC-USD which is +7.3R (PF 1.428, n=32) on the very holdout it was tuned on. The optimiser never evaluated **B1-3in1** (39 trades, -39.0R, 0.0% win rate) at all: `backtest_optimizer.py` drops every trade whose `direction` is `'none'`, so a strategy that never resolves a direction is invisible to it. The exit-lever search contributes nothing in the live book, because the live exit model is binary (SF-1) \u2014 every cell's chosen config is `t2=1.618 be=0.0 pa=0.0`, i.e. the book default. So the only lever that actually moves is the ticker list, and it is being selected on a train sample of 21-379 trades against a per-cell exit-combo search space that can only fit noise.",
       "impact": "Do NOT flip the `_validated` gate on these configs \u2014 for 50-20-Pullback the published config loses 15R more than doing nothing on the very holdout it was selected for. The gate is currently protecting the book. What is worth doing is the two ticker restrictions that BOTH this report and the optimiser's own holdout data agree on (50-20-Pullback drop BTC-USD, Stair keep MNQ=F only)."
+    },
+    {
+      "id": "SF-10",
+      "severity": "\ud83d\udd34 critical",
+      "title": "`agent_weight()` never matches \u2014 the optimiser's confidence lever runs on the wrong number",
+      "detail": "`backtest_optimizer.py:agent_weight()` recovers the RAW confidence of a trade by dividing its published (weight-scaled) confidence by the strategy's weight. It finds that weight by grepping `live_scan.py` with `re.search(r'^\\s*\"NAME\":\\s*\\{[^}]*\"weight\":\\s*([0-9.]+)', src, re.MULTILINE)` \u2014 but `[^}]*` cannot cross the `}` inside the entry's `\"args\": {...}`, so the pattern never matches and the helper **silently returns 1.0 for every strategy**. Consequence: for 7 of the 9 strategies the reconstructed 'raw confidence' is in fact the *scaled* confidence, and the `min_conf` lever is applied to it \u2014 while the live gate (`live_scan.py:1528`, `LLM_MIN_CONF=40` / `LLM_MIN_CONF_BTC=30`) compares the **raw** confidence, because the weight is only applied afterwards (line 1536, SF-3). The optimiser and the live system are therefore calibrating the same lever against two different quantities. The scale error per strategy: **50-20-Pullback** \u00d70.948, **CRT** \u00d71.3, **Stair** \u00d71.1, **3-Pushes** \u00d71.2, **RSI-Div** \u00d70.6, **B1** \u00d70.9, **Kell-Cycle** \u00d70.7. A `min_conf=65` candidate admits true raw \u2265 50 on CRT but needs raw \u2265 108 on RSI-Div \u2014 i.e. the lever looks cheap for up-weighted strategies and impossible for down-weighted ones, which is exactly backwards for a confidence floor.",
+      "impact": "One published cell uses `min_conf` (Two-Yang BTC-USD, min_conf=65, weight 0.8), so there is no live impact today \u2014 but that cell would behave differently live than in the simulation if the `_validated` gate were ever passed. The search itself was distorted for every strategy, so the min_conf variants it explored were not the ones it should have."
+    },
+    {
+      "id": "SF-11",
+      "severity": "\ud83d\udfe0 high",
+      "title": "The 'second, independent track' is independent in resolution, not in time",
+      "detail": "`btopt_2026-10-20.md` states the two tracks *\"share no trades and cover different periods\"*. The second track spans 182 days (2026-04-20 \u2192 2026-10-20), but its **holdout** \u2014 the last 30% of its trades \u2014 lands in the SAME recent window as the live track's holdout, because the split is per-strategy and chronological: **H-Pattern** \u2014 live holdout 2026-09-21\u21922026-10-19 overlaps the second track's holdout 2026-08-27\u21922026-10-19 by 27 days (100% of the live holdout window) **Kell-Cycle** \u2014 live holdout 2026-09-10\u21922026-10-19 overlaps the second track's holdout 2026-08-26\u21922026-10-20 by 39 days (100% of the live holdout window) **Stair** \u2014 live holdout 2026-09-14\u21922026-10-20 overlaps the second track's holdout 2026-09-01\u21922026-10-20 by 36 days (100% of the live holdout window). The part of the second track that IS genuinely earlier in time (its training window) is largely unusable: `load_bars()` fetches only 60 days of 5-minute bars, so only 33-37% of each strategy's second-track trades have bars to replay against; `prepare_trade()` returns None for the rest and they are dropped without a word. The verdict itself survives this \u2014 the holdout is 100% inside the window \u2014 but the *independence* it claims does not: the second track tests robustness to bar resolution and to the trade population, not to the market regime, at exactly the point where the verdict is made.",
+      "impact": "'0 of 9 survive' is a weaker statement than the report implies. A config that fails the second track may be fitted to the recent regime rather than overfitted to the sample. That argues for keeping the `_validated` gate closed (SF-9) and for extending the bars window before treating the second track as out-of-time evidence."
     }
   ],
   "lever_map": [
@@ -156,8 +170,8 @@
         "MNQ=F": "winner"
       },
       "conflicts": [
-        "optimiser KEEPS M2K=F, live 4D says loser",
-        "optimiser KEEPS MGC=F, live 4D says loser"
+        "optimiser KEEPS MGC=F, live 4D says loser",
+        "optimiser KEEPS M2K=F, live 4D says loser"
       ],
       "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
     },
@@ -250,9 +264,9 @@
         "MNQ=F": "loser"
       },
       "conflicts": [
+        "optimiser KEEPS BTC-USD, live 4D says loser",
         "optimiser KEEPS MES=F, live 4D says loser",
-        "optimiser KEEPS MNQ=F, live 4D says loser",
-        "optimiser KEEPS BTC-USD, live 4D says loser"
+        "optimiser KEEPS MNQ=F, live 4D says loser"
       ],
       "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
     },
@@ -275,8 +289,8 @@
         "MNQ=F": "loser"
       },
       "conflicts": [
-        "optimiser KEEPS MNQ=F, live 4D says loser",
         "optimiser KEEPS BTC-USD, live 4D says loser",
+        "optimiser KEEPS MNQ=F, live 4D says loser",
         "optimiser DROPS MES=F, live 4D says winner"
       ],
       "note": "not published: did not improve on both the live track and the independent 180-day one-hour track"
@@ -579,6 +593,203 @@
       "profit_factor": 0.0
     }
   ],
+  "agent_weight_audit": [
+    {
+      "strategy": "50-20-Pullback",
+      "helper_weight": 1.0,
+      "effective_weight": 0.948,
+      "scale_error": 0.948,
+      "weights_actually_applied": [
+        0.8,
+        0.948,
+        1.0
+      ]
+    },
+    {
+      "strategy": "CRT",
+      "helper_weight": 1.0,
+      "effective_weight": 1.3,
+      "scale_error": 1.3,
+      "weights_actually_applied": [
+        1.1,
+        1.262,
+        1.3
+      ]
+    },
+    {
+      "strategy": "Stair",
+      "helper_weight": 1.0,
+      "effective_weight": 1.1,
+      "scale_error": 1.1,
+      "weights_actually_applied": [
+        0.9,
+        1.1
+      ]
+    },
+    {
+      "strategy": "3-Pushes",
+      "helper_weight": 1.0,
+      "effective_weight": 1.2,
+      "scale_error": 1.2,
+      "weights_actually_applied": [
+        1.0,
+        1.165,
+        1.2
+      ]
+    },
+    {
+      "strategy": "B1-3in1",
+      "helper_weight": 1.0,
+      "effective_weight": 1.0,
+      "scale_error": 1.0,
+      "weights_actually_applied": [
+        1.0
+      ]
+    },
+    {
+      "strategy": "Two-Yang",
+      "helper_weight": 1.0,
+      "effective_weight": 1.0,
+      "scale_error": 1.0,
+      "weights_actually_applied": [
+        0.8
+      ]
+    },
+    {
+      "strategy": "RSI-Div",
+      "helper_weight": 1.0,
+      "effective_weight": 0.6,
+      "scale_error": 0.6,
+      "weights_actually_applied": [
+        0.6,
+        0.7,
+        0.85
+      ]
+    },
+    {
+      "strategy": "B1",
+      "helper_weight": 1.0,
+      "effective_weight": 0.9,
+      "scale_error": 0.9,
+      "weights_actually_applied": [
+        1.0
+      ]
+    },
+    {
+      "strategy": "H-Pattern",
+      "helper_weight": 1.0,
+      "effective_weight": 1.0,
+      "scale_error": 1.0,
+      "weights_actually_applied": [
+        1.2
+      ]
+    },
+    {
+      "strategy": "Kell-Cycle",
+      "helper_weight": 1.0,
+      "effective_weight": 0.7,
+      "scale_error": 0.7,
+      "weights_actually_applied": [
+        0.7,
+        0.9
+      ]
+    }
+  ],
+  "second_track_audit": {
+    "available": true,
+    "track_from": "2026-04-20",
+    "track_to": "2026-10-20",
+    "track_days": 182,
+    "bars_window_days": 60,
+    "bars_from": "2026-08-22",
+    "n_trades": 2297,
+    "rows": [
+      {
+        "strategy": "50-20-Pullback",
+        "live_ho_from": "2026-09-11",
+        "live_ho_to": "2026-10-21",
+        "live_ho_n": 288,
+        "hist_ho_from": "2026-08-31",
+        "hist_ho_to": "2026-10-20",
+        "hist_ho_n": 130,
+        "overlap_days": 38,
+        "live_ho_days": 39,
+        "overlap_pct": 97,
+        "hist_n": 432,
+        "hist_within_bars_window": 161
+      },
+      {
+        "strategy": "B1",
+        "live_ho_from": "2026-09-29",
+        "live_ho_to": "2026-10-18",
+        "live_ho_n": 5,
+        "hist_ho_from": "2026-08-28",
+        "hist_ho_to": "2026-10-05",
+        "hist_ho_n": 15,
+        "overlap_days": 5,
+        "live_ho_days": 19,
+        "overlap_pct": 26,
+        "hist_n": 50,
+        "hist_within_bars_window": 17
+      },
+      {
+        "strategy": "H-Pattern",
+        "live_ho_from": "2026-09-21",
+        "live_ho_to": "2026-10-19",
+        "live_ho_n": 12,
+        "hist_ho_from": "2026-08-27",
+        "hist_ho_to": "2026-10-19",
+        "hist_ho_n": 64,
+        "overlap_days": 27,
+        "live_ho_days": 27,
+        "overlap_pct": 100,
+        "hist_n": 211,
+        "hist_within_bars_window": 73
+      },
+      {
+        "strategy": "Kell-Cycle",
+        "live_ho_from": "2026-09-10",
+        "live_ho_to": "2026-10-19",
+        "live_ho_n": 15,
+        "hist_ho_from": "2026-08-26",
+        "hist_ho_to": "2026-10-20",
+        "hist_ho_n": 239,
+        "overlap_days": 39,
+        "live_ho_days": 39,
+        "overlap_pct": 100,
+        "hist_n": 794,
+        "hist_within_bars_window": 262
+      },
+      {
+        "strategy": "Stair",
+        "live_ho_from": "2026-09-14",
+        "live_ho_to": "2026-10-20",
+        "live_ho_n": 104,
+        "hist_ho_from": "2026-09-01",
+        "hist_ho_to": "2026-10-20",
+        "hist_ho_n": 129,
+        "overlap_days": 36,
+        "live_ho_days": 36,
+        "overlap_pct": 100,
+        "hist_n": 429,
+        "hist_within_bars_window": 155
+      },
+      {
+        "strategy": "Two-Yang",
+        "live_ho_from": "2026-09-11",
+        "live_ho_to": "2026-10-20",
+        "live_ho_n": 40,
+        "hist_ho_from": "2026-08-31",
+        "hist_ho_to": "2026-10-20",
+        "hist_ho_n": 115,
+        "overlap_days": 39,
+        "live_ho_days": 39,
+        "overlap_pct": 100,
+        "hist_n": 381,
+        "hist_within_bars_window": 136
+      }
+    ]
+  },
   "optimiser_book_definition": "backtest_optimizer.py load_trades(): closed trades, direction not in ('none',''), grade != 'C'. Per-strategy chronological 70/30 split (HOLDOUT_FRACTION=0.30), holdout = last 30% of that strategy's A/B trades. Reproduced exactly for H-Pattern (n=12, PF 2.265), Kell-Cycle (n=15, PF 1.416) and RSI-Div (n=10, PF 0.18).",
   "strategies": {
     "50-20-Pullback": {

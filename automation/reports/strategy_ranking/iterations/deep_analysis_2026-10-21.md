@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-21 (HKT)  
 **Source:** `automation/reports/live_scan/trades.jsonl` — 3265 closed trades (7d: 115 | 30d: 493 | all-time: 3265)  
-**Window cutoff (7d):** 2026-10-14T05:34:02.458882+00:00  
+**Window cutoff (7d):** 2026-10-14T06:41:41.448235+00:00  
 **Dimensions:** aggregate · by grade · by direction · by ticker  
 **Strategies covered:** 10  
 **Optimiser reconciled:** `backtest_optimizer.py` / `btopt_2026-10-20.md` — replayed on its own holdout  
@@ -22,6 +22,8 @@
 | SF-7 | The +1.618R monoculture is the *pre-override* regime — the new exits are untested | 🟡 medium |
 | SF-8 | The scientist's LLM parser can never yield a parameter — auto-apply is structurally impossible | 🔴 critical |
 | SF-9 | The optimiser's ticker keep/drop decisions are inverted on the data they were tuned on | 🔴 critical |
+| SF-10 | `agent_weight()` never matches — the optimiser's confidence lever runs on the wrong number | 🔴 critical |
+| SF-11 | The 'second, independent track' is independent in resolution, not in time | 🟠 high |
 
 **Strategy league table (7d):**
 
@@ -78,7 +80,7 @@ live_scan.py order is: LLM grade (1505) → BTC boost (1511) → `conf < min_con
 
 ### SF-7 — The +1.618R monoculture is the *pre-override* regime — the new exits are untested
 
-`exit_overrides.json` (written 2026-10-20T14:00:02.325747+00:00, runs=6) carries learned `t2_r` (2.0–3.0) and `breakeven_at_r` (0.5–1.5) for 6 strategies, and `resolve_exit_config` (live_scan.py:902) does read it. But every one of the 1,189 winning trades in the file is exactly +1.618R, because the last trade was recorded at 2026-10-20T13:00Z and the overrides were written at 2026-10-20T14:00Z — **after** the data. Furthermore `rl_arm.assign_arm` only applies an override during that strategy's RL half-period, and 4 strategies (3-Pushes, CRT, B1, B1-3in1) have no override at all and are therefore permanently on the default template.
+`exit_overrides.json` (written 2026-10-20T14:00:02.325747+00:00, runs=7) carries learned `t2_r` (2.0–3.0) and `breakeven_at_r` (0.5–1.5) for 6 strategies, and `resolve_exit_config` (live_scan.py:902) does read it. But every one of the 1,189 winning trades in the file is exactly +1.618R, because the last trade was recorded at 2026-10-20T13:00Z and the overrides were written at 2026-10-20T14:00Z — **after** the data. Furthermore `rl_arm.assign_arm` only applies an override during that strategy's RL half-period, and 4 strategies (3-Pushes, CRT, B1, B1-3in1) have no override at all and are therefore permanently on the default template.
 
 *Impact:* Do not read the +1.618R monoculture as proof that exits cannot be improved. The first 14-day RL window is the real test, and it has not happened yet.
 
@@ -93,6 +95,18 @@ live_scan.py order is: LLM grade (1505) → BTC boost (1511) → `conf < min_con
 `backtest_optimizer.py` reports **0 of 9 configurations survive** on both tracks, and that verdict is correct — but the reason is sharper than 'overfitting'. Replaying each published config on the optimiser's **own holdout** (the last 30% of that strategy's A/B trades, the same split the optimiser used) shows the ticker filter is the problem, and that it points the wrong way: **50-20-Pullback** — base holdout PF 0.942 / -10.5R becomes PF 0.844 / -25.1R once the optimiser's own keep/drop set is applied (-14.6R): drops MES=F which is +10.0R (PF 1.912, n=24) on the very holdout it was tuned on; drops M2K=F which is +4.6R (PF 1.456, n=19) on the very holdout it was tuned on; keeps BTC-USD which is -35.9R (PF 0.767, n=227). **CRT** — base holdout PF 1.019 / +2.4R becomes PF 0.916 / -7.0R once the optimiser's own keep/drop set is applied (-9.4R): drops MNQ=F which is +10.1R (PF 1.533, n=37) on the very holdout it was tuned on; keeps MGC=F which is -5.4R (PF 0.728, n=29); keeps MES=F which is -4.3R (PF 0.839, n=41). **3-Pushes** — base holdout PF 1.179 / +12.5R becomes PF 1.192 / +7.3R once the optimiser's own keep/drop set is applied (-5.2R): drops BTC-USD which is +7.3R (PF 1.428, n=32) on the very holdout it was tuned on. The optimiser never evaluated **B1-3in1** (39 trades, -39.0R, 0.0% win rate) at all: `backtest_optimizer.py` drops every trade whose `direction` is `'none'`, so a strategy that never resolves a direction is invisible to it. The exit-lever search contributes nothing in the live book, because the live exit model is binary (SF-1) — every cell's chosen config is `t2=1.618 be=0.0 pa=0.0`, i.e. the book default. So the only lever that actually moves is the ticker list, and it is being selected on a train sample of 21-379 trades against a per-cell exit-combo search space that can only fit noise.
 
 *Impact:* Do NOT flip the `_validated` gate on these configs — for 50-20-Pullback the published config loses 15R more than doing nothing on the very holdout it was selected for. The gate is currently protecting the book. What is worth doing is the two ticker restrictions that BOTH this report and the optimiser's own holdout data agree on (50-20-Pullback drop BTC-USD, Stair keep MNQ=F only).
+
+### SF-10 — `agent_weight()` never matches — the optimiser's confidence lever runs on the wrong number
+
+`backtest_optimizer.py:agent_weight()` recovers the RAW confidence of a trade by dividing its published (weight-scaled) confidence by the strategy's weight. It finds that weight by grepping `live_scan.py` with `re.search(r'^\s*"NAME":\s*\{[^}]*"weight":\s*([0-9.]+)', src, re.MULTILINE)` — but `[^}]*` cannot cross the `}` inside the entry's `"args": {...}`, so the pattern never matches and the helper **silently returns 1.0 for every strategy**. Consequence: for 7 of the 9 strategies the reconstructed 'raw confidence' is in fact the *scaled* confidence, and the `min_conf` lever is applied to it — while the live gate (`live_scan.py:1528`, `LLM_MIN_CONF=40` / `LLM_MIN_CONF_BTC=30`) compares the **raw** confidence, because the weight is only applied afterwards (line 1536, SF-3). The optimiser and the live system are therefore calibrating the same lever against two different quantities. The scale error per strategy: **50-20-Pullback** ×0.948, **CRT** ×1.3, **Stair** ×1.1, **3-Pushes** ×1.2, **RSI-Div** ×0.6, **B1** ×0.9, **Kell-Cycle** ×0.7. A `min_conf=65` candidate admits true raw ≥ 50 on CRT but needs raw ≥ 108 on RSI-Div — i.e. the lever looks cheap for up-weighted strategies and impossible for down-weighted ones, which is exactly backwards for a confidence floor.
+
+*Impact:* One published cell uses `min_conf` (Two-Yang BTC-USD, min_conf=65, weight 0.8), so there is no live impact today — but that cell would behave differently live than in the simulation if the `_validated` gate were ever passed. The search itself was distorted for every strategy, so the min_conf variants it explored were not the ones it should have.
+
+### SF-11 — The 'second, independent track' is independent in resolution, not in time
+
+`btopt_2026-10-20.md` states the two tracks *"share no trades and cover different periods"*. The second track spans 182 days (2026-04-20 → 2026-10-20), but its **holdout** — the last 30% of its trades — lands in the SAME recent window as the live track's holdout, because the split is per-strategy and chronological: **H-Pattern** — live holdout 2026-09-21→2026-10-19 overlaps the second track's holdout 2026-08-27→2026-10-19 by 27 days (100% of the live holdout window) **Kell-Cycle** — live holdout 2026-09-10→2026-10-19 overlaps the second track's holdout 2026-08-26→2026-10-20 by 39 days (100% of the live holdout window) **Stair** — live holdout 2026-09-14→2026-10-20 overlaps the second track's holdout 2026-09-01→2026-10-20 by 36 days (100% of the live holdout window). The part of the second track that IS genuinely earlier in time (its training window) is largely unusable: `load_bars()` fetches only 60 days of 5-minute bars, so only 33-37% of each strategy's second-track trades have bars to replay against; `prepare_trade()` returns None for the rest and they are dropped without a word. The verdict itself survives this — the holdout is 100% inside the window — but the *independence* it claims does not: the second track tests robustness to bar resolution and to the trade population, not to the market regime, at exactly the point where the verdict is made.
+
+*Impact:* '0 of 9 survive' is a weaker statement than the report implies. A config that fails the second track may be fitted to the recent regime rather than overfitted to the sample. That argues for keeping the `_validated` gate closed (SF-9) and for extending the bars window before treating the second track as out-of-time evidence.
 
 ## 3. Per-strategy 4D analysis
 
@@ -707,12 +721,12 @@ Before recommending a parameter change it has to be established that changing it
 | Strategy | Optimiser keeps | Optimiser drops | Live 4D verdict | Conflict |
 |---|---|---|---|---|
 | H-Pattern | BTC-USD | — | BTC-USD=loser | optimiser KEEPS BTC-USD, live 4D says loser |
-| 3-Pushes | M2K=F, MGC=F, MNQ=F | BTC-USD, MES=F | BTC-USD=thin, M2K=F=loser, MES=F=loser, MGC=F=loser, MNQ=F=winner | optimiser KEEPS M2K=F, live 4D says loser; optimiser KEEPS MGC=F, live 4D says loser |
+| 3-Pushes | M2K=F, MGC=F, MNQ=F | BTC-USD, MES=F | BTC-USD=thin, M2K=F=loser, MES=F=loser, MGC=F=loser, MNQ=F=winner | optimiser KEEPS MGC=F, live 4D says loser; optimiser KEEPS M2K=F, live 4D says loser |
 | RSI-Div | BTC-USD, M2K=F, MES=F, MGC=F, MNQ=F | — | BTC-USD=thin, M2K=F=thin, MES=F=loser, MGC=F=thin, MNQ=F=thin | optimiser KEEPS MES=F, live 4D says loser |
 | CRT | BTC-USD, MES=F, MGC=F | M2K=F, MNQ=F | BTC-USD=loser, M2K=F=loser, MES=F=winner, MGC=F=loser, MNQ=F=loser | optimiser KEEPS MGC=F, live 4D says loser; optimiser KEEPS BTC-USD, live 4D says loser |
 | Stair | MES=F, MGC=F, MNQ=F | BTC-USD, M2K=F | BTC-USD=loser, M2K=F=loser, MES=F=loser, MGC=F=loser, MNQ=F=winner | optimiser KEEPS MES=F, live 4D says loser; optimiser KEEPS MGC=F, live 4D says loser |
-| Two-Yang | BTC-USD, MES=F, MGC=F, MNQ=F | M2K=F | BTC-USD=loser, M2K=F=thin, MES=F=loser, MGC=F=thin, MNQ=F=loser | optimiser KEEPS MES=F, live 4D says loser; optimiser KEEPS MNQ=F, live 4D says loser; optimiser KEEPS BTC-USD, live 4D says loser |
-| 50-20-Pullback | BTC-USD, MGC=F, MNQ=F | M2K=F, MES=F | BTC-USD=loser, M2K=F=loser, MES=F=winner, MGC=F=thin, MNQ=F=loser | optimiser KEEPS MNQ=F, live 4D says loser; optimiser KEEPS BTC-USD, live 4D says loser; optimiser DROPS MES=F, live 4D says winner |
+| Two-Yang | BTC-USD, MES=F, MGC=F, MNQ=F | M2K=F | BTC-USD=loser, M2K=F=thin, MES=F=loser, MGC=F=thin, MNQ=F=loser | optimiser KEEPS BTC-USD, live 4D says loser; optimiser KEEPS MES=F, live 4D says loser; optimiser KEEPS MNQ=F, live 4D says loser |
+| 50-20-Pullback | BTC-USD, MGC=F, MNQ=F | M2K=F, MES=F | BTC-USD=loser, M2K=F=loser, MES=F=winner, MGC=F=thin, MNQ=F=loser | optimiser KEEPS BTC-USD, live 4D says loser; optimiser KEEPS MNQ=F, live 4D says loser; optimiser DROPS MES=F, live 4D says winner |
 
 **7 of 7 strategies have a live-trade disagreement with the optimiser's ticker selection.** The optimiser's numbers are out-of-sample and holdout-validated in design; the 4D numbers here are realised live trades. They are answering different questions, and the disagreement itself is the signal: the optimiser's track has not been able to reproduce the live book, which is exactly why `0 of 9 configurations survive it`.
 
@@ -740,6 +754,45 @@ Before recommending a parameter change it has to be established that changing it
 - **Stair** — **keeps MGC=F** which is -9.4R (PF 0.607, n=33); **keeps MES=F** which is -1.8R (PF 0.647, n=7).
 
 **Strategies the optimiser never evaluated at all:** **B1-3in1** (39 trades, -39.0R, 0.0% win rate, PF 0.0). `backtest_optimizer.py` drops every trade whose `direction` is `'none'`, so a strategy that never resolves a direction is invisible to it. The `0 of 9` verdict says nothing about these.
+
+### 5.2 Two defects inside the optimiser itself
+
+**(a) `agent_weight()` never matches.** It recovers the *raw* confidence of a trade by dividing the published (weight-scaled) confidence by the strategy's weight, and finds that weight by grepping `live_scan.py`:
+
+```python
+m = re.search(r'^\s*"' + re.escape(strategy) + r'":\s*\{[^}]*"weight":\s*([0-9.]+)',
+              src, re.MULTILINE)
+```
+
+`[^}]*` cannot cross the `}` inside the entry's `"args": {...}`, so the pattern never matches and the helper **silently returns 1.0 for every strategy**. The reconstructed 'raw confidence' is therefore the *scaled* confidence — while the live gate (`live_scan.py:1528`) compares the **raw** confidence, because the weight is applied afterwards (line 1536, SF-3). Same lever, two different numbers.
+
+| Strategy | `agent_weight()` returns | Weight actually applied | Scale error | Weights seen live |
+|---|--:|--:|--:|---|
+| 50-20-Pullback | 1.0 | 0.948 | ×0.948 | 0.8, 0.948, 1.0 |
+| CRT | 1.0 | 1.3 | ×1.3 | 1.1, 1.262, 1.3 |
+| Stair | 1.0 | 1.1 | ×1.1 | 0.9, 1.1 |
+| 3-Pushes | 1.0 | 1.2 | ×1.2 | 1.0, 1.165, 1.2 |
+| B1-3in1 | 1.0 | 1.0 | ×1.0 | 1.0 |
+| Two-Yang | 1.0 | 1.0 | ×1.0 | 0.8 |
+| RSI-Div | 1.0 | 0.6 | ×0.6 | 0.6, 0.7, 0.85 |
+| B1 | 1.0 | 0.9 | ×0.9 | 1.0 |
+| H-Pattern | 1.0 | 1.0 | ×1.0 | 1.2 |
+| Kell-Cycle | 1.0 | 0.7 | ×0.7 | 0.7, 0.9 |
+
+A `min_conf=65` candidate therefore admits true raw ≥ 50 on CRT (×1.3) but needs raw ≥ 108 on RSI-Div (×0.6) — a confidence floor that looks cheap for up-weighted strategies and impossible for down-weighted ones. Only one published cell uses `min_conf` (Two-Yang BTC-USD, 65, weight 0.8), so there is no live impact today, but the search that produced every other config was distorted.
+
+**(b) The 'second, independent track' is independent in resolution, not in time.** The track spans **182 days** (2026-04-20 → 2026-10-20, 2297 trades), but its *holdout* — the last 30% of its trades — lands inside the same recent window as the live track's holdout, because the split is per-strategy and chronological.
+
+| Strategy | Live holdout | 2nd-track holdout | Overlap | 2nd-track trades replayable |
+|---|---|---|--:|--:|
+| 50-20-Pullback | 2026-09-11 → 2026-10-21 (n=288) | 2026-08-31 → 2026-10-20 (n=130) | 38 days (97%) | 161/432 |
+| B1 | 2026-09-29 → 2026-10-18 (n=5) | 2026-08-28 → 2026-10-05 (n=15) | 5 days (26%) | 17/50 |
+| H-Pattern | 2026-09-21 → 2026-10-19 (n=12) | 2026-08-27 → 2026-10-19 (n=64) | 27 days (100%) | 73/211 |
+| Kell-Cycle | 2026-09-10 → 2026-10-19 (n=15) | 2026-08-26 → 2026-10-20 (n=239) | 39 days (100%) | 262/794 |
+| Stair | 2026-09-14 → 2026-10-20 (n=104) | 2026-09-01 → 2026-10-20 (n=129) | 36 days (100%) | 155/429 |
+| Two-Yang | 2026-09-11 → 2026-10-20 (n=40) | 2026-08-31 → 2026-10-20 (n=115) | 39 days (100%) | 136/381 |
+
+`load_bars()` fetches only **60 days** of 5-minute bars, so the second track's genuinely earlier training window (before 2026-08-22) cannot be replayed at all — `prepare_trade()` returns `None` and those trades are dropped silently. The verdict survives (the holdout is 100% inside the window), but the independence the report claims does not exist: the second track tests robustness to **bar resolution and trade population**, not to **market regime**.
 
 ## 6. Recommended changes
 
@@ -811,7 +864,7 @@ These are the changes the four dimensions actually point at: drop the instrument
 
 ## 7. Methodology and caveats
 
-- **Windows.** `7d` = trades whose `entry_time` falls inside the last 7 days (cutoff 2026-10-14T05:34:02.458882+00:00); `30d` and `all-time` are the same rule extended. All 3,265 trades are `status: closed`, so no open-position mark-to-market is mixed in.
+- **Windows.** `7d` = trades whose `entry_time` falls inside the last 7 days (cutoff 2026-10-14T06:41:41.448235+00:00); `30d` and `all-time` are the same rule extended. All 3,265 trades are `status: closed`, so no open-position mark-to-market is mixed in.
 - **`opt_holdout`** = the optimiser's own evaluation set: the last 30% of that strategy's A/B trades, split per strategy the way `backtest_optimizer.py` does it. Used in §5.1 to replay the published configs.
 - **Profit factor** = gross winning R ÷ gross losing R (not wins/losses). Where there are no losses, PF is reported as gross win R with a note. This is the same definition `backtest_optimizer.py` uses (`_agg`), so the two reports are directly comparable.
 - **Direction** is normalised: `long/bullish/up` → LONG, `short/bearish/down` → SHORT, `none` → FLAT.
@@ -823,4 +876,4 @@ These are the changes the four dimensions actually point at: drop the instrument
 
 ---
 
-_Generated by the LLM Iteration Scientist (deep 4D mode) at 2026-10-21T13:34:32.636285+08:00. Analysis only — no parameter was applied._
+_Generated by the LLM Iteration Scientist (deep 4D mode) at 2026-10-21T14:42:11.609893+08:00. Analysis only — no parameter was applied._
