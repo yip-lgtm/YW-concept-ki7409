@@ -1287,24 +1287,22 @@ Detector result: {json.dumps(det_summary, default=str)[:500]}
 
 禁止 <think> 標籤。"""
     try:
-        r = requests.post(
-            MINIMAX_URL,
-            headers={"Authorization": f"Bearer {MINIMAX_KEY}"},
-            json={
-                "model": MINIMAX_MODEL,
-                "max_tokens": 1024,
-                "messages": [
-                    {"role": "system", "content": "你是量化交易員。直接輸出 GRADE/CONFIDENCE/REASON。"},
-                    {"role": "user", "content": prompt},
-                ],
-            },
+        # One call, through the shared client. This used to fire a first
+        # requests.post purely to read its status code, throw the body
+        # away, and then make a second call through chat() — and that
+        # second call passed `system=system` where no `system` variable
+        # existed in scope. The NameError was caught by the outer except,
+        # every signal came back with confidence 0, and the live system
+        # confirmed no signals at all. It also doubled the LLM spend for
+        # every candidate signal.
+        content, _llm_err = chat(
+            prompt,
+            system="你是量化交易員。直接輸出 GRADE/CONFIDENCE/REASON。",
+            max_tokens=1024,
             timeout=30,
         )
-        if r.status_code != 200:
-            return {"grade": "?", "confidence": 0, "reason": f"http {r.status_code}"}
-        content, _llm_err = chat(prompt, system=system)
         if _llm_err:
-            content = ""
+            return {"grade": "?", "confidence": 0, "reason": f"llm: {_llm_err[:80]}"}
 
         # Strip thinking
         if "</think>" in content:

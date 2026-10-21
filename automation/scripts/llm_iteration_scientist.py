@@ -261,24 +261,20 @@ REASON: <what to do>
 SUGGESTED_PARAMS: NONE
 """
     try:
-        r = requests.post(
-            MINIMAX_URL,
-            headers={"Authorization": f"Bearer {MINIMAX_KEY}"},
-            json={
-                "model": MINIMAX_MODEL,
-                "max_tokens": 600,
-                "messages": [
-                    {"role": "system", "content": "你是 LLM iteration scientist。輸出 GRADE/CONFIDENCE/DIAGNOSIS/REASON/SUGGESTED_PARAMS。"},
-                    {"role": "user", "content": prompt},
-                ],
-            },
+        # One call, through the shared client. The old code made a first
+        # requests.post only to read its status code, discarded the body,
+        # then called chat(prompt, system=system) with no `system` in
+        # scope — a NameError that turned every diagnosis into
+        # "no parse". See the same fix in live_scan.py.
+        content, _llm_err = chat(
+            prompt,
+            system="你是 LLM iteration scientist。輸出 GRADE/CONFIDENCE/DIAGNOSIS/REASON/SUGGESTED_PARAMS。",
+            max_tokens=600,
             timeout=60,
         )
-        if r.status_code != 200:
-            return {"grade": "?", "confidence": 0, "diagnosis": f"HTTP {r.status_code}", "suggested_params": {}, "auto_apply": False}
-        content, _llm_err = chat(prompt, system=system)
         if _llm_err:
-            content = ""
+            return {"grade": "?", "confidence": 0, "diagnosis": f"llm: {_llm_err[:80]}",
+                    "suggested_params": {}, "auto_apply": False}
 
         if "</think>" in content:
             content = content.split("</think>")[-1].strip()
