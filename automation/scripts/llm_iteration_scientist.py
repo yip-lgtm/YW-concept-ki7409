@@ -413,6 +413,14 @@ def send_tg_summary(results: list):
 
 
 sys.path.insert(0, str(REPO / "automation/scripts"))
+import os as _os
+import sys as _sys
+from pathlib import Path as _Path
+
+_SRC = str(_Path(__file__).resolve().parent.parent / "src")
+if _SRC not in _sys.path:
+    _sys.path.insert(0, _SRC)
+
 from llm_client import chat  # noqa: E402
 from audit import log_action
 

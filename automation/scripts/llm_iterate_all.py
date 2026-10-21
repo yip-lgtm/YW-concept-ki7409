@@ -6,6 +6,14 @@ performance and queries MiniMax-M3 for optimization suggestions specific to
 that strategy's behavior. Suggestions are logged + applied (if high confidence).
 """
 from __future__ import annotations
+import os as _os
+import sys as _sys
+from pathlib import Path as _Path
+
+_SRC = str(_Path(__file__).resolve().parent.parent / "src")
+if _SRC not in _sys.path:
+    _sys.path.insert(0, _SRC)
+
 from llm_client import chat  # noqa: E402
 import os
 import sys
