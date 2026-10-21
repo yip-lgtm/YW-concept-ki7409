@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-21T19:16:18.737709+00:00",
+  "timestamp": "2026-10-21T20:45:00.514585+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -11,19 +11,26 @@
   "ranking": {
     "component": "strategy-ranking",
     "issues": [],
-    "latest_file": "ranking_2026-10-21.md",
-    "latest_date": "2026-10-21"
+    "latest_file": "ranking_2026-10-22.md",
+    "latest_date": "2026-10-22"
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
     "today": "2026-10-21",
-    "ran_today": false,
-    "success_today": false
+    "ran_today": true,
+    "success_today": true,
+    "last_id": 39666174629
   },
   "workflows": [
     {
       "workflow": "yw-daily.yml",
       "runs": [
+        {
+          "id": 39666174629,
+          "conclusion": "success",
+          "created_at": "2026-10-21T19:57:54Z",
+          "event": "schedule"
+        },
         {
           "id": 39487399372,
           "conclusion": "success",
@@ -35,12 +42,6 @@
           "conclusion": "success",
           "created_at": "2026-10-19T20:54:54Z",
           "event": "schedule"
-        },
-        {
-          "id": 39154053724,
-          "conclusion": "success",
-          "created_at": "2026-10-18T18:25:02Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -48,6 +49,12 @@
     {
       "workflow": "yw-publish-signal.yml",
       "runs": [
+        {
+          "id": 39667070696,
+          "conclusion": "success",
+          "created_at": "2026-10-21T20:04:05Z",
+          "event": "schedule"
+        },
         {
           "id": 39487909647,
           "conclusion": "success",
@@ -59,12 +66,6 @@
           "conclusion": "success",
           "created_at": "2026-10-19T20:59:25Z",
           "event": "schedule"
-        },
-        {
-          "id": 39155551583,
-          "conclusion": "success",
-          "created_at": "2026-10-18T18:44:37Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -73,8 +74,14 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 39660080547,
+          "id": 39672916748,
           "conclusion": "running",
+          "created_at": "2026-10-21T20:44:31Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 39660080547,
+          "conclusion": "success",
           "created_at": "2026-10-21T19:15:48Z",
           "event": "workflow_dispatch"
         },
@@ -83,12 +90,6 @@
           "conclusion": "success",
           "created_at": "2026-10-21T18:04:19Z",
           "event": "schedule"
-        },
-        {
-          "id": 39643636758,
-          "conclusion": "success",
-          "created_at": "2026-10-21T17:25:18Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -96,6 +97,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 39665810067,
+          "conclusion": "success",
+          "created_at": "2026-10-21T19:55:18Z",
+          "event": "schedule"
+        },
         {
           "id": 39624915118,
           "conclusion": "success",
@@ -107,12 +114,6 @@
           "conclusion": "success",
           "created_at": "2026-10-21T15:15:24Z",
           "event": "workflow_dispatch"
-        },
-        {
-          "id": 39621902793,
-          "conclusion": "success",
-          "created_at": "2026-10-21T15:00:36Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -120,6 +121,12 @@
     {
       "workflow": "strategy-reward.yml",
       "runs": [
+        {
+          "id": 39667393775,
+          "conclusion": "success",
+          "created_at": "2026-10-21T20:06:18Z",
+          "event": "schedule"
+        },
         {
           "id": 39488020654,
           "conclusion": "success",
@@ -131,12 +138,6 @@
           "conclusion": "success",
           "created_at": "2026-10-19T21:01:22Z",
           "event": "schedule"
-        },
-        {
-          "id": 39155549940,
-          "conclusion": "success",
-          "created_at": "2026-10-18T18:44:36Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -149,12 +150,12 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 2,
+    "n_open": 1,
     "n_stale_24h": 0,
     "issues": [],
-    "long_count": 2,
-    "short_count": 0,
-    "total_risk": 13.382924107142859,
+    "long_count": 0,
+    "short_count": 1,
+    "total_risk": 145.3169642857143,
     "deep_loss_positions": []
   }
 }
