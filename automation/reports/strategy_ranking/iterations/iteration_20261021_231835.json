@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-21",
+  "worst_strategy": {
+    "strategy_id": "b1-mnq",
+    "name": "B1 \u6218\u6cd5 (MNQ)",
+    "rank": 9,
+    "pf": 0,
+    "total_R": 0,
+    "pnl_usd": 0,
+    "win_rate": 0,
+    "n_trades": 0,
+    "avg_pf": 0.0
+  },
+  "llm_response": "<think>The strategy \"b1-mnq\" has zero performance across all metrics - no trades, no profit factor, no R, no win rate. It's been stuck at rank #9 for 7+ days with no activity. Current parameters are empty {}. I need to suggest parameters to get this strategy actually trading and performing.\n\nMNQ is micro Nasdaq futures - this is a contract that works well on shorter timeframes due to its tick value. Let me suggest a solid breakout/momentum strategy setup that would be appropriate.\n\nGiven the B1 (Breakout/Bullish) naming and MNQ:\n- MNQ has good movement, benefits from momentum strategies\n- B1 suggests a breakout approach\n- Need to actually generate trades (currently 0)\n\nLet me suggest:\n- Timeframe: 5min is good for MNQ momentum\n- Weight: Start lower since performance is unproven (0.7-0.8)\n- Indicators: EMA crossover with RSI filter and volume for breakout confirmation\n- R multiples: Standard scaling targets\n\nOutput as JSON only.</think>\n\n```json\n{\n  \"weight\": 0.7,\n  \"timeframe\": \"5min\",\n  \"indicators\": [\"ema_9\", \"ema_21\", \"rsi_14\", \"vwap\", \"volume\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"Strategy shows zero activity for 7+ days with empty parameters, indicating the B1 breakout logic for MNQ is not firing trades. MNQ micro Nasdaq responds well to EMA 9/21 crossovers on 5min charts for short-term momentum, with RSI(14) gating entries to avoid overextended moves. VWAP adds institutional fair-value context, and volume confirmation filters false breakouts. R-m",
+  "suggested_params": {}
+}
