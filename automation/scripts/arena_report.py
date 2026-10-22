@@ -78,6 +78,7 @@ def render(board: dict, taunts: list) -> str:
     lines = [f"🏆 ARENA — {day}", ""]
     lines.append("紙上競技場：15 個策略 agent 各自揸住自己個帳戶，全標的、可同時持倉。"
                  "目標：日日 +1 level。")
+    lines.append(f"（成績 = 已結算嗰日 {day}；最後一欄係進行中嗰日）")
     lines.append("")
     lines.append("| # | agent | lv | 昨日結果 | n | PF | WR | 昨日 P&L | equity | 今日進行中 |")
     lines.append("|---:|---|--:|---|--:|--:|--:|--:|--:|--:|")
@@ -94,11 +95,11 @@ def render(board: dict, taunts: list) -> str:
     leaders = [r for r in rows if r["action"] == "promote"]
     if leaders:
         names = "、".join(r["agent"] for r in leaders)
-        lines += ["", f"⬆️ 今日升級：{names}"]
+        lines += ["", f"⬆️ 升級：{names}"]
     losers = [r for r in rows if r["action"] == "demote"]
     if losers:
         names = "、".join(r["agent"] for r in losers)
-        lines += [f"⬇️ 今日降級：{names}"]
+        lines += [f"⬇️ 降級：{names}"]
     if taunts:
         lines += ["", "──── 互噴環節 ────", ""]
         for t in taunts:
