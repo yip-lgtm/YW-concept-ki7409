@@ -1,8 +1,8 @@
 {
-  "ts": "2026-10-23T03:23:45.835023+08:00",
+  "ts": "2026-10-23T04:49:28.961873+08:00",
   "ticker": "BTC-USD",
-  "h4_bars": 179,
-  "m15_bars": 654,
+  "h4_bars": 180,
+  "m15_bars": 660,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -12,22 +12,22 @@
       "poi": {
         "found": true,
         "basis": "structural pivots",
-        "prior_extreme": 81284.78125,
+        "prior_extreme": 81589.0,
         "swing_levels": [
-          81284.78125,
-          81591.3125,
-          81655.578125,
+          81589.0,
+          81655.859375,
           82536.5625,
-          82875.296875
+          82876.9921875,
+          83042.546875
         ],
-        "pivot_count": 27,
+        "pivot_count": 28,
         "fvg_count": 12
       },
       "cisd": {
         "confirmed": false,
-        "opposing_open": 82074.4921875,
-        "series_length": 1,
-        "last_close": 81311.671875,
+        "opposing_open": 82291.0078125,
+        "series_length": 4,
+        "last_close": 81103.8984375,
         "reason": "no break"
       },
       "strategy": "TTrades-L12",
@@ -41,7 +41,10 @@
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "stage": "CISD not confirmed",
+      "detail": "no break",
+      "direction": "long",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
