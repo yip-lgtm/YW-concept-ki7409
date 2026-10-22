@@ -1,16 +1,38 @@
 {
   "agent": "3-Pushes",
-  "level": 1,
+  "level": 2,
   "realised_usd": 921.4,
   "last_day": "2026-10-22",
-  "positions": [],
+  "positions": [
+    {
+      "id": "3-Pushes|BTC-USD|short|2026-10-22 14:30:00+00:00",
+      "strategy": "3-Pushes",
+      "ticker": "BTC-USD",
+      "direction": "short",
+      "entry": 81655.1328125,
+      "sl": 81997.65870535714,
+      "t1": 81312.60691964286,
+      "t2": 81100.92591785714,
+      "t3": 80758.400025,
+      "sl_dist": 342.525892857142,
+      "units": 0.2919487317173631,
+      "usd_per_point": 1.0,
+      "risk_usd": 100.0,
+      "atr": 214.07868303571428,
+      "opened": "2026-10-22 14:30:00+00:00",
+      "opened_bar": "2026-10-22 14:30:00+00:00",
+      "reason": "",
+      "mark": 81655.1328125,
+      "unrealised_usd": -0.0
+    }
+  ],
   "cursors": {
-    "MNQ=F": "2026-10-22 14:15:00+00:00",
-    "MES=F": "2026-10-22 14:15:00+00:00",
-    "M2K=F": "2026-10-22 14:15:00+00:00",
-    "MGC=F": "2026-10-22 14:15:00+00:00",
-    "GC=F": "2026-10-22 14:15:00+00:00",
-    "BTC-USD": "2026-10-22 14:25:00+00:00"
+    "MNQ=F": "2026-10-22 14:20:00+00:00",
+    "MES=F": "2026-10-22 14:20:00+00:00",
+    "M2K=F": "2026-10-22 14:20:00+00:00",
+    "MGC=F": "2026-10-22 14:20:00+00:00",
+    "GC=F": "2026-10-22 14:20:00+00:00",
+    "BTC-USD": "2026-10-22 14:30:00+00:00"
   },
   "cooldowns": {
     "MNQ=F|live_scan": 3396,
@@ -18,9 +40,23 @@
     "M2K=F|live_scan": 3395,
     "MGC=F|live_scan": 3418,
     "GC=F|live_scan": 3419,
-    "BTC-USD|live_scan": 4172
+    "BTC-USD|live_scan": 4206
   },
   "days": {
+    "2026-10-21": {
+      "n": 22,
+      "PF": 1.618,
+      "WR": 0.5,
+      "RR": 1.618,
+      "pnl_usd": 679.8,
+      "wins": 11,
+      "losses": 11,
+      "old_level": 1,
+      "new_level": 2,
+      "action": "promote",
+      "reason": "PF 1.618 > 1.0, WR 50%, n=22",
+      "provisional": false
+    },
     "2026-10-22": {
       "n": 29,
       "PF": 1.142,
@@ -29,10 +65,10 @@
       "pnl_usd": 241.6,
       "wins": 12,
       "losses": 17,
-      "old_level": 1,
-      "new_level": 1,
-      "action": "hold",
-      "reason": "n=29, PF 1.142, WR 41% \u2014 did not qualify"
+      "provisional": true
     }
-  }
+  },
+  "settled_days": [
+    "2026-10-21"
+  ]
 }

@@ -79,15 +79,18 @@ def render(board: dict, taunts: list) -> str:
     lines.append("紙上競技場：15 個策略 agent 各自揸住自己個帳戶，全標的、可同時持倉。"
                  "目標：日日 +1 level。")
     lines.append("")
-    lines.append("| # | agent | lv | 今日 | n | PF | WR | 今日 P&L | equity |")
-    lines.append("|---:|---|--:|---|--:|--:|--:|--:|--:|")
+    lines.append("| # | agent | lv | 昨日結果 | n | PF | WR | 昨日 P&L | equity | 今日進行中 |")
+    lines.append("|---:|---|--:|---|--:|--:|--:|--:|--:|--:|")
     for r in rows:
         m = r["today"]
         pf = "—" if m["PF"] is None else f"{m['PF']:.2f}"
+        live = r.get("live") or {}
+        live_txt = "—" if not live.get("n") else (
+            f"{live['n']} 單 · ${live['pnl_usd']:+,.0f}")
         lines.append(
             f"| {r['rank']} | {r['agent']} | {r['level']} | {r['action']} | "
             f"{m['n']} | {pf} | {m['WR']:.0%} | ${m['pnl_usd']:+,.0f} | "
-            f"${r['equity_usd']:+,.0f} |")
+            f"${r['equity_usd']:+,.0f} | {live_txt} |")
     leaders = [r for r in rows if r["action"] == "promote"]
     if leaders:
         names = "、".join(r["agent"] for r in leaders)
@@ -153,6 +156,11 @@ def main() -> int:
     ap.add_argument("--taunts", default=str(ARENA_DIR / "taunts"),
                     help="folder holding the agents' trash talk")
     ap.add_argument("--no-telegram", action="store_true")
+    ap.add_argument("--tag", default="board",
+                    help="which one-post-per-day marker to use. The CI "
+                         "publishes the board, the host session publishes the "
+                         "banter, and they must not share a marker or one "
+                         "would suppress the other.")
     ap.add_argument("--out", default=str(ARENA_DIR))
     args = ap.parse_args()
 
@@ -173,10 +181,12 @@ def main() -> int:
     if args.no_telegram:
         return 0
     # The engine runs every fifteen minutes, but the board is published once
-    # a day. The marker file is what keeps it to one post per New York day.
-    marker = out_dir / "last_posted_day"
+    # a day. The marker file is what keeps it to one post per New York day,
+    # and the tag keeps the board's marker and the banter's marker apart.
+    marker = out_dir / f"last_posted_{args.tag}"
     if marker.exists() and marker.read_text().strip() == day:
-        print("[arena-report] already published today — skipping Telegram")
+        print(f"[arena-report] already published {args.tag} today — "
+              "skipping Telegram")
         return 0
     if post_tg(text):
         marker.write_text(day)

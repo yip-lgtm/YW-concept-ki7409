@@ -53,6 +53,7 @@ import sys
 import json
 import argparse
 import traceback
+from collections import defaultdict
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
@@ -160,6 +161,7 @@ def load_account(name: str, rules: dict) -> dict:
             acct.setdefault("cursors", {})
             acct.setdefault("cooldowns", {})
             acct.setdefault("days", {})
+            acct.setdefault("settled_days", [])
             return acct
         except Exception:
             pass
@@ -172,6 +174,7 @@ def load_account(name: str, rules: dict) -> dict:
         "cursors": {},
         "cooldowns": {},
         "days": {},
+        "settled_days": [],
     }
 
 
@@ -655,22 +658,59 @@ def main() -> int:
                 f"over {stats['bars']} bars")
         save_account(name, acct)
 
+    # A day is settled once and only once. The engine runs every fifteen
+    # minutes, and a day that qualifies has to be worth exactly one level —
+    # re-grading the same trades on every run handed out a level every
+    # fifteen minutes.
     board = []
+    settled_any = []
     for a in ARENA_AGENTS:
         name = a["name"]
         acct = accounts[name]
-        trades_today = [t for t in read_trades(name) if t.get("day") == day]
-        metrics = day_metrics(trades_today)
-        result = settle(acct, metrics, rules)
-        acct["days"][day] = {**metrics, **result}
+        settled = set(acct.get("settled_days", []))
+        by_day = defaultdict(list)
+        for t in read_trades(name):
+            if t.get("day"):
+                by_day[t["day"]].append(t)
+        # A New York day is finished once the calendar has moved past it.
+        for d in sorted(by_day):
+            if d >= day or d in settled:
+                continue
+            m = day_metrics(by_day[d])
+            res = settle(acct, m, rules)
+            acct["days"][d] = {**m, **res, "provisional": False}
+            settled.add(d)
+            settled_any.append(d)
+        acct["settled_days"] = sorted(settled)[-30:]
         acct["last_day"] = day
         for d in list(acct["days"])[:-30]:
             acct["days"].pop(d)
         save_account(name, acct)
+
+    # The board shows the last finished competition day. Today is still
+    # being traded, so it is shown as a live column, not a result.
+    all_days = {d for acct in accounts.values() for d in acct.get("days", {})}
+    board_day = max((d for d in all_days if d < day), default=day)
+    for a in ARENA_AGENTS:
+        name = a["name"]
+        acct = accounts[name]
+        settled_row = acct.get("days", {}).get(board_day, {})
+        metrics = {k: settled_row.get(k) for k in
+                   ("n", "PF", "WR", "RR", "pnl_usd", "wins", "losses")}
+        if metrics["n"] is None:
+            metrics = day_metrics([])
+        live = day_metrics([t for t in read_trades(name) if t.get("day") == day])
+        acct["days"][day] = {**live, "provisional": True}
+        save_account(name, acct)
+        result = {"old_level": settled_row.get("old_level", acct["level"]),
+                   "new_level": settled_row.get("new_level", acct["level"]),
+                   "action": settled_row.get("action", "hold"),
+                   "reason": settled_row.get("reason", "no settled day yet")}
         board.append({
             "agent": name, "level": acct["level"],
             "level_before": result["old_level"], "action": result["action"],
             "reason": result["reason"], "equity_usd": equity(acct),
+            "live": live,
             "realised_usd": round(acct.get("realised_usd", 0.0), 2),
             "open_positions": len(acct["positions"]),
             "unrealised_usd": round(sum(float(p.get("unrealised_usd", 0.0))
@@ -686,11 +726,12 @@ def main() -> int:
     for i, row in enumerate(board, 1):
         row["rank"] = i
 
-    payload = {"day": day, "generated_at": datetime.now(timezone.utc).isoformat(),
+    payload = {"day": board_day, "live_day": day,
+               "generated_at": datetime.now(timezone.utc).isoformat(),
                "rules": rules, "board": board}
     (out_dir / "leaderboard.json").write_text(json.dumps(payload, indent=2, default=str))
 
-    md = [f"# Arena — {day}", "",
+    md = [f"# Arena — {board_day}", "",
           "Fifteen strategy agents, each on its own virtual account. "
           "Paper only: no broker order is ever placed.", "",
           "| # | agent | lv | day action | n | PF | WR | day P&L | equity | open |",
@@ -706,7 +747,7 @@ def main() -> int:
     md += ["", "## Why each level moved", ""]
     for row in board:
         md.append(f"- **{row['agent']}** — {row['action']}: {row['reason']}")
-    (out_dir / f"arena_{day}.md").write_text("\n".join(md) + "\n")
+    (out_dir / f"arena_{board_day}.md").write_text("\n".join(md) + "\n")
 
     log(f"wrote {out_dir / 'leaderboard.json'}")
     for row in board:

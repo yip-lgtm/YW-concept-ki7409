@@ -1,6 +1,6 @@
 {
   "agent": "TTrades-Fractal",
-  "level": 1,
+  "level": 2,
   "realised_usd": 104.43,
   "last_day": "2026-10-22",
   "positions": [
@@ -22,19 +22,33 @@
       "opened": "2026-10-22 00:00:00+00:00",
       "opened_bar": "2026-10-22 00:00:00+00:00",
       "reason": "Fractal bearish CISD",
-      "mark": 4068.0,
-      "unrealised_usd": 246.74934822527973
+      "mark": 4063.89990234375,
+      "unrealised_usd": 260.85944123033056
     }
   ],
   "cursors": {
-    "MNQ=F": "2026-10-22 14:15:00+00:00",
-    "MGC=F": "2026-10-22 14:15:00+00:00",
-    "BTC-USD": "2026-10-22 14:25:00+00:00"
+    "MNQ=F": "2026-10-22 14:20:00+00:00",
+    "MGC=F": "2026-10-22 14:20:00+00:00",
+    "BTC-USD": "2026-10-22 14:30:00+00:00"
   },
   "cooldowns": {
     "MGC=F|ttrades": 3255
   },
   "days": {
+    "2026-10-21": {
+      "n": 2,
+      "PF": 10.073,
+      "WR": 0.5,
+      "RR": 10.073,
+      "pnl_usd": 104.43,
+      "wins": 1,
+      "losses": 1,
+      "old_level": 1,
+      "new_level": 2,
+      "action": "promote",
+      "reason": "PF 10.073 > 1.0, WR 50%, n=2",
+      "provisional": false
+    },
     "2026-10-22": {
       "n": 0,
       "PF": 0.0,
@@ -43,10 +57,10 @@
       "pnl_usd": 0,
       "wins": 0,
       "losses": 0,
-      "old_level": 1,
-      "new_level": 1,
-      "action": "hold",
-      "reason": "no trades closed today"
+      "provisional": true
     }
-  }
+  },
+  "settled_days": [
+    "2026-10-21"
+  ]
 }
