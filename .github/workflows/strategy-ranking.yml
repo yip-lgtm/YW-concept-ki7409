@@ -45,6 +45,16 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install -q -r requirements.txt
 
+      - name: Sanitize state files (remove conflict markers)
+        if: always()
+        working-directory: automation
+        run: |
+          # The ranking reads automation/config/strategy_levels.json. If
+          # that file still carries git conflict markers from a merge that
+          # was resolved by hand, the level column of the board comes out
+          # as "?" for every row while the job still reports success.
+          .venv/bin/python scripts/clean_state_files.py 2>&1 || echo "clean_state_files reported a problem"
+
       - name: Run strategy ranking
         id: ranking
         working-directory: automation

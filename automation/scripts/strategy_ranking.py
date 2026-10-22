@@ -309,16 +309,36 @@ def make_ranking_markdown(ranking: list[dict], date_str: str, settings: dict | N
     # Load current levels (per-agent promotion state)
     levels_path = REPO / "automation" / "config" / "strategy_levels.json"
     levels_map = {}
+    ldata = None
     if levels_path.exists():
         try:
             ldata = json.loads(levels_path.read_text())
-            for k, v in ldata.items():
-                if k.startswith("_") or not isinstance(v, dict):
-                    continue
-                # Map by name (case-insensitive)
-                levels_map[k.lower()] = v.get("level", 1)
-        except Exception:
-            pass
+        except Exception as e:
+            # Do not swallow this. A levels file that will not parse means
+            # every level column comes out as "?" while the board still
+            # looks finished. On 2026-10-22 that is exactly what happened:
+            # the file still carried git conflict markers from a merge that
+            # had been resolved by hand.
+            print(f"[ranking] WARN: {levels_path} does not parse ({e})")
+    if ldata is None:
+        try:
+            import subprocess
+            rel = levels_path.relative_to(REPO).as_posix()
+            raw = subprocess.run(["git", "show", f"HEAD:{rel}"], cwd=REPO,
+                                 capture_output=True, text=True).stdout
+            if raw:
+                ldata = json.loads(raw)
+                print(f"[ranking] using the committed copy of {rel}")
+        except Exception as e:
+            print(f"[ranking] WARN: no fallback for the levels file ({e})")
+    if isinstance(ldata, dict):
+        for k, v in ldata.items():
+            if k.startswith("_") or not isinstance(v, dict):
+                continue
+            # Map by name (case-insensitive)
+            levels_map[k.lower()] = v.get("level", 1)
+    if not levels_map:
+        print("[ranking] WARN: no levels available; the Lv column will show ?")
 
     # Strategy-id → level-name mapping (handles "OCS BTC 5m" vs "OCS-BTC-5m" etc.)
     NAME_TO_LEVEL_KEY = {
