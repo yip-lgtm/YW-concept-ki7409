@@ -180,7 +180,7 @@ STRATEGIES = {
     "B1":            {"fn": "b1",            "args": {}, "weight": 1.0, "tf": "5m/15min/1h", "llm_optimized": True},
     "B1-3in1":       {"fn": "b1_3in1",       "args": {}, "weight": 1.0, "tf": "5m", "llm_optimized": True, "multi_asset": True},
     "Kell-Cycle":    {"fn": "kell",          "args": {}, "weight": 0.9, "tf": "5m"},
-    "CRT":           {"fn": "crt",           "args": {"needs_4h": True}, "weight": 1.1, "tf": "5m+4h"},
+    "CRT":           {"fn": "crt",           "args": {"needs_4h": True, "use_last_raid": True, "max_raid_depth_pct": 1.0}, "weight": 1.1, "tf": "5m+4h"},
     "OCS-BTC-5m":    {"fn": "ocs",           "args": {"needs_btc": True}, "weight": 1.0, "tf": "5m"},
     # Argon Gold SOP (docs/21): 15M box + M5 confirmation, gold only.
     # The absolute $5.00 stop cap in the SOP is spot-gold dollars; on MGC=F
