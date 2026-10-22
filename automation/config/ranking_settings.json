@@ -7,23 +7,25 @@
     "timezone": "Asia/Hong_Kong"
   },
   "sort_criteria": {
-    "_comment": "9/22 feedback: Total $ + PF 排行，R 只作附註",
+    "_comment": "2026-10-22: PF → RR → WR 做排序依據。美元唔再係主鍵——sizing 之後每單風險都係 $100，美元 P&L 已經係 R 嘅常數倍（×$100），所以佢唔帶獨立資訊，反而令唔同標的嘅 R 差異被放大。R 與美元都保留做顯示欄。",
     "primary": [
-      "total_pnl_usd"
+      "profit_factor"
     ],
     "secondary": [
-      "profit_factor"
+      "rr_ratio"
     ],
     "tertiary": [
       "win_rate"
     ],
     "r_role": "footnote",
-    "_r_note": "Total R appears as a footnote column (rightmost), not in main sort. 種田要睇$同單筆風險，R係效率指標。"
+    "_r_note": "Total R 與 P&L (USD) 仍然顯示，但唔參與排序。PF/RR/WR 三者都係 R 正規化、跨標的可比。"
   },
   "award_eligibility": {
     "_comment": "9/22 feedback: n<10 唔入獎",
     "min_trades_for_medal": 10,
-    "_detail": "Strategy with n_trades < 10 is shown in the table but does NOT receive 🥇/🥈/🥉. Display with '  ' (no medal). Prevents n=2 B1 cases from taking silver due to lucky 1/1 WR."
+    "_detail": "Strategy with n_trades < 10 is shown in the table but does NOT receive 🥇/🥈/🥉. Display with '  ' (no medal). Prevents n=2 B1 cases from taking silver due to lucky 1/1 WR.",
+    "min_trades_for_ranking": 20,
+    "_ranking_note": "2026-10-22: 一行嘅樣本少過呢個數就唔參與排序，排喺有足夠樣本嘅後面（但仍然顯示）。冇呢個，n=1 嗰種單 trade 會排第一。"
   },
   "ticker_split": {
     "_comment": "9/22 feedback: ticker 拆欄",
@@ -37,16 +39,18 @@
     "rolling_window_days": 7,
     "_note": "20d for daily full-pipeline ranking, 7d for rolling (naturally derived from closed trades within window)."
   },
-  "display_columns": [
-    "rank",
-    "ticker",
-    "strategy",
-    "n_trades",
-    "win_rate",
-    "profit_factor",
-    "total_pnl_usd",
-    "footnote_total_R"
-  ],
+  "display_columns": {
+    "_comment": "2026-10-22: PF、RR、WR 為主欄；R 與美元為附註欄。",
+    "main": [
+      "profit_factor",
+      "rr_ratio",
+      "win_rate"
+    ],
+    "footnote": [
+      "total_R",
+      "total_pnl_usd"
+    ]
+  },
   "table_columns": {
     "main": [
       "Rank",

@@ -33,6 +33,9 @@ from datetime import datetime, timezone, timedelta
 from collections import defaultdict
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from contract_specs import trade_pnl_usd  # noqa: E402
+
 def _find_repo() -> Path:
     """Locate the repo root without hard-coding one machine's path.
 
@@ -148,6 +151,10 @@ def load_strategy_trades(window_days: int) -> dict[str, list[dict]]:
     paths = [
         (REPO / "automation" / "reports" / "live_scan" / "trades.jsonl", "live_scan"),
         (REPO / "automation" / "reports" / "ocs_btc_5m" / "trades.jsonl", "ocs"),
+        # The TTrades family keeps its own trade log. Without this path the
+        # four TTrades agents sat in the level ladder with n=0 for ever and
+        # could never be promoted or demoted on any evidence.
+        (REPO / "automation" / "reports" / "ttrades_btc" / "trades.jsonl", "ttrades"),
     ]
 
     for path, source in paths:
@@ -195,7 +202,11 @@ def compute_metrics(trades: list[dict]) -> dict:
                 "total_pnl_usd": 0, "total_R": 0}
 
     r_vals = [float(t.get("R_multiple", 0)) for t in trades]
-    pnl = sum(float(t.get("pnl_usd", 0)) for t in trades)
+    # Recomputed from the price move and the contract multiplier, not read
+    # from the stored field: trades closed before the sizing fix recorded
+    # the bare price difference, which was dollars only on BTC-USD, so the
+    # two eras were not comparable.
+    pnl = sum(trade_pnl_usd(t) for t in trades)
     wins = [r for r in r_vals if r > 0]
     losses = [r for r in r_vals if r <= 0]
     n_w = len(wins)

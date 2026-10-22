@@ -28,6 +28,9 @@ import pandas as pd
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from contract_specs import trade_pnl_usd  # noqa: E402
 import matplotlib.pyplot as plt
 
 # Auto-detect repo
@@ -64,7 +67,128 @@ STRATEGIES = [
     {"id": "b1-mgc", "name": "B1 战法 (MGC)", "ticker": "MGC=F", "type": "yw", "weight": 0.3, "llm_optimized": True, "optim_date": "2026-08-27"},
     {"id": "b1-btc", "name": "B1 战法 (BTC)", "ticker": "BTC-USD", "type": "yw", "weight": 0.3, "llm_optimized": True, "optim_date": "2026-08-27"},
     {"id": "b1-3in1", "name": "B1 战法 3合1 (MNQ+MGC+BTC)", "ticker": "MNQ=F", "type": "yw", "weight": 1.0, "llm_optimized": True, "optim_date": "2026-08-27"},
+    # The TTrades family keeps its own trade log and its own levels. It
+    # was missing from this board entirely while the settlement tracked it.
+    {"id": "ttrades-fractal", "name": "TTrades Fractal", "ticker": "BTC-USD", "type": "yw", "weight": 1.0},
+    {"id": "ttrades-l12", "name": "TTrades L12", "ticker": "BTC-USD", "type": "yw", "weight": 1.0},
+    {"id": "ttrades-l13", "name": "TTrades L13", "ticker": "BTC-USD", "type": "yw", "weight": 1.0},
+    {"id": "ttrades-l14", "name": "TTrades L14", "ticker": "BTC-USD", "type": "yw", "weight": 1.0},
+    {"id": "argon-gold", "name": "Argon Gold SOP", "ticker": "GC=F", "type": "yw", "weight": 1.0},
 ]
+
+
+# Strategy id → (name in trades.jsonl, ticker filter or None).
+# The live records use the display names; the B1 family is one strategy
+# traded on three tickers, so it is split per ticker the way the board
+# always presented it.
+STRATEGY_FILTERS = {
+    "h-pattern":        ("H-Pattern", None),
+    "3-pushes":         ("3-Pushes", None),
+    "two-yang":         ("Two-Yang", None),
+    "rsi-div":          ("RSI-Div", None),
+    "50-20-pullback":   ("50-20-Pullback", None),
+    "stair-pattern":    ("Stair", None),
+    "crt":              ("CRT", None),
+    "kell-cycle":       ("Kell-Cycle", None),
+    "b1-mnq":           ("B1", "MNQ=F"),
+    "b1-mgc":           ("B1", "MGC=F"),
+    "b1-btc":           ("B1", "BTC-USD"),
+    "b1-3in1":          ("B1-3in1", None),
+    "ocs-btc":          ("OCS-BTC-5m", None),
+    "ttrades-fractal":  ("TTrades-Fractal", None),
+    "ttrades-l12":      ("TTrades-L12", None),
+    "ttrades-l13":      ("TTrades-L13", None),
+    "ttrades-l14":      ("TTrades-L14", None),
+    "argon-gold":       ("Argon-Gold", None),
+}
+
+
+def _parse_iso(s):
+    if not s:
+        return None
+    try:
+        d = datetime.fromisoformat(str(s).replace("Z", "+00:00"))
+        if d.tzinfo is None:
+            d = d.replace(tzinfo=timezone.utc)
+        return d.astimezone(timezone.utc)
+    except Exception:
+        return None
+
+
+def load_closed_trades(days: int) -> dict:
+    """Real closed trades per (strategy, ticker) over the lookback window.
+
+    The ranking board used to be built from a hard-coded table of numbers
+    left over from an earlier backtest, so every row on it was fabricated
+    and nothing on it moved. This reads the trades the system actually
+    made.
+    """
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
+    paths = [
+        (REPO / "automation/reports/live_scan/trades.jsonl", "live"),
+        (REPO / "automation/reports/ocs_btc_5m/trades.jsonl", "ocs"),
+        (REPO / "automation/reports/ttrades_btc/trades.jsonl", "ttrades"),
+    ]
+    out = {}
+    for path, source in paths:
+        if not path.exists():
+            continue
+        try:
+            lines = path.read_text(errors="ignore").splitlines()
+        except Exception:
+            continue
+        for line in lines:
+            line = line.strip()
+            if not line or line[0] in "<=>":
+                continue
+            try:
+                t = json.loads(line)
+            except Exception:
+                continue
+            if t.get("status") != "closed":
+                continue
+            et = _parse_iso(t.get("exit_time") or t.get("entry_time"))
+            if not et or et < cutoff:
+                continue
+            name = t.get("strategy") or ("OCS-BTC-5m" if source == "ocs" else None)
+            if not name:
+                continue
+            key = (name, t.get("ticker", ""))
+            out.setdefault(key, []).append(t)
+    return out
+
+
+def live_stats(strategy_id: str, trades_by_key: dict, days: int) -> dict:
+    """PF, RR, WR and the true dollar result for one strategy row."""
+    name, ticker = STRATEGY_FILTERS.get(strategy_id, (None, None))
+    trades = []
+    for (n, tk), rows in trades_by_key.items():
+        if n != name:
+            continue
+        if ticker and tk != ticker:
+            continue
+        trades.extend(rows)
+    if not trades:
+        return {"n_trades": 0, "wins": 0, "losses": 0, "win_rate": 0.0,
+                "profit_factor": 0.0, "rr_ratio": 0.0, "total_R": 0.0,
+                "total_pnl_usd": 0.0, "_no_data": True}
+    rs = [float(t.get("R_multiple", 0) or 0) for t in trades]
+    wins = [r for r in rs if r > 0]
+    losses = [r for r in rs if r <= 0]
+    n_w, n_l = len(wins), len(losses)
+    gross_win = sum(wins)
+    gross_loss = abs(sum(losses))
+    pf = gross_win / gross_loss if gross_loss > 0 else (10.0 if gross_win > 0 else 0.0)
+    avg_win = (gross_win / n_w) if n_w > 0 else 0.0
+    avg_loss = (abs(sum(losses)) / n_l) if n_l > 0 else 0.0
+    rr = avg_win / avg_loss if avg_loss > 0 else (10.0 if avg_win > 0 else 0.0)
+    return {"n_trades": len(trades), "wins": n_w, "losses": n_l,
+            "win_rate": round(n_w / len(trades), 4),
+            "profit_factor": round(pf, 3),
+            "rr_ratio": round(rr, 3),
+            "avg_win_R": round(avg_win, 3), "avg_loss_R": round(avg_loss, 3),
+            "total_R": round(sum(rs), 3),
+            "total_pnl_usd": round(sum(trade_pnl_usd(t) for t in trades), 2)}
 
 
 def run_ocs_backtest(days: int = 20) -> dict:
@@ -155,8 +279,17 @@ def compute_ranking(results: list[dict], settings: dict | None = None) -> list[d
     secondary = s["sort_criteria"].get("secondary", [])
     tertiary = s["sort_criteria"].get("tertiary", [])
 
+    min_n = s.get("award_eligibility", {}).get("min_trades_for_ranking", 0)
+
     def sort_key(r):
-        return tuple(-float(r.get(k, 0)) for k in (primary + secondary + tertiary))
+        # A row with too few trades cannot be ranked on its profit factor:
+        # one trade gives PF 10.0 and a 100% win rate. Those rows go below
+        # every row that has enough evidence, whatever their numbers are.
+        # Negated, because the sort is ascending: a qualified row (1)
+        # must come before an unqualified one (0).
+        qualified = -1 if float(r.get("n_trades", 0)) >= min_n else 0
+        return (qualified,) + tuple(-float(r.get(k, 0))
+                                   for k in (primary + secondary + tertiary))
 
     return sorted(results, key=sort_key)
 
@@ -202,6 +335,11 @@ def make_ranking_markdown(ranking: list[dict], date_str: str, settings: dict | N
         "two-yang":        "two-yang",
         "rsi-div":         "rsi-div",
         "kell-cycle":      "kell-cycle",
+        "ttrades-fractal": "ttrades-fractal",
+        "ttrades-l12":     "ttrades-l12",
+        "ttrades-l13":     "ttrades-l13",
+        "ttrades-l14":     "ttrades-l14",
+        "argon-gold":      "argon-gold",
     }
 
     # Build header
@@ -210,27 +348,53 @@ def make_ranking_markdown(ranking: list[dict], date_str: str, settings: dict | N
     md = f"""# Strategy Ranking — {date_str}
 
 ## Summary
-**{len(ranking)} strategies** ranked by **Total P&L (USD)**, tie-broken by **Profit Factor**.
-Sort key: Total $ → PF → Win Rate. Total R is a footnote (efficiency, not cash flow).
+**{len(ranking)} strategies** ranked by **PF → RR → WR**.
+Sort key: Profit Factor → Risk/Reward → Win Rate. Total R and P&L (USD) are footnotes.
 Level: current agent level (auto-promotes by daily settlement).
 
-| Rank | {ticker_header} Strategy | Lv | Trades | WR | PF | P&L (USD) |
-|------|{ticker_sep}----------|-----|--------|----|-----|-----------|
+| Rank | {ticker_header} Strategy | Lv | Trades | PF | RR | WR | R | P&L (USD) |
+|------|{ticker_sep}----------|-----|--------|----|----|----|---|-----------|
 """
+    min_rank_n = s.get("award_eligibility", {}).get("min_trades_for_ranking", 0)
     for i, r in enumerate(ranking, 1):
         rs = r["strategy"]
         n = r.get("n_trades", 0)
+        # Rows without enough trades are not ranked at all; they are listed
+        # in their own section further down.
+        # Look up level: try mapping table, then id, then name
+        sid = rs.get("id", "").lower()
+        level_key = NAME_TO_LEVEL_KEY.get(sid, sid)
+        lv = levels_map.get(level_key) or levels_map.get(sid) or levels_map.get(rs["name"].lower()) or "?"
+        r["_level"] = lv
+        if n < min_rank_n:
+            continue
         # n<10 唔入獎 — no medal, just position
         if n >= min_medal:
             emoji = "🥇" if i == 1 else "🥈" if i == 2 else "🥉" if i == 3 else "  "
         else:
             emoji = "  "  # disqualified from medal
         tk = f" {rs['ticker']} |" if show_ticker else ""
-        # Look up level: try mapping table, then id, then name
-        sid = rs.get("id", "").lower()
-        level_key = NAME_TO_LEVEL_KEY.get(sid, sid)
-        lv = levels_map.get(level_key) or levels_map.get(sid) or levels_map.get(rs["name"].lower()) or "?"
-        md += f"| {i} {emoji} |{tk} {rs['name']} | {lv} | {n} | {r['win_rate']:.1f}% | {r['profit_factor']:.2f} | ${r['total_pnl_usd']:+,.0f} |\n"
+        md += (f"| {i} {emoji} |{tk} {rs['name']} | {lv} | {n} | "
+               f"{r['profit_factor']:.2f} | {r.get('rr_ratio', 0):.2f} | "
+               f"{r['win_rate']*100:.1f}% | {r.get('total_R', 0):+.1f}R | "
+               f"${r['total_pnl_usd']:+,.0f} |\n")
+
+    # Rows without enough trades are shown separately: one trade gives
+    # PF 10.0 and a 100% win rate, and leaving those in the same table
+    # invites reading them as the best strategies on the board.
+    min_rank_n = s.get("award_eligibility", {}).get("min_trades_for_ranking", 0)
+    thin = [r for r in ranking if r.get("n_trades", 0) < min_rank_n]
+    if thin:
+        md += f"\n## 樣本不足（n < {min_rank_n}，唔參與排名）\n"
+        md += ("| Strategy | Lv | Trades | PF | RR | WR | R | P&L (USD) |\n"
+               "|---|---|---|---|---|---|---|---|\n")
+        for r in thin:
+            rs = r["strategy"]
+            tk = f" {rs['ticker']} |" if show_ticker else ""
+            md += (f"|{tk} {rs['name']} | {r.get('_level', '?')} | "
+                   f"{r.get('n_trades', 0)} | {r['profit_factor']:.2f} | "
+                   f"{r.get('rr_ratio', 0):.2f} | {r['win_rate']*100:.1f}% | "
+                   f"{r.get('total_R', 0):+.1f}R | ${r['total_pnl_usd']:+,.0f} |\n")
 
     # Top 3 / Bottom 3 from ELIGIBLE strategies only
     eligible = [r for r in ranking if r.get("n_trades", 0) >= min_medal]
@@ -238,7 +402,9 @@ Level: current agent level (auto-promotes by daily settlement).
     for i, r in enumerate(eligible[:3], 1):
         rs = r["strategy"]
         tk = f" ({rs['ticker']})" if show_ticker else ""
-        md += f"{i}. **{rs['name']}**{tk} — P&L ${r['total_pnl_usd']:+,.0f}, PF {r['profit_factor']:.2f}, {r['win_rate']:.1f}% WR (n={r.get('n_trades', 0)})\n"
+        md += (f"{i}. **{rs['name']}**{tk} — PF {r['profit_factor']:.2f}, "
+               f"RR {r.get('rr_ratio', 0):.2f}, {r['win_rate']*100:.1f}% WR, "
+               f"${r['total_pnl_usd']:+,.0f} (n={r.get('n_trades', 0)})\n")
 
     md += "\n## Bottom 3 (eligible, n≥10)\n"
     for j, r in enumerate(eligible[-3:], len(eligible) - 2):
@@ -246,7 +412,9 @@ Level: current agent level (auto-promotes by daily settlement).
             continue
         rs = r["strategy"]
         tk = f" ({rs['ticker']})" if show_ticker else ""
-        md += f"{j}. **{rs['name']}**{tk} — P&L ${r['total_pnl_usd']:+,.0f}, PF {r['profit_factor']:.2f}, {r['win_rate']:.1f}% WR (n={r.get('n_trades', 0)})\n"
+        md += (f"{j}. **{rs['name']}**{tk} — PF {r['profit_factor']:.2f}, "
+               f"RR {r.get('rr_ratio', 0):.2f}, {r['win_rate']*100:.1f}% WR, "
+               f"${r['total_pnl_usd']:+,.0f} (n={r.get('n_trades', 0)})\n")
 
     # Footnote — Total R as supplementary info
     md += "\n## Footnote — Total R (efficiency, not in sort)\n"
@@ -311,26 +479,33 @@ def main():
         + settings["sort_criteria"].get("secondary", [])
     )
 
-    print(f"[ranking] Computing daily strategy ranking for {today_hkt} ({days}d backtest)...")
-    print(f"[ranking] Sort: {sort_desc} (R excluded — footnote only)")
+    print(f"[ranking] Computing daily strategy ranking for {today_hkt} ({days}d of closed trades)...")
+    print(f"[ranking] Sort: {sort_desc}")
     print(f"[ranking] Min trades for medal: {settings['award_eligibility']['min_trades_for_medal']}")
 
+    trades_by_key = load_closed_trades(days)
     results = []
     for strat in STRATEGIES:
         print(f"  - {strat['name']} ({strat['id']})...", end=" ")
-        if strat["type"] == "ocs":
-            data = run_ocs_backtest(days)
-        else:
-            data = run_yw_backtest(strat["id"], days)
+        data = live_stats(strat["id"], trades_by_key, days)
         data["strategy"] = strat
         results.append(data)
-        print(f"PnL=${data['total_pnl_usd']:+,.0f}, PF={data['profit_factor']:.2f}, R={data['total_R']:+.0f}")
+        if data.get("_no_data"):
+            print("no closed trades in window")
+        else:
+            print(f"n={data['n_trades']}, PF={data['profit_factor']:.2f}, "
+                  f"RR={data['rr_ratio']:.2f}, WR={data['win_rate']*100:.1f}%, "
+                  f"${data['total_pnl_usd']:+,.0f}")
 
     # Rank using 9/22 收緊版 sort
     ranking = compute_ranking(results, settings)
     n_eligible = sum(1 for r in ranking if r.get("n_trades", 0) >= settings["award_eligibility"]["min_trades_for_medal"])
-    print(f"\n[ranking] Top: {ranking[0]['strategy']['name']} (P&L ${ranking[0]['total_pnl_usd']:+,.0f}, PF {ranking[0]['profit_factor']:.2f})")
-    print(f"[ranking] Bottom: {ranking[-1]['strategy']['name']} (P&L ${ranking[-1]['total_pnl_usd']:+,.0f}, PF {ranking[-1]['profit_factor']:.2f})")
+    print(f"\n[ranking] Top: {ranking[0]['strategy']['name']} "
+          f"(PF {ranking[0]['profit_factor']:.2f}, RR {ranking[0].get('rr_ratio', 0):.2f}, "
+          f"WR {ranking[0]['win_rate']*100:.1f}%)")
+    print(f"[ranking] Bottom: {ranking[-1]['strategy']['name']} "
+          f"(PF {ranking[-1]['profit_factor']:.2f}, RR {ranking[-1].get('rr_ratio', 0):.2f}, "
+          f"WR {ranking[-1]['win_rate']*100:.1f}%)")
     print(f"[ranking] Eligible (n≥{settings['award_eligibility']['min_trades_for_medal']}): {n_eligible}/{len(ranking)}")
 
     # Output dir

@@ -96,3 +96,40 @@ def size_position(ticker: str, stop_distance: float,
 def true_pnl(ticker: str, price_move: float, units: float = 1.0) -> float:
     """The dollar result of a price move on a sized position."""
     return float(price_move) * usd_per_point(ticker) * float(units)
+
+
+def trade_pnl_usd(trade: dict) -> float:
+    """The dollar result of a closed trade.
+
+    Derived from the R-multiple and the dollar risk the position carried:
+    pnl_usd = R x (stop distance x contract multiplier x units).
+
+    Going through the R-multiple rather than through the price move
+    matters. A trade opened with an unusable direction — which is what
+    every B1-3in1 position used to get — has no price-move sign that
+    means anything, while its R-multiple always does. Reading the price
+    move directly turned those trades' losses into gains.
+
+    The stored pnl_usd is a cache and is not comparable across the
+    changeover: trades closed before the sizing fix recorded the bare
+    price difference, which was dollars only on BTC-USD. Recomputing makes
+    every trade comparable, before and after the fix.
+    """
+    r = trade.get("R_multiple")
+    sl_dist = trade.get("sl_dist")
+    if r is not None and sl_dist:
+        mult = float(trade.get("usd_per_point") or usd_per_point(trade.get("ticker", "")))
+        units = float(trade.get("units") or 1.0)
+        return float(r) * float(sl_dist) * mult * units
+    entry = trade.get("entry")
+    exit_price = trade.get("exit_price")
+    if entry is None or exit_price is None:
+        try:
+            return float(trade.get("pnl_usd", 0.0) or 0.0)
+        except (TypeError, ValueError):
+            return 0.0
+    d = str(trade.get("direction", "")).strip().lower()
+    sign = 1 if d in ("long", "buy", "up", "bullish", "l") else -1
+    mult = float(trade.get("usd_per_point") or usd_per_point(trade.get("ticker", "")))
+    units = float(trade.get("units") or 1.0)
+    return sign * (float(exit_price) - float(entry)) * mult * units

@@ -5,11 +5,36 @@
   "ranking": [
     {
       "rank": 1,
-      "n_trades": 571,
-      "win_rate": 47.6,
-      "total_R": 95,
-      "profit_factor": 1.25,
-      "total_pnl_usd": 3816,
+      "n_trades": 30,
+      "wins": 12,
+      "losses": 18,
+      "win_rate": 0.4,
+      "profit_factor": 1.079,
+      "rr_ratio": 1.618,
+      "avg_win_R": 1.618,
+      "avg_loss_R": 1.0,
+      "total_R": 1.416,
+      "total_pnl_usd": -178.24,
+      "strategy": {
+        "id": "ttrades-l13",
+        "name": "TTrades L13",
+        "ticker": "BTC-USD",
+        "type": "yw",
+        "weight": 1.0
+      }
+    },
+    {
+      "rank": 2,
+      "n_trades": 115,
+      "wins": 43,
+      "losses": 72,
+      "win_rate": 0.3739,
+      "profit_factor": 0.999,
+      "rr_ratio": 1.673,
+      "avg_win_R": 1.627,
+      "avg_loss_R": 0.972,
+      "total_R": -0.044,
+      "total_pnl_usd": -660.08,
       "strategy": {
         "id": "50-20-pullback",
         "name": "50/20 Pullback",
@@ -19,60 +44,17 @@
       }
     },
     {
-      "rank": 2,
-      "n_trades": 500,
-      "win_rate": 46.2,
-      "total_R": 70,
-      "profit_factor": 1.18,
-      "total_pnl_usd": 2796,
-      "strategy": {
-        "id": "kell-cycle",
-        "name": "Kell Cycle",
-        "ticker": "MNQ=F",
-        "type": "yw",
-        "weight": 0.6,
-        "llm_optimized": true,
-        "optim_date": "2026-08-26 v4"
-      }
-    },
-    {
       "rank": 3,
-      "n_trades": 271,
-      "win_rate": 53.9,
-      "profit_factor": 1.17,
-      "total_R": 21.0,
-      "total_pnl_usd": 1353.74,
-      "avg_R": 0.077,
-      "strategy": {
-        "id": "ocs-btc",
-        "name": "OCS BTC 5m",
-        "ticker": "BTC-USD",
-        "type": "ocs",
-        "weight": 1.0
-      }
-    },
-    {
-      "rank": 4,
-      "n_trades": 46,
-      "win_rate": 54.3,
-      "total_R": 25,
-      "profit_factor": 1.4,
-      "total_pnl_usd": 1068,
-      "strategy": {
-        "id": "h-pattern",
-        "name": "H-Pattern",
-        "ticker": "MNQ=F",
-        "type": "yw",
-        "weight": 1.2
-      }
-    },
-    {
-      "rank": 5,
-      "n_trades": 383,
-      "win_rate": 43.1,
-      "total_R": 21,
-      "profit_factor": 1.08,
-      "total_pnl_usd": 844,
+      "n_trades": 45,
+      "wins": 15,
+      "losses": 30,
+      "win_rate": 0.3333,
+      "profit_factor": 0.899,
+      "rr_ratio": 1.798,
+      "avg_win_R": 1.618,
+      "avg_loss_R": 0.9,
+      "total_R": -2.73,
+      "total_pnl_usd": -399.5,
       "strategy": {
         "id": "stair-pattern",
         "name": "Stair Pattern",
@@ -84,27 +66,17 @@
       }
     },
     {
-      "rank": 6,
-      "n_trades": 85,
-      "win_rate": 47.0,
-      "total_R": 12,
-      "profit_factor": 1.1,
-      "total_pnl_usd": 580,
-      "strategy": {
-        "id": "3-pushes",
-        "name": "3-Pushes",
-        "ticker": "MNQ=F",
-        "type": "yw",
-        "weight": 1.0
-      }
-    },
-    {
-      "rank": 7,
-      "n_trades": 78,
-      "win_rate": 48.7,
-      "total_R": 9,
-      "profit_factor": 1.06,
-      "total_pnl_usd": 410,
+      "rank": 4,
+      "n_trades": 66,
+      "wins": 23,
+      "losses": 43,
+      "win_rate": 0.3485,
+      "profit_factor": 0.865,
+      "rr_ratio": 1.618,
+      "avg_win_R": 1.618,
+      "avg_loss_R": 1.0,
+      "total_R": -5.786,
+      "total_pnl_usd": -2638.72,
       "strategy": {
         "id": "crt",
         "name": "CRT",
@@ -116,63 +88,17 @@
       }
     },
     {
-      "rank": 8,
-      "n_trades": 32,
-      "win_rate": 50.0,
-      "total_R": 5,
-      "profit_factor": 1.05,
-      "total_pnl_usd": 240,
-      "strategy": {
-        "id": "two-yang",
-        "name": "\u5169\u967d\u593e\u4e00\u9670",
-        "ticker": "MNQ=F",
-        "type": "yw",
-        "weight": 0.3,
-        "llm_optimized": true,
-        "optim_date": "2026-08-25 v2"
-      }
-    },
-    {
-      "rank": 9,
-      "n_trades": 0,
-      "win_rate": 0,
-      "total_R": 0,
-      "profit_factor": 0,
-      "total_pnl_usd": 0,
-      "strategy": {
-        "id": "b1-mnq",
-        "name": "B1 \u6218\u6cd5 (MNQ)",
-        "ticker": "MNQ=F",
-        "type": "yw",
-        "weight": 0.4,
-        "llm_optimized": true,
-        "optim_date": "2026-08-27"
-      }
-    },
-    {
-      "rank": 10,
-      "n_trades": 0,
-      "win_rate": 0,
-      "total_R": 0,
-      "profit_factor": 0,
-      "total_pnl_usd": 0,
-      "strategy": {
-        "id": "b1-mgc",
-        "name": "B1 \u6218\u6cd5 (MGC)",
-        "ticker": "MGC=F",
-        "type": "yw",
-        "weight": 0.3,
-        "llm_optimized": true,
-        "optim_date": "2026-08-27"
-      }
-    },
-    {
-      "rank": 11,
-      "n_trades": 0,
-      "win_rate": 0,
-      "total_R": 0,
-      "profit_factor": 0,
-      "total_pnl_usd": 0,
+      "rank": 5,
+      "n_trades": 1,
+      "wins": 1,
+      "losses": 0,
+      "win_rate": 1.0,
+      "profit_factor": 10.0,
+      "rr_ratio": 10.0,
+      "avg_win_R": 1.618,
+      "avg_loss_R": 0.0,
+      "total_R": 1.618,
+      "total_pnl_usd": 900.46,
       "strategy": {
         "id": "b1-btc",
         "name": "B1 \u6218\u6cd5 (BTC)",
@@ -184,12 +110,205 @@
       }
     },
     {
+      "rank": 6,
+      "n_trades": 6,
+      "wins": 5,
+      "losses": 1,
+      "win_rate": 0.8333,
+      "profit_factor": 8.09,
+      "rr_ratio": 1.618,
+      "avg_win_R": 1.618,
+      "avg_loss_R": 1.0,
+      "total_R": 7.09,
+      "total_pnl_usd": 1869.57,
+      "strategy": {
+        "id": "h-pattern",
+        "name": "H-Pattern",
+        "ticker": "MNQ=F",
+        "type": "yw",
+        "weight": 1.2
+      }
+    },
+    {
+      "rank": 7,
+      "n_trades": 19,
+      "wins": 10,
+      "losses": 9,
+      "win_rate": 0.5263,
+      "profit_factor": 1.798,
+      "rr_ratio": 1.618,
+      "avg_win_R": 1.618,
+      "avg_loss_R": 1.0,
+      "total_R": 7.18,
+      "total_pnl_usd": 834.91,
+      "strategy": {
+        "id": "3-pushes",
+        "name": "3-Pushes",
+        "ticker": "MNQ=F",
+        "type": "yw",
+        "weight": 1.0
+      }
+    },
+    {
+      "rank": 8,
+      "n_trades": 2,
+      "wins": 1,
+      "losses": 1,
+      "win_rate": 0.5,
+      "profit_factor": 1.618,
+      "rr_ratio": 1.618,
+      "avg_win_R": 1.618,
+      "avg_loss_R": 1.0,
+      "total_R": 0.618,
+      "total_pnl_usd": 31.31,
+      "strategy": {
+        "id": "b1-mgc",
+        "name": "B1 \u6218\u6cd5 (MGC)",
+        "ticker": "MGC=F",
+        "type": "yw",
+        "weight": 0.3,
+        "llm_optimized": true,
+        "optim_date": "2026-08-27"
+      }
+    },
+    {
+      "rank": 9,
+      "n_trades": 3,
+      "wins": 1,
+      "losses": 2,
+      "win_rate": 0.3333,
+      "profit_factor": 0.809,
+      "rr_ratio": 1.618,
+      "avg_win_R": 1.618,
+      "avg_loss_R": 1.0,
+      "total_R": -0.382,
+      "total_pnl_usd": -63.63,
+      "strategy": {
+        "id": "kell-cycle",
+        "name": "Kell Cycle",
+        "ticker": "MNQ=F",
+        "type": "yw",
+        "weight": 0.6,
+        "llm_optimized": true,
+        "optim_date": "2026-08-26 v4"
+      }
+    },
+    {
+      "rank": 10,
+      "n_trades": 12,
+      "wins": 4,
+      "losses": 8,
+      "win_rate": 0.3333,
+      "profit_factor": 0.809,
+      "rr_ratio": 1.618,
+      "avg_win_R": 1.618,
+      "avg_loss_R": 1.0,
+      "total_R": -1.528,
+      "total_pnl_usd": -479.13,
+      "strategy": {
+        "id": "ttrades-l14",
+        "name": "TTrades L14",
+        "ticker": "BTC-USD",
+        "type": "yw",
+        "weight": 1.0
+      }
+    },
+    {
+      "rank": 11,
+      "n_trades": 15,
+      "wins": 3,
+      "losses": 12,
+      "win_rate": 0.2,
+      "profit_factor": 0.405,
+      "rr_ratio": 1.618,
+      "avg_win_R": 1.618,
+      "avg_loss_R": 1.0,
+      "total_R": -7.146,
+      "total_pnl_usd": -856.48,
+      "strategy": {
+        "id": "two-yang",
+        "name": "\u5169\u967d\u593e\u4e00\u9670",
+        "ticker": "MNQ=F",
+        "type": "yw",
+        "weight": 0.3,
+        "llm_optimized": true,
+        "optim_date": "2026-08-25 v2"
+      }
+    },
+    {
       "rank": 12,
       "n_trades": 0,
-      "win_rate": 0,
-      "total_R": 0,
-      "profit_factor": 0,
-      "total_pnl_usd": 0,
+      "wins": 0,
+      "losses": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "rr_ratio": 0.0,
+      "total_R": 0.0,
+      "total_pnl_usd": 0.0,
+      "_no_data": true,
+      "strategy": {
+        "id": "ocs-btc",
+        "name": "OCS BTC 5m",
+        "ticker": "BTC-USD",
+        "type": "ocs",
+        "weight": 1.0
+      }
+    },
+    {
+      "rank": 13,
+      "n_trades": 4,
+      "wins": 0,
+      "losses": 4,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "rr_ratio": 0.0,
+      "avg_win_R": 0.0,
+      "avg_loss_R": 1.0,
+      "total_R": -4.0,
+      "total_pnl_usd": -285.86,
+      "strategy": {
+        "id": "rsi-div",
+        "name": "RSI Divergence",
+        "ticker": "MNQ=F",
+        "type": "yw",
+        "weight": 0.7,
+        "llm_optimized": true,
+        "optim_date": "2026-08-25"
+      }
+    },
+    {
+      "rank": 14,
+      "n_trades": 0,
+      "wins": 0,
+      "losses": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "rr_ratio": 0.0,
+      "total_R": 0.0,
+      "total_pnl_usd": 0.0,
+      "_no_data": true,
+      "strategy": {
+        "id": "b1-mnq",
+        "name": "B1 \u6218\u6cd5 (MNQ)",
+        "ticker": "MNQ=F",
+        "type": "yw",
+        "weight": 0.4,
+        "llm_optimized": true,
+        "optim_date": "2026-08-27"
+      }
+    },
+    {
+      "rank": 15,
+      "n_trades": 19,
+      "wins": 0,
+      "losses": 19,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "rr_ratio": 0.0,
+      "avg_win_R": 0.0,
+      "avg_loss_R": 1.0,
+      "total_R": -19.0,
+      "total_pnl_usd": -1199.24,
       "strategy": {
         "id": "b1-3in1",
         "name": "B1 \u6218\u6cd5 3\u54081 (MNQ+MGC+BTC)",
@@ -201,20 +320,62 @@
       }
     },
     {
-      "rank": 13,
-      "n_trades": 120,
-      "win_rate": 45.0,
-      "total_R": -8,
-      "profit_factor": 0.92,
-      "total_pnl_usd": -380,
+      "rank": 16,
+      "n_trades": 2,
+      "wins": 0,
+      "losses": 2,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "rr_ratio": 0.0,
+      "avg_win_R": 0.0,
+      "avg_loss_R": 1.0,
+      "total_R": -2.0,
+      "total_pnl_usd": -662.9,
       "strategy": {
-        "id": "rsi-div",
-        "name": "RSI Divergence",
-        "ticker": "MNQ=F",
+        "id": "ttrades-fractal",
+        "name": "TTrades Fractal",
+        "ticker": "BTC-USD",
         "type": "yw",
-        "weight": 0.7,
-        "llm_optimized": true,
-        "optim_date": "2026-08-25"
+        "weight": 1.0
+      }
+    },
+    {
+      "rank": 17,
+      "n_trades": 7,
+      "wins": 0,
+      "losses": 7,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "rr_ratio": 0.0,
+      "avg_win_R": 0.0,
+      "avg_loss_R": 1.0,
+      "total_R": -7.0,
+      "total_pnl_usd": -500.55,
+      "strategy": {
+        "id": "ttrades-l12",
+        "name": "TTrades L12",
+        "ticker": "BTC-USD",
+        "type": "yw",
+        "weight": 1.0
+      }
+    },
+    {
+      "rank": 18,
+      "n_trades": 0,
+      "wins": 0,
+      "losses": 0,
+      "win_rate": 0.0,
+      "profit_factor": 0.0,
+      "rr_ratio": 0.0,
+      "total_R": 0.0,
+      "total_pnl_usd": 0.0,
+      "_no_data": true,
+      "strategy": {
+        "id": "argon-gold",
+        "name": "Argon Gold SOP",
+        "ticker": "GC=F",
+        "type": "yw",
+        "weight": 1.0
       }
     }
   ]
