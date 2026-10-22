@@ -9,7 +9,22 @@ For each agent, over the **14d** rolling window:
   - floor at **1**
 - Otherwise: **stay flat** (neutral zone — 1-2 of 3 conditions fail)
 
+<<<<<<< HEAD
 ## Promoted (2 agents) ⬆
+=======
+**Per-agent overrides in force** (LLM-managed, settlement_llm_intervene.py):
+
+- `3-Pushes`: PF>1.0, WR>45%, RR>1.0, n≥10
+- `50-20-Pullback`: PF>0.95, WR>35%, RR>1.0, n≥10
+- `CRT`: PF>0.8, WR>30%, RR>1.0, n≥10
+- `H-Pattern`: PF>1.0, WR>50%, RR>1.0, n≥5
+- `Stair`: PF>0.85, WR>33%, RR>1.0, n≥10
+- `TTrades-L12`: PF>1.2, WR>55%, RR>1.2, n≥15
+- `TTrades-L13`: PF>1.0, WR>39%, RR>1.0, n≥10
+- `TTrades-L14`: PF>0.8, WR>30%, RR>1.0, n≥10
+
+## Promoted (0 agents) ⬆
+>>>>>>> 8fc13072 (fix(settlement): say which thresholds promoted an agent)
 | Agent | Old → New | n | PF | WR | RR | Reason |
 |-------|-----------|---|-----|-----|-----|--------|
 | TTrades-L13 | 1 → 2 ⬆ | 30 | 1.08 | 40.0% | 1.62 | all 3 conditions met |

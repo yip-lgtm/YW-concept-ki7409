@@ -255,7 +255,8 @@ def save_levels_state(state: dict):
 
 
 def make_settlement_markdown(results: list[dict], date_str: str,
-                            settings: dict) -> str:
+                            settings: dict,
+                            agent_overrides: dict | None = None) -> str:
     """Generate daily settlement report."""
     min_n = settings["min_trades"]
     min_pf = settings["min_PF"]
@@ -273,6 +274,23 @@ def make_settlement_markdown(results: list[dict], date_str: str,
     held = [r for r in results if not r.get("promoted") and not r.get("demoted") and n(r) >= min_n]
     insufficient = [r for r in results if n(r) < min_n]
 
+    _ov_names = sorted(agent_overrides)
+    if _ov_names:
+        override_note = (
+            "\n**Per-agent overrides in force** (LLM-managed, "
+            "settlement_llm_intervene.py):\n\n"
+            + "\n".join(
+                f"- `{a}`: PF>{agent_overrides[a].get('min_PF', min_pf)}, "
+                f"WR>{agent_overrides[a].get('min_WR', min_wr)*100:.0f}%, "
+                f"RR>{agent_overrides[a].get('min_RR', min_rr)}, "
+                f"n≥{agent_overrides[a].get('min_trades', min_n)}"
+                for a in _ov_names)
+            + "\n"
+        )
+    else:
+        override_note = ""
+
+    agent_overrides = agent_overrides or {}
     md = f"""# Daily Settlement — {date_str}
 
 ## Rule (Symmetric)
@@ -283,7 +301,7 @@ For each agent, over the **{settings['window_days']}d** rolling window:
   - enabled: **{decrement}** (10/07 user directive)
   - floor at **{min_lv}**
 - Otherwise: **stay flat** (neutral zone — 1-2 of 3 conditions fail)
-
+{override_note}
 ## Promoted ({len(promoted)} agents) ⬆
 | Agent | Old → New | n | PF | WR | RR | Reason |
 |-------|-----------|---|-----|-----|-----|--------|
@@ -292,7 +310,21 @@ For each agent, over the **{settings['window_days']}d** rolling window:
         old = r.get("old_level", 1)
         new = r.get("new_level", 2)
         m = r["metrics"]
-        md += f"| {r['strategy']} | {old} → {new} ⬆ | {m['n_trades']} | {m['profit_factor']:.2f} | {m['win_rate']*100:.1f}% | {m['rr_ratio']:.2f} | all 3 conditions met |\n"
+        # Say which thresholds were actually applied. The LLM-managed
+        # per-agent overrides are looser than the book rule, so a row can
+        # show PF 0.81 and WR 33.3% and still be promoted — without
+        # saying so, the table reads as if the metrics were wrong.
+        _ov = agent_overrides.get(r["strategy"], {})
+        if _ov:
+            _thr = (f"override: PF>{_ov.get('min_PF', settings['min_PF'])}, "
+                    f"WR>{_ov.get('min_WR', settings['min_WR'])*100:.0f}%, "
+                    f"RR>{_ov.get('min_RR', settings['min_RR'])}, "
+                    f"n≥{_ov.get('min_trades', settings['min_trades'])}")
+        else:
+            _thr = (f"PF>{min_pf}, WR>{min_wr*100:.0f}%, RR>{min_rr}, n≥{min_n}")
+        md += (f"| {r['strategy']} | {old} → {new} ⬆ | {m['n_trades']} | "
+               f"{m['profit_factor']:.2f} | {m['win_rate']*100:.1f}% | "
+               f"{m['rr_ratio']:.2f} | all 3 conditions met ({_thr}) |\n")
 
     if decrement:
         md += f"\n## Demoted ({len(demoted)} agents) ⬇\n"
@@ -302,7 +334,17 @@ For each agent, over the **{settings['window_days']}d** rolling window:
             old = r.get("old_level", 1)
             new = r.get("new_level", 0)
             m = r["metrics"]
-            md += f"| {r['strategy']} | {old} → {new} ⬇ | {m['n_trades']} | {m['profit_factor']:.2f} | {m['win_rate']*100:.1f}% | {m['rr_ratio']:.2f} | all 3 conditions failed (唔達標) |\n"
+            _ov = agent_overrides.get(r["strategy"], {})
+            if _ov:
+                _thr = (f"override: PF≤{_ov.get('min_PF', settings['min_PF'])}, "
+                        f"WR≤{_ov.get('min_WR', settings['min_WR'])*100:.0f}%, "
+                        f"RR≤{_ov.get('min_RR', settings['min_RR'])}, "
+                        f"n≥{_ov.get('min_trades', settings['min_trades'])}")
+            else:
+                _thr = f"PF≤{min_pf}, WR≤{min_wr*100:.0f}%, RR≤{min_rr}, n≥{min_n}"
+            md += (f"| {r['strategy']} | {old} → {new} ⬇ | {m['n_trades']} | "
+                   f"{m['profit_factor']:.2f} | {m['win_rate']*100:.1f}% | "
+                   f"{m['rr_ratio']:.2f} | all 3 conditions failed ({_thr}) |\n")
 
     md += f"\n## Held (n≥{min_n}, mixed signals — stays flat) ({len(held)} agents)\n"
     md += "| Agent | Level | n | PF | WR | RR | Why not promoted / demoted |\n"
@@ -569,7 +611,7 @@ def main() -> int:
 
     # Save Markdown
     md_path = out_dir / f"settlement_{today_hkt}.md"
-    md_content = make_settlement_markdown(results, today_hkt, settings)
+    md_content = make_settlement_markdown(results, today_hkt, settings, agent_overrides)
     md_path.write_text(md_content, encoding="utf-8")
     print(f"[settlement] MD: {md_path}")
 
