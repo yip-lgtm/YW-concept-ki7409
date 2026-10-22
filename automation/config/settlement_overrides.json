@@ -2,16 +2,20 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 14,
-    "last_run": "2026-10-21T15:16:00.370251+00:00",
-    "last_applied": 2,
+    "runs": 15,
+    "last_run": "2026-10-22T04:16:23.620981+00:00",
+    "last_applied": 3,
     "last_log": [
       {
-        "agent": "CRT",
+        "agent": "TTrades-L12",
+        "action": "tighten"
+      },
+      {
+        "agent": "TTrades-L13",
         "action": "relax"
       },
       {
-        "agent": "3-Pushes",
+        "agent": "TTrades-L14",
         "action": "relax"
       }
     ]
@@ -103,6 +107,51 @@
       "min_trades": 5
     },
     "relaxed_count": 1,
+    "tightened_count": 0
+  },
+  "TTrades-L12": {
+    "last_revised": "2026-10-22T04:16:23.620981+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "tighten",
+    "reasoning": "sentence\" then JSON, which isn't strictly JSON. Need follow exact format likely reasoning line plus object. Need assess. Metrics PF 0 WR 0 RR 0 n7. Strategy unknown. Promotion requirements n>=10, all ",
+    "response_raw": "<think>We need answer exact format? They say JSON only but prescribed \"REASONING: sentence\" then JSON, which isn't strictly JSON. Need follow exact format likely reasoning line plus object. Need assess. Metrics PF 0 WR 0 RR 0 n7. Strategy unknown. Promotion requirements n>=10, all thresholds. We can relax at most 2 indicators, min trades min 5. But actual performance catastrophic, zero across all. We should tighten or hold? Need suggest per-agent thresholds. Hard ranges. Current global thresholds PF >1, WR >.5, RR >1, n>=10. Tighten likely PF/RR maybe 1.2, WR .55? n maybe 15? But \"action\": tighten. Strategy unknown means cannot justify relaxing. Zero observed performance means make harder, perhaps PF 1.2, WR 0.55, RR1.2, min_trades 15. Yet n=7 and threshold n=15 delays. Is that reasonable?",
+    "overrides": {
+      "min_PF": 1.2,
+      "min_WR": 0.55,
+      "min_RR": 1.2,
+      "min_trades": 15
+    },
+    "relaxed_count": 0,
+    "tightened_count": 4
+  },
+  "TTrades-L13": {
+    "last_revised": "2026-10-22T04:16:23.620981+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "relax",
+    "reasoning": "&lt;一句話點解咁調&gt;",
+    "response_raw": "<think>We need answer exact format JSON only? User says EXACT format: REASONING sentence then JSON, but \"JSON only, 唔好其他文字\" contradictory because includes REASONING. Need likely follow requested exact format perhaps reasoning line plus JSON, no think. Need assess metrics, unknown strategy character, can't infer high RR low WR definitively. Need suggest per-agent promotion thresholds, max relax 2 indicators, min trades >=5 and meaningful, range. Actual PF 1.079 >1, RR1.618 >1, n30, WR40 <50. Need likely relax WR only to <=0.40? Need strict inequalities: metrics WR=40.0%; promotion threshold min_WR perhaps 0.40? They state promote WR >50%, actual 40, so threshold at 0.40 would still not trigger if strict >. Could set 0.39 or 0.38, based uncertainty/unknown strategy character. Need decide. PF",
+    "overrides": {
+      "min_PF": 1.0,
+      "min_WR": 0.39,
+      "min_RR": 1.0,
+      "min_trades": 10
+    },
+    "relaxed_count": 1,
+    "tightened_count": 0
+  },
+  "TTrades-L14": {
+    "last_revised": "2026-10-22T04:16:23.620981+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "relax",
+    "reasoning": "&lt;一句話...&gt;\" then JSON. Need ensure valid? \"JSON only\" but REASONING makes not valid JSON. They explicitly request exact format with REASONING preceding object. We should follow exact. Maybe they m",
+    "response_raw": "<think>We need answer exact format JSON only? They show REASONING line then JSON, despite \"JSON only\" contradictory. Need comply exact likely reasoning plus object, no other text. Need assess. Agent unknown strategy character, actual PF .809, WR .333, RR 1.618, n12. Promotion thresholds global PF>1, WR>.5 RR>1 n>=10. Need per-agent override, max relax 2 indicators. Could relax PF and WR, retain RR 1.0 and n10. But actual metrics: PF .809, WR .333. Set min PF perhaps .80 (or .81? Actual .809), WR .30. This lets promotion if strict > thresholds. RR already passes, n passes. Is this justified despite performance poor? They say unknown character, could hold/tighten because PF near 0.8 indicates poor. But purpose stuck and allow profile-specific threshold; strategy character unknown, metrics lo",
+    "overrides": {
+      "min_PF": 0.8,
+      "min_WR": 0.3,
+      "min_RR": 1.0,
+      "min_trades": 10
+    },
+    "relaxed_count": 2,
     "tightened_count": 0
   }
 }
