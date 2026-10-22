@@ -594,9 +594,27 @@ def main() -> int:
             "target_met": bool(vm and vm["pf"] >= args.target_pf and vm["rr"] >= args.target_rr),
             "tune_met": bool(best[2]["pf"] >= args.target_pf and best[2]["rr"] >= args.target_rr),
         }
-        (OUT_DIR / "results.json").write_text(json.dumps(results, indent=2, default=str))
+        _merged = {}
+        _dest = OUT_DIR / "results.json"
+        if _dest.exists():
+            try:
+                _merged = json.loads(_dest.read_text())
+            except Exception:
+                _merged = {}
+        _merged.update(results)
+        _dest.write_text(json.dumps(_merged, indent=2, default=str))
 
-    (OUT_DIR / "results.json").write_text(json.dumps(results, indent=2, default=str))
+    # Merge with what is already on disk: a run over a subset of the
+    # strategies must not erase the results of the others.
+    merged = {}
+    dest = OUT_DIR / "results.json"
+    if dest.exists():
+        try:
+            merged = json.loads(dest.read_text())
+        except Exception:
+            merged = {}
+    merged.update(results)
+    dest.write_text(json.dumps(merged, indent=2, default=str))
     print(f"\nwrote {OUT_DIR / 'results.json'}")
     return 0
 
