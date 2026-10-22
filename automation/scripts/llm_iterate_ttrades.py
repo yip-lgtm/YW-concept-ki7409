@@ -159,8 +159,15 @@ def run_agent(df, agent, cfg, start, end):
         ts = df.index[idx]
         if ts < start or ts > end:
             continue
-        w4 = h4[h4.index <= ts].iloc[-8:]
-        w15 = m15[m15.index <= ts].iloc[-60:]
+        # The frames must match what the live path gives the detector:
+        # ttrades_l_strategies.main() builds H4 from 30 days of hourly
+        # bars (180 H4 bars) and M15 from 7 days of fifteen-minute bars
+        # (672 M15 bars). A shorter H4 frame makes find_htf_poi search a
+        # different set of pivots, which changes the number of trades
+        # outright — L12 produced 0 trades on a full frame and 81 on a
+        # truncated one.
+        w4 = h4[h4.index <= ts].iloc[-180:]
+        w15 = m15[m15.index <= ts].iloc[-672:]
         if len(w4) < 4 or len(w15) < 30:
             continue
         try:
