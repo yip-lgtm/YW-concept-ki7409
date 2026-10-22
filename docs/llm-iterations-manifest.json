@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-22T04:44:16.978356+00:00",
+  "generated_at": "2026-10-22T19:47:05.461936+00:00",
   "count": 100,
   "iterations": [
     {
@@ -224,6 +224,168 @@
           "current_timeframe": "5min",
           "response_raw": "<think>The user wants me to review the live performance of the yw-stair-pattern sub-agent and provide a grade with suggested parameters.\n\nLooking at the performance:\n- Backtest: 0 trades, WR 50%, PF 1.0, R +0\n- This is essentially no data - 0 trades means the strategy hasn't fired at all\n\nWith 0 trades, the strategy is either:\n1. Too restrictive (never finding signals)\n2. Not properly configured for current market conditions\n3. The weight might be too low to trigger\n\nThe current weight is 0.9 which is relatively high. With 0 trades, the strategy isn't generating signals. \n\nGrade: D - no trades means no edge demonstrated\nConfidence: Low since we have no data\n\nSuggestions:\n- Lower weight might help generate more signals, but that defeats the purpose\n- Need to ensure the pattern is being detected properly\n- Maybe the timeframe needs adjustment - step patterns on 5min might be too noisy\n- Could try combining with other indicators to confirm signals\n\nLet me provide a reasonable response.</think>\n\nGRADE: D | CONFIDENCE: 25 | REASON: \u96f6\u4ea4\u6613\u4ee3\u8868\u8a0a\u865f\u5f9e\u672a\u89f8\u767c\uff0c\u7b56\u7565\u672a\u7522\u751f\u4efb\u4f55 edge\uff0c\u7121\u6cd5\u8a55\u4f30\u6709\u6548\u6027\u3002\n\nsuggested_params = {\n  \"weight\": 0.5,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"step_pattern\", \"volume_spike\", \"atr_breakout\"],\n  \"r_multiples\": [1.5, 2.0, 2.5, 3.0, 4.0],\n  \"rationale\": \"\u96f6\u4ea4\u6613\u9700\u964d\u4f4e\u7be9\u9078\u9580\u6abb\u4e26\u63db\u66f4\u5927\u6642\u6846\u6e1b\u5c11\u96dc\u8a0a\uff0c\u52a0\u6210\u4ea4\u91cf\u53ca\u6ce2\u52d5\u6307\u6a19\u78ba\u8a8d\u968e\u68af\u578b\u614b\u771f\u7a81\u7834\u3002\"\n}"
         }
+      }
+    },
+    {
+      "date": "scientist_20261023_030242",
+      "data": {
+        "date": "2026-10-23",
+        "hkt_timestamp": "20261023_030242",
+        "type": "llm_iteration_scientist",
+        "n_agents": 10,
+        "n_auto_applied": 0,
+        "results": [
+          {
+            "grade": "D",
+            "confidence": 0,
+            "diagnosis": "INSUFFICIENT DATA\nREASON: Inspect signal-generation logic and data feed; no trades were produced.\nSUGGESTED_PARAMS: NONE",
+            "reason": "",
+            "suggested_params": {},
+            "auto_apply": false,
+            "agent": "ocs-btc-5m",
+            "agent_id": "ocs-btc",
+            "n_signals_7d": 0,
+            "n_trades": 0,
+            "win_rate": 0.0,
+            "total_R": 0.0,
+            "profit_factor": 0.0
+          },
+          {
+            "grade": "C",
+            "confidence": 90,
+            "diagnosis": "C-grade signals overwhelm profitable B-grade signals, while direction and ticker data are too skewed for further conclusions.\nREASON: B trades earn +4.51R, while C trades lose 16.70R; excluding C remo",
+            "reason": "",
+            "suggested_params": {},
+            "auto_apply": false,
+            "agent": "yw-h-pattern",
+            "agent_id": "h-pattern",
+            "n_signals_7d": 44,
+            "n_trades": 132,
+            "win_rate": 34.8,
+            "total_R": -12.190000000000024,
+            "profit_factor": 0.53
+          },
+          {
+            "grade": "B",
+            "confidence": 92,
+            "diagnosis": "Low win rate and PF are driven by losing down trades, while up trades are strongly profitable.\nREASON: Down trades lose 10.18R while up trades gain 45.0R; blocking downs should improve PF.\nSUGGESTED_P",
+            "reason": "",
+            "suggested_params": {},
+            "auto_apply": false,
+            "agent": "yw-3-pushes",
+            "agent_id": "3-pushes",
+            "n_signals_7d": 42,
+            "n_trades": 425,
+            "win_rate": 41.9,
+            "total_R": 34.82399999999998,
+            "profit_factor": 0.72
+          },
+          {
+            "grade": "C",
+            "confidence": 50,
+            "diagnosis": "[Rule-based - LLM unavailable] Marginal: PF=0.96 WR=48.9% R=+47.9",
+            "reason": "Needs tuning",
+            "suggested_params": {},
+            "auto_apply": false,
+            "agent": "yw-rsi-div",
+            "agent_id": "rsi-div",
+            "n_signals_7d": 113,
+            "n_trades": 180,
+            "win_rate": 48.9,
+            "total_R": 47.912000000000035,
+            "profit_factor": 0.96
+          },
+          {
+            "grade": "D",
+            "confidence": 0,
+            "diagnosis": "[Rule-based - LLM unavailable] Underperf: PF=0.68 WR=40.3% R=+32.8",
+            "reason": "Consider pause",
+            "suggested_params": {},
+            "auto_apply": false,
+            "agent": "yw-crt",
+            "agent_id": "crt",
+            "n_signals_7d": 225,
+            "n_trades": 717,
+            "win_rate": 40.3,
+            "total_R": 32.80399999999993,
+            "profit_factor": 0.68
+          },
+          {
+            "grade": "D",
+            "confidence": 92,
+            "diagnosis": "Grade C entries lost 26.17R, driving the 34.2% win rate, 0.52 PF, and -24.27 total R.\nREASON: Excluding C leaves B/A at +1.90R, removing the dominant loss bucket.\nSUGGESTED_PARAMS:",
+            "reason": "",
+            "suggested_params": {},
+            "auto_apply": false,
+            "agent": "yw-two-yang",
+            "agent_id": "two-yang",
+            "n_signals_7d": 36,
+            "n_trades": 222,
+            "win_rate": 34.2,
+            "total_R": -24.268000000000043,
+            "profit_factor": 0.52
+          },
+          {
+            "grade": "A",
+            "confidence": 84,
+            "diagnosis": "Long and directionless trades lost 16.61R while shorts gained 26.19R, depressing the 0.67 PF.\nREASON: Short-only trading removes losing long and unknown-direction exposure.\nSUGGESTED_PARAMS: {\"allowed",
+            "reason": "",
+            "suggested_params": {},
+            "auto_apply": false,
+            "agent": "yw-kell-cycle",
+            "agent_id": "kell-cycle",
+            "n_signals_7d": 43,
+            "n_trades": 194,
+            "win_rate": 40.2,
+            "total_R": 9.58600000000001,
+            "profit_factor": 0.67
+          },
+          {
+            "grade": "D",
+            "confidence": 0,
+            "diagnosis": "[Rule-based - LLM unavailable] Underperf: PF=0.15 WR=13.0% R=-35.7",
+            "reason": "Consider pause",
+            "suggested_params": {},
+            "auto_apply": false,
+            "agent": "yw-b1",
+            "agent_id": "b1",
+            "n_signals_7d": 17,
+            "n_trades": 54,
+            "win_rate": 13.0,
+            "total_R": -35.67399999999999,
+            "profit_factor": 0.15
+          },
+          {
+            "grade": "D",
+            "confidence": 0,
+            "diagnosis": "[Rule-based - LLM unavailable] Underperf: PF=0.56 WR=36.0% R=-20.8",
+            "reason": "Consider pause",
+            "suggested_params": {},
+            "auto_apply": false,
+            "agent": "yw-stair-pattern",
+            "agent_id": "stair-pattern",
+            "n_signals_7d": 106,
+            "n_trades": 350,
+            "win_rate": 36.0,
+            "total_R": -20.840000000000053,
+            "profit_factor": 0.56
+          },
+          {
+            "grade": "D",
+            "confidence": 0,
+            "diagnosis": "[Rule-based - LLM unavailable] Underperf: PF=0.56 WR=36.0% R=-68.2",
+            "reason": "Consider pause",
+            "suggested_params": {},
+            "auto_apply": false,
+            "agent": "yw-50-20-pullback",
+            "agent_id": "50-20-pullback",
+            "n_signals_7d": 127,
+            "n_trades": 1015,
+            "win_rate": 36.0,
+            "total_R": -68.17199999999991,
+            "profit_factor": 0.56
+          }
+        ]
       }
     },
     {
@@ -11285,6 +11447,43 @@
       }
     },
     {
+      "date": "b1_20261023_034335",
+      "data": {
+        "date": "2026-10-23",
+        "agent": "yw-b1",
+        "result": {
+          "grade": "B",
+          "confidence": 78,
+          "reason": "PF 1.42\u4e14\u7e3dR\u6b63\uff0c\u4f46\u52dd\u7387\u4f4e\u65bc50%\uff0cBTC\u62d6\u7d2f\u660e\u986f",
+          "weight": 0.8,
+          "timeframe": "15min/1h",
+          "r_multiples": [
+            1.0,
+            1.5,
+            2.0,
+            2.5,
+            3.0
+          ],
+          "indicators": [
+            "bbi",
+            "kdj",
+            "volume"
+          ],
+          "rationale": "\u6a23\u672c\u4ecd\u504f\u5c11\uff1b\u964d\u6b0a\u4e26\u6e1b\u5c11\u9031\u671f\u566a\u97f3\uff0c\u4ee5\u964d\u4f4eBTC\u9006\u52e2\u4ea4\u6613",
+          "agent": "yw-b1",
+          "strategy_id": "b1",
+          "ticker": "MNQ=F",
+          "live_n": 15,
+          "live_pf": 1.42,
+          "live_wr": 46.7,
+          "live_R": 3.33,
+          "current_weight": 1.0,
+          "current_timeframe": "5min/15min/1h",
+          "response_raw": "GRADE: B | CONFIDENCE: 78 | REASON: PF 1.42\u4e14\u7e3dR\u6b63\uff0c\u4f46\u52dd\u7387\u4f4e\u65bc50%\uff0cBTC\u62d6\u7d2f\u660e\u986f\n\nsuggested_params = {\n  \"weight\": 0.8,\n  \"timeframe\": \"15min/1h\",\n  \"indicators\": [\"bbi\", \"kdj\", \"volume\"],\n  \"r_multiples\": [1, 1.5, 2, 2.5, 3],\n  \"rationale\": \"\u6a23\u672c\u4ecd\u504f\u5c11\uff1b\u964d\u6b0a\u4e26\u6e1b\u5c11\u9031\u671f\u566a\u97f3\uff0c\u4ee5\u964d\u4f4eBTC\u9006\u52e2\u4ea4\u6613\"\n}"
+        }
+      }
+    },
+    {
       "date": "b1_20261014_045830",
       "data": {
         "date": "2026-10-14",
@@ -11454,6 +11653,335 @@
             5.0
           ]
         }
+      }
+    },
+    {
+      "date": "all_20261023_034541",
+      "data": {
+        "date": "2026-10-23",
+        "hkt_timestamp": "20261023_034541",
+        "n_strategies": 9,
+        "results": [
+          {
+            "grade": "B",
+            "confidence": 82,
+            "reason": "\u6574\u9ad4\u76c8\u5229\u4f46\u4f9d\u8cf4MNQ\uff0cMES\u53caMGC\u62d6\u7d2f\u660e\u986f",
+            "weight": 0.8,
+            "timeframe": "15min",
+            "r_multiples": [
+              1.0,
+              1.5,
+              2.0,
+              2.5,
+              3.0
+            ],
+            "indicators": [
+              "trend",
+              "push_count"
+            ],
+            "rationale": "\u6539\u752815\u5206\u9418\u964d\u4f4e\u96dc\u8a0a\uff0c\u4e26\u63d0\u9ad8\u76c8\u8667\u6bd4\u4ee5\u6539\u5584\u4f4e\u52dd\u7387\u53ca\u8584PF",
+            "agent": "yw-3-pushes",
+            "strategy_id": "3-pushes",
+            "ticker": "MNQ=F",
+            "live_n": 425,
+            "live_pf": 1.14,
+            "live_wr": 41.9,
+            "live_R": 34.82,
+            "current_weight": 1.0,
+            "current_timeframe": "5min/15min",
+            "response_raw": "GRADE: B | CONFIDENCE: 82 | REASON: \u6574\u9ad4\u76c8\u5229\u4f46\u4f9d\u8cf4MNQ\uff0cMES\u53caMGC\u62d6\u7d2f\u660e\u986f\n\nsuggested_params = {\n  \"weight\": 0.8,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"trend\", \"push_count\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"\u6539\u752815\u5206\u9418\u964d\u4f4e\u96dc\u8a0a\uff0c\u4e26\u63d0\u9ad8\u76c8\u8667\u6bd4\u4ee5\u6539\u5584\u4f4e\u52dd\u7387\u53ca\u8584PF\"\n}"
+          },
+          {
+            "grade": "C",
+            "confidence": 84,
+            "reason": "\u6574\u9ad4\u4ecd\u6b63\u671f\u671b\uff0c\u4f46\u52dd\u7387\u504f\u4f4e\uff0cMGC\u62d6\u7d2f\u660e\u986f\u3002",
+            "weight": 0.75,
+            "timeframe": "5min/15min",
+            "r_multiples": [
+              1.0,
+              1.5,
+              2.0,
+              2.5,
+              3.0
+            ],
+            "indicators": [
+              "cycle",
+              "5_subdetectors",
+              "trend_filter"
+            ],
+            "rationale": "MGC\u53caMES\u62d6\u7d2f\u76c8\u5229\uff1b\u964d\u6b0a\u91cd\u517c\u52a015\u5206\u9418\u8da8\u52e2\u904e\u6ffe\uff0c\u4fdd\u7559BTC\u3001MQ\u53caM2K\u8ca2\u737b\u3002",
+            "agent": "yw-kell-cycle",
+            "strategy_id": "kell-cycle",
+            "ticker": "MNQ=F",
+            "live_n": 194,
+            "live_pf": 1.08,
+            "live_wr": 40.2,
+            "live_R": 9.59,
+            "current_weight": 0.9,
+            "current_timeframe": "5min",
+            "response_raw": "GRADE: C | CONFIDENCE: 84 | REASON: \u6574\u9ad4\u4ecd\u6b63\u671f\u671b\uff0c\u4f46\u52dd\u7387\u504f\u4f4e\uff0cMGC\u62d6\u7d2f\u660e\u986f\u3002\n\nsuggested_params = {\n  \"weight\": 0.75,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"cycle\", \"5_subdetectors\", \"trend_filter\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"MGC\u53caMES\u62d6\u7d2f\u76c8\u5229\uff1b\u964d\u6b0a\u91cd\u517c\u52a015\u5206\u9418\u8da8\u52e2\u904e\u6ffe\uff0c\u4fdd\u7559BTC\u3001MQ\u53caM2K\u8ca2\u737b\u3002\"\n}"
+          },
+          {
+            "grade": "D",
+            "confidence": 92,
+            "reason": "\u96f6\u4ea4\u6613\u672a\u80fd\u9a57\u8b49\u512a\u52e2\uff0c\u9700\u63d0\u9ad8\u8a0a\u865f\u53ef\u5f97\u6027\u3002",
+            "weight": 0.3,
+            "timeframe": "15min",
+            "r_multiples": [
+              1.0,
+              1.5,
+              2.0,
+              2.5,
+              3.0
+            ],
+            "indicators": [
+              "8_features",
+              "knn_k7"
+            ],
+            "rationale": "\u96f6\u4ea4\u6613\u986f\u793a\u7b56\u7565\u672a\u7372\u89f8\u767c\uff1b\u964d\u4f4e\u6b0a\u91cd\u4e26\u6539\u752815\u5206\u9418\u7d2f\u7a4d\u6a23\u672c\u3002",
+            "agent": "ocs-btc-5m",
+            "strategy_id": "ocs-btc",
+            "ticker": "BTC-USD",
+            "live_n": 0,
+            "live_pf": 1.0,
+            "live_wr": 50,
+            "live_R": 0,
+            "current_weight": 1.0,
+            "current_timeframe": "5min",
+            "response_raw": "GRADE: D | CONFIDENCE: 92 | REASON: \u96f6\u4ea4\u6613\u672a\u80fd\u9a57\u8b49\u512a\u52e2\uff0c\u9700\u63d0\u9ad8\u8a0a\u865f\u53ef\u5f97\u6027\u3002\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"8_features\", \"knn_k7\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"\u96f6\u4ea4\u6613\u986f\u793a\u7b56\u7565\u672a\u7372\u89f8\u767c\uff1b\u964d\u4f4e\u6b0a\u91cd\u4e26\u6539\u752815\u5206\u9418\u7d2f\u7a4d\u6a23\u672c\u3002\"\n}"
+          },
+          {
+            "grade": "B",
+            "confidence": 84,
+            "reason": "\u6574\u9ad4\u76c8\u5229\u4f46\u4f9d\u8cf4BTC\uff0c\u6307\u6578\u671f\u8868\u73fe\u504f\u5f31",
+            "weight": 0.6,
+            "timeframe": "15min",
+            "r_multiples": [
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0
+            ],
+            "indicators": [
+              "rsi",
+              "divergence",
+              "ema50",
+              "volume"
+            ],
+            "rationale": "\u7dad\u6301\u5df2\u9a57\u8b49\u6307\u6a19\uff0c\u964d\u4f4e\u6b0a\u91cd\u907f\u514d\u975eBTC\u4ea4\u6613\u62d6\u7d2f",
+            "agent": "yw-rsi-div",
+            "strategy_id": "rsi-div",
+            "ticker": "MNQ=F",
+            "live_n": 180,
+            "live_pf": 1.52,
+            "live_wr": 48.9,
+            "live_R": 47.91,
+            "current_weight": 0.7,
+            "current_timeframe": "15min",
+            "response_raw": "GRADE: B | CONFIDENCE: 84 | REASON: \u6574\u9ad4\u76c8\u5229\u4f46\u4f9d\u8cf4BTC\uff0c\u6307\u6578\u671f\u8868\u73fe\u504f\u5f31\n\nsuggested_params = {\n  \"weight\": 0.6,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"rsi\", \"divergence\", \"ema50\", \"volume\"],\n  \"r_multiples\": [1, 2, 3, 4, 5],\n  \"rationale\": \"\u7dad\u6301\u5df2\u9a57\u8b49\u6307\u6a19\uff0c\u964d\u4f4e\u6b0a\u91cd\u907f\u514d\u975eBTC\u4ea4\u6613\u62d6\u7d2f\"\n}"
+          },
+          {
+            "grade": "D",
+            "confidence": 97,
+            "reason": "\u52dd\u7387\u50c534%\u3001PF 0.83\uff0cMES\u8ca2\u737b\u8fd197%\u7e3d\u8667\u640d",
+            "weight": 0.2,
+            "timeframe": "15min",
+            "r_multiples": [
+              1.0,
+              1.5,
+              2.0,
+              2.5,
+              3.0
+            ],
+            "indicators": [
+              "candle_pattern",
+              "ema20",
+              "adx",
+              "volume"
+            ],
+            "rationale": "\u964d\u4f4e\u6b0a\u91cd\u4e26\u8f4915\u5206\u9418\u6e1b\u96dc\u8a0a\uff0c\u7dca\u7e2eR\u76ee\u6a19\u4ee5\u63a7\u5236MES\u62d6\u7d2f",
+            "agent": "yw-two-yang",
+            "strategy_id": "two-yang",
+            "ticker": "MNQ=F",
+            "live_n": 222,
+            "live_pf": 0.83,
+            "live_wr": 34.2,
+            "live_R": -24.27,
+            "current_weight": 0.5,
+            "current_timeframe": "5min",
+            "response_raw": "GRADE: D | CONFIDENCE: 97 | REASON: \u52dd\u7387\u50c534%\u3001PF 0.83\uff0cMES\u8ca2\u737b\u8fd197%\u7e3d\u8667\u640d\n\nsuggested_params = {\n  \"weight\": 0.2,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"candle_pattern\", \"ema20\", \"adx\", \"volume\"],\n  \"r_multiples\": [1, 1.5, 2, 2.5, 3],\n  \"rationale\": \"\u964d\u4f4e\u6b0a\u91cd\u4e26\u8f4915\u5206\u9418\u6e1b\u96dc\u8a0a\uff0c\u7dca\u7e2eR\u76ee\u6a19\u4ee5\u63a7\u5236MES\u62d6\u7d2f\"\n}"
+          },
+          {
+            "grade": "C",
+            "confidence": 82,
+            "reason": "\u6574\u9ad4PF\u50c51.08\uff0c\u96d6MES\u53caBTC\u76c8\u5229\uff0c\u4f46M2K/MNQ\u62d6\u7d2f\uff0c\u5b9c\u964d\u66dd\u96aa",
+            "weight": 0.8,
+            "timeframe": "5min/15min",
+            "r_multiples": [
+              1.0,
+              1.5,
+              2.0,
+              3.0,
+              5.0
+            ],
+            "indicators": [
+              "candle_range",
+              "htf_confirm",
+              "trend_strength"
+            ],
+            "rationale": "\u4fdd\u75595\u5206\u9418\u5165\u5834\u53ca\u9ad8\u9031\u671f\u78ba\u8a8d\uff0c\u964d\u4f4e\u6b0a\u91cd\u907f\u514d\u5f31PF\u56de\u64a4",
+            "agent": "yw-crt",
+            "strategy_id": "crt",
+            "ticker": "MNQ=F",
+            "live_n": 718,
+            "live_pf": 1.08,
+            "live_wr": 40.4,
+            "live_R": 34.42,
+            "current_weight": 1.1,
+            "current_timeframe": "5min+4H",
+            "response_raw": "GRADE: C | CONFIDENCE: 82 | REASON: \u6574\u9ad4PF\u50c51.08\uff0c\u96d6MES\u53caBTC\u76c8\u5229\uff0c\u4f46M2K/MNQ\u62d6\u7d2f\uff0c\u5b9c\u964d\u66dd\u96aa\n\nsuggested_params = {\n  \"weight\": 0.8,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"candle_range\", \"htf_confirm\", \"trend_strength\"],\n  \"r_multiples\": [1, 1.5, 2, 3, 5],\n  \"rationale\": \"\u4fdd\u75595\u5206\u9418\u5165\u5834\u53ca\u9ad8\u9031\u671f\u78ba\u8a8d\uff0c\u964d\u4f4e\u6b0a\u91cd\u907f\u514d\u5f31PF\u56de\u64a4\"\n}"
+          },
+          {
+            "grade": "D",
+            "confidence": 94,
+            "reason": "132\u7b46\u5df2\u5177\u6a23\u672c\uff0c\u52dd\u7387\u3001PF\u53caR\u9f4a\u5f31\uff0c\u5b9c\u5373\u6642\u964d\u98a8\u96aa",
+            "weight": 0.6,
+            "timeframe": "5min/15min",
+            "r_multiples": [
+              0.8,
+              1.0,
+              1.2,
+              1.5,
+              2.0
+            ],
+            "indicators": [
+              "momentum",
+              "support"
+            ],
+            "rationale": "3/5\u5206\u9418\u566a\u97f3\u8f03\u9ad8\uff1b\u6e1b\u78c5\u3001\u79fb\u9664pivot\u53ca\u63d0\u65e9\u5206\u6bb5\u6b62\u76c8",
+            "agent": "yw-h-pattern",
+            "strategy_id": "h-pattern",
+            "ticker": "MNQ=F",
+            "live_n": 132,
+            "live_pf": 0.86,
+            "live_wr": 34.8,
+            "live_R": -12.19,
+            "current_weight": 1.2,
+            "current_timeframe": "3min/5min",
+            "response_raw": "GRADE: D | CONFIDENCE: 94 | REASON: 132\u7b46\u5df2\u5177\u6a23\u672c\uff0c\u52dd\u7387\u3001PF\u53caR\u9f4a\u5f31\uff0c\u5b9c\u5373\u6642\u964d\u98a8\u96aa\n\nsuggested_params = {\n  \"weight\": 0.6,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"momentum\", \"support\"],\n  \"r_multiples\": [0.8, 1.0, 1.2, 1.5, 2.0],\n  \"rationale\": \"3/5\u5206\u9418\u566a\u97f3\u8f03\u9ad8\uff1b\u6e1b\u78c5\u3001\u79fb\u9664pivot\u53ca\u63d0\u65e9\u5206\u6bb5\u6b62\u76c8\"\n}"
+          },
+          {
+            "grade": "D",
+            "confidence": 90,
+            "reason": "PF\u50c50.91\u4e14\u7e3dR\u70ba\u8ca0\uff0c\u6574\u9ad4\u6a23\u672c\u672a\u9054\u76c8\u5229\u6a19\u6e96",
+            "weight": 0.6,
+            "timeframe": "5min/15min",
+            "r_multiples": [
+              1.0,
+              1.5,
+              2.0,
+              2.5,
+              3.0
+            ],
+            "indicators": [
+              "step_pattern",
+              "rsi",
+              "volume"
+            ],
+            "rationale": "\u53ea\u6709MNQ\u76c8\u5229\uff1b\u964d\u6b0a\u4e26\u52a0\u5165\u591a\u6642\u9593\u6846\u3001RSI\u53ca\u6210\u4ea4\u91cf\u78ba\u8a8d",
+            "agent": "yw-stair-pattern",
+            "strategy_id": "stair-pattern",
+            "ticker": "MNQ=F",
+            "live_n": 350,
+            "live_pf": 0.91,
+            "live_wr": 36.0,
+            "live_R": -20.84,
+            "current_weight": 0.9,
+            "current_timeframe": "5min",
+            "response_raw": "GRADE: D | CONFIDENCE: 90 | REASON: PF\u50c50.91\u4e14\u7e3dR\u70ba\u8ca0\uff0c\u6574\u9ad4\u6a23\u672c\u672a\u9054\u76c8\u5229\u6a19\u6e96\n\nsuggested_params = {\n  \"weight\": 0.6,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"step_pattern\", \"rsi\", \"volume\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"\u53ea\u6709MNQ\u76c8\u5229\uff1b\u964d\u6b0a\u4e26\u52a0\u5165\u591a\u6642\u9593\u6846\u3001RSI\u53ca\u6210\u4ea4\u91cf\u78ba\u8a8d\"\n}"
+          },
+          {
+            "grade": "D",
+            "confidence": 90,
+            "reason": "\u96f6\u4ea4\u6613\u4e14\u7121ticker breakdown\uff0c\u7121\u6cd5\u9a57\u8b49\u512a\u52e2\uff0c\u61c9\u964d\u98a8\u96aa\u4e26\u7c21\u5316\u8a0a\u865f",
+            "weight": 0.6,
+            "timeframe": "15min",
+            "r_multiples": [
+              1.0,
+              1.5,
+              2.0,
+              3.0,
+              5.0
+            ],
+            "indicators": [
+              "box_break",
+              "msb",
+              "hh_hl"
+            ],
+            "rationale": "\u964d\u6b0a\u63a7\u98a8\u96aa\uff1b\u6539\u55ae\u4e00\u9031\u671f\uff0c\u4fdd\u7559\u7a81\u7834\u8207\u8da8\u52e2\u78ba\u8a8d\u4ee5\u589e\u52a0\u8a0a\u865f",
+            "agent": "yw-argon-gold",
+            "strategy_id": "argon-gold",
+            "ticker": "MGC=F",
+            "live_n": 0,
+            "live_pf": 1.0,
+            "live_wr": 50,
+            "live_R": 0,
+            "current_weight": 1.0,
+            "current_timeframe": "5min/15min/1h",
+            "response_raw": "GRADE: D | CONFIDENCE: 90 | REASON: \u96f6\u4ea4\u6613\u4e14\u7121ticker breakdown\uff0c\u7121\u6cd5\u9a57\u8b49\u512a\u52e2\uff0c\u61c9\u964d\u98a8\u96aa\u4e26\u7c21\u5316\u8a0a\u865f\n\nsuggested_params = {\n  \"weight\": 0.6,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"box_break\", \"msb\", \"hh_hl\"],\n  \"r_multiples\": [1, 1.5, 2, 3, 5],\n  \"rationale\": \"\u964d\u6b0a\u63a7\u98a8\u96aa\uff1b\u6539\u55ae\u4e00\u9031\u671f\uff0c\u4fdd\u7559\u7a81\u7834\u8207\u8da8\u52e2\u78ba\u8a8d\u4ee5\u589e\u52a0\u8a0a\u865f\"\n}"
+          },
+          {
+            "grade": "B",
+            "confidence": 78,
+            "reason": "PF\u90541.42\u4e14\u7e3dR\u70ba\u6b63\uff0c\u4f46\u6a23\u672c\u50c515\u7b46\uff0cBTC\u4ecd\u62d6\u7d2f\u3002",
+            "weight": 0.8,
+            "timeframe": "15min/1h",
+            "r_multiples": [
+              1.0,
+              1.5,
+              2.0,
+              3.0,
+              5.0
+            ],
+            "indicators": [
+              "bbi",
+              "kdj",
+              "volume"
+            ],
+            "rationale": "\u4fdd\u7559\u6b63\u671f\u671b\u8a0a\u865f\uff1b\u6e1b\u4f4e\u6b0a\u91cd\u53ca5min\u96dc\u8a0a\uff0c\u6a23\u672c\u4e0d\u8db3\u6545\u4e0d\u64f4\u5f35\u3002",
+            "agent": "yw-b1",
+            "strategy_id": "b1",
+            "ticker": "MNQ=F",
+            "live_n": 15,
+            "live_pf": 1.42,
+            "live_wr": 46.7,
+            "live_R": 3.33,
+            "current_weight": 1.0,
+            "current_timeframe": "5min/15min/1h",
+            "response_raw": "GRADE: B | CONFIDENCE: 78 | REASON: PF\u90541.42\u4e14\u7e3dR\u70ba\u6b63\uff0c\u4f46\u6a23\u672c\u50c515\u7b46\uff0cBTC\u4ecd\u62d6\u7d2f\u3002\n\nsuggested_params = {\n  \"weight\": 0.8,\n  \"timeframe\": \"15min/1h\",\n  \"indicators\": [\"bbi\", \"kdj\", \"volume\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 3.0, 5.0],\n  \"rationale\": \"\u4fdd\u7559\u6b63\u671f\u671b\u8a0a\u865f\uff1b\u6e1b\u4f4e\u6b0a\u91cd\u53ca5min\u96dc\u8a0a\uff0c\u6a23\u672c\u4e0d\u8db3\u6545\u4e0d\u64f4\u5f35\u3002\"\n}"
+          },
+          {
+            "grade": "?",
+            "confidence": 0,
+            "reason": "no parse",
+            "weight": null,
+            "timeframe": null,
+            "r_multiples": null,
+            "indicators": null,
+            "rationale": "no parse",
+            "agent": "yw-50-20-pullback",
+            "strategy_id": "50-20-pullback",
+            "ticker": "MNQ=F",
+            "live_n": 1015,
+            "live_pf": 0.89,
+            "live_wr": 36.0,
+            "live_R": -68.17,
+            "current_weight": 1.0,
+            "current_timeframe": "5min",
+            "response_raw": "GRADE:"
+          }
+        ]
       }
     },
     {
@@ -12472,1006 +13000,6 @@
             "current_weight": 0.9,
             "current_timeframe": "5min",
             "response_raw": "GRADE: D | CONFIDENCE: 95 | REASON: \u6a23\u672c\u5145\u8db3\u4f46PF\u50c50.91\uff0c\u53ea\u6709MNQ\u76c8\u5229\uff0c\u6574\u9ad4\u9700\u964d\u6b0a\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"step_pattern\", \"trend_filter\", \"volatility_filter\"],\n  \"r_multiples\": [1, 1.5, 2, 2.5, 3],\n  \"rationale\": \"349\u7b46\u4e0bPF\u4f4e\u65bc1\uff1b\u964d\u6b0a\u4e26\u52a0\u8da8\u52e2\u6ffe\u7db2\uff0c\u512a\u5148\u50c5\u65bcMNQ\u4ea4\u6613\"\n}"
-          }
-        ]
-      }
-    },
-    {
-      "date": "all_20261022_121710",
-      "data": {
-        "date": "2026-10-22",
-        "hkt_timestamp": "20261022_121710",
-        "n_strategies": 9,
-        "results": [
-          {
-            "grade": "D",
-            "confidence": 82,
-            "reason": "132\u7b46\u6a23\u672c\u5145\u8db3\u4f46WR35%\u3001PF0.86\u56b4\u91cd\u8667\u640d\uff0c\u96c6\u4e2dBTC-USD\u9700\u5168\u9762\u8abf\u6574\u6b0a\u91cd\u8207\u6307\u6a19\u7d44\u5408",
-            "weight": 0.3,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "pivot",
-              "support",
-              "volume",
-              "trend"
-            ],
-            "rationale": "PF0.86+WR35%\u8b49\u5be6\u7b56\u7565\u5931\u6548\uff0c\u5927\u5e45\u964d\u6b0a\u91cd0.3\u907f\u514d\u653e\u5927\u8667\u640d\uff1b\u6539\u752815min\u904e\u6ffe\u566a\u97f3\uff1b\u52a0\u5165volume\u53catrend\u88dc\u5f37\u9006\u52e2\u9032\u5834\u554f\u984c\uff1b\u9396\u7dcaR\u500d\u6578\u63a7\u5236\u55ae\u7b46\u98a8\u96aa",
-            "agent": "yw-h-pattern",
-            "strategy_id": "h-pattern",
-            "ticker": "MNQ=F",
-            "live_n": 132,
-            "live_pf": 0.86,
-            "live_wr": 34.8,
-            "live_R": -12.19,
-            "current_weight": 1.2,
-            "current_timeframe": "3min/5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 82 | REASON: 132\u7b46\u6a23\u672c\u5145\u8db3\u4f46WR35%\u3001PF0.86\u56b4\u91cd\u8667\u640d\uff0c\u96c6\u4e2dBTC-USD\u9700\u5168\u9762\u8abf\u6574\u6b0a\u91cd\u8207\u6307\u6a19\u7d44\u5408\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"pivot\", \"support\", \"volume\", \"trend\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"PF0.86+WR35%\u8b49\u5be6\u7b56\u7565\u5931\u6548\uff0c\u5927\u5e45\u964d\u6b0a\u91cd0.3\u907f\u514d\u653e\u5927\u8667\u640d\uff1b\u6539\u752815min\u904e\u6ffe\u566a\u97f3\uff1b\u52a0\u5165volume\u53catrend\u88dc\u5f37\u9006\u52e2\u9032\u5834\u554f\u984c\uff1b\u9396\u7dcaR\u500d\u6578\u63a7\u5236\u55ae\u7b46\u98a8\u96aa\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 72,
-            "reason": "MES\u6bc0\u6ec5\u6027\u8868\u73fe25%WR\u62d6\u7d2f\u5168\u5c40\uff0c\u5176\u9918\u6a19\u7684\u5fae\u5229\u6216\u8fd1\u6301\u5e73\uff0c\u6025\u9700\u904e\u6ffe\u4f4e\u8cea\u91cf\u4fe1\u865f",
-            "weight": 0.3,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "candle_pattern",
-              "ema20",
-              "ema50",
-              "adx",
-              "rsi"
-            ],
-            "rationale": "MES\u4f4e\u52dd\u7387\u9700\u904e\u6ffe\uff0c\u5347\u7d1a15min\u964d\u566a\uff0c\u52a0EMA50/RSI\u5f37\u5316\u8da8\u52e2\u78ba\u8a8d\uff0c\u7dcar\u500d\u6578\u9069\u61c9\u4f4eWR",
-            "agent": "yw-two-yang",
-            "strategy_id": "two-yang",
-            "ticker": "MNQ=F",
-            "live_n": 222,
-            "live_pf": 0.83,
-            "live_wr": 34.2,
-            "live_R": -24.27,
-            "current_weight": 0.5,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 72 | REASON: MES\u6bc0\u6ec5\u6027\u8868\u73fe25%WR\u62d6\u7d2f\u5168\u5c40\uff0c\u5176\u9918\u6a19\u7684\u5fae\u5229\u6216\u8fd1\u6301\u5e73\uff0c\u6025\u9700\u904e\u6ffe\u4f4e\u8cea\u91cf\u4fe1\u865f\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"candle_pattern\", \"ema20\", \"ema50\", \"adx\", \"rsi\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"MES\u4f4e\u52dd\u7387\u9700\u904e\u6ffe\uff0c\u5347\u7d1a15min\u964d\u566a\uff0c\u52a0EMA50/RSI\u5f37\u5316\u8da8\u52e2\u78ba\u8a8d\uff0c\u7dcar\u500d\u6578\u9069\u61c9\u4f4eWR\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 78,
-            "reason": "\u6574\u9ad4R-19.8\u8667\u640d\uff0c\u53ea\u6709MNQ\u7372\u5229R+25.96\uff0c\u5176\u99185\u500b\u6a19\u7684\u7686\u8ca0\uff0cWR\u50c536%\u904e\u4f4e\uff0cPF<1\u9700\u5927\u5e45\u8abf\u6574\u3002",
-            "weight": 0.3,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "step_pattern",
-              "volatility_filter"
-            ],
-            "rationale": "\u50c5MNQ\u6b63R\u5176\u9918\u5168\u8667\uff0c\u964d\u81f315min\u52a0\u6ce2\u52d5\u6ffe\u6ce2\u63d0\u9ad8WR\uff0cweight\u780d\u81f30.3\u907f\u514d\u62d6\u7d2f\u7d44\u5408",
-            "agent": "yw-stair-pattern",
-            "strategy_id": "stair-pattern",
-            "ticker": "MNQ=F",
-            "live_n": 349,
-            "live_pf": 0.91,
-            "live_wr": 36.1,
-            "live_R": -19.84,
-            "current_weight": 0.9,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 78 | REASON: \u6574\u9ad4R-19.8\u8667\u640d\uff0c\u53ea\u6709MNQ\u7372\u5229R+25.96\uff0c\u5176\u99185\u500b\u6a19\u7684\u7686\u8ca0\uff0cWR\u50c536%\u904e\u4f4e\uff0cPF<1\u9700\u5927\u5e45\u8abf\u6574\u3002\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"step_pattern\", \"volatility_filter\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"\u50c5MNQ\u6b63R\u5176\u9918\u5168\u8667\uff0c\u964d\u81f315min\u52a0\u6ce2\u52d5\u6ffe\u6ce2\u63d0\u9ad8WR\uff0cweight\u780d\u81f30.3\u907f\u514d\u62d6\u7d2f\u7d44\u5408\"\n}"
-          },
-          {
-            "grade": "C",
-            "confidence": 62,
-            "reason": "WR\u504f\u4f4e40%\uff0cPF\u50c51.06\uff0cMNQ/M2K\u6301\u7e8c\u8667\u640d\uff0c\u9760MES+BTC\u652f\u6490\uff0c\u6574\u9ad4edge\u8584\u5f31",
-            "weight": 0.8,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.0,
-              1.8,
-              2.5,
-              3.5,
-              5.0
-            ],
-            "indicators": [
-              "candle_range",
-              "htf_confirm",
-              "atr_filter"
-            ],
-            "rationale": "\u964dweight\u9632\u4f4eWR\u62d6\u7d2f\uff0c\u52a0\u5165atr_filter\u904e\u6ffe\u9707\u76ea\uff0cr\u500d\u6578\u6536\u7dca\u6b62\u76c8\u63d0\u5347PF\uff0ctimeframe\u52a015min\u78ba\u8a8d",
-            "agent": "yw-crt",
-            "strategy_id": "crt",
-            "ticker": "MNQ=F",
-            "live_n": 706,
-            "live_pf": 1.06,
-            "live_wr": 39.9,
-            "live_R": 25.48,
-            "current_weight": 1.1,
-            "current_timeframe": "5min+4H",
-            "response_raw": "GRADE: C | CONFIDENCE: 62 | REASON: WR\u504f\u4f4e40%\uff0cPF\u50c51.06\uff0cMNQ/M2K\u6301\u7e8c\u8667\u640d\uff0c\u9760MES+BTC\u652f\u6490\uff0c\u6574\u9ad4edge\u8584\u5f31\n\nsuggested_params = {\n  \"weight\": 0.8,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"candle_range\", \"htf_confirm\", \"atr_filter\"],\n  \"r_multiples\": [1.0, 1.8, 2.5, 3.5, 5.0],\n  \"rationale\": \"\u964dweight\u9632\u4f4eWR\u62d6\u7d2f\uff0c\u52a0\u5165atr_filter\u904e\u6ffe\u9707\u76ea\uff0cr\u500d\u6578\u6536\u7dca\u6b62\u76c8\u63d0\u5347PF\uff0ctimeframe\u52a015min\u78ba\u8a8d\"\n}"
-          },
-          {
-            "grade": "C",
-            "confidence": 62,
-            "reason": "Net positive\u4f46MGC/MES\u62d6\u7d2f\u6574\u9ad4,2/5\u5e02\u5834\u8667\u640d,\u9700\u5254\u9664\u6216\u964d\u6b0a",
-            "weight": 0.85,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              3.0,
-              5.0
-            ],
-            "indicators": [
-              "cycle",
-              "5_subdetectors",
-              "trend_filter"
-            ],
-            "rationale": "MGC 30%WR\u87554.67R\u61c9\u5254\u9664,MES 36%WR\u5fae\u8755,\u805a\u7126M2K/MNQ\u9ad8\u52dd\u5e02\u5834,\u52a0\u8da8\u52e2\u6ffe\u7db2\u63d0\u5347WR",
-            "agent": "yw-kell-cycle",
-            "strategy_id": "kell-cycle",
-            "ticker": "MNQ=F",
-            "live_n": 194,
-            "live_pf": 1.08,
-            "live_wr": 40.2,
-            "live_R": 9.59,
-            "current_weight": 0.9,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: C | CONFIDENCE: 62 | REASON: Net positive\u4f46MGC/MES\u62d6\u7d2f\u6574\u9ad4,2/5\u5e02\u5834\u8667\u640d,\u9700\u5254\u9664\u6216\u964d\u6b0a\n\nsuggested_params = {\n  \"weight\": 0.85,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"cycle\", \"5_subdetectors\", \"trend_filter\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 3.0, 5.0],\n  \"rationale\": \"MGC 30%WR\u87554.67R\u61c9\u5254\u9664,MES 36%WR\u5fae\u8755,\u805a\u7126M2K/MNQ\u9ad8\u52dd\u5e02\u5834,\u52a0\u8da8\u52e2\u6ffe\u7db2\u63d0\u5347WR\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 92,
-            "reason": "\u96f6\u4ea4\u6613\u4e14\u7121\u6a19\u7684\u5206\u62c6\uff0c\u7121\u6cd5\u9a57\u8b49\u8a0a\u865f\u512a\u52e2",
-            "weight": 0.5,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "8_features",
-              "knn_k7",
-              "volume_confirmation"
-            ],
-            "rationale": "\u96f6\u6210\u4ea4\u986f\u793a\u689d\u4ef6\u53ef\u80fd\u904e\u56b4\uff1b\u964d\u6b0a\u53ca\u8de8\u9031\u671f\u53ef\u589e\u52a0\u6709\u6548\u6a23\u672c",
-            "agent": "ocs-btc-5m",
-            "strategy_id": "ocs-btc",
-            "ticker": "BTC-USD",
-            "live_n": 0,
-            "live_pf": 1.0,
-            "live_wr": 50,
-            "live_R": 0,
-            "current_weight": 1.0,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 92 | REASON: \u96f6\u4ea4\u6613\u4e14\u7121\u6a19\u7684\u5206\u62c6\uff0c\u7121\u6cd5\u9a57\u8b49\u8a0a\u865f\u512a\u52e2\n\nsuggested_params = {\n  \"weight\": 0.5,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"8_features\", \"knn_k7\", \"volume_confirmation\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"\u96f6\u6210\u4ea4\u986f\u793a\u689d\u4ef6\u53ef\u80fd\u904e\u56b4\uff1b\u964d\u6b0a\u53ca\u8de8\u9031\u671f\u53ef\u589e\u52a0\u6709\u6548\u6a23\u672c\"\n}"
-          },
-          {
-            "grade": "C",
-            "confidence": 84,
-            "reason": "\u6a23\u672c\u8db3\u5920\u4e14\u6574\u9ad4\u76c8\u5229\uff0c\u4f46PF\u504f\u4f4e\uff0c\u8667\u640d\u96c6\u4e2d\u65bcMES\u7b49\u5e02\u5834",
-            "weight": 0.7,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.5,
-              2.0,
-              2.5,
-              3.0,
-              3.5
-            ],
-            "indicators": [
-              "trend",
-              "push_count"
-            ],
-            "rationale": "\u964d\u4f4e\u6b0a\u91cd\u63a7\u5236MES\u3001BTC\u62d6\u7d2f\uff0c\u4fdd\u7559\u8da8\u52e2\u53ca\u7a81\u7834\u78ba\u8a8d\uff0c\u63d0\u9ad8\u76c8\u8667\u6bd4",
-            "agent": "yw-3-pushes",
-            "strategy_id": "3-pushes",
-            "ticker": "MNQ=F",
-            "live_n": 425,
-            "live_pf": 1.14,
-            "live_wr": 41.9,
-            "live_R": 34.82,
-            "current_weight": 1.0,
-            "current_timeframe": "5min/15min",
-            "response_raw": "GRADE: C | CONFIDENCE: 84 | REASON: \u6a23\u672c\u8db3\u5920\u4e14\u6574\u9ad4\u76c8\u5229\uff0c\u4f46PF\u504f\u4f4e\uff0c\u8667\u640d\u96c6\u4e2d\u65bcMES\u7b49\u5e02\u5834\n\nsuggested_params = {\n  \"weight\": 0.7,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"trend\", \"push_count\"],\n  \"r_multiples\": [1.5, 2.0, 2.5, 3.0, 3.5],\n  \"rationale\": \"\u964d\u4f4e\u6b0a\u91cd\u63a7\u5236MES\u3001BTC\u62d6\u7d2f\uff0c\u4fdd\u7559\u8da8\u52e2\u53ca\u7a81\u7834\u78ba\u8a8d\uff0c\u63d0\u9ad8\u76c8\u8667\u6bd4\"\n}"
-          },
-          {
-            "grade": "B",
-            "confidence": 86,
-            "reason": "PF\u8207R\u70ba\u6b63\uff0c\u4f46\u76c8\u5229\u9ad8\u5ea6\u96c6\u4e2dBTC\uff0c\u975eBTC\u8868\u73fe\u504f\u5f31\u3002",
-            "weight": 0.6,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              3.0,
-              5.0
-            ],
-            "indicators": [
-              "rsi",
-              "divergence",
-              "ema50",
-              "volume"
-            ],
-            "rationale": "\u7dad\u6301\u5df2\u9a57\u8b49\u6307\u6a19\u8207\u9031\u671f\uff0c\u7565\u964d\u6b0a\u91cd\u4ee5\u63a7\u5236\u975eBTC\u62d6\u7d2f\u3002",
-            "agent": "yw-rsi-div",
-            "strategy_id": "rsi-div",
-            "ticker": "MNQ=F",
-            "live_n": 180,
-            "live_pf": 1.52,
-            "live_wr": 48.9,
-            "live_R": 47.91,
-            "current_weight": 0.7,
-            "current_timeframe": "15min",
-            "response_raw": "GRADE: B | CONFIDENCE: 86 | REASON: PF\u8207R\u70ba\u6b63\uff0c\u4f46\u76c8\u5229\u9ad8\u5ea6\u96c6\u4e2dBTC\uff0c\u975eBTC\u8868\u73fe\u504f\u5f31\u3002\n\nsuggested_params = {\n  \"weight\": 0.6,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"rsi\", \"divergence\", \"ema50\", \"volume\"],\n  \"r_multiples\": [1, 1.5, 2, 3, 5],\n  \"rationale\": \"\u7dad\u6301\u5df2\u9a57\u8b49\u6307\u6a19\u8207\u9031\u671f\uff0c\u7565\u964d\u6b0a\u91cd\u4ee5\u63a7\u5236\u975eBTC\u62d6\u7d2f\u3002\"\n}"
-          },
-          {
-            "grade": "B",
-            "confidence": 78,
-            "reason": "PF\u53ca\u7e3dR\u70ba\u6b63\uff0c\u4f46\u6a23\u672c\u504f\u5c11\u4e14BTC\u660e\u986f\u62d6\u7d2f\u3002",
-            "weight": 0.8,
-            "timeframe": "15min/1h",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              3.0,
-              5.0
-            ],
-            "indicators": [
-              "bbi",
-              "kdj",
-              "volume"
-            ],
-            "rationale": "\u4fdd\u7559\u6b63\u671f\u671b\u7b56\u7565\u4e26\u6e1b\u6b0a\uff0c\u6539\u7528\u8f03\u9ad8\u9031\u671f\u964d\u4f4e\u566a\u97f3\u53caBTC\u62d6\u7d2f\u3002",
-            "agent": "yw-b1",
-            "strategy_id": "b1",
-            "ticker": "MNQ=F",
-            "live_n": 15,
-            "live_pf": 1.42,
-            "live_wr": 46.7,
-            "live_R": 3.33,
-            "current_weight": 1.0,
-            "current_timeframe": "5min/15min/1h",
-            "response_raw": "GRADE: B | CONFIDENCE: 78 | REASON: PF\u53ca\u7e3dR\u70ba\u6b63\uff0c\u4f46\u6a23\u672c\u504f\u5c11\u4e14BTC\u660e\u986f\u62d6\u7d2f\u3002\n\nsuggested_params = {\n  \"weight\": 0.8,\n  \"timeframe\": \"15min/1h\",\n  \"indicators\": [\"bbi\", \"kdj\", \"volume\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 3.0, 5.0],\n  \"rationale\": \"\u4fdd\u7559\u6b63\u671f\u671b\u7b56\u7565\u4e26\u6e1b\u6b0a\uff0c\u6539\u7528\u8f03\u9ad8\u9031\u671f\u964d\u4f4e\u566a\u97f3\u53caBTC\u62d6\u7d2f\u3002\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 85,
-            "reason": "\u96f6\u6210\u4ea4\u4ee4\u52dd\u7387\u53caPF\u5931\u771f\uff0c\u9700\u7c21\u5316\u689d\u4ef6\u63d0\u9ad8\u8a0a\u865f\u8986\u84cb",
-            "weight": 0.5,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              3.0,
-              5.0
-            ],
-            "indicators": [
-              "box_break",
-              "engulfing",
-              "msb"
-            ],
-            "rationale": "\u6a23\u672c\u70ba\u96f6\uff1b\u7d71\u4e0015\u5206\u9418\u4e26\u4fdd\u7559\u6838\u5fc3\u8a0a\u865f\uff0c\u907f\u514d\u591a\u91cd\u689d\u4ef6\u904e\u6ffe",
-            "agent": "yw-argon-gold",
-            "strategy_id": "argon-gold",
-            "ticker": "MGC=F",
-            "live_n": 0,
-            "live_pf": 1.0,
-            "live_wr": 50,
-            "live_R": 0,
-            "current_weight": 1.0,
-            "current_timeframe": "5min/15min/1h",
-            "response_raw": "GRADE: D | CONFIDENCE: 85 | REASON: \u96f6\u6210\u4ea4\u4ee4\u52dd\u7387\u53caPF\u5931\u771f\uff0c\u9700\u7c21\u5316\u689d\u4ef6\u63d0\u9ad8\u8a0a\u865f\u8986\u84cb\n\nsuggested_params = {\n  \"weight\": 0.5,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"box_break\", \"engulfing\", \"msb\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 3.0, 5.0],\n  \"rationale\": \"\u6a23\u672c\u70ba\u96f6\uff1b\u7d71\u4e0015\u5206\u9418\u4e26\u4fdd\u7559\u6838\u5fc3\u8a0a\u865f\uff0c\u907f\u514d\u591a\u91cd\u689d\u4ef6\u904e\u6ffe\"\n}"
-          },
-          {
-            "grade": "?",
-            "confidence": 0,
-            "reason": "no parse",
-            "weight": null,
-            "timeframe": null,
-            "r_multiples": null,
-            "indicators": null,
-            "rationale": "no parse",
-            "agent": "yw-50-20-pullback",
-            "strategy_id": "50-20-pullback",
-            "ticker": "MNQ=F",
-            "live_n": 1015,
-            "live_pf": 0.89,
-            "live_wr": 36.0,
-            "live_R": -68.17,
-            "current_weight": 1.0,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 97"
-          }
-        ]
-      }
-    },
-    {
-      "date": "all_20261022_035614",
-      "data": {
-        "date": "2026-10-22",
-        "hkt_timestamp": "20261022_035614",
-        "n_strategies": 9,
-        "results": [
-          {
-            "grade": "C",
-            "confidence": 90,
-            "reason": "\u96f6\u6210\u4ea4\u672a\u80fd\u9a57\u8b49\u52dd\u7387\u53caPF\uff0c\u8a0a\u865f\u9580\u6abb\u53ef\u80fd\u904e\u56b4",
-            "weight": 0.5,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "8_features",
-              "knn_k7"
-            ],
-            "rationale": "\u96f6\u6210\u4ea4\u986f\u793a\u8a0a\u865f\u904e\u7a84\uff1b\u4fdd\u7559\u7279\u5fb5\u4e26\u52a0\u516515\u5206\u9418\u4ee5\u589e\u52a0\u6a23\u672c",
-            "agent": "ocs-btc-5m",
-            "strategy_id": "ocs-btc",
-            "ticker": "BTC-USD",
-            "live_n": 0,
-            "live_pf": 1.0,
-            "live_wr": 50,
-            "live_R": 0,
-            "current_weight": 1.0,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: C | CONFIDENCE: 90 | REASON: \u96f6\u6210\u4ea4\u672a\u80fd\u9a57\u8b49\u52dd\u7387\u53caPF\uff0c\u8a0a\u865f\u9580\u6abb\u53ef\u80fd\u904e\u56b4\n\nsuggested_params = {\n  \"weight\": 0.5,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"8_features\", \"knn_k7\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"\u96f6\u6210\u4ea4\u986f\u793a\u8a0a\u865f\u904e\u7a84\uff1b\u4fdd\u7559\u7279\u5fb5\u4e26\u52a0\u516515\u5206\u9418\u4ee5\u589e\u52a0\u6a23\u672c\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 68,
-            "reason": "PF 0.86 \u56b4\u91cd\u8667\u640d\uff0cWR 35% \u904e\u4f4e\uff0c\u7d14\u9760 BTC \u62d6\u7d2f\u9700\u5927\u5e45\u7e2e\u6b0a\u91cd\u3002",
-            "weight": 0.3,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.5,
-              2.5,
-              3.5,
-              4.5,
-              6.0
-            ],
-            "indicators": [
-              "pivot",
-              "momentum",
-              "support",
-              "volume"
-            ],
-            "rationale": "BTC-USD \u62d6\u7d2f\u904e\u91cd\u9700\u7e2e\u6b0a\u91cd\u81f3 0.3\uff1b\u6539\u7528 5/15min \u96d9\u6642\u6846\u6ffe\u96dc\u8a0a\uff1bT1 \u62c9\u9ad8\u81f3 1.5R \u62b5\u92b7\u4f4e WR \u52a3\u52e2\u3002",
-            "agent": "yw-h-pattern",
-            "strategy_id": "h-pattern",
-            "ticker": "MNQ=F",
-            "live_n": 132,
-            "live_pf": 0.86,
-            "live_wr": 34.8,
-            "live_R": -12.19,
-            "current_weight": 1.2,
-            "current_timeframe": "3min/5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 68 | REASON: PF 0.86 \u56b4\u91cd\u8667\u640d\uff0cWR 35% \u904e\u4f4e\uff0c\u7d14\u9760 BTC \u62d6\u7d2f\u9700\u5927\u5e45\u7e2e\u6b0a\u91cd\u3002\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"pivot\", \"momentum\", \"support\", \"volume\"],\n  \"r_multiples\": [1.5, 2.5, 3.5, 4.5, 6.0],\n  \"rationale\": \"BTC-USD \u62d6\u7d2f\u904e\u91cd\u9700\u7e2e\u6b0a\u91cd\u81f3 0.3\uff1b\u6539\u7528 5/15min \u96d9\u6642\u6846\u6ffe\u96dc\u8a0a\uff1bT1 \u62c9\u9ad8\u81f3 1.5R \u62b5\u92b7\u4f4e WR \u52a3\u52e2\u3002\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 98,
-            "reason": "\u52dd\u7387\u50c534%\u3001PF\u4f4e\u65bc1\uff0cMES\u8ca2\u737b\u8fd197%\u8667\u640d",
-            "weight": 0.3,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "ema20",
-              "adx",
-              "volume"
-            ],
-            "rationale": "MES\u62d6\u7d2f\u6700\u91cd\uff1b\u964d\u6b0a\u91cd\u3001\u8f4915\u5206\u9418\u6e1b\u96dc\u8a0a\uff0c\u79fb\u9664\u881f\u71ed\u5f62\u614b\u3002",
-            "agent": "yw-two-yang",
-            "strategy_id": "two-yang",
-            "ticker": "MNQ=F",
-            "live_n": 222,
-            "live_pf": 0.83,
-            "live_wr": 34.2,
-            "live_R": -24.27,
-            "current_weight": 0.5,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 98 | REASON: \u52dd\u7387\u50c534%\u3001PF\u4f4e\u65bc1\uff0cMES\u8ca2\u737b\u8fd197%\u8667\u640d\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"ema20\", \"adx\", \"volume\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"MES\u62d6\u7d2f\u6700\u91cd\uff1b\u964d\u6b0a\u91cd\u3001\u8f4915\u5206\u9418\u6e1b\u96dc\u8a0a\uff0c\u79fb\u9664\u881f\u71ed\u5f62\u614b\u3002\"\n}"
-          },
-          {
-            "grade": "C",
-            "confidence": 86,
-            "reason": "\u6574\u9ad4\u76c8\u5229\u4f46PF\u50c51.08\uff0cMGC\u62d6\u7d2f\u660e\u986f",
-            "weight": 0.75,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.5,
-              2.0,
-              2.5,
-              3.0,
-              3.5
-            ],
-            "indicators": [
-              "cycle",
-              "5_subdetectors"
-            ],
-            "rationale": "\u52dd\u7387\u50c540%\uff1b\u52a015min\u964d\u566a\u3001\u964d\u6b0a\u91cd\uff0c\u4e26\u62c9\u9ad8\u76c8\u8667\u6bd4",
-            "agent": "yw-kell-cycle",
-            "strategy_id": "kell-cycle",
-            "ticker": "MNQ=F",
-            "live_n": 194,
-            "live_pf": 1.08,
-            "live_wr": 40.2,
-            "live_R": 9.59,
-            "current_weight": 0.9,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: C | CONFIDENCE: 86 | REASON: \u6574\u9ad4\u76c8\u5229\u4f46PF\u50c51.08\uff0cMGC\u62d6\u7d2f\u660e\u986f\n\nsuggested_params = {\n  \"weight\": 0.75,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"cycle\", \"5_subdetectors\"],\n  \"r_multiples\": [1.5, 2.0, 2.5, 3.0, 3.5],\n  \"rationale\": \"\u52dd\u7387\u50c540%\uff1b\u52a015min\u964d\u566a\u3001\u964d\u6b0a\u91cd\uff0c\u4e26\u62c9\u9ad8\u76c8\u8667\u6bd4\"\n}"
-          },
-          {
-            "grade": "C",
-            "confidence": 62,
-            "reason": "PF\u50c51.07\u52c9\u5f37\u7372\u5229\uff0cWR 40%\u504f\u4f4e\uff0cMNQ\u62d6\u7d2f-19R\u56b4\u91cd\uff0c\u9700\u7e2e\u6b0a\u91cd\u8207\u904e\u6ffe\u8667\u640d\u6a19\u7684\u3002",
-            "weight": 0.8,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "candle_range",
-              "htf_confirm",
-              "ema_trend"
-            ],
-            "rationale": "PF 1.07\u904e\u4f4e\u9700\u964d\u6b0a\u91cd\u63a7\u98a8\u96aa\uff1bMNQ\u6301\u7e8c\u8667\u640d\u61c9\u904e\u6ffe\uff1b\u52a0EMA\u8da8\u52e2\u6ffe\u63d0\u9ad8WR\u3002",
-            "agent": "yw-crt",
-            "strategy_id": "crt",
-            "ticker": "MNQ=F",
-            "live_n": 701,
-            "live_pf": 1.07,
-            "live_wr": 40.1,
-            "live_R": 27.86,
-            "current_weight": 1.1,
-            "current_timeframe": "5min+4H",
-            "response_raw": "GRADE: C | CONFIDENCE: 62 | REASON: PF\u50c51.07\u52c9\u5f37\u7372\u5229\uff0cWR 40%\u504f\u4f4e\uff0cMNQ\u62d6\u7d2f-19R\u56b4\u91cd\uff0c\u9700\u7e2e\u6b0a\u91cd\u8207\u904e\u6ffe\u8667\u640d\u6a19\u7684\u3002\n\nsuggested_params = {\n  \"weight\": 0.8,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"candle_range\", \"htf_confirm\", \"ema_trend\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"PF 1.07\u904e\u4f4e\u9700\u964d\u6b0a\u91cd\u63a7\u98a8\u96aa\uff1bMNQ\u6301\u7e8c\u8667\u640d\u61c9\u904e\u6ffe\uff1b\u52a0EMA\u8da8\u52e2\u6ffe\u63d0\u9ad8WR\u3002\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 95,
-            "reason": "PF 0.91\u4e14R -19.8\uff1b\u8ca0\u671f\u671b\uff0c\u61c9\u6e1b\u66dd\u96aa\u4e26\u907f\u958bMES",
-            "weight": 0.5,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.5,
-              2.0,
-              2.5,
-              3.0,
-              4.0
-            ],
-            "indicators": [
-              "step_pattern"
-            ],
-            "rationale": "MNQ\u76c8\u5229\u800cMES\u91cd\u8667\uff1b\u6e1b\u534a\u6b0a\u91cd\uff0c\u591a\u6642\u6bb5\u904e\u6ffe\u566a\u97f3\u4e26\u63d0\u9ad8\u76c8\u8667\u6bd4",
-            "agent": "yw-stair-pattern",
-            "strategy_id": "stair-pattern",
-            "ticker": "MNQ=F",
-            "live_n": 346,
-            "live_pf": 0.91,
-            "live_wr": 36.4,
-            "live_R": -19.84,
-            "current_weight": 0.9,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 95 | REASON: PF 0.91\u4e14R -19.8\uff1b\u8ca0\u671f\u671b\uff0c\u61c9\u6e1b\u66dd\u96aa\u4e26\u907f\u958bMES\n\nsuggested_params = {\n  \"weight\": 0.5,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"step_pattern\"],\n  \"r_multiples\": [1.5, 2.0, 2.5, 3.0, 4.0],\n  \"rationale\": \"MNQ\u76c8\u5229\u800cMES\u91cd\u8667\uff1b\u6e1b\u534a\u6b0a\u91cd\uff0c\u591a\u6642\u6bb5\u904e\u6ffe\u566a\u97f3\u4e26\u63d0\u9ad8\u76c8\u8667\u6bd4\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 25,
-            "reason": "0 trades = no edge validation, strategy\u5b8c\u5168\u7121signal\uff0cconfig\u6025\u9700\u8abf\u6574",
-            "weight": 0.3,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "pin_bar",
-              "msb",
-              "engulfing"
-            ],
-            "rationale": "0 trades\u986f\u793asignal\u904e\u6ffe\u592a\u56b4\uff0c5timeframe+5indicator\u9020\u6210\u7121\u4ea4\u96c6\u3002\u7e2e\u523015min\u55aetimeframe+3\u6838\u5fc3indicator\u63d0\u5347\u89f8\u767c\u7387\uff0cweight\u964d\u81f30.3\u56e0\u672a\u9a57\u8b49edge",
-            "agent": "yw-argon-gold",
-            "strategy_id": "argon-gold",
-            "ticker": "MGC=F",
-            "live_n": 0,
-            "live_pf": 1.0,
-            "live_wr": 50,
-            "live_R": 0,
-            "current_weight": 1.0,
-            "current_timeframe": "5min/15min/1h",
-            "response_raw": "GRADE: D | CONFIDENCE: 25 | REASON: 0 trades = no edge validation, strategy\u5b8c\u5168\u7121signal\uff0cconfig\u6025\u9700\u8abf\u6574\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"pin_bar\", \"msb\", \"engulfing\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"0 trades\u986f\u793asignal\u904e\u6ffe\u592a\u56b4\uff0c5timeframe+5indicator\u9020\u6210\u7121\u4ea4\u96c6\u3002\u7e2e\u523015min\u55aetimeframe+3\u6838\u5fc3indicator\u63d0\u5347\u89f8\u767c\u7387\uff0cweight\u964d\u81f30.3\u56e0\u672a\u9a57\u8b49edge\"\n}"
-          },
-          {
-            "grade": "B",
-            "confidence": 62,
-            "reason": "\u6574\u9ad4R\u6b63\u4f46BTC\u56b4\u91cd\u8667\u640d\u62d6\u7d2f\uff0c\u6a23\u672c\u504f\u5c0f\u9700\u66f4\u591a\u6578\u64da\u9a57\u8b49\u3002",
-            "weight": 0.8,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.5,
-              3.5,
-              5.0
-            ],
-            "indicators": [
-              "bbi",
-              "kdj",
-              "volume"
-            ],
-            "rationale": "BTC\u8ca2\u737b\u8ca0R-1.76\u9700\u964d\u6b0a\u91cd\uff1b15min\u5c0dMNQ/MGC\u8868\u73fe\u6700\u4f73\uff1b\u4fdd\u7559\u4e09\u6307\u6a19\u7d44\u5408\u7dad\u6301\u4fe1\u865f\u4e00\u81f4\u6027",
-            "agent": "yw-b1",
-            "strategy_id": "b1",
-            "ticker": "MNQ=F",
-            "live_n": 15,
-            "live_pf": 1.42,
-            "live_wr": 46.7,
-            "live_R": 3.33,
-            "current_weight": 1.0,
-            "current_timeframe": "5min/15min/1h",
-            "response_raw": "GRADE: B | CONFIDENCE: 62 | REASON: \u6574\u9ad4R\u6b63\u4f46BTC\u56b4\u91cd\u8667\u640d\u62d6\u7d2f\uff0c\u6a23\u672c\u504f\u5c0f\u9700\u66f4\u591a\u6578\u64da\u9a57\u8b49\u3002\n\nsuggested_params = {\n  \"weight\": 0.8,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"bbi\", \"kdj\", \"volume\"],\n  \"r_multiples\": [1.0, 1.5, 2.5, 3.5, 5.0],\n  \"rationale\": \"BTC\u8ca2\u737b\u8ca0R-1.76\u9700\u964d\u6b0a\u91cd\uff1b15min\u5c0dMNQ/MGC\u8868\u73fe\u6700\u4f73\uff1b\u4fdd\u7559\u4e09\u6307\u6a19\u7d44\u5408\u7dad\u6301\u4fe1\u865f\u4e00\u81f4\u6027\"\n}"
-          },
-          {
-            "grade": "B",
-            "confidence": 68,
-            "reason": "\u6574\u9ad4+47.9R\u7372\u5229\u4f46\u56b4\u91cd\u50be\u659cBTC\uff0cMNQ/MGC/MES\u5168\u8667\uff0c\u6a23\u672c\u4e0d\u5747\u9700\u904e\u6ffe",
-            "weight": 0.6,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "rsi",
-              "divergence",
-              "ema50",
-              "volume"
-            ],
-            "rationale": "BTC\u4f5474%\u4ea4\u6613\u4e14R+54.6\u8868\u73fe\u512a\u7570\uff0c15min+\u73fe\u6709\u6307\u6a19\u7d44\u5408\u6709\u6548\uff1bMNQ(1/8)\u3001MGC(6/19)\u3001MES(3/11)\u5168\u8667\u62d6\u7d2f\u7e3e\u6548\uff0c\u5efa\u8b70\u964d\u6b0a\u91cd\u81f30.6\u4e26\u7531\u4e0a\u5c64\u904e\u6ffe\u8667\u640d\u54c1\u7a2e\uff1b\u5fae\u8abfTP\u6536\u7dca\u81f33R\u4ee5\u63d0\u9ad8\u5229\u6f64\u56e0\u5b50\u56e0PF 1.52\u4ecd\u6709\u63d0\u5347\u7a7a\u9593",
-            "agent": "yw-rsi-div",
-            "strategy_id": "rsi-div",
-            "ticker": "MNQ=F",
-            "live_n": 180,
-            "live_pf": 1.52,
-            "live_wr": 48.9,
-            "live_R": 47.91,
-            "current_weight": 0.7,
-            "current_timeframe": "15min",
-            "response_raw": "GRADE: B | CONFIDENCE: 68 | REASON: \u6574\u9ad4+47.9R\u7372\u5229\u4f46\u56b4\u91cd\u50be\u659cBTC\uff0cMNQ/MGC/MES\u5168\u8667\uff0c\u6a23\u672c\u4e0d\u5747\u9700\u904e\u6ffe\n\nsuggested_params = {\n  \"weight\": 0.6,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"rsi\", \"divergence\", \"ema50\", \"volume\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"BTC\u4f5474%\u4ea4\u6613\u4e14R+54.6\u8868\u73fe\u512a\u7570\uff0c15min+\u73fe\u6709\u6307\u6a19\u7d44\u5408\u6709\u6548\uff1bMNQ(1/8)\u3001MGC(6/19)\u3001MES(3/11)\u5168\u8667\u62d6\u7d2f\u7e3e\u6548\uff0c\u5efa\u8b70\u964d\u6b0a\u91cd\u81f30.6\u4e26\u7531\u4e0a\u5c64\u904e\u6ffe\u8667\u640d\u54c1\u7a2e\uff1b\u5fae\u8abfTP\u6536\u7dca\u81f33R\u4ee5\u63d0\u9ad8\u5229\u6f64\u56e0\u5b50\u56e0PF 1.52\u4ecd\u6709\u63d0\u5347\u7a7a\u9593\"\n}"
-          },
-          {
-            "grade": "B",
-            "confidence": 88,
-            "reason": "425\u7b46\u4ecd\u6b63R\uff0c\u4f46PF\u50c51.14\u4e14\u76c8\u5229\u4e3b\u8981\u9760MNQ\uff0c\u7a69\u5065\u6027\u4e0d\u8db3",
-            "weight": 0.7,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.0,
-              2.0,
-              3.0,
-              4.0,
-              5.0
-            ],
-            "indicators": [
-              "trend",
-              "push_count"
-            ],
-            "rationale": "\u4e0b\u8abf\u6b0a\u91cd\u63a7\u5236\u56de\u64a4\uff1b\u7dad\u6301\u6709\u6548\u8a0a\u865f\uff0c\u4e26\u4ee5\u5206\u7d1a\u6b62\u76c8\u6539\u5584\u4f4ePF",
-            "agent": "yw-3-pushes",
-            "strategy_id": "3-pushes",
-            "ticker": "MNQ=F",
-            "live_n": 425,
-            "live_pf": 1.14,
-            "live_wr": 41.9,
-            "live_R": 34.82,
-            "current_weight": 1.0,
-            "current_timeframe": "5min/15min",
-            "response_raw": "GRADE: B | CONFIDENCE: 88 | REASON: 425\u7b46\u4ecd\u6b63R\uff0c\u4f46PF\u50c51.14\u4e14\u76c8\u5229\u4e3b\u8981\u9760MNQ\uff0c\u7a69\u5065\u6027\u4e0d\u8db3\n\nsuggested_params = {\n  \"weight\": 0.7,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"trend\", \"push_count\"],\n  \"r_multiples\": [1.0, 2.0, 3.0, 4.0, 5.0],\n  \"rationale\": \"\u4e0b\u8abf\u6b0a\u91cd\u63a7\u5236\u56de\u64a4\uff1b\u7dad\u6301\u6709\u6548\u8a0a\u865f\uff0c\u4e26\u4ee5\u5206\u7d1a\u6b62\u76c8\u6539\u5584\u4f4ePF\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 97,
-            "reason": "\u903e\u5343\u7b46\u4ea4\u6613\u4ecdPF 0.90\u3001\u7e3dR\u70ba\u8ca0\uff0c\u672a\u5177\u6b63\u671f\u671b\u3002",
-            "weight": 0.4,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              3.0,
-              4.0
-            ],
-            "indicators": [
-              "ema20",
-              "sma50",
-              "pullback"
-            ],
-            "rationale": "15\u5206\u9418\u6e1b\u4f4e\u77ed\u7dda\u96dc\u8a0a\uff1b\u4fdd\u7559\u56de\u8abf\u6307\u6a19\uff0c\u964d\u6b0a\u9650\u5236\u7d44\u5408\u8667\u640d\u3002",
-            "agent": "yw-50-20-pullback",
-            "strategy_id": "50-20-pullback",
-            "ticker": "MNQ=F",
-            "live_n": 1014,
-            "live_pf": 0.9,
-            "live_wr": 36.0,
-            "live_R": -67.17,
-            "current_weight": 1.0,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 97 | REASON: \u903e\u5343\u7b46\u4ea4\u6613\u4ecdPF 0.90\u3001\u7e3dR\u70ba\u8ca0\uff0c\u672a\u5177\u6b63\u671f\u671b\u3002\n\nsuggested_params = {\n  \"weight\": 0.4,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"ema20\", \"sma50\", \"pullback\"],\n  \"r_multiples\": [1, 1.5, 2, 3, 4],\n  \"rationale\": \"15\u5206\u9418\u6e1b\u4f4e\u77ed\u7dda\u96dc\u8a0a\uff1b\u4fdd\u7559\u56de\u8abf\u6307\u6a19\uff0c\u964d\u6b0a\u9650\u5236\u7d44\u5408\u8667\u640d\u3002\"\n}"
-          }
-        ]
-      }
-    },
-    {
-      "date": "all_20261021_231705",
-      "data": {
-        "date": "2026-10-21",
-        "hkt_timestamp": "20261021_231705",
-        "n_strategies": 9,
-        "results": [
-          {
-            "grade": "D",
-            "confidence": 72,
-            "reason": "PF<1, WR 35%, \u96c6\u4e2dBTC\u8667\u640d\u56b4\u91cd\uff0c\u9700\u5927\u5e45\u7e2e\u6e1b\u4e26\u91cd\u65b0\u6821\u6e96",
-            "weight": 0.4,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "pivot",
-              "momentum",
-              "volume",
-              "atr"
-            ],
-            "rationale": "BTC\u7b56\u7565\u5931\u6548\uff0c\u6e1b\u78bc\u81f30.4\u4e26\u62c9\u9ad8\u6642\u6846\u904e\u6ffe\u96dc\u8a0a\uff0c\u52a0\u5165ATR\u505a\u6ce2\u52d5\u9069\u914d\uff0c\u5f85WR>45%\u518d\u52a0\u78bc",
-            "agent": "yw-h-pattern",
-            "strategy_id": "h-pattern",
-            "ticker": "MNQ=F",
-            "live_n": 132,
-            "live_pf": 0.86,
-            "live_wr": 34.8,
-            "live_R": -12.19,
-            "current_weight": 1.2,
-            "current_timeframe": "3min/5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 72 | REASON: PF<1, WR 35%, \u96c6\u4e2dBTC\u8667\u640d\u56b4\u91cd\uff0c\u9700\u5927\u5e45\u7e2e\u6e1b\u4e26\u91cd\u65b0\u6821\u6e96\n\nsuggested_params = {\n  \"weight\": 0.4,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"pivot\", \"momentum\", \"volume\", \"atr\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"BTC\u7b56\u7565\u5931\u6548\uff0c\u6e1b\u78bc\u81f30.4\u4e26\u62c9\u9ad8\u6642\u6846\u904e\u6ffe\u96dc\u8a0a\uff0c\u52a0\u5165ATR\u505a\u6ce2\u52d5\u9069\u914d\uff0c\u5f85WR>45%\u518d\u52a0\u78bc\"\n}"
-          },
-          {
-            "grade": "C",
-            "confidence": 95,
-            "reason": "0 trades\uff0c\u6a23\u672c\u4e0d\u8db3\uff0c\u66ab\u4e0d\u8abf\u6574\u53c3\u6578",
-            "weight": 1.0,
-            "timeframe": "5min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "8_features",
-              "knn_k7"
-            ],
-            "rationale": "\u7121\u4ea4\u6613\u7d00\u9304\uff0c\u4fdd\u7559\u539f\u8a2d\u5b9a\u907f\u514d\u56e0\u96f6\u6a23\u672c\u904e\u5ea6\u64ec\u5408",
-            "agent": "ocs-btc-5m",
-            "strategy_id": "ocs-btc",
-            "ticker": "BTC-USD",
-            "live_n": 0,
-            "live_pf": 1.0,
-            "live_wr": 50,
-            "live_R": 0,
-            "current_weight": 1.0,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: C | CONFIDENCE: 95 | REASON: 0 trades\uff0c\u6a23\u672c\u4e0d\u8db3\uff0c\u66ab\u4e0d\u8abf\u6574\u53c3\u6578\n\nsuggested_params = {\n  \"weight\": 1.0,\n  \"timeframe\": \"5min\",\n  \"indicators\": [\"8_features\", \"knn_k7\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"\u7121\u4ea4\u6613\u7d00\u9304\uff0c\u4fdd\u7559\u539f\u8a2d\u5b9a\u907f\u514d\u56e0\u96f6\u6a23\u672c\u904e\u5ea6\u64ec\u5408\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 45,
-            "reason": "\u7b56\u7565\u6574\u9ad4\u8667\u640d\uff0cPF 0.91\uff0c\u50c5 MNQ \u76c8\u5229\uff0c\u5176\u9918\u5168\u8755\uff1bWR 36%\u904e\u4f4e\uff0c\u9700\u5f37\u5316\u904e\u6ffe\u5668\u3002",
-            "weight": 0.5,
-            "timeframe": "5min/15min",
-            "r_multiples": [
-              1.5,
-              2.0,
-              2.5,
-              3.0,
-              4.0
-            ],
-            "indicators": [
-              "step_pattern",
-              "ema_trend",
-              "rsi_filter",
-              "volume_confirm"
-            ],
-            "rationale": "\u52a0\u5165 EMA \u8da8\u52e2\u53ca RSI \u904e\u6ffe\u63d0\u5347 WR\uff1b\u591a\u6642\u6846\u78ba\u8a8d\u964d\u4f4e\u5047\u4fe1\u865f\uff1b\u7e2e\u7dca R \u500d\u6578\u6355\u6349\u52d5\u80fd\uff1b\u964d\u6b0a\u91cd\u56e0\u7b56\u7565\u6574\u9ad4\u4ecd\u8667\u640d\u3002",
-            "agent": "yw-stair-pattern",
-            "strategy_id": "stair-pattern",
-            "ticker": "MNQ=F",
-            "live_n": 346,
-            "live_pf": 0.91,
-            "live_wr": 36.4,
-            "live_R": -19.84,
-            "current_weight": 0.9,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 45 | REASON: \u7b56\u7565\u6574\u9ad4\u8667\u640d\uff0cPF 0.91\uff0c\u50c5 MNQ \u76c8\u5229\uff0c\u5176\u9918\u5168\u8755\uff1bWR 36%\u904e\u4f4e\uff0c\u9700\u5f37\u5316\u904e\u6ffe\u5668\u3002\n\nsuggested_params = {\n  \"weight\": 0.5,\n  \"timeframe\": \"5min/15min\",\n  \"indicators\": [\"step_pattern\", \"ema_trend\", \"rsi_filter\", \"volume_confirm\"],\n  \"r_multiples\": [1.5, 2.0, 2.5, 3.0, 4.0],\n  \"rationale\": \"\u52a0\u5165 EMA \u8da8\u52e2\u53ca RSI \u904e\u6ffe\u63d0\u5347 WR\uff1b\u591a\u6642\u6846\u78ba\u8a8d\u964d\u4f4e\u5047\u4fe1\u865f\uff1b\u7e2e\u7dca R \u500d\u6578\u6355\u6349\u52d5\u80fd\uff1b\u964d\u6b0a\u91cd\u56e0\u7b56\u7565\u6574\u9ad4\u4ecd\u8667\u640d\u3002\"\n}"
-          },
-          {
-            "grade": "B",
-            "confidence": 84,
-            "reason": "\u76c8\u5229\u96c6\u4e2dMNQ\uff0cPF\u50c51.14\uff0c\u5b9c\u964d\u5009\u6e1b\u5c11\u4f4e\u6548\u4ea4\u6613",
-            "weight": 0.7,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "trend",
-              "push_count"
-            ],
-            "rationale": "MNQ\u53caM2K\u5e36\u52d5\u76c8\u5229\uff0c\u5176\u9918\u62d6\u7d2f\uff1b15min\u6e1b\u5c11\u566a\u97f3\uff0c\u6e1b\u6b0a\u964d\u4f4e\u56de\u64a4",
-            "agent": "yw-3-pushes",
-            "strategy_id": "3-pushes",
-            "ticker": "MNQ=F",
-            "live_n": 425,
-            "live_pf": 1.14,
-            "live_wr": 41.9,
-            "live_R": 34.82,
-            "current_weight": 1.0,
-            "current_timeframe": "5min/15min",
-            "response_raw": "GRADE: B | CONFIDENCE: 84 | REASON: \u76c8\u5229\u96c6\u4e2dMNQ\uff0cPF\u50c51.14\uff0c\u5b9c\u964d\u5009\u6e1b\u5c11\u4f4e\u6548\u4ea4\u6613\n\nsuggested_params = {\n  \"weight\": 0.7,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"trend\", \"push_count\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"MNQ\u53caM2K\u5e36\u52d5\u76c8\u5229\uff0c\u5176\u9918\u62d6\u7d2f\uff1b15min\u6e1b\u5c11\u566a\u97f3\uff0c\u6e1b\u6b0a\u964d\u4f4e\u56de\u64a4\"\n}"
-          },
-          {
-            "grade": "C",
-            "confidence": 58,
-            "reason": "40% WR\u540cPF 1.07\u504f\u5f31\uff0cMNQ\u540cM2K\u62d6\u5f8c\u817f\uff0c\u7e3dR\u50c5+27.9\u908a\u7de3\u3002",
-            "weight": 0.7,
-            "timeframe": "5min+1H",
-            "r_multiples": [
-              1.5,
-              2.5,
-              4.0,
-              6.0,
-              8.0
-            ],
-            "indicators": [
-              "candle_range",
-              "htf_confirm",
-              "trend_filter"
-            ],
-            "rationale": "WR\u50c540%\u9700\u653e\u5927T1\u81f31.5R\u5148\u5920cover\uff1b\u52a0trend_filter\u6dd8\u6c70MNQ\u985e\u4f4eWR\u8a0a\u865f\uff1b4H\u904e\u7c97\u65391H\u8cbc\u8fd15min",
-            "agent": "yw-crt",
-            "strategy_id": "crt",
-            "ticker": "MNQ=F",
-            "live_n": 701,
-            "live_pf": 1.07,
-            "live_wr": 40.1,
-            "live_R": 27.86,
-            "current_weight": 1.1,
-            "current_timeframe": "5min+4H",
-            "response_raw": "GRADE: C | CONFIDENCE: 58 | REASON: 40% WR\u540cPF 1.07\u504f\u5f31\uff0cMNQ\u540cM2K\u62d6\u5f8c\u817f\uff0c\u7e3dR\u50c5+27.9\u908a\u7de3\u3002\n\nsuggested_params = {\n  \"weight\": 0.7,\n  \"timeframe\": \"5min+1H\",\n  \"indicators\": [\"candle_range\", \"htf_confirm\", \"trend_filter\"],\n  \"r_multiples\": [1.5, 2.5, 4.0, 6.0, 8.0],\n  \"rationale\": \"WR\u50c540%\u9700\u653e\u5927T1\u81f31.5R\u5148\u5920cover\uff1b\u52a0trend_filter\u6dd8\u6c70MNQ\u985e\u4f4eWR\u8a0a\u865f\uff1b4H\u904e\u7c97\u65391H\u8cbc\u8fd15min\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 15,
-            "reason": "\u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u7b56\u7565\u5f9e\u672a\u89f8\u767c\uff0c\u908a\u672a\u8b49\u660e\u6709\u6548",
-            "weight": 0.3,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "pin_bar",
-              "engulfing"
-            ],
-            "rationale": "\u96f6\u4ea4\u6613\u4ee3\u8868\u904e\u6ffe\u592a\u56b4\uff0c\u9700\u7c21\u5316\u6307\u6a19\u8207\u6642\u6846\u8b93\u8a0a\u865f\u771f\u6b63\u89f8\u767c\uff0c\u518d\u7d2f\u7a4d\u6a23\u672c\u9a57\u8b49\u908a\u3002\u4f4e\u6b0a\u91cd\u56e0\u672a\u8b49\u5be6 edge",
-            "agent": "yw-argon-gold",
-            "strategy_id": "argon-gold",
-            "ticker": "MGC=F",
-            "live_n": 0,
-            "live_pf": 1.0,
-            "live_wr": 50,
-            "live_R": 0,
-            "current_weight": 1.0,
-            "current_timeframe": "5min/15min/1h",
-            "response_raw": "GRADE: D | CONFIDENCE: 15 | REASON: \u96f6\u4ea4\u6613\u6a23\u672c\uff0c\u7121\u7d71\u8a08\u610f\u7fa9\uff0c\u7b56\u7565\u5f9e\u672a\u89f8\u767c\uff0c\u908a\u672a\u8b49\u660e\u6709\u6548\n\nsuggested_params = {\n  \"weight\": 0.3,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"pin_bar\", \"engulfing\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"\u96f6\u4ea4\u6613\u4ee3\u8868\u904e\u6ffe\u592a\u56b4\uff0c\u9700\u7c21\u5316\u6307\u6a19\u8207\u6642\u6846\u8b93\u8a0a\u865f\u771f\u6b63\u89f8\u767c\uff0c\u518d\u7d2f\u7a4d\u6a23\u672c\u9a57\u8b49\u908a\u3002\u4f4e\u6b0a\u91cd\u56e0\u672a\u8b49\u5be6 edge\"\n}"
-          },
-          {
-            "grade": "?",
-            "confidence": 0,
-            "reason": "no parse",
-            "weight": null,
-            "timeframe": null,
-            "r_multiples": null,
-            "indicators": null,
-            "rationale": "no parse",
-            "agent": "yw-kell-cycle",
-            "strategy_id": "kell-cycle",
-            "ticker": "MNQ=F",
-            "live_n": 194,
-            "live_pf": 1.08,
-            "live_wr": 40.2,
-            "live_R": 9.59,
-            "current_weight": 0.9,
-            "current_timeframe": "5min",
-            "response_raw": ""
-          },
-          {
-            "grade": "D",
-            "confidence": 95,
-            "reason": "MES\u8ca2\u737b\u8fd1\u5168\u90e8\u8667\u640d\uff0c\u6574\u9ad4\u52dd\u7387\u4f4e\u4e14PF\u4f4e\u65bc1\u3002",
-            "weight": 0.2,
-            "timeframe": "15min",
-            "r_multiples": [
-              0.5,
-              0.75,
-              1.0,
-              1.25,
-              1.5
-            ],
-            "indicators": [
-              "candle_pattern",
-              "ema20",
-              "adx",
-              "volume"
-            ],
-            "rationale": "MES\u62d6\u7d2f\u56b4\u91cd\uff1b\u964d\u6b0a\u91cd\u3001\u5ef6\u9577\u9031\u671f\u53ca\u964d\u4f4eR\u76ee\u6a19\uff0c\u4ee5\u6e1b\u5c11\u904e\u4ea4\u6613\u3002",
-            "agent": "yw-two-yang",
-            "strategy_id": "two-yang",
-            "ticker": "MNQ=F",
-            "live_n": 222,
-            "live_pf": 0.83,
-            "live_wr": 34.2,
-            "live_R": -24.27,
-            "current_weight": 0.5,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 95 | REASON: MES\u8ca2\u737b\u8fd1\u5168\u90e8\u8667\u640d\uff0c\u6574\u9ad4\u52dd\u7387\u4f4e\u4e14PF\u4f4e\u65bc1\u3002\n\nsuggested_params = {\n  \"weight\": 0.2,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"candle_pattern\", \"ema20\", \"adx\", \"volume\"],\n  \"r_multiples\": [0.5, 0.75, 1.0, 1.25, 1.5],\n  \"rationale\": \"MES\u62d6\u7d2f\u56b4\u91cd\uff1b\u964d\u6b0a\u91cd\u3001\u5ef6\u9577\u9031\u671f\u53ca\u964d\u4f4eR\u76ee\u6a19\uff0c\u4ee5\u6e1b\u5c11\u904e\u4ea4\u6613\u3002\"\n}"
-          },
-          {
-            "grade": "C",
-            "confidence": 68,
-            "reason": "\u5fae\u5229\u4f46BTC\u56b4\u91cd\u8667\u640d\u62d6\u7d2f\uff0cWR<50%\u9700\u8abf\u6574\u6301\u5009\u7d50\u69cb",
-            "weight": 0.6,
-            "timeframe": "15min/1h",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "bbi",
-              "kdj",
-              "volume"
-            ],
-            "rationale": "BTC-USD 7\u6230\u50c52\u52ddR-1.76\uff0c\u660e\u986f\u4e0d\u9069\u914d\u6b64\u7b56\u7565\uff0c\u5efa\u8b70\u5254\u9664BTC\u4e26\u964d\u4f4e\u6b0a\u91cd\u81f30.6\uff1b\u4fdd\u7559MNQ\u8207MGC\u52dd\u7387\u8f03\u9ad8\u6a19\u7684\uff1b\u7cbe\u7c21\u6642\u5e8f\u81f315min/1h\u96d9\u6846\u63d0\u5347\u4fe1\u865f\u54c1\u8cea\uff1bKDJ+\u6210\u4ea4\u91cf\u7d44\u5408\u5728\u9707\u76ea\u5e02\u8868\u73fe\u7a69\u5b9a\u3002",
-            "agent": "yw-b1",
-            "strategy_id": "b1",
-            "ticker": "MNQ=F",
-            "live_n": 15,
-            "live_pf": 1.42,
-            "live_wr": 46.7,
-            "live_R": 3.33,
-            "current_weight": 1.0,
-            "current_timeframe": "5min/15min/1h",
-            "response_raw": "GRADE: C | CONFIDENCE: 68 | REASON: \u5fae\u5229\u4f46BTC\u56b4\u91cd\u8667\u640d\u62d6\u7d2f\uff0cWR<50%\u9700\u8abf\u6574\u6301\u5009\u7d50\u69cb\n\nsuggested_params = {\n  \"weight\": 0.6,\n  \"timeframe\": \"15min/1h\",\n  \"indicators\": [\"bbi\", \"kdj\", \"volume\"],\n  \"r_multiples\": [1.0, 1.5, 2.0, 2.5, 3.0],\n  \"rationale\": \"BTC-USD 7\u6230\u50c52\u52ddR-1.76\uff0c\u660e\u986f\u4e0d\u9069\u914d\u6b64\u7b56\u7565\uff0c\u5efa\u8b70\u5254\u9664BTC\u4e26\u964d\u4f4e\u6b0a\u91cd\u81f30.6\uff1b\u4fdd\u7559MNQ\u8207MGC\u52dd\u7387\u8f03\u9ad8\u6a19\u7684\uff1b\u7cbe\u7c21\u6642\u5e8f\u81f315min/1h\u96d9\u6846\u63d0\u5347\u4fe1\u865f\u54c1\u8cea\uff1bKDJ+\u6210\u4ea4\u91cf\u7d44\u5408\u5728\u9707\u76ea\u5e02\u8868\u73fe\u7a69\u5b9a\u3002\"\n}"
-          },
-          {
-            "grade": "C",
-            "confidence": 65,
-            "reason": "74%\u4ea4\u6613\u96c6\u4e2dBTC\u4e14\u7368\u529b\u8ca2\u737b\u76c8\u5229\uff1bMGC/MES/MNQ\u52dd\u7387\u904e\u4f4e\u62d6\u7d2f\u6574\u9ad4\uff0c\u9700\u7cbe\u7c21\u6a19\u7684",
-            "weight": 0.8,
-            "timeframe": "15min",
-            "r_multiples": [
-              0.8,
-              1.5,
-              2.5,
-              4.0,
-              5.0
-            ],
-            "indicators": [
-              "rsi",
-              "divergence",
-              "ema50",
-              "volume"
-            ],
-            "rationale": "BTC\u4e3b\u5c0e\u76c8\u5229\uff0c\u79fb\u9664MGC/MES/MNQ\u6216\u964d\u6b0a\uff1b49% WR\u4e0b\u6536\u7dcaT1\u63d0\u5347\u52dd\u7387\uff0c\u7b49\u5f85\u66f4\u9ad8\u78ba\u5b9a\u6027\u518d\u6301\u5009",
-            "agent": "yw-rsi-div",
-            "strategy_id": "rsi-div",
-            "ticker": "MNQ=F",
-            "live_n": 180,
-            "live_pf": 1.52,
-            "live_wr": 48.9,
-            "live_R": 47.91,
-            "current_weight": 0.7,
-            "current_timeframe": "15min",
-            "response_raw": "GRADE: C | CONFIDENCE: 65 | REASON: 74%\u4ea4\u6613\u96c6\u4e2dBTC\u4e14\u7368\u529b\u8ca2\u737b\u76c8\u5229\uff1bMGC/MES/MNQ\u52dd\u7387\u904e\u4f4e\u62d6\u7d2f\u6574\u9ad4\uff0c\u9700\u7cbe\u7c21\u6a19\u7684\n\nsuggested_params = {\n  \"weight\": 0.8,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"rsi\", \"divergence\", \"ema50\", \"volume\"],\n  \"r_multiples\": [0.8, 1.5, 2.5, 4.0, 5.0],\n  \"rationale\": \"BTC\u4e3b\u5c0e\u76c8\u5229\uff0c\u79fb\u9664MGC/MES/MNQ\u6216\u964d\u6b0a\uff1b49% WR\u4e0b\u6536\u7dcaT1\u63d0\u5347\u52dd\u7387\uff0c\u7b49\u5f85\u66f4\u9ad8\u78ba\u5b9a\u6027\u518d\u6301\u5009\"\n}"
-          },
-          {
-            "grade": "D",
-            "confidence": 96,
-            "reason": "PF\u50c50.89\u4e14\u7e3dR\u70ba\u8ca0\uff0c5min\u4ea4\u6613\u904e\u5bc6\uff0c\u9700\u964d\u6b0a\u964d\u566a",
-            "weight": 0.5,
-            "timeframe": "15min",
-            "r_multiples": [
-              1.0,
-              1.5,
-              2.0,
-              2.5,
-              3.0
-            ],
-            "indicators": [
-              "ema20",
-              "sma50",
-              "pullback"
-            ],
-            "rationale": "\u6a23\u672c\u903e\u5343\u7b46\u4ecd\u8667\u640d\uff1b\u8f4915min\u53ca\u6e1b\u534a\u6b0a\u9650\uff0c\u964d\u4f4e\u4ea4\u6613\u983b\u7387\u8207\u56de\u64a4",
-            "agent": "yw-50-20-pullback",
-            "strategy_id": "50-20-pullback",
-            "ticker": "MNQ=F",
-            "live_n": 1011,
-            "live_pf": 0.89,
-            "live_wr": 36.0,
-            "live_R": -69.17,
-            "current_weight": 1.0,
-            "current_timeframe": "5min",
-            "response_raw": "GRADE: D | CONFIDENCE: 96 | REASON: PF\u50c50.89\u4e14\u7e3dR\u70ba\u8ca0\uff0c5min\u4ea4\u6613\u904e\u5bc6\uff0c\u9700\u964d\u6b0a\u964d\u566a\n\nsuggested_params = {\n  \"weight\": 0.5,\n  \"timeframe\": \"15min\",\n  \"indicators\": [\"ema20\", \"sma50\", \"pullback\"],\n  \"r_multiples\": [1, 1.5, 2, 2.5, 3],\n  \"rationale\": \"\u6a23\u672c\u903e\u5343\u7b46\u4ecd\u8667\u640d\uff1b\u8f4915min\u53ca\u6e1b\u534a\u6b0a\u9650\uff0c\u964d\u4f4e\u4ea4\u6613\u983b\u7387\u8207\u56de\u64a4\"\n}"
           }
         ]
       }
