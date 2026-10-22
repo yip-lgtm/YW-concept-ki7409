@@ -9,15 +9,17 @@ For each agent, over the **14d** rolling window:
   - floor at **1**
 - Otherwise: **stay flat** (neutral zone — 1-2 of 3 conditions fail)
 
-## Promoted (0 agents) ⬆
+## Promoted (2 agents) ⬆
 | Agent | Old → New | n | PF | WR | RR | Reason |
 |-------|-----------|---|-----|-----|-----|--------|
+| TTrades-L13 | 1 → 2 ⬆ | 30 | 1.08 | 40.0% | 1.62 | all 3 conditions met |
+| TTrades-L14 | 1 → 2 ⬆ | 12 | 0.81 | 33.3% | 1.62 | all 3 conditions met |
 
 ## Demoted (0 agents) ⬇
 | Agent | Old → New | n | PF | WR | RR | Reason |
 |-------|-----------|---|-----|-----|-----|--------|
 
-## Held (n≥10, mixed signals — stays flat) (7 agents)
+## Held (n≥10, mixed signals — stays flat) (5 agents)
 | Agent | Level | n | PF | WR | RR | Why not promoted / demoted |
 |-------|-------|---|-----|-----|-----|----------------------------|
 | 3-Pushes | 2 | 12 | 2.27 | 58.3% | 1.62 | NOT promoted: — | NOT demoted: PF 2.27 > 1.0; WR 58.3% > 50.0%; RR 1.62 > 1.0 |
@@ -25,14 +27,12 @@ For each agent, over the **14d** rolling window:
 | Stair | 3 | 35 | 0.97 | 34.3% | 1.86 | NOT promoted: PF 0.97 ≤ 1.0; WR 34.3% ≤ 50.0% | NOT demoted: RR 1.86 > 1.0 |
 | B1-3in1 | 1 | 15 | 0.00 | 0.0% | 0.00 | NOT promoted: PF 0.00 ≤ 1.0; WR 0.0% ≤ 50.0%; RR 0.00 ≤ 1.0 | NOT demoted: at min_level |
 | CRT | 2 | 48 | 0.73 | 31.2% | 1.62 | NOT promoted: PF 0.73 ≤ 1.0; WR 31.2% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0 |
-| TTrades-L13 | 1 | 30 | 1.08 | 40.0% | 1.62 | NOT promoted: WR 40.0% ≤ 50.0% | NOT demoted: PF 1.08 > 1.0; RR 1.62 > 1.0; at min_level |
-| TTrades-L14 | 1 | 12 | 0.81 | 33.3% | 1.62 | NOT promoted: PF 0.81 ≤ 1.0; WR 33.3% ≤ 50.0% | NOT demoted: RR 1.62 > 1.0; at min_level |
 
 ## Insufficient data (n<10) (9 agents)
 | Agent | Level | n | Note |
 |-------|-------|---|------|
 | H-Pattern | 2 | 5 | need ≥ 10 trades to settle |
-| Two-Yang | 1 | 9 | need ≥ 10 trades to settle |
+| Two-Yang | 1 | 8 | need ≥ 10 trades to settle |
 | RSI-Div | 1 | 4 | need ≥ 10 trades to settle |
 | B1 | 1 | 2 | need ≥ 10 trades to settle |
 | Kell-Cycle | 1 | 2 | need ≥ 10 trades to settle |
@@ -42,8 +42,8 @@ For each agent, over the **14d** rolling window:
 | Argon-Gold | 1 | 0 | need ≥ 10 trades to settle |
 
 ## Aggregate
-- **Promoted (⬆)**: 0
+- **Promoted (⬆)**: 2
 - **Demoted (⬇)**: 0
-- **Held (flat)**: 7
+- **Held (flat)**: 5
 - **Insufficient data**: 9
 - **Total evaluated**: 16
