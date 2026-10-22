@@ -1,0 +1,399 @@
+{
+  "day": "2026-10-22",
+  "generated_at": "2026-10-22T14:20:58.816587+00:00",
+  "rules": {
+    "_meta": {
+      "_comment": "Arena rules \u2014 the 15 strategy agents trade each other on virtual accounts. This is a PAPER competition: it never places a broker order, it only moves numbers in its own account files. The governance ladder in strategy_levels.json is NOT touched by the arena; the arena keeps its own level counter so the live promotion rules (n>=10 over 14 days, 2 consecutive days) stay intact.",
+      "created": "2026-10-22T00:00:00+00:00",
+      "version": 1
+    },
+    "enabled": true,
+    "risk_budget_usd": 100.0,
+    "universe": [
+      "MNQ=F",
+      "MES=F",
+      "M2K=F",
+      "MGC=F",
+      "GC=F",
+      "BTC-USD"
+    ],
+    "max_positions_per_agent": 5,
+    "cooldown_bars": 12,
+    "levels": {
+      "start": 1,
+      "floor": 0,
+      "promote": {
+        "min_trades": 1,
+        "min_PF": 1.0,
+        "min_WR": 0.5,
+        "min_RR": 1.0,
+        "min_pnl_usd": 0.0,
+        "delta": 1
+      },
+      "demote": {
+        "min_trades": 5,
+        "max_PF": 0.5,
+        "max_pnl_usd": -300.0,
+        "delta": -1,
+        "_comment": "Demotion is deliberately hard to earn: five or more trades, a profit factor below 0.5 and a day that cost more than three times the risk budget. A level is a score, not a punishment \u2014 the race is the point. The first draft demoted on three trades and a PF under 0.7, which took three agents to level 0 on day one and made the ladder meaningless."
+      }
+    },
+    "signal": {
+      "min_strength": 0,
+      "_comment": "min_strength is the detector's own strength/confidence floor. 0 means every detector hit is taken \u2014 the arena is a competition, not the live book, so the live gates (LLM grading, session gates, weight gates, ticker bans) do not apply. Banned tickers in live_scan.py are ignored here on purpose: the user asked for all instruments, and the arena records the outcome per instrument so a ban can be judged on evidence instead of inherited."
+    }
+  },
+  "board": [
+    {
+      "agent": "Stair",
+      "level": 2,
+      "level_before": 1,
+      "action": "promote",
+      "reason": "PF 2.265 > 1.0, WR 58%, n=24",
+      "equity_usd": 1792.53,
+      "realised_usd": 1830.4,
+      "open_positions": 1,
+      "unrealised_usd": -37.87,
+      "today": {
+        "n": 24,
+        "PF": 2.265,
+        "WR": 0.5833,
+        "RR": 1.618,
+        "pnl_usd": 1265.2,
+        "wins": 14,
+        "losses": 10
+      },
+      "instruments": [
+        "BTC-USD"
+      ],
+      "rank": 1
+    },
+    {
+      "agent": "Kell-Cycle",
+      "level": 2,
+      "level_before": 1,
+      "action": "promote",
+      "reason": "PF 2.311 > 1.0, WR 59%, n=17",
+      "equity_usd": 527.3,
+      "realised_usd": 459.6,
+      "open_positions": 3,
+      "unrealised_usd": 67.7,
+      "today": {
+        "n": 17,
+        "PF": 2.311,
+        "WR": 0.5882,
+        "RR": 1.618,
+        "pnl_usd": 918.0,
+        "wins": 10,
+        "losses": 7
+      },
+      "instruments": [
+        "GC=F",
+        "MGC=F",
+        "MNQ=F"
+      ],
+      "rank": 2
+    },
+    {
+      "agent": "CRT",
+      "level": 2,
+      "level_before": 1,
+      "action": "promote",
+      "reason": "PF 1.618 > 1.0, WR 50%, n=14",
+      "equity_usd": 2040.97,
+      "realised_usd": 1983.2,
+      "open_positions": 2,
+      "unrealised_usd": 57.77,
+      "today": {
+        "n": 14,
+        "PF": 1.618,
+        "WR": 0.5,
+        "RR": 1.618,
+        "pnl_usd": 432.6,
+        "wins": 7,
+        "losses": 7
+      },
+      "instruments": [
+        "GC=F",
+        "MGC=F"
+      ],
+      "rank": 3
+    },
+    {
+      "agent": "3-Pushes",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "n=29, PF 1.142, WR 41% \u2014 did not qualify",
+      "equity_usd": 921.4,
+      "realised_usd": 921.4,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 29,
+        "PF": 1.142,
+        "WR": 0.4138,
+        "RR": 1.618,
+        "pnl_usd": 241.6,
+        "wins": 12,
+        "losses": 17
+      },
+      "instruments": [],
+      "rank": 4
+    },
+    {
+      "agent": "RSI-Div",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "n=29, PF 0.545, WR 17% \u2014 did not qualify",
+      "equity_usd": -2256.68,
+      "realised_usd": -2173.0,
+      "open_positions": 3,
+      "unrealised_usd": -83.68,
+      "today": {
+        "n": 29,
+        "PF": 0.545,
+        "WR": 0.1724,
+        "RR": 2.618,
+        "pnl_usd": -1091.0,
+        "wins": 5,
+        "losses": 24
+      },
+      "instruments": [
+        "BTC-USD",
+        "GC=F",
+        "MGC=F"
+      ],
+      "rank": 5
+    },
+    {
+      "agent": "50-20-Pullback",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "n=21, PF 0.996, WR 38% \u2014 did not qualify",
+      "equity_usd": -839.88,
+      "realised_usd": -849.4,
+      "open_positions": 1,
+      "unrealised_usd": 9.52,
+      "today": {
+        "n": 21,
+        "PF": 0.996,
+        "WR": 0.381,
+        "RR": 1.618,
+        "pnl_usd": -5.6,
+        "wins": 8,
+        "losses": 13
+      },
+      "instruments": [
+        "BTC-USD"
+      ],
+      "rank": 6
+    },
+    {
+      "agent": "TTrades-Fractal",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "no trades closed today",
+      "equity_usd": 361.5,
+      "realised_usd": 104.43,
+      "open_positions": 1,
+      "unrealised_usd": 257.07,
+      "today": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "instruments": [
+        "MGC=F"
+      ],
+      "rank": 7
+    },
+    {
+      "agent": "TTrades-L13",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "no trades closed today",
+      "equity_usd": 106.02,
+      "realised_usd": 0.0,
+      "open_positions": 1,
+      "unrealised_usd": 106.02,
+      "today": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "instruments": [
+        "BTC-USD"
+      ],
+      "rank": 8
+    },
+    {
+      "agent": "B1",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "no trades closed today",
+      "equity_usd": 0.0,
+      "realised_usd": 0.0,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "instruments": [],
+      "rank": 9
+    },
+    {
+      "agent": "Argon-Gold",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "no trades closed today",
+      "equity_usd": 0.0,
+      "realised_usd": 0.0,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "instruments": [],
+      "rank": 10
+    },
+    {
+      "agent": "OCS-BTC-5m",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "no trades closed today",
+      "equity_usd": 0.0,
+      "realised_usd": 0.0,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "instruments": [],
+      "rank": 11
+    },
+    {
+      "agent": "TTrades-L12",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "no trades closed today",
+      "equity_usd": 0.0,
+      "realised_usd": 0.0,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "instruments": [],
+      "rank": 12
+    },
+    {
+      "agent": "TTrades-L14",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "no trades closed today",
+      "equity_usd": 0.0,
+      "realised_usd": 0.0,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "instruments": [],
+      "rank": 13
+    },
+    {
+      "agent": "Two-Yang",
+      "level": 0,
+      "level_before": 1,
+      "action": "demote",
+      "reason": "PF 0.324 < 0.5 over n=12, pnl $-676.4",
+      "equity_usd": -1674.34,
+      "realised_usd": -1714.6,
+      "open_positions": 1,
+      "unrealised_usd": 40.26,
+      "today": {
+        "n": 12,
+        "PF": 0.324,
+        "WR": 0.1667,
+        "RR": 1.618,
+        "pnl_usd": -676.4,
+        "wins": 2,
+        "losses": 10
+      },
+      "instruments": [
+        "BTC-USD"
+      ],
+      "rank": 14
+    },
+    {
+      "agent": "H-Pattern",
+      "level": 0,
+      "level_before": 1,
+      "action": "demote",
+      "reason": "PF 0.0 < 0.5 over n=5, pnl $-500.0",
+      "equity_usd": -776.4,
+      "realised_usd": -776.4,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 5,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": -500.0,
+        "wins": 0,
+        "losses": 5
+      },
+      "instruments": [],
+      "rank": 15
+    }
+  ]
+}

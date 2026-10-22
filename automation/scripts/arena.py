@@ -446,7 +446,12 @@ def close_positions_against(acct: dict, agent: str, ticker: str,
             continue
         risk = pos["sl_dist"]
         r = sign * (exit_price - pos["entry"]) / risk if risk else 0.0
-        pnl = true_pnl(ticker, exit_price - pos["entry"], pos["units"])
+        # Dollars come from the R-multiple and the dollar risk the position
+        # carried, never from the raw price move: a short's price move has
+        # the opposite sign to its profit, and reading it directly turned
+        # this arena's short winners into losers. Same rule as
+        # contract_specs.trade_pnl_usd.
+        pnl = r * float(pos.get("risk_usd", 0.0))
         trade = {
             "strategy": agent, "ticker": ticker, "direction": pos["direction"],
             "entry": pos["entry"], "exit": exit_price, "exit_level": exit_level,
@@ -461,6 +466,17 @@ def close_positions_against(acct: dict, agent: str, ticker: str,
         closed.append(trade)
         append_trade(agent, trade)
     return closed
+
+
+def mark_to_market(acct: dict, ticker: str, last_close: float):
+    """Mark this agent's open positions on one instrument to the last close."""
+    for pos in acct["positions"]:
+        if pos["ticker"] != ticker:
+            continue
+        sign = 1 if pos["direction"] == "long" else -1
+        pos["mark"] = last_close
+        pos["unrealised_usd"] = sign * true_pnl(
+            ticker, last_close - pos["entry"], pos["units"])
 
 
 def open_position(agent: str, sig: dict, acct: dict, ts, rules: dict):
@@ -537,6 +553,7 @@ def replay_agent(spec: dict, acct: dict, hub: "DataHub", rules: dict) -> dict:
                 stats["opened"] += 1
                 cooldowns[cd_key] = idx
         cursors[ticker] = str(df5.index[-1])
+        mark_to_market(acct, ticker, float(fr["df_5m"]["Close"].iloc[-1]))
     return stats
 
 
