@@ -225,7 +225,10 @@ def sig_in_last_24h(s):
         return (now - ts.astimezone(HKT)).total_seconds() < 24*3600
     except: return False
 
-last24h_sigs = [s for s in all_signals if sig_in_last_24h(s)]
+# A signal the scanner rejected — chasing, session ban, Grade C — is logged
+# with its reason for the LLM, not because a trade happened. Counting it
+# here inflated the 24h signal counts with entries the system never took.
+last24h_sigs = [s for s in all_signals if sig_in_last_24h(s) and not s.get('gate_blocked')]
 
 # 4b. 24h Live Ranking (from real closed trades)
 RANKING_24H_FILE = REPO / 'automation/reports/strategy_ranking/24h/ranking_24h.json'

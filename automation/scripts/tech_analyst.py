@@ -42,6 +42,8 @@ def to_ny_time() -> str:
     return datetime.now(NY_TZ).isoformat()
 from pathlib import Path
 
+from tg_ledger import is_sent, mark_sent
+
 def _find_repo() -> Path:
     """Locate the repo root without hard-coding one machine's path.
 
@@ -123,6 +125,51 @@ def signal_id(sig: dict) -> str:
     # Keep microseconds (e.g. 2026-08-31T05:55:42.800232+00:00)
     ts = ts.replace(":", "-").replace("+", "-").replace("/", "-")
     return f"{strategy}_{ticker}_{ts}"[:80]
+
+
+def should_publish(sig: dict) -> bool:
+    """Only real trades reach the channel.
+
+    The scanner logs the signals it rejected — chasing, session ban, Grade
+    C — with the reason attached, so the LLM can learn from them. They are
+    not trades, and publishing them with a chart made the channel look like
+    it was taking entries it had already refused.
+
+    Two marks say a signal was rejected: `gate_blocked`, and
+    `position_opened` set to False. A record with neither is a trade.
+    """
+    if sig.get("gate_blocked"):
+        return False
+    if sig.get("position_opened") is False:
+        return False
+    return True
+
+
+def build_caption(sig: dict) -> str:
+    """The Telegram caption for a signal chart.
+
+    The price is `last_close`: the scanner records the close of the bar the
+    signal fired on, and the record has no `entry` and no `price` key at all.
+    Reading those two used to print the entry as a literal question mark, so
+    every chart reached the channel as "Entry: $?".
+
+    A non-positive close means the price was never recorded, and printing
+    "$0.00" would be worse than admitting it.
+    """
+    strategy = sig.get("strategy", "?")
+    ticker = sig.get("ticker", "?")
+    direction = sig.get("direction", "?")
+    grade = sig.get("grade", "?")
+    raw = sig.get("entry") or sig.get("price") or sig.get("last_close")
+    if isinstance(raw, (int, float)) and not isinstance(raw, bool):
+        entry = f"{raw:,.2f}" if raw > 0 else "?"
+    elif raw:
+        entry = str(raw)
+    else:
+        entry = "?"
+    return (f"📊 {strategy} [{grade}] {ticker} {direction}\n"
+            f"🎯 Entry: ${entry}\n"
+            f"🕐 {sig.get('ts', '?')}")
 
 
 def chart_exists(sig: dict) -> bool:
@@ -266,6 +313,8 @@ def main():
     charts_generated = 0
     charts_failed = 0  # yfinance no data (older than 2d for crypto, etc)
     photos_sent = 0
+    photos_skipped_gated = 0
+    photos_skipped_dup = 0
     
     for sig in last_24h:
         sid = signal_id(sig)
@@ -296,15 +345,23 @@ def main():
         chart_path = CHART_DIR / f"{sid}.png"
         if not chart_path.exists():
             continue
-        # Send TG photo with caption
-        strategy = sig.get("strategy", "?")
-        ticker = sig.get("ticker", "?")
-        direction = sig.get("direction", "?")
-        grade = sig.get("grade", "?")
-        entry = sig.get("entry") or sig.get("price") or "?"
-        caption = f"📊 {strategy} [{grade}] {ticker} {direction}\n🎯 Entry: ${entry}\n🕐 {sig.get('ts', '?')}"
+        # The scanner logs the signals it rejected — chasing, session ban,
+        # Grade C — with the reason attached, so the LLM can learn from
+        # them. They are not trades. Publishing them with a chart made the
+        # channel look like it was taking entries it had already refused.
+        if not should_publish(sig):
+            photos_skipped_gated += 1
+            log_action("tech_analyst", "tg_photo", sid, "INFO",
+                       "skipped: gate-blocked signal, not a trade")
+            continue
+        # live_scan already posted this exact chart when the signal fired.
+        if is_sent(chart_path):
+            photos_skipped_dup += 1
+            continue
+        caption = build_caption(sig)
         if send_telegram_photo(str(chart_path), caption):
             photos_sent += 1
+            mark_sent(chart_path)
             log_action("tech_analyst", "tg_photo", sid, "INFO", "sent to TG")
     
     # Save state
@@ -318,6 +375,8 @@ def main():
         "charts_generated": charts_generated,
         "charts_failed": charts_failed,
         "photos_sent": photos_sent,
+        "photos_skipped_gated": photos_skipped_gated,
+        "photos_skipped_dup": photos_skipped_dup,
         "coverage_24h": round(charts_present / max(charts_total, 1) * 100, 1),
         "status": "healthy" if charts_failed == 0 else ("degraded" if charts_present < charts_total * 0.5 else "ok"),
     }

@@ -1484,6 +1484,7 @@ if _SRC not in _sys.path:
 
 from llm_client import chat  # noqa: E402
 from contract_specs import size_position, usd_per_point  # noqa: E402
+from tg_ledger import mark_sent  # noqa: E402
 from audit import log_action
 
 # Auto-generate chart for each signal
@@ -1855,6 +1856,12 @@ def main() -> int:
             # Send chart as photo to TG
             chart_caption = f"📊 {sig['strategy']} [{sig['grade']}] {sig['ticker']} {sig['direction']} | Entry ${sig.get('last_close', 0):,.2f}"
             photo_code = send_telegram_photo(chart_path, chart_caption)
+            if photo_code == 200:
+                # tech_analyst runs every fifteen minutes and would post this
+                # same chart again for every signal inside its two-hour
+                # window. The ledger is how the two of them agree that a
+                # chart goes out once.
+                mark_sent(chart_path)
             print(f"  ✓ {sig['strategy']} {sig['ticker']} [{sig['grade']}] TG={tg_code} AI={ai_code} CHART={chart_path} PHOTO={photo_code}")
         else:
             print(f"  ✓ {sig['strategy']} {sig['ticker']} [{sig['grade']}] TG={tg_code} AI={ai_code}")
