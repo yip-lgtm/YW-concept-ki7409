@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "generated_at": "2026-10-22 12:19 HKT",
   "hkt_timestamp": "2026-10-22T12:19:03.214302+08:00",
+=======
+  "generated_at": "2026-10-22 12:21 HKT",
+  "hkt_timestamp": "2026-10-22T12:21:16.866673+08:00",
+>>>>>>> f58b63d7 (fix(paths): the last hard-coded repo paths — one of them was crashing CI)
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 8,
@@ -61,7 +66,11 @@
     "total_R": -1.38,
     "total_pnl_usd": 40.62
   },
+<<<<<<< HEAD
   "ranking_24h_updated": "2026-10-22T04:19:03.214320+00:00",
+=======
+  "ranking_24h_updated": "2026-10-22T04:21:16.866732+00:00",
+>>>>>>> f58b63d7 (fix(paths): the last hard-coded repo paths — one of them was crashing CI)
   "strategies": [
     {
       "id": "ocs-btc",
@@ -122,7 +131,7 @@
       "ticker": "MNQ=F",
       "weight": 1.2,
       "optim_date": "\u2014",
-      "timeframe": "3min/5min",
+      "timeframe": "5min",
       "r_multiples": [
         1,
         1.618,
@@ -174,7 +183,7 @@
       "ticker": "MNQ=F",
       "weight": 1.0,
       "optim_date": "\u2014",
-      "timeframe": "5min/15min",
+      "timeframe": "5min",
       "r_multiples": [
         1,
         1.618,
@@ -226,13 +235,13 @@
       "ticker": "MNQ=F",
       "weight": 0.3,
       "optim_date": "2026-08-25 v2",
-      "timeframe": "5min/15min",
+      "timeframe": "5min",
       "r_multiples": [
-        1.5,
-        2.5,
-        4.0,
-        6.0,
-        8.0
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
       ],
       "live_24h": {
         "n": 0,
@@ -278,13 +287,13 @@
       "ticker": "MNQ=F",
       "weight": 0.7,
       "optim_date": "2026-08-25",
-      "timeframe": "15min",
+      "timeframe": "5min",
       "r_multiples": [
-        1.5,
-        2.0,
-        3.0,
-        4.0,
-        5.0
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
       ],
       "live_24h": {
         "n": 0,
@@ -330,7 +339,7 @@
       "ticker": "MNQ=F",
       "weight": 1.0,
       "optim_date": "\u2014",
-      "timeframe": "5min/15min/60min",
+      "timeframe": "5min",
       "r_multiples": [
         1,
         1.618,
@@ -382,7 +391,7 @@
       "ticker": "MNQ=F",
       "weight": 1.2,
       "optim_date": "2026-08-25 v3",
-      "timeframe": "5min/15min/1hr",
+      "timeframe": "5min",
       "r_multiples": [
         1,
         1.618,
@@ -434,7 +443,7 @@
       "ticker": "MNQ=F",
       "weight": 1.2,
       "optim_date": "2026-08-26 v5",
-      "timeframe": "4H range / 5min execution",
+      "timeframe": "5min",
       "r_multiples": [
         1,
         1.618,
@@ -486,7 +495,7 @@
       "ticker": "MNQ=F",
       "weight": 0.6,
       "optim_date": "2026-08-26 v4",
-      "timeframe": "5min/15min/1H/Daily",
+      "timeframe": "5min",
       "r_multiples": [
         1,
         1.618,
@@ -997,6 +1006,266 @@
         "grade": "D",
         "confidence": 85,
         "reason": "\u96f6\u6210\u4ea4\u4ee4\u52dd\u7387\u53caPF\u5931\u771f\uff0c\u9700\u7c21\u5316\u689d\u4ef6\u63d0\u9ad8\u8a0a\u865f\u8986\u84cb"
+      }
+    },
+    {
+      "id": "ttrades-fractal",
+      "name": "TTrades Fractal",
+      "agent": "yw-ttrades-fractal",
+      "ticker": "BTC-USD",
+      "weight": 1.0,
+      "optim_date": "\u2014",
+      "timeframe": "5min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
+      }
+    },
+    {
+      "id": "ttrades-l12",
+      "name": "TTrades L12",
+      "agent": "yw-ttrades-l12",
+      "ticker": "BTC-USD",
+      "weight": 1.0,
+      "optim_date": "\u2014",
+      "timeframe": "5min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
+      }
+    },
+    {
+      "id": "ttrades-l13",
+      "name": "TTrades L13",
+      "agent": "yw-ttrades-l13",
+      "ticker": "BTC-USD",
+      "weight": 1.0,
+      "optim_date": "\u2014",
+      "timeframe": "5min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
+      }
+    },
+    {
+      "id": "ttrades-l14",
+      "name": "TTrades L14",
+      "agent": "yw-ttrades-l14",
+      "ticker": "BTC-USD",
+      "weight": 1.0,
+      "optim_date": "\u2014",
+      "timeframe": "5min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "?",
+        "confidence": 0,
+        "reason": ""
+      }
+    },
+    {
+      "id": "argon-gold",
+      "name": "Argon Gold SOP",
+      "agent": "yw-argon-gold",
+      "ticker": "GC=F",
+      "weight": 1.0,
+      "optim_date": "\u2014",
+      "timeframe": "5min",
+      "r_multiples": [
+        1,
+        1.618,
+        2.618,
+        3.618,
+        5
+      ],
+      "live_24h": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
+      },
+      "signals_24h": 0,
+      "backtest_4d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "backtest_20d": {
+        "n_trades": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0
+      },
+      "iteration": {
+        "grade": "D",
+        "confidence": 25,
+        "reason": "0 trades = no edge validation, strategy\u5b8c\u5168\u7121signal\uff0cconfig\u6025\u9700\u8abf\u6574"
       }
     }
   ],

@@ -43,9 +43,9 @@ if "GITHUB_WORKSPACE" in os.environ:
 else:
     # Prefer fuller local clone, then primary path used by other scripts
     for cand in (
+        Path(__file__).resolve().parents[2],
         Path("/workspace/YW-concept-ki7409-tmp"),
         Path("/workspace/YW-concept-ki7409"),
-        Path(__file__).resolve().parents[2],
     ):
         if (cand / "automation").exists():
             REPO = cand

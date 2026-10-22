@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 import yfinance as yf
 
-sys.path.insert(0, '/workspace/YW-concept-ki7409/automation/src')
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from yw_indicators_b1 import detect_b1
 
 

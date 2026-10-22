@@ -8,12 +8,27 @@ Outputs:
 - docs/llm-iterations-manifest.json (latest 100 LLM iterations)
 """
 import json
+import os
 import sys
 from pathlib import Path
 from datetime import datetime, timezone
 from collections import defaultdict
 
-REPO = Path('/workspace/YW-concept-ki7409') if Path('/workspace/YW-concept-ki7409').exists() else Path('/workspace/YW-concept-ki7409')
+def _find_repo() -> Path:
+    """Locate the repo root without hard-coding one machine's path.
+
+    GITHUB_WORKSPACE wins, because that is where CI checks the repo out.
+    Otherwise walk up from this file until a directory containing
+    "automation" is found, so any clone or worktree works.
+    """
+    if "GITHUB_WORKSPACE" in os.environ:
+        return Path(os.environ["GITHUB_WORKSPACE"])
+    for _parent in Path(__file__).resolve().parents:
+        if (_parent / "automation").is_dir():
+            return _parent
+    return Path("/workspace/YW-concept-ki7409")
+
+REPO = _find_repo()
 UTC = timezone.utc
 
 

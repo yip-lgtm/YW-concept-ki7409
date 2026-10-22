@@ -182,10 +182,7 @@ def main():
     parser.add_argument("--out-dir", default="automation/reports/ocs_btc_5m/backtest")
     args = parser.parse_args()
 
-    if "GITHUB_WORKSPACE" in os.environ:
-        repo = Path(os.environ["GITHUB_WORKSPACE"])
-    else:
-        repo = Path("/workspace/YW-concept-ki7409")
+    repo = _find_repo()
 
     out_dir = repo / args.out_dir
     out_dir.mkdir(parents=True, exist_ok=True)

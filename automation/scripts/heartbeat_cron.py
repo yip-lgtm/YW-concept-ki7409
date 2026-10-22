@@ -5,6 +5,7 @@ This is the PRIMARY scheduler; GHA schedules are backups.
 Why: GHA free tier has unreliable schedule firing (40+ min stalls observed).
 Our own cron service has no such limits.
 """
+from pathlib import Path
 import os
 import time
 import json
@@ -18,6 +19,8 @@ GHA_TOKEN = (
     or os.environ.get('GH_TOKEN', '')
 )
 REPO = 'yip-lgtm/YW-concept-ki7409'
+
+_LOG_PATH = Path(__file__).resolve().parents[1] / "automation" / "reports" / "heartbeat_cron.log"
 WORKFLOW = 'unified-pipeline.yml'
 BRANCH = 'main'
 INTERVAL_SEC = 300  # 5 min
@@ -35,7 +38,7 @@ def log(msg):
     ts = datetime.now(HKT).strftime('%H:%M:%S HKT')
     line = f"[heartbeat-cron {ts}] {msg}"
     print(line, flush=True)
-    with open('/workspace/YW-concept-ki7409/automation/reports/heartbeat_cron.log', 'a') as f:
+    with open(str(_LOG_PATH), 'a') as f:
         f.write(line + '\n')
 
 def trigger_workflow(workflow=WORKFLOW):
