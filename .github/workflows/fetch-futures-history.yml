@@ -44,10 +44,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Install deps
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
       - name: Fetch
         run: |
           cd automation
-          python scripts/fetch_yahoo_history.py \
+          .venv/bin/python scripts/fetch_yahoo_history.py \
             --ticker "${{ github.event.inputs.ticker || 'MGC=F' }}" \
             --intervals ${{ github.event.inputs.intervals || '60m 15m 5m' }}
       - name: Commit

@@ -29,6 +29,7 @@ import os
 import sys
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
@@ -50,29 +51,74 @@ def slug_for(ticker: str) -> str:
     return ticker.replace("=", "").replace("-", "").replace("^", "").upper()
 
 
-def fetch(symbol: str, interval: str, rng: str, retries: int = 4):
-    url = (API.format(symbol=symbol) + f"?range={rng}&interval={interval}"
-           "&includePrePost=false&events=div%2Csplit")
+def _crumb_and_session():
+    """A session with a Yahoo cookie and a crumb.
+
+    Yahoo answers requests from a datacentre address with 429 unless the
+    request carries a cookie and a matching crumb. Getting one is a
+    two-step dance: hit fc.yahoo.com to collect the cookie, then ask
+    for the crumb.
+    """
+    import requests
+    s = requests.Session()
+    s.headers.update({
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                      "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "application/json,text/plain,*/*",
+        "Accept-Language": "en-US,en;q=0.9",
+    })
+    try:
+        s.get("https://fc.yahoo.com", timeout=20)
+    except Exception:
+        pass
+    try:
+        s.get("https://finance.yahoo.com", timeout=20)
+    except Exception:
+        pass
+    crumb = ""
+    for host in ("https://query1.finance.yahoo.com",
+                 "https://query2.finance.yahoo.com"):
+        try:
+            r = s.get(f"{host}/v1/test/getcrumb", timeout=20)
+            if r.status_code == 200 and r.text and len(r.text) < 40:
+                crumb = r.text.strip()
+                break
+        except Exception:
+            continue
+    return s, crumb
+
+
+def fetch(symbol: str, interval: str, rng: str, retries: int = 5):
+    session, crumb = _crumb_and_session()
+    hosts = ["https://query1.finance.yahoo.com", "https://query2.finance.yahoo.com"]
     last_err = None
     for attempt in range(retries):
+        host = hosts[attempt % len(hosts)]
+        url = f"{host}/v8/finance/chart/{urllib.parse.quote(symbol)}"
+        params = {"range": rng, "interval": interval,
+                  "includePrePost": "false", "events": "div,split"}
+        if crumb:
+            params["crumb"] = crumb
         try:
-            req = urllib.request.Request(url, headers={
-                "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) "
-                              "AppleWebKit/537.36 Chrome/120 Safari/537.36"})
-            with urllib.request.urlopen(req, timeout=60) as r:
-                payload = json.loads(r.read().decode())
-        except urllib.error.HTTPError as e:
-            last_err = f"HTTP {e.code}"
-            if e.code in (429, 503):
-                wait = 20 * (attempt + 1)
-                print(f"    {e.code}, waiting {wait}s", flush=True)
-                time.sleep(wait)
-                continue
-            raise
+            r = session.get(url, params=params, timeout=60)
         except Exception as e:
             last_err = f"{type(e).__name__}: {e}"
             time.sleep(5)
             continue
+        if r.status_code == 429:
+            last_err = "HTTP 429"
+            wait = 20 * (attempt + 1)
+            print(f"    429 from {host}, waiting {wait}s", flush=True)
+            time.sleep(wait)
+            # A fresh cookie and crumb may be what the limit wants.
+            if attempt >= 1:
+                session, crumb = _crumb_and_session()
+            continue
+        if r.status_code != 200:
+            last_err = f"HTTP {r.status_code}: {r.text[:160]}"
+            time.sleep(5)
+            continue
+        payload = r.json()
         res = (payload.get("chart", {}).get("result") or [None])[0]
         if not res:
             last_err = f"no result: {payload.get('chart', {}).get('error')}"
