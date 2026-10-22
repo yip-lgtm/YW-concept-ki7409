@@ -1,12 +1,17 @@
 {
-  "timestamp": "2026-10-22T01:24:26.262525+00:00",
+  "timestamp": "2026-10-22T06:31:04.672021+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
     "agent": "ocs-btc-5m",
     "issues": [
-      "read error: Expecting property name enclosed in double quotes: line 5 column 1 (char 78)"
-    ]
+      "no /tmp/ocs_btc/latest.json"
+    ],
+    "n_open": 0,
+    "n_trades_total": 4,
+    "win_rate": 25.0,
+    "profit_factor": 0.33,
+    "last_signal": null
   },
   "ranking": {
     "component": "strategy-ranking",
@@ -73,21 +78,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 39705430314,
+          "id": 39734359167,
           "conclusion": "running",
-          "created_at": "2026-10-22T01:23:48Z",
+          "created_at": "2026-10-22T06:30:27Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 39698344923,
+          "id": 39724354602,
           "conclusion": "success",
-          "created_at": "2026-10-22T00:13:04Z",
+          "created_at": "2026-10-22T04:47:40Z",
           "event": "schedule"
         },
         {
-          "id": 39694774849,
+          "id": 39705430314,
           "conclusion": "success",
-          "created_at": "2026-10-21T23:39:04Z",
+          "created_at": "2026-10-22T01:23:48Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -97,21 +102,21 @@
       "workflow": "strategy-ranking.yml",
       "runs": [
         {
-          "id": 39665810067,
+          "id": 39723762890,
           "conclusion": "success",
-          "created_at": "2026-10-21T19:55:18Z",
-          "event": "schedule"
-        },
-        {
-          "id": 39624915118,
-          "conclusion": "success",
-          "created_at": "2026-10-21T15:21:38Z",
+          "created_at": "2026-10-22T04:41:20Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 39623977545,
+          "id": 39722451667,
           "conclusion": "success",
-          "created_at": "2026-10-21T15:15:24Z",
+          "created_at": "2026-10-22T04:27:11Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 39721975035,
+          "conclusion": "success",
+          "created_at": "2026-10-22T04:22:03Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -149,12 +154,12 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 1,
+    "n_open": 0,
     "n_stale_24h": 0,
     "issues": [],
-    "long_count": 1,
+    "long_count": 0,
     "short_count": 0,
-    "total_risk": 2.2513950892857144,
+    "total_risk": 0.0,
     "deep_loss_positions": []
   }
 }
