@@ -106,24 +106,46 @@ def render(board: dict, taunts: list) -> str:
 
 
 def post_tg(text: str) -> bool:
+    """Publish to Telegram as plain text, split into chunks that fit.
+
+    No parse_mode: the agents write ordinary prose with angle brackets and
+    ampersands in it, and Telegram rejects the whole message when the HTML
+    parser chokes on one stray character.
+    """
     if not TG_TOKEN or not TG_CHAT:
         print("[arena-report] no Telegram credentials — skipped")
         return False
-    try:
-        data = urllib.parse.urlencode({
-            "chat_id": TG_CHAT, "text": text[:4000],
-            "parse_mode": "HTML", "disable_web_page_preview": "true",
-        }).encode()
-        req = urllib.request.Request(
-            f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage", data=data)
-        with urllib.request.urlopen(req, timeout=30) as r:
-            body = json.loads(r.read().decode())
-        ok = bool(body.get("ok"))
-        print(f"[arena-report] telegram {'sent' if ok else 'FAILED'}")
-        return ok
-    except Exception as e:
-        print(f"[arena-report] telegram failed: {type(e).__name__}: {e}")
-        return False
+    chunks = []
+    current = []
+    for line in text.splitlines():
+        if sum(len(x) + 1 for x in current) + len(line) > 3800:
+            chunks.append("\n".join(current))
+            current = []
+        current.append(line)
+    if current:
+        chunks.append("\n".join(current))
+    ok_all = True
+    for i, chunk in enumerate(chunks):
+        try:
+            data = urllib.parse.urlencode({
+                "chat_id": TG_CHAT, "text": chunk,
+                "disable_web_page_preview": "true",
+            }).encode()
+            req = urllib.request.Request(
+                f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage", data=data)
+            with urllib.request.urlopen(req, timeout=30) as r:
+                body = json.loads(r.read().decode())
+            ok = bool(body.get("ok"))
+            if not ok:
+                ok_all = False
+                print(f"[arena-report] telegram chunk {i+1} rejected: {body}")
+            else:
+                print(f"[arena-report] telegram chunk {i+1}/{len(chunks)} sent")
+        except Exception as e:
+            ok_all = False
+            print(f"[arena-report] telegram chunk {i+1} failed: "
+                  f"{type(e).__name__}: {e}")
+    return ok_all
 
 
 def main() -> int:
