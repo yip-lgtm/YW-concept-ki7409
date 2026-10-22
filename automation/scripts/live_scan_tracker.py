@@ -31,6 +31,10 @@ def to_ny(iso_ts: str) -> str:
         return str(iso_ts)
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+from contract_specs import usd_per_point  # noqa: E402
+
+
 def _find_repo() -> Path:
     """Locate the repo root without hard-coding one machine's path.
 
@@ -206,13 +210,25 @@ def check_position_exit(pos, df):
                 if r_now >= breakeven_at_r:
                     cur_sl = entry
             continue
-        pnl_usd = (exit_price - entry) * (1 if direction in ("long", "buy", "up", "bullish", "LONG") else -1)
+        # The real dollar result: the price move times the contract
+        # multiplier times the position size. This used to be the bare
+        # price move, which treated every instrument as $1 per point — a
+        # 30-point MNQ stop was booked as $30 when it cost $61.50, and a
+        # 5.8-point GC stop was booked as $5.85 when it cost $585.
+        _sign = 1 if direction in ("long", "buy", "up", "bullish", "LONG") else -1
+        _tk = pos.get("ticker", "")
+        _mult = float(pos.get("usd_per_point") or usd_per_point(_tk))
+        _units = float(pos.get("units") or 1.0)
+        pnl_usd = (exit_price - entry) * _sign * _mult * _units
         return {
             "exit_time": str(ts),
             "exit_price": exit_price,
             "exit_level": exit_level,
             "R_multiple": R_multiple,
             "pnl_usd": round(pnl_usd, 2),
+            "pnl_points": round((exit_price - entry) * _sign, 4),
+            "usd_per_point": _mult,
+            "units": _units,
             "bars_held": i + 1,
             # Which arm this trade ran under, frozen at open time. The
             # comparison report groups closed trades by this.

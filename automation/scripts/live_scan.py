@@ -1046,6 +1046,22 @@ def open_live_position(sig, atr):
     sl_tp.setdefault("t4", sl_tp.get("t3"))
     sl_tp.setdefault("t5", sl_tp.get("t3"))
     sl_tp.setdefault("sl_dist", abs(entry - sl_tp["sl"]))
+
+    # Position sizing. The book had none: one contract, and the tracker
+    # recorded the price difference as dollars, so every instrument was
+    # treated as $1 per point. On MNQ a 30-point stop cost $61.50 and was
+    # booked as $30; on GC a 5.8-point stop cost $585 and was booked as
+    # $5.85. The average BTC trade was risking $154 against a $100 daily
+    # loss envelope.
+    #
+    # The position is now sized so the trade risks the budget whatever
+    # the instrument, and the contract multiplier travels with the
+    # position so the tracker can report the real dollar result.
+    _tk = sig.get("ticker", "")
+    _units, _risk_usd, _why = size_position(_tk, sl_tp["sl_dist"])
+    if _units is None:
+        print(f"[open] SKIP {sig.get('strategy')} {_tk}: cannot size — {_why}")
+        return None
     pos = {
         "signal_id": f"{sig['strategy']}|{sig['ticker']}|{sig['ts']}",
         "strategy": sig["strategy"],
@@ -1064,6 +1080,9 @@ def open_live_position(sig, atr):
         "t4": sl_tp["t4"],
         "t5": sl_tp["t5"],
         "sl_dist": sl_tp["sl_dist"],
+        "units": round(_units, 6),
+        "usd_per_point": usd_per_point(_tk),
+        "risk_usd": round(_risk_usd, 2),
         "t2_r": sl_tp.get("t2_r", 1.618),
         "t1_r": sl_tp.get("t1_r", 1.0),
         "breakeven_at_r": sl_tp.get("breakeven_at_r", 0.0),
@@ -1464,6 +1483,7 @@ if _SRC not in _sys.path:
     _sys.path.insert(0, _SRC)
 
 from llm_client import chat  # noqa: E402
+from contract_specs import size_position, usd_per_point  # noqa: E402
 from audit import log_action
 
 # Auto-generate chart for each signal

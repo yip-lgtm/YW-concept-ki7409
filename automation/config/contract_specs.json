@@ -1,0 +1,16 @@
+{
+  "_comment": "CME micro contract specifications — dollars per one point of price movement. The live tracker recorded pnl_usd as (exit - entry) x 1, i.e. it treated every instrument as $1 per point, so the live P&L history understated the real dollar result by 2x on MNQ and up to 100x on GC.",
+  "_risk_budget_usd": 100,
+  "_risk_budget_note": "The account's daily loss envelope. 'max_stop_points' is how many points of stop distance a single contract can carry before the whole $100 is at risk: $100 / dollars per point.",
+  "specs": {
+    "MES=F":  {"label": "Micro E-mini S&P 500", "usd_per_point": 5.0,  "max_stop_points": 20},
+    "MNQ=F":  {"label": "Micro E-mini Nasdaq-100", "usd_per_point": 2.0,  "max_stop_points": 50},
+    "M2K=F":  {"label": "Micro E-mini Russell 2000", "usd_per_point": 5.0,  "max_stop_points": 20},
+    "MYM=F":  {"label": "Micro E-mini MidCap 400", "usd_per_point": 0.5, "max_stop_points": 200},
+    "MGC=F":  {"label": "Micro Gold", "usd_per_point": 10.0, "max_stop_points": 10},
+    "MCL=F":  {"label": "Micro WTI Crude", "usd_per_point": 100.0, "max_stop_points": 1},
+    "M6E=F":  {"label": "Micro EUR/USD", "usd_per_point": 12500.0, "max_stop_points": 0.008},
+    "GC=F":   {"label": "Gold (full size, 100 oz)", "usd_per_point": 100.0, "max_stop_points": 1},
+    "BTC-USD": {"label": "BTC USD", "usd_per_point": 1.0, "max_stop_points": 100}
+  }
+}

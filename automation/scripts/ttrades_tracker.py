@@ -48,6 +48,8 @@ def _find_repo() -> Path:
 REPO = _find_repo()
 
 sys.path.insert(0, str(REPO / "automation" / "scripts"))
+sys.path.insert(0, str(REPO / "automation" / "src"))
+from contract_specs import usd_per_point  # noqa: E402
 HKT = timezone(timedelta(hours=8))
 
 SIGNAL_DIR = REPO / "automation" / "reports" / "ttrades_btc"
@@ -309,7 +311,13 @@ def main() -> int:
             try:
                 import ttrades_btc as base
                 risk_dist = abs(float(sig["entry"]) - float(sig["sl"]))
-                units = base.RISK_AMOUNT / risk_dist if risk_dist > 0 else 0.0
+                # The risk per contract is the stop distance in dollars, not
+                # in points. MGC is $10 a point, so the old division by
+                # the point distance made every MGC contract risk ten
+                # times the intended amount.
+                _mult = usd_per_point(sig.get("ticker", ""))
+                per_contract = risk_dist * _mult
+                units = base.RISK_AMOUNT / per_contract if per_contract > 0 else 0.0
                 units = min(units, base.TTRADES_MAX_UNITS_BTC)
                 if units * float(sig["entry"]) > base.TTRADES_MAX_NOTIONAL_USD:
                     units = base.TTRADES_MAX_NOTIONAL_USD / float(sig["entry"])
@@ -325,6 +333,7 @@ def main() -> int:
             "entry": entry, "sl": sl, "t1": t1, "t2": t2,
             "units": units,
             "risk_per_unit": sig.get("risk_per_unit"),
+            "usd_per_point": usd_per_point(sig.get("ticker", "")),
             "entry_time": sig.get("ts"),
             "entry_ts": et.isoformat(),
             "t1_hit": False,
@@ -393,7 +402,11 @@ def main() -> int:
             continue
 
         units = float(pos.get("units") or 0)
-        risk = float(pos.get("risk_per_unit") or abs(pos["entry"] - pos["sl"]) or 0)
+        # risk_per_unit is the stop distance in points. The dollar result
+        # needs the contract multiplier as well.
+        risk_pts = float(pos.get("risk_per_unit") or abs(pos["entry"] - pos["sl"]) or 0)
+        _mult = float(pos.get("usd_per_point") or usd_per_point(pos.get("ticker", "")))
+        risk = risk_pts * _mult
         pnl = R * risk * units if risk and units else 0.0
         # exit_dt is the bar's own timestamp, taken from the bar that actually
         # triggered, so it cannot drift when the slice is short.
