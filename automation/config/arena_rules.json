@@ -1,0 +1,35 @@
+{
+  "_meta": {
+    "_comment": "Arena rules — the 15 strategy agents trade each other on virtual accounts. This is a PAPER competition: it never places a broker order, it only moves numbers in its own account files. The governance ladder in strategy_levels.json is NOT touched by the arena; the arena keeps its own level counter so the live promotion rules (n>=10 over 14 days, 2 consecutive days) stay intact.",
+    "created": "2026-10-22T00:00:00+00:00",
+    "version": 1
+  },
+  "enabled": true,
+  "risk_budget_usd": 100.0,
+  "universe": ["MNQ=F", "MES=F", "M2K=F", "MGC=F", "GC=F", "BTC-USD"],
+  "max_positions_per_agent": 5,
+  "cooldown_bars": 12,
+  "levels": {
+    "start": 1,
+    "floor": 0,
+    "promote": {
+      "min_trades": 1,
+      "min_PF": 1.0,
+      "min_WR": 0.5,
+      "min_RR": 1.0,
+      "min_pnl_usd": 0.0,
+      "delta": 1
+    },
+    "demote": {
+      "min_trades": 5,
+      "max_PF": 0.5,
+      "max_pnl_usd": -300.0,
+      "delta": -1,
+      "_comment": "Demotion is deliberately hard to earn: five or more trades, a profit factor below 0.5 and a day that cost more than three times the risk budget. A level is a score, not a punishment — the race is the point. The first draft demoted on three trades and a PF under 0.7, which took three agents to level 0 on day one and made the ladder meaningless."
+    }
+  },
+  "signal": {
+    "min_strength": 0,
+    "_comment": "min_strength is the detector's own strength/confidence floor. 0 means every detector hit is taken — the arena is a competition, not the live book, so the live gates (LLM grading, session gates, weight gates, ticker bans) do not apply. Banned tickers in live_scan.py are ignored here on purpose: the user asked for all instruments, and the arena records the outcome per instrument so a ban can be judged on evidence instead of inherited."
+  }
+}

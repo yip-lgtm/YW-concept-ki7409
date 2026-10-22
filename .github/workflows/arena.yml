@@ -1,0 +1,81 @@
+name: 'Arena — 15 strategy agents compete'
+
+# The arena is a paper competition: fifteen strategy agents, one virtual
+# account each, all instruments, several positions at a time. The target is
+# one level per day and the board is published to Telegram.
+#
+# It never places a broker order. The Longbridge client in this repo only
+# reads quotes; there is no order-submission call anywhere in the tree.
+#
+# 05:05 UTC = just after the New York session closes, so the day being
+# settled is complete.
+
+on:
+  schedule:
+    # Every fifteen minutes, like the live scan: the arena is a rolling
+    # simulator and each run walks the bars that arrived since the last one.
+    # The board itself is published to Telegram once per New York day —
+    # arena_report.py keeps a marker file for that.
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  arena:
+    name: Arena board (15 agents)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
+      GITHUB_PAT: ${{ secrets.APEX_PAT }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: automation/requirements.txt
+
+      - name: Install deps
+        working-directory: automation
+        run: |
+          python -m venv .venv
+          .venv/bin/pip install -q -r requirements.txt
+
+      - name: Run the arena
+        working-directory: automation
+        env:
+          YF_CACHE: /tmp/yf_cache
+        run: |
+          .venv/bin/python scripts/arena.py 2>&1 | tee /tmp/arena_log.txt
+
+      - name: Publish the board
+        working-directory: automation
+        env:
+          YF_CACHE: /tmp/yf_cache
+        run: |
+          .venv/bin/python scripts/arena_report.py 2>&1 | tee /tmp/arena_report_log.txt || true
+
+      - name: Commit the board
+        if: always()
+        run: |
+          git config --global user.name "Mavis bot"
+          git config --global user.email "mavis@MiniMax"
+          git remote set-url origin "https://x-access-token:${GITHUB_PAT}@github.com/yip-lgtm/YW-concept-ki7409.git"
+          git fetch origin main 2>&1 || echo "fetch failed, continuing"
+          git checkout origin/main -- .github/ docs/ automation/src/ automation/scripts/ automation/config/ automation/requirements.txt 2>&1 || echo "checkout failed, continuing"
+          git add automation/reports/arena/ || true
+          git commit -m "auto(arena): board $(date -u +%Y-%m-%dT%H:%M)" --allow-empty || true
+          git stash --include-untracked 2>&1 || echo "no stash needed"
+          git pull --rebase origin main 2>&1 || echo "rebase failed"
+          git stash pop 2>&1 || echo "no stash to pop"
+          git add automation/reports/arena/ || true
+          git commit --amend --no-edit 2>&1 || echo "amend failed (no changes)"
+          git push origin main 2>&1 || echo "push failed"

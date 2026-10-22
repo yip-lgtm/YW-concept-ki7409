@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+"""Arena report — render the day's board and the agents' trash talk, and
+publish it.
+
+The leaderboard comes from arena.py. The trash talk comes from the fifteen
+agent sessions, each of which writes a short file into the taunts folder
+after it sees its own score for the day. This script puts the two together,
+writes the digest into the repo, and posts it to Telegram.
+
+Run it without arguments in CI to publish the board alone. Run it with
+--taunts pointing at a folder to include the banter — that is how the host
+session publishes the full version after the agents have written theirs.
+"""
+from __future__ import annotations
+import os
+import sys
+import json
+import argparse
+import urllib.parse
+import urllib.request
+from datetime import datetime, timezone
+from pathlib import Path
+
+
+def _find_repo() -> Path:
+    if "GITHUB_WORKSPACE" in os.environ:
+        return Path(os.environ["GITHUB_WORKSPACE"])
+    for parent in Path(__file__).resolve().parents:
+        if (parent / "automation").is_dir():
+            return parent
+    return Path("/workspace/YW-concept-ki7409")
+
+
+REPO = _find_repo()
+ARENA_DIR = REPO / "automation" / "reports" / "arena"
+
+TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID")
+
+
+def load_board() -> dict | None:
+    p = ARENA_DIR / "leaderboard.json"
+    if not p.exists():
+        return None
+    try:
+        return json.loads(p.read_text())
+    except Exception:
+        return None
+
+
+def load_taunts(day: str, taunts_dir: Path) -> list:
+    """Read the agents' trash talk for the day, in board order."""
+    out = []
+    if not taunts_dir.exists():
+        return out
+    for f in sorted(taunts_dir.glob(f"{day}*.md")):
+        try:
+            text = f.read_text().strip()
+        except Exception:
+            continue
+        if not text:
+            continue
+        # The file name carries the agent slug; the first line carries the
+        # display name, usually with a marker the agent added.
+        name = f.stem.split("_", 1)[1].replace("_", "-") if "_" in f.stem else f.stem
+        display = text.splitlines()[0].lstrip("# ").strip() if text else name
+        for marker in ("💬", "🗣", "🎤"):
+            if display.startswith(marker):
+                display = display[len(marker):].strip()
+        body = "\n".join(text.splitlines()[1:]).strip() or text
+        out.append({"slug": name, "display": display, "text": body})
+    return out
+
+
+def render(board: dict, taunts: list) -> str:
+    day = board["day"]
+    rows = board["board"]
+    lines = [f"🏆 ARENA — {day}", ""]
+    lines.append("紙上競技場：15 個策略 agent 各自揸住自己個帳戶，全標的、可同時持倉。"
+                 "目標：日日 +1 level。")
+    lines.append("")
+    lines.append("| # | agent | lv | 今日 | n | PF | WR | 今日 P&L | equity |")
+    lines.append("|---:|---|--:|---|--:|--:|--:|--:|--:|")
+    for r in rows:
+        m = r["today"]
+        pf = "—" if m["PF"] is None else f"{m['PF']:.2f}"
+        lines.append(
+            f"| {r['rank']} | {r['agent']} | {r['level']} | {r['action']} | "
+            f"{m['n']} | {pf} | {m['WR']:.0%} | ${m['pnl_usd']:+,.0f} | "
+            f"${r['equity_usd']:+,.0f} |")
+    leaders = [r for r in rows if r["action"] == "promote"]
+    if leaders:
+        names = "、".join(r["agent"] for r in leaders)
+        lines += ["", f"⬆️ 今日升級：{names}"]
+    losers = [r for r in rows if r["action"] == "demote"]
+    if losers:
+        names = "、".join(r["agent"] for r in losers)
+        lines += [f"⬇️ 今日降級：{names}"]
+    if taunts:
+        lines += ["", "──── 互噴環節 ────", ""]
+        for t in taunts:
+            lines.append(f"💬 {t['display']}")
+            lines.append(t["text"])
+            lines.append("")
+    return "\n".join(lines).strip()
+
+
+def post_tg(text: str) -> bool:
+    if not TG_TOKEN or not TG_CHAT:
+        print("[arena-report] no Telegram credentials — skipped")
+        return False
+    try:
+        data = urllib.parse.urlencode({
+            "chat_id": TG_CHAT, "text": text[:4000],
+            "parse_mode": "HTML", "disable_web_page_preview": "true",
+        }).encode()
+        req = urllib.request.Request(
+            f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage", data=data)
+        with urllib.request.urlopen(req, timeout=30) as r:
+            body = json.loads(r.read().decode())
+        ok = bool(body.get("ok"))
+        print(f"[arena-report] telegram {'sent' if ok else 'FAILED'}")
+        return ok
+    except Exception as e:
+        print(f"[arena-report] telegram failed: {type(e).__name__}: {e}")
+        return False
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--taunts", default=str(ARENA_DIR / "taunts"),
+                    help="folder holding the agents' trash talk")
+    ap.add_argument("--no-telegram", action="store_true")
+    ap.add_argument("--out", default=str(ARENA_DIR))
+    args = ap.parse_args()
+
+    board = load_board()
+    if not board:
+        print("[arena-report] no leaderboard.json — nothing to report")
+        return 1
+    day = board["day"]
+    taunts = load_taunts(day, Path(args.taunts))
+    text = render(board, taunts)
+
+    out_dir = Path(args.out)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / f"arena_digest_{day}.md").write_text(text + "\n")
+    print(f"[arena-report] wrote arena_digest_{day}.md ({len(text)} chars, "
+          f"{len(taunts)} taunts)")
+
+    if args.no_telegram:
+        return 0
+    # The engine runs every fifteen minutes, but the board is published once
+    # a day. The marker file is what keeps it to one post per New York day.
+    marker = out_dir / "last_posted_day"
+    if marker.exists() and marker.read_text().strip() == day:
+        print("[arena-report] already published today — skipping Telegram")
+        return 0
+    if post_tg(text):
+        marker.write_text(day)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
