@@ -734,14 +734,15 @@ def main() -> int:
     md = [f"# Arena — {board_day}", "",
           "Fifteen strategy agents, each on its own virtual account. "
           "Paper only: no broker order is ever placed.", "",
-          "| # | agent | lv | day action | n | PF | WR | day P&L | equity | open |",
-          "|---:|---|--:|---|--:|--:|--:|--:|--:|--:|"]
+          "| # | agent | lv | day action | n | WR | PF | RR | day P&L | equity | open |",
+          "|---:|---|--:|---|--:|--:|--:|--:|--:|--:|--:|"]
     for row in board:
         m = row["today"]
         pf = "—" if m["PF"] is None else f"{m['PF']:.2f}"
+        rr = "—" if m.get("RR") is None else f"{m['RR']:.2f}"
         md.append(
             f"| {row['rank']} | **{row['agent']}** | {row['level']} | "
-            f"{row['action']} | {m['n']} | {pf} | {m['WR']:.0%} | "
+            f"{row['action']} | {m['n']} | {m['WR']:.0%} | {pf} | {rr} | "
             f"${m['pnl_usd']:+,.2f} | ${row['equity_usd']:+,.2f} | "
             f"{row['open_positions']} |")
     md += ["", "## Why each level moved", ""]

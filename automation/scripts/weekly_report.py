@@ -247,26 +247,58 @@ def summarise(trades: list) -> dict:
         ts = by_day[d]
         w = [x for x in ts if x["pips"] > 0]
         l = [x for x in ts if x["pips"] < 0]
+        dw = sum(x["usd"] for x in ts if x["usd"] > 0)
+        dl = abs(sum(x["usd"] for x in ts if x["usd"] <= 0))
+        dpf = (dw / dl) if dl > 0 else (99.0 if dw > 0 else 0.0)
+        aw = dw / len(w) if w else 0.0
+        al = dl / len(l) if l else 0.0
+        drr = (aw / al) if (w and l) else (99.0 if aw else 0.0)
         days.append({
             "day": d, "trades": ts, "n": len(ts), "wins": len(w), "losses": len(l),
             "wr": (len(w) / len(ts)) if ts else 0.0,
             "pips": sum(x["pips"] for x in ts),
             "usd": sum(x.get("usd", x["pips"]) for x in ts),
+            "pf": min(dpf, 99.0), "rr": min(drr, 99.0),
         })
     cum = 0.0
     curve = []
     for d in days:
         cum += d["usd"]
         curve.append((d["day"], cum))
+    # Profit factor and risk-reward, on the same scale the settlement uses:
+    # the R-multiple when the record carries one, the dollar result when it
+    # does not.
+    rs = [float(t.get("r")) for t in counted if t.get("r") is not None]
+    if len(rs) == len(counted) and rs:
+        w_r = [x for x in rs if x > 0]
+        l_r = [abs(x) for x in rs if x <= 0]
+        gw_r, gl_r = sum(w_r), sum(l_r)
+        pf = (gw_r / gl_r) if gl_r > 0 else (99.0 if gw_r > 0 else 0.0)
+        rr = ((gw_r / len(w_r)) / (gl_r / len(l_r))) if (w_r and l_r) else (
+            99.0 if gw_r else 0.0)
+    else:
+        w_u = [t["usd"] for t in counted if t["usd"] > 0]
+        l_u = [abs(t["usd"]) for t in counted if t["usd"] <= 0]
+        gw_u, gl_u = sum(w_u), sum(l_u)
+        pf = (gw_u / gl_u) if gl_u > 0 else (99.0 if gw_u > 0 else 0.0)
+        rr = ((gw_u / len(w_u)) / (gl_u / len(l_u))) if (w_u and l_u) else (
+            99.0 if gw_u else 0.0)
     by_inst = defaultdict(list)
     for t in counted:
         by_inst[t.get("ticker", "?")].append(t)
     instruments = []
     for tk, ts in by_inst.items():
         tw = [x for x in ts if x.get("usd", x["pips"]) > 0]
+        iw = sum(x["usd"] for x in ts if x["usd"] > 0)
+        il = abs(sum(x["usd"] for x in ts if x["usd"] <= 0))
+        ipf = (iw / il) if il > 0 else (99.0 if iw > 0 else 0.0)
+        iaw = iw / len(tw) if tw else 0.0
+        ial = il / (len(ts) - len(tw)) if (len(ts) - len(tw)) else 0.0
+        irr = (iaw / ial) if (tw and ial) else (99.0 if iaw else 0.0)
         instruments.append({
             "ticker": tk, "n": len(ts), "wins": len(tw), "losses": len(ts) - len(tw),
             "wr": len(tw) / len(ts) if ts else 0.0,
+            "pf": min(ipf, 99.0), "rr": min(irr, 99.0),
             "usd": sum(x.get("usd", x["pips"]) for x in ts),
             "pips": sum(x["pips"] for x in ts),
         })
@@ -277,6 +309,7 @@ def summarise(trades: list) -> dict:
         "wr": (len(wins) / len(counted)) if counted else 0.0,
         "pips": sum(t["pips"] for t in counted),
         "usd": sum(t.get("usd", t["pips"]) for t in counted),
+        "pf": min(pf, 99.0), "rr": min(rr, 99.0),
         "days": days, "curve": curve, "instruments": instruments,
         "skipped": len(trades) - len(counted),
     }
@@ -413,15 +446,22 @@ def render_card(title: str, subtitle: str, s: dict, extra_footer: str = "") -> s
                 trades.append(trade_line(t, i))
             while len(trades) % 2:
                 trades.append('<span class="tr"></span>')
+            d_pf = "up" if d["pf"] > 1 else "down"
+            d_rr = "up" if d["rr"] > 1 else "down"
             rows.append(
                 f'<div class="day"><h3>📅 {label} '
-                f'<span class="{wr_col}">勝率 {d["wr"]:.0%} '
-                f'(${d["usd"]:+,.0f})</span></h3>'
+                f'<span class="{wr_col}">WR {d["wr"]:.0%}</span> '
+                f'<span class="{d_pf}">PF {d["pf"]:.2f}</span> '
+                f'<span class="{d_rr}">RR {d["rr"]:.2f}</span> '
+                f'<span class="{"up" if d["usd"] >= 0 else "down"}">'
+                f'${d["usd"]:+,.0f}</span></h3>'
                 f'{"".join(trades)}</div>')
         days_html = "".join(rows)
 
     wr_col = "up" if s["wr"] >= 0.5 else "down"
     pips_col = "up" if s["usd"] >= 0 else "down"
+    pf_col = "up" if s["pf"] > 1 else "down"
+    rr_col = "up" if s["rr"] > 1 else "down"
     headline = (f'{s["wins"]} 贏 {s["losses"]} 輸')
     if s["skipped"]:
         headline += f'（已無視 {s["skipped"]} 單無成交）'
@@ -430,9 +470,10 @@ def render_card(title: str, subtitle: str, s: dict, extra_footer: str = "") -> s
     for a in s.get("instruments", []):
         cls = "up" if a["usd"] >= 0 else "down"
         inst_rows.append(
-            f'<span class="tr"><b>{a["ticker"]}</b> · {a["n"]} 單 · '
-            f'WR {a["wr"]:.0%} · {a["wins"]}勝{a["losses"]}負 · '
-            f'{a["pips"]:+,.0f} 點 · <b class="{cls}">${a["usd"]:+,.0f}</b></span>')
+            f'<span class="tr"><b>{a["ticker"]}</b> · {a["n"]}單 · '
+            f'WR {a["wr"]:.0%} · PF {a["pf"]:.2f} · RR {a["rr"]:.2f} · '
+            f'{a["wins"]}勝{a["losses"]}負 · {a["pips"]:+,.0f}點 · '
+            f'<b class="{cls}">${a["usd"]:+,.0f}</b></span>')
     while len(inst_rows) % 2:
         inst_rows.append('<span class="tr"></span>')
     instrument_rows = "".join(inst_rows)
@@ -453,7 +494,9 @@ def render_card(title: str, subtitle: str, s: dict, extra_footer: str = "") -> s
 
 <div class="card">
   <h2 style="margin-bottom:8px">【本週總結】<span class="pill">{s['n']} 單</span>
-    <span class="pill {wr_col}">勝率 {s['wr']:.0%}</span>
+    <span class="pill {wr_col}">WR {s['wr']:.0%}</span>
+    <span class="pill {pf_col}">PF {s['pf']:.2f}</span>
+    <span class="pill {rr_col}">RR {s['rr']:.2f}</span>
     <span class="pill {pips_col}">合計 ${s['usd']:+,.0f}</span></h2>
   <div class="row" style="margin-top:6px">
     <div style="font-size:30px">🏆</div>
@@ -461,7 +504,7 @@ def render_card(title: str, subtitle: str, s: dict, extra_footer: str = "") -> s
       <div class="big" style="font-size:24px">本週 {s['n']} 單（做多 {s['longs']}，做空 {s['shorts']}）|
         <b class="{wr_col}">{headline}</b>| 勝率 <b class="{wr_col}">{s['wr']:.0%}</b> |
         合計 <b class="{pips_col}">${s['usd']:+,.0f}</b></div>
-      <div class="legend">🎯 勝率　💰 合計真實美元（已計合約乘數 × 倉位）</div>
+      <div class="legend">🎯 WR 勝率　📊 PF 盈虧比　⚖️ RR 賺蝕比　💰 合計真實美元（已計合約乘數 × 倉位）</div>
     </div>
   </div>
 </div>
@@ -494,12 +537,16 @@ def render_arena_card(s: dict, standings: list, title: str, subtitle: str) -> st
             f'<td class="{"up" if a.get("lv_delta", 0) > 0 else ("down" if a.get("lv_delta", 0) < 0 else "")}">'
             f'{a.get("lv_delta", 0):+d}</td><td>{a["n"]}</td>'
             f'<td class="{"up" if a["usd"] >= 0 else "down"}">${a["usd"]:+,.0f}</td>'
+            f'<td class="{"up" if a["wr"] >= 0.5 else "down"}">{a["wr"]:.0%}</td>'
+            f'<td class="{"up" if a["pf"] > 1 else "down"}">{a["pf"]:.2f}</td>'
+            f'<td class="{"up" if a["rr"] > 1 else "down"}">{a["rr"]:.2f}</td>'
             f'<td class="{"up" if a["wins"] >= a["losses"] else "down"}">'
             f'{a["wins"]}勝{a["losses"]}輸</td></tr>')
     table = ("<table style='width:100%;border-collapse:collapse;font-size:15px'>"
              "<tr style='color:#f0cb6a'><th style='text-align:left'>#</th>"
              "<th style='text-align:left'>agent</th><th>lv</th><th>本週±lv</th>"
-             "<th>n</th><th>美元</th><th>勝負</th></tr>" + "".join(rows) + "</table>")
+             "<th>n</th><th>美元</th><th>WR</th><th>PF</th><th>RR</th>"
+             "<th>勝負</th></tr>" + "".join(rows) + "</table>")
     return f"""<!doctype html><html><head><meta charset="utf-8">
 <style>{CSS}
 table td {{ padding: 4px 6px; border-bottom: 1px solid rgba(224,178,76,.18); }}
@@ -514,6 +561,8 @@ table td {{ padding: 4px 6px; border-bottom: 1px solid rgba(224,178,76,.18); }}
   <div class="big">15 個 agent · 總成交 <b>{s['n']}</b> 單 ·
     <b class="{"up" if s["wins"] >= s["losses"] else "down"}">{s['wins']} 贏 {s['losses']} 輸</b> ·
     勝率 <b class="{"up" if s["wr"] >= 0.5 else "down"}">{s['wr']:.0%}</b> ·
+    PF <b class="{"up" if s["pf"] > 1 else "down"}">{s['pf']:.2f}</b> ·
+    RR <b class="{"up" if s["rr"] > 1 else "down"}">{s['rr']:.2f}</b> ·
     合計 <b class="{"up" if s["usd"] >= 0 else "down"}">${s['usd']:+,.0f}</b></div>
   <div class="legend">（真實美元：價格變動 × 合約乘數 × 倉位，方向已計入）</div>
 </div>
@@ -725,7 +774,8 @@ def main() -> int:
                     pass
             standings.append({"agent": display, "slug": slug, "level": level,
                               "lv_delta": lv_delta, "n": a["n"], "wins": a["wins"],
-                              "losses": a["losses"], "usd": a["usd"], "pips": a["pips"]})
+                              "losses": a["losses"], "usd": a["usd"], "pips": a["pips"],
+                              "pf": a["pf"], "rr": a["rr"], "wr": a["wr"]})
         standings.sort(key=lambda x: (-x["level"], -x["usd"]))
         title = "YW Arena 競賽場週榜"
         subtitle = f"本週總結（{label}）· 15 個策略 agent"

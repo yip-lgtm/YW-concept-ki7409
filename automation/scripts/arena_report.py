@@ -80,17 +80,22 @@ def render(board: dict, taunts: list) -> str:
                  "目標：日日 +1 level。")
     lines.append(f"（成績 = 已結算嗰日 {day}；最後一欄係進行中嗰日）")
     lines.append("")
-    lines.append("| # | agent | lv | 昨日結果 | n | PF | WR | 昨日 P&L | equity | 今日進行中 |")
-    lines.append("|---:|---|--:|---|--:|--:|--:|--:|--:|--:|")
+    lines.append("| # | agent | lv | 昨日結果 | n | WR | PF | RR | 昨日 P&L | equity | 今日進行中 |")
+    lines.append("|---:|---|--:|---|--:|--:|--:|--:|--:|--:|---|")
     for r in rows:
         m = r["today"]
         pf = "—" if m["PF"] is None else f"{m['PF']:.2f}"
+        rr = "—" if m.get("RR") is None else f"{m['RR']:.2f}"
+        wr_col = "up" if m["WR"] >= 0.5 else "down"
+        pf_col = "up" if (m["PF"] or 0) > 1 else "down"
+        rr_col = "up" if (m.get("RR") or 0) > 1 else "down"
         live = r.get("live") or {}
         live_txt = "—" if not live.get("n") else (
             f"{live['n']} 單 · ${live['pnl_usd']:+,.0f}")
         lines.append(
             f"| {r['rank']} | {r['agent']} | {r['level']} | {r['action']} | "
-            f"{m['n']} | {pf} | {m['WR']:.0%} | ${m['pnl_usd']:+,.0f} | "
+            f"{m['n']} | {wr_col} {m['WR']:.0%} | {pf_col} {pf} | {rr_col} {rr} | "
+            f"${m['pnl_usd']:+,.0f} | "
             f"${r['equity_usd']:+,.0f} | {live_txt} |")
     leaders = [r for r in rows if r["action"] == "promote"]
     if leaders:
