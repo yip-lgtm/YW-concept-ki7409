@@ -1,14 +1,54 @@
 {
-  "ts": "2026-10-23T10:03:24.548870+08:00",
+  "ts": "2026-10-23T13:17:53.327482+08:00",
   "ticker": "BTC-USD",
-  "h4_bars": 175,
-  "m15_bars": 579,
+  "h4_bars": 176,
+  "m15_bars": 598,
   "strategies": {
     "TTrades-L12": {
-      "fired": false,
-      "stage": "no C2 closure (sweep+reclaim) on C2",
+      "fired": true,
       "strategy": "TTrades-L12",
-      "has_levels": false
+      "direction": "long",
+      "stage": "all L12 gates passed",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 81284.78125,
+        "swing_levels": [
+          81284.78125,
+          81591.3125,
+          81655.578125,
+          82536.5625,
+          82875.296875
+        ],
+        "pivot_count": 27,
+        "fvg_count": 13
+      },
+      "poi_note": "C2 range [81012, 81913] contains swing 81285",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 81504.9921875,
+        "series_length": 5,
+        "last_close": 81746.8828125,
+        "reason": "cisd_long"
+      },
+      "c2_eq": 81462.59765625,
+      "c2_high": 81912.8515625,
+      "c2_low": 81012.34375,
+      "c2_close": 81772.8828125,
+      "c3_close": 81746.8828125,
+      "swing_level": 81012.34375,
+      "entry_ref": 81746.8828125,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 81746.88,
+      "sl": 80891.31,
+      "t1": 82602.46,
+      "t2_close": 83131.2,
+      "t3": 83986.78,
+      "risk": 855.58,
+      "sl_basis": "beyond protected swing (C2/C3 extreme)",
+      "sl_buffer": 121.04,
+      "atr_h4": 806.91
     },
     "TTrades-L13": {
       "fired": false,
@@ -17,13 +57,48 @@
       "has_levels": false
     },
     "TTrades-L14": {
-      "fired": false,
-      "stage": "CISD not confirmed",
-      "detail": "no break",
-      "direction": "long",
-      "closure": "c2_closure",
+      "fired": true,
       "strategy": "TTrades-L14",
-      "has_levels": false
+      "direction": "long",
+      "closure": "c3_closure",
+      "trade_candle": "C4",
+      "stage": "c3_closure \u2014 trade C4",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 81284.78125,
+        "swing_levels": [
+          81284.78125,
+          81591.3125,
+          81655.578125,
+          82536.5625,
+          82875.296875
+        ],
+        "pivot_count": 27,
+        "fvg_count": 13
+      },
+      "poi_note": "C2 range [81012, 81913] contains swing 81285",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 81504.9921875,
+        "series_length": 5,
+        "last_close": 81746.8828125,
+        "reason": "cisd_long"
+      },
+      "c_eq": 81462.59765625,
+      "swing_level": 81012.34375,
+      "entry_ref": 81746.8828125,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 81746.88,
+      "sl": 80891.31,
+      "t1": 82602.46,
+      "t2_close": 83131.2,
+      "t3": 83986.78,
+      "risk": 855.58,
+      "sl_basis": "beyond protected swing (C2/C3 extreme)",
+      "sl_buffer": 121.04,
+      "atr_h4": 806.91
     }
   }
 }
