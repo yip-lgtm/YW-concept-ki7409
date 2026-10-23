@@ -1,54 +1,54 @@
 {
-  "generated_at": "2026-10-23 08:07 HKT",
-  "hkt_timestamp": "2026-10-23T08:07:00.113769+08:00",
+  "generated_at": "2026-10-23 09:52 HKT",
+  "hkt_timestamp": "2026-10-23T09:52:03.577955+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 17,
-    "trades_today": 6,
-    "wins_24h": 8,
-    "R_24h": 3.94,
-    "signals_24h": 27,
-    "wr_24h": 47.1
+    "trades_24h": 20,
+    "trades_today": 10,
+    "wins_24h": 10,
+    "R_24h": 6.18,
+    "signals_24h": 28,
+    "wr_24h": 50.0
   },
   "ranking_24h": [
     {
       "strategy": "CRT",
       "ticker": "M2K=F",
-      "n_trades": 15,
-      "n_wins": 8,
+      "n_trades": 16,
+      "n_wins": 9,
       "n_losses": 7,
-      "win_rate": 53.3,
-      "total_R": 5.94,
-      "avg_R": 0.396,
-      "total_pnl_usd": 683.14,
-      "profit_factor": 1.85,
+      "win_rate": 56.2,
+      "total_R": 7.56,
+      "avg_R": 0.473,
+      "total_pnl_usd": 844.94,
+      "profit_factor": 2.08,
       "rank": 1,
       "medal_eligible": true
     },
     {
-      "strategy": "Stair",
-      "ticker": "GC=F",
-      "n_trades": 1,
-      "n_wins": 0,
-      "n_losses": 1,
-      "win_rate": 0.0,
-      "total_R": -1.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -100.0,
-      "profit_factor": 0.0,
+      "strategy": "unknown",
+      "ticker": "\u2014",
+      "n_trades": 3,
+      "n_wins": 1,
+      "n_losses": 2,
+      "win_rate": 33.3,
+      "total_R": -0.38,
+      "avg_R": -0.127,
+      "total_pnl_usd": -2.3,
+      "profit_factor": 0.81,
       "rank": 2,
       "medal_eligible": false
     },
     {
-      "strategy": "unknown",
-      "ticker": "\u2014",
-      "n_trades": 1,
+      "strategy": "Stair",
+      "ticker": "GC=F",
+      "n_trades": 2,
       "n_wins": 0,
-      "n_losses": 1,
+      "n_losses": 2,
       "win_rate": 0.0,
-      "total_R": -1.0,
+      "total_R": -2.0,
       "avg_R": -1.0,
-      "total_pnl_usd": -106.43,
+      "total_pnl_usd": -200.0,
       "profit_factor": 0.0,
       "rank": 3,
       "medal_eligible": false
@@ -56,26 +56,26 @@
     {
       "strategy": "B1-3in1",
       "ticker": "MNQ=F",
-      "n_trades": 4,
+      "n_trades": 5,
       "n_wins": 0,
-      "n_losses": 4,
+      "n_losses": 5,
       "win_rate": 0.0,
-      "total_R": -4.0,
+      "total_R": -5.0,
       "avg_R": -1.0,
-      "total_pnl_usd": -400.0,
+      "total_pnl_usd": -500.0,
       "profit_factor": 0.0,
       "rank": 4,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 21,
-    "n_wins": 8,
-    "win_rate": 38.1,
-    "total_R": -0.06,
-    "total_pnl_usd": 76.71
+    "n_trades": 26,
+    "n_wins": 10,
+    "win_rate": 38.5,
+    "total_R": 0.18,
+    "total_pnl_usd": 142.64
   },
-  "ranking_24h_updated": "2026-10-23T00:07:00.113788+00:00",
+  "ranking_24h_updated": "2026-10-23T01:52:03.577972+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -93,22 +93,22 @@
         5
       ],
       "live_24h": {
-        "n": 1,
-        "wins": 0,
-        "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
-        "pf": 0.0,
-        "pnl": -106.43
+        "n": 3,
+        "wins": 1,
+        "losses": 2,
+        "wr": 33.3,
+        "R": -0.38,
+        "pf": 0.81,
+        "pnl": -2.3
       },
       "live_today": {
-        "n": 1,
-        "wins": 0,
-        "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
-        "pf": 0.0,
-        "pnl": -106.43
+        "n": 3,
+        "wins": 1,
+        "losses": 2,
+        "wr": 33.3,
+        "R": -0.38,
+        "pf": 0.81,
+        "pnl": -2.3
       },
       "signals_24h": 0,
       "backtest_4d": {
@@ -405,6 +405,15 @@
         5
       ],
       "live_24h": {
+        "n": 2,
+        "wins": 0,
+        "losses": 2,
+        "wr": 0.0,
+        "R": -2.0,
+        "pf": 0.0,
+        "pnl": -200.0
+      },
+      "live_today": {
         "n": 1,
         "wins": 0,
         "losses": 1,
@@ -412,15 +421,6 @@
         "R": -1.0,
         "pf": 0.0,
         "pnl": -100.0
-      },
-      "live_today": {
-        "n": 0,
-        "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
-        "pf": 0.0,
-        "pnl": 0
       },
       "signals_24h": 5,
       "backtest_4d": {
@@ -458,23 +458,23 @@
       ],
       "live_24h": {
         "n": 15,
-        "wins": 8,
-        "losses": 7,
-        "wr": 53.3,
-        "R": 5.94,
-        "pf": 1.85,
-        "pnl": 683.14
+        "wins": 9,
+        "losses": 6,
+        "wr": 60.0,
+        "R": 8.56,
+        "pf": 2.43,
+        "pnl": 856.2
       },
       "live_today": {
-        "n": 5,
-        "wins": 3,
+        "n": 6,
+        "wins": 4,
         "losses": 2,
-        "wr": 60.0,
-        "R": 2.85,
-        "pf": 2.43,
-        "pnl": 285.4
+        "wr": 66.7,
+        "R": 4.47,
+        "pf": 3.24,
+        "pnl": 447.2
       },
-      "signals_24h": 22,
+      "signals_24h": 23,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -1018,12 +1018,12 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-10-23T07:43:06.230343+08:00",
+        "updated": "2026-10-23T08:58:21.443975+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-10-22T19:43:05.879984-04:00"
+          "ts": "2026-10-22T20:58:21.017642-04:00"
         },
         "l_series": [
           {
@@ -1069,10 +1069,10 @@
           {
             "strategy": "TTrades-L14",
             "fired": false,
-            "stage": "no POI",
-            "detail": "C2 [29228, 29590] misses nearest swing 30224 by 635",
-            "direction": "short",
-            "closure": "c2_closure",
+            "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+            "detail": null,
+            "direction": null,
+            "closure": null,
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
@@ -1090,20 +1090,20 @@
       },
       {
         "ticker": "MGC=F",
-        "updated": "2026-10-23T07:43:08.240214+08:00",
+        "updated": "2026-10-23T08:58:23.518144+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-10-22T19:43:07.871999-04:00"
+          "reason": "CISD not confirmed; EQ not respected; D1 counter-trend (downtrend); London expanded (skip NY)",
+          "ts": "2026-10-22T20:58:23.096428-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no C2 closure (sweep+reclaim) on C2",
-            "detail": null,
-            "direction": null,
+            "stage": "no POI",
+            "detail": "C2 [4036, 4048] misses nearest swing 4174 by 126",
+            "direction": "long",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -1121,7 +1121,7 @@
           {
             "strategy": "TTrades-L13",
             "fired": false,
-            "stage": "C3 not an expansion candle (wick too large)",
+            "stage": "C2 not an expansion candle (wick too large)",
             "detail": null,
             "direction": null,
             "closure": null,
@@ -1162,20 +1162,20 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-10-23T07:43:10.445120+08:00",
+        "updated": "2026-10-23T08:58:25.545140+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "CISD not confirmed; London expanded (skip NY)",
-          "ts": "2026-10-22T19:43:10.030023-04:00"
+          "reason": "no H4 C3 closure (Fractal quiet)",
+          "ts": "2026-10-22T20:58:25.121199-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "CISD not confirmed",
-            "detail": "no break",
-            "direction": "long",
+            "stage": "no C2 closure (sweep+reclaim) on C2",
+            "detail": null,
+            "direction": null,
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
