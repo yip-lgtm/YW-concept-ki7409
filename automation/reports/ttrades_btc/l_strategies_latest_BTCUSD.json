@@ -1,8 +1,8 @@
 {
-  "ts": "2026-10-23T18:13:45.848725+08:00",
+  "ts": "2026-10-23T19:02:13.246265+08:00",
   "ticker": "BTC-USD",
   "h4_bars": 177,
-  "m15_bars": 617,
+  "m15_bars": 621,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -12,9 +12,7 @@
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "CISD not confirmed",
-      "detail": "no break",
-      "direction": "short",
+      "stage": "C3 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
@@ -28,39 +26,39 @@
       "poi": {
         "found": true,
         "basis": "structural pivots",
-        "prior_extreme": 81589.0,
+        "prior_extreme": 81284.78125,
         "swing_levels": [
-          81589.0,
-          81655.859375,
+          81284.78125,
+          81591.3125,
+          81655.578125,
           82536.5625,
-          82876.9921875,
-          83042.546875
+          82875.296875
         ],
-        "pivot_count": 28,
+        "pivot_count": 27,
         "fvg_count": 12
       },
-      "poi_note": "C2 range [81012, 81913] contains swing 81589",
+      "poi_note": "C2 range [81012, 81913] contains swing 81285",
       "cisd": {
         "confirmed": true,
-        "opposing_open": 81443.1015625,
-        "series_length": 1,
-        "last_close": 81686.359375,
+        "opposing_open": 81443.09375,
+        "series_length": 4,
+        "last_close": 81501.453125,
         "reason": "cisd_long"
       },
-      "c_eq": 81462.6015625,
+      "c_eq": 81462.59765625,
       "swing_level": 81012.34375,
-      "entry_ref": 81686.359375,
+      "entry_ref": 81501.453125,
       "target_r": 2.0,
       "has_levels": true,
-      "entry": 81686.36,
-      "sl": 80891.92,
-      "t1": 82480.8,
-      "t2_close": 82971.77,
-      "t3": 83766.21,
-      "risk": 794.44,
+      "entry": 81501.45,
+      "sl": 80891.89,
+      "t1": 82111.02,
+      "t2_close": 82487.73,
+      "t3": 83097.29,
+      "risk": 609.56,
       "sl_basis": "beyond protected swing (C2/C3 extreme)",
-      "sl_buffer": 120.43,
-      "atr_h4": 802.84
+      "sl_buffer": 120.45,
+      "atr_h4": 803.02
     }
   }
 }
