@@ -1,0 +1,183 @@
+{
+  "date_hkt": "2026-10-24",
+  "date_ymd": "20261024",
+  "generated_at_hkt": "2026-10-24 02:53:19 HKT",
+  "repo": "/home/runner/work/YW-concept-ki7409/YW-concept-ki7409",
+  "account": "PAAPEX…091",
+  "equity": {
+    "equity_start": null,
+    "equity_end": null,
+    "open_pl": null,
+    "working_count": null,
+    "day_pnl": 0.0,
+    "dd_amount": 0.0,
+    "dd_vs": "day_start",
+    "dd_limit_usd": -100.0,
+    "dd_hold": false,
+    "pnl_source": "paper_allowlisted_pnl_fallback",
+    "account": "PAAPEX…091",
+    "session_high_equity": null
+  },
+  "dd_hold": false,
+  "dd_state": {
+    "dd": "unlocked",
+    "dd_hold": false,
+    "updated_at_hkt": "2026-10-24 02:53 HKT",
+    "date": "2026-10-24",
+    "day_pnl": 0.0,
+    "dd_amount": 0.0,
+    "dd_limit_usd": -100.0,
+    "no_new_entries": false,
+    "account": "PAAPEX…091",
+    "path": "automation/state/ops_dd_hold.json"
+  },
+  "dd_state_path": "automation/state/ops_dd_hold.json",
+  "dd_limit_usd": -100.0,
+  "tp_limit_usd": 300.0,
+  "fills": {
+    "n_fills_total": 1,
+    "n_allowlisted": 0,
+    "n_non_allowlisted": 1,
+    "pnl_allowlisted_usd": 0,
+    "pnl_all_sources_usd": -100.0,
+    "by_strategy": {},
+    "rows": [
+      {
+        "source": "paper_live_scan",
+        "strategy": "Two-Yang",
+        "ticker": "MNQ=F",
+        "side": "long",
+        "qty": 1,
+        "pnl_usd": -100.0,
+        "R_multiple": -1.0,
+        "exit_level": "SL",
+        "grade": "B",
+        "status": "closed",
+        "signal_id": "Two-Yang|MNQ=F|2026-10-23T15:45:09.977876+00:00",
+        "allowlisted": false
+      }
+    ]
+  },
+  "signals": {
+    "n_allowlisted": 0,
+    "n_gated": 0,
+    "n_fired_or_ungated": 0,
+    "by_strategy": {},
+    "outcomes_tail": []
+  },
+  "llm": {
+    "llm_status": "ok",
+    "scientist_invoked": true,
+    "returncode": 0,
+    "stdout_tail": "de=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.72 WR=41.9% R=+34.8\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.68 WR=40.4% R=+35.5\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.56 WR=36.0% R=-68.2\n    [FALLBACK] C conf=50\n    LLM: grade=C conf=50 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Marginal: PF=0.96 WR=48.9% R=+47.9\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.56 WR=35.8% R=-22.8\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.15 WR=13.1% R=-40.1\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.67 WR=40.2% R=+9.6\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.53 WR=34.6% R=-13.2\n\n[scientist] Saved: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261024_025305.json\n[scientist] Markdown: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261024_025305.md\n[scientist] TG: 200\n",
+    "stderr_tail": "",
+    "latest_report": "automation/reports/strategy_ranking/iterations/iteration_scientist_20261024_025305.json"
+  },
+  "drift_flags": [],
+  "ops_lessons": [
+    "Never treat Order Ticket Limit as sim last (MBT 83660 false OUT_OF_GATE) — use chart/DOM/explicit last.",
+    "Bracket SL/TP: prefer paper-anchored absolute levels vs fill-offset when fill ≠ paper; flag drift.",
+    "Handoff text must say QTY=1 Bracket (NOT Group QTY20). Ops-only Tradovate; A皮 coordinates.",
+    "Live allowlist only: 50-20-Pullback, CRT, Stair, H-Pattern.",
+    "Envelope defaults: −$100 DD hold / +$300 TP (historical). Change only with explicit user choice."
+  ],
+  "ops_briefing": [
+    "Settlement 2026-10-24 HKT · PAAPEX…091 · day P/L $+0.00 (src=paper_allowlisted_pnl_fallback) · DD +0.00 vs limit -100.0",
+    "✅ DD unlocked — under −$100 limit.",
+    "Allowlist fills: n=0 pnl=$+0.00; signals allow n=0 gated=0",
+    "Policy: QTY=1 Bracket only (NOT Group QTY20); never use Order Ticket Limit as sim last.",
+    "LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261024_025305.json",
+    "Never re-handoff stale/gated/null-position signals; stay quiet if nothing changed."
+  ],
+  "live_scan": {
+    "live_dir": "/home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/live_scan",
+    "n_positions": 2,
+    "positions": [
+      {
+        "signal_id": "H-Pattern|BTC-USD|2026-10-23T15:08:55.209907+00:00",
+        "strategy": "H-Pattern",
+        "ticker": "BTC-USD",
+        "direction": "long",
+        "grade": "B",
+        "entry": 81486.8203125,
+        "entry_time": "2026-10-23T15:08:55.209907+00:00",
+        "atr": 223.33370535714286,
+        "confidence": 98,
+        "reason": "結構偏多且強度70，但未突破前低、上影線偏高、確認度有限",
+        "sl": 81129.48638392857,
+        "t1": 81844.15424107143,
+        "t2": 82064.98660892856,
+        "t3": 82422.3205375,
+        "t4": 82779.65446607143,
+        "t5": 83273.48995535714,
+        "sl_dist": 357.3339285714286,
+        "units": 0.27985,
+        "usd_per_point": 1.0,
+        "risk_usd": 100.0,
+        "t2_r": 1.618,
+        "t1_r": 1.0,
+        "breakeven_at_r": 0.0,
+        "partial_at_r": 0.0,
+        "exit_arm": "CONTROL",
+        "status": "open"
+      },
+      {
+        "signal_id": "Two-Yang|M2K=F|2026-10-23T15:45:09.977876+00:00",
+        "strategy": "Two-Yang",
+        "ticker": "M2K=F",
+        "direction": "long",
+        "grade": "B",
+        "entry": 2786.699951171875,
+        "entry_time": "2026-10-23T15:45:09.977876+00:00",
+        "atr": 4.742815290178571,
+        "confidence": 58,
+        "reason": "兩陽夾一陰形態偏強，但欠趨勢及成交量確認。",
+        "sl": 2779.1114467075895,
+        "t1": 2794.2884556361605,
+        "t2": 2798.9781513950893,
+        "t3": 2806.566655859375,
+        "t4": 2814.1551603236608,
+        "t5": 2824.6424734933034,
+        "sl_dist": 7.588504464285714,
+        "units": 2.635565,
+        "usd_per_point": 5.0,
+        "risk_usd": 100.0,
+        "t2_r": 1.618,
+        "t1_r": 1.0,
+        "breakeven_at_r": 0.5,
+        "partial_at_r": 0.0,
+        "exit_arm": "RL",
+        "status": "open"
+      }
+    ],
+    "heartbeat_ts": "2026-10-23T17:39:11.753864+00:00",
+    "heartbeat": {
+      "timestamp": "2026-10-23T17:39:11.753864+00:00",
+      "n_detections": 9,
+      "n_signals": 0,
+      "n_errors": 1,
+      "n_fired": 0,
+      "n_gated": 0,
+      "n_pre_gate": 0,
+      "circuit_breaker": {
+        "consecutive_good_scans": 24
+      },
+      "elapsed_sec": 1.7,
+      "tickers": [
+        "BTC-USD"
+      ]
+    },
+    "circuit_breaker": {
+      "consecutive_good_scans": 24
+    },
+    "n_day_trades": 1,
+    "n_day_signals": 0
+  },
+  "allowlist": [
+    "50-20-Pullback",
+    "CRT",
+    "Stair",
+    "H-Pattern"
+  ],
+  "book_path": null
+}
