@@ -2,9 +2,11 @@
   "_meta": {
     "_comment": "Per-strategy exit overrides learned by the RL iteration agent. Written by rl_iterate.py, read by live_scan.py.",
     "created": "2026-10-20T14:00:02.325747+00:00",
-    "runs": 19,
-    "last_run": "2026-10-22T19:45:22.556076+00:00",
-    "last_applied": []
+    "runs": 20,
+    "last_run": "2026-10-23T19:47:50.005346+00:00",
+    "last_applied": [
+      "B1-3in1"
+    ]
   },
   "Two-Yang": {
     "config": {
@@ -88,6 +90,20 @@
     "baseline_r": 41.91,
     "candidate_r": 73.02,
     "n_scored": 178,
+    "source": "rl_iterate"
+  },
+  "B1-3in1": {
+    "config": {
+      "t2_r": 1.618,
+      "breakeven_at_r": 0.5,
+      "partial_at_r": 0.0,
+      "partial_r": 1.0
+    },
+    "last_changed": "2026-10-23T19:47:50.005346+00:00",
+    "gain_r": 2.0,
+    "baseline_r": 34.62,
+    "candidate_r": 36.62,
+    "n_scored": 46,
     "source": "rl_iterate"
   }
 }
