@@ -1,7 +1,7 @@
 {
   "day": "2026-10-22",
   "live_day": "2026-10-23",
-  "generated_at": "2026-10-23T19:10:09.533450+00:00",
+  "generated_at": "2026-10-23T22:06:19.750958+00:00",
   "rules": {
     "_meta": {
       "_comment": "Arena rules \u2014 the 15 strategy agents trade each other on virtual accounts. This is a PAPER competition: it never places a broker order, it only moves numbers in its own account files. The governance ladder in strategy_levels.json is NOT touched by the arena; the arena keeps its own level counter so the live promotion rules (n>=10 over 14 days, 2 consecutive days) stay intact.",
@@ -51,19 +51,19 @@
       "level_before": 2,
       "action": "promote",
       "reason": "PF 2.311 > 1.0, WR 59%, n=34",
-      "equity_usd": 3414.55,
+      "equity_usd": 3431.75,
       "live": {
-        "n": 1,
-        "PF": 99.0,
-        "WR": 1.0,
-        "RR": 99.0,
-        "pnl_usd": 161.8,
-        "wins": 1,
-        "losses": 0
+        "n": 4,
+        "PF": 1.618,
+        "WR": 0.5,
+        "RR": 1.618,
+        "pnl_usd": 123.6,
+        "wins": 2,
+        "losses": 2
       },
-      "realised_usd": 3386.6,
-      "open_positions": 1,
-      "unrealised_usd": 27.95,
+      "realised_usd": 3348.4,
+      "open_positions": 2,
+      "unrealised_usd": 83.35,
       "today": {
         "n": 34,
         "PF": 2.311,
@@ -74,6 +74,7 @@
         "losses": 14
       },
       "instruments": [
+        "BTC-USD",
         "M2K=F"
       ],
       "rank": 1
@@ -84,7 +85,7 @@
       "level_before": 2,
       "action": "promote",
       "reason": "PF 99.0 > 1.0, WR 100%, n=1",
-      "equity_usd": 624.66,
+      "equity_usd": 626.11,
       "live": {
         "n": 0,
         "PF": 0.0,
@@ -96,7 +97,7 @@
       },
       "realised_usd": 555.23,
       "open_positions": 2,
-      "unrealised_usd": 69.43,
+      "unrealised_usd": 70.88,
       "today": {
         "n": 1,
         "PF": 99.0,
@@ -160,8 +161,8 @@
         "losses": 0
       },
       "realised_usd": 1339.4,
-      "open_positions": 0,
-      "unrealised_usd": 0,
+      "open_positions": 1,
+      "unrealised_usd": 0.0,
       "today": {
         "n": 37,
         "PF": 2.124,
@@ -171,7 +172,9 @@
         "wins": 21,
         "losses": 16
       },
-      "instruments": [],
+      "instruments": [
+        "BTC-USD"
+      ],
       "rank": 4
     },
     {
@@ -180,17 +183,17 @@
       "level_before": 1,
       "action": "hold",
       "reason": "n=43, PF 1.544, WR 49% \u2014 did not qualify",
-      "equity_usd": 1863.0,
+      "equity_usd": 1763.0,
       "live": {
-        "n": 0,
+        "n": 1,
         "PF": 0.0,
         "WR": 0.0,
         "RR": 0.0,
-        "pnl_usd": 0,
+        "pnl_usd": -100.0,
         "wins": 0,
-        "losses": 0
+        "losses": 1
       },
-      "realised_usd": 1863.0,
+      "realised_usd": 1763.0,
       "open_positions": 0,
       "unrealised_usd": 0,
       "today": {
@@ -211,19 +214,19 @@
       "level_before": 1,
       "action": "hold",
       "reason": "n=32, PF 0.848, WR 34% \u2014 did not qualify",
-      "equity_usd": -1301.32,
+      "equity_usd": -1421.09,
       "live": {
-        "n": 0,
+        "n": 2,
         "PF": 0.0,
         "WR": 0.0,
         "RR": 0.0,
-        "pnl_usd": 0,
+        "pnl_usd": -200.0,
         "wins": 0,
-        "losses": 0
+        "losses": 2
       },
-      "realised_usd": -1325.8,
-      "open_positions": 4,
-      "unrealised_usd": 24.48,
+      "realised_usd": -1525.8,
+      "open_positions": 2,
+      "unrealised_usd": 104.71,
       "today": {
         "n": 32,
         "PF": 0.848,
@@ -245,7 +248,7 @@
       "level_before": 1,
       "action": "hold",
       "reason": "no settled day yet",
-      "equity_usd": 204.11,
+      "equity_usd": 142.44,
       "live": {
         "n": 0,
         "PF": 0.0,
@@ -256,8 +259,8 @@
         "losses": 0
       },
       "realised_usd": 0.0,
-      "open_positions": 1,
-      "unrealised_usd": 204.11,
+      "open_positions": 2,
+      "unrealised_usd": 142.44,
       "today": {
         "n": 0,
         "PF": 0.0,
@@ -268,7 +271,8 @@
         "losses": 0
       },
       "instruments": [
-        "BTC-USD"
+        "BTC-USD",
+        "MNQ=F"
       ],
       "rank": 7
     },
@@ -340,7 +344,7 @@
       "level_before": 1,
       "action": "hold",
       "reason": "no settled day yet",
-      "equity_usd": -4.15,
+      "equity_usd": -5.05,
       "live": {
         "n": 0,
         "PF": 0.0,
@@ -352,7 +356,7 @@
       },
       "realised_usd": 0.0,
       "open_positions": 1,
-      "unrealised_usd": -4.15,
+      "unrealised_usd": -5.05,
       "today": {
         "n": 0,
         "PF": 0.0,
@@ -373,7 +377,7 @@
       "level_before": 1,
       "action": "hold",
       "reason": "no settled day yet",
-      "equity_usd": -51.24,
+      "equity_usd": -51.95,
       "live": {
         "n": 0,
         "PF": 0.0,
@@ -385,7 +389,7 @@
       },
       "realised_usd": 0.0,
       "open_positions": 1,
-      "unrealised_usd": -51.24,
+      "unrealised_usd": -51.95,
       "today": {
         "n": 0,
         "PF": 0.0,
@@ -437,19 +441,19 @@
       "level_before": 1,
       "action": "demote",
       "reason": "PF 0.495 < 0.5 over n=44, pnl $-1867.4",
-      "equity_usd": -2787.6,
+      "equity_usd": -2736.62,
       "live": {
-        "n": 2,
-        "PF": 2.618,
-        "WR": 0.5,
+        "n": 3,
+        "PF": 1.309,
+        "WR": 0.3333,
         "RR": 2.618,
-        "pnl_usd": 161.8,
+        "pnl_usd": 61.8,
         "wins": 1,
-        "losses": 1
+        "losses": 2
       },
-      "realised_usd": -2787.6,
-      "open_positions": 0,
-      "unrealised_usd": 0,
+      "realised_usd": -2887.6,
+      "open_positions": 1,
+      "unrealised_usd": 150.98,
       "today": {
         "n": 44,
         "PF": 0.495,
@@ -459,7 +463,9 @@
         "wins": 7,
         "losses": 37
       },
-      "instruments": [],
+      "instruments": [
+        "MES=F"
+      ],
       "rank": 13
     },
     {
@@ -468,7 +474,7 @@
       "level_before": 0,
       "action": "demote",
       "reason": "PF 0.243 < 0.5 over n=23, pnl $-1514.6",
-      "equity_usd": -2963.97,
+      "equity_usd": -2924.25,
       "live": {
         "n": 4,
         "PF": 0.0,
@@ -480,7 +486,7 @@
       },
       "realised_usd": -2952.8,
       "open_positions": 1,
-      "unrealised_usd": -11.17,
+      "unrealised_usd": 28.55,
       "today": {
         "n": 23,
         "PF": 0.243,
@@ -501,19 +507,19 @@
       "level_before": 0,
       "action": "demote",
       "reason": "PF 0.18 < 0.5 over n=10, pnl $-738.2",
-      "equity_usd": -1311.83,
+      "equity_usd": -1376.4,
       "live": {
-        "n": 1,
+        "n": 2,
         "PF": 0.0,
         "WR": 0.0,
         "RR": 0.0,
-        "pnl_usd": -100.0,
+        "pnl_usd": -200.0,
         "wins": 0,
-        "losses": 1
+        "losses": 2
       },
-      "realised_usd": -1276.4,
-      "open_positions": 1,
-      "unrealised_usd": -35.43,
+      "realised_usd": -1376.4,
+      "open_positions": 0,
+      "unrealised_usd": 0,
       "today": {
         "n": 10,
         "PF": 0.18,
@@ -523,9 +529,7 @@
         "wins": 1,
         "losses": 9
       },
-      "instruments": [
-        "MNQ=F"
-      ],
+      "instruments": [],
       "rank": 15
     }
   ]

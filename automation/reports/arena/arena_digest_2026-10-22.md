@@ -5,21 +5,21 @@
 
 | # | agent | lv | 昨日結果 | n | WR | PF | RR | 昨日 P&L | equity | 今日進行中 |
 |---:|---|--:|---|--:|--:|--:|--:|--:|--:|---|
-| 1 | CRT | 3 | promote | 34 | up 59% | up 2.31 | up 1.62 | $+1,836 | $+3,415 | 1 單 · $+162 |
-| 2 | TTrades-Fractal | 3 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+451 | $+625 | — |
+| 1 | CRT | 3 | promote | 34 | up 59% | up 2.31 | up 1.62 | $+1,836 | $+3,432 | 4 單 · $+124 |
+| 2 | TTrades-Fractal | 3 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+451 | $+626 | — |
 | 3 | 3-Pushes | 2 | hold | 51 | down 43% | up 1.23 | up 1.62 | $+660 | $+1,339 | — |
 | 4 | Kell-Cycle | 2 | promote | 37 | up 57% | up 2.12 | up 1.62 | $+1,798 | $+1,339 | — |
-| 5 | Stair | 1 | hold | 43 | down 49% | up 1.54 | up 1.62 | $+1,198 | $+1,863 | — |
-| 6 | 50-20-Pullback | 1 | hold | 32 | down 34% | down 0.85 | up 1.62 | $-320 | $-1,301 | — |
-| 7 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+204 | — |
+| 5 | Stair | 1 | hold | 43 | down 49% | up 1.54 | up 1.62 | $+1,198 | $+1,763 | 1 單 · $-100 |
+| 6 | 50-20-Pullback | 1 | hold | 32 | down 34% | down 0.85 | up 1.62 | $-320 | $-1,421 | 2 單 · $-200 |
+| 7 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+142 | — |
 | 8 | Argon-Gold | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 9 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
-| 10 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-4 | — |
-| 11 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-51 | — |
+| 10 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-5 | — |
+| 11 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-52 | — |
 | 12 | B1 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-100 | 1 單 · $-100 |
-| 13 | RSI-Div | 0 | demote | 44 | down 16% | down 0.49 | up 2.62 | $-1,867 | $-2,788 | 2 單 · $+162 |
-| 14 | Two-Yang | 0 | demote | 23 | down 13% | down 0.24 | up 1.62 | $-1,515 | $-2,964 | 4 單 · $-400 |
-| 15 | H-Pattern | 0 | demote | 10 | down 10% | down 0.18 | up 1.62 | $-738 | $-1,312 | 1 單 · $-100 |
+| 13 | RSI-Div | 0 | demote | 44 | down 16% | down 0.49 | up 2.62 | $-1,867 | $-2,737 | 3 單 · $+62 |
+| 14 | Two-Yang | 0 | demote | 23 | down 13% | down 0.24 | up 1.62 | $-1,515 | $-2,924 | 4 單 · $-400 |
+| 15 | H-Pattern | 0 | demote | 10 | down 10% | down 0.18 | up 1.62 | $-738 | $-1,376 | 2 單 · $-200 |
 
 ⬆️ 升級：CRT、TTrades-Fractal、Kell-Cycle
 ⬇️ 降級：RSI-Div、Two-Yang、H-Pattern
