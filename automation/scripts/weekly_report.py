@@ -80,6 +80,82 @@ def week_bounds(ref: datetime) -> tuple[datetime, datetime]:
             datetime.combine(friday, datetime.max.time(), tzinfo=NY_TZ))
 
 
+def infer_sign(t: dict, entry: float) -> int:
+    """Which way was this trade pointing, when the record does not say?
+
+    The live book sometimes writes a blank direction. The stop and the
+    target still say: a stop below the entry with a target above it is a
+    long, the other way round is a short. 47 of the book's records are
+    like that, and every one of them is a long — so the old fallback,
+    which called anything that was not "long" a short, scored three of
+    this week's losers as winners and moved the weekly total by $292.
+    Zero means the direction could not be worked out; such a trade is
+    left out rather than guessed at.
+    """
+    try:
+        sl = float(t.get("sl") or 0)
+        t2 = float(t.get("t2") or 0)
+    except (TypeError, ValueError):
+        return 0
+    if not sl or not t2:
+        return 0
+    if sl < entry < t2:
+        return 1
+    if t2 < entry < sl:
+        return -1
+
+
+def normalise_trade(t: dict, entry: float, exit_p: float, agent: str,
+                     ticker: str, exit_level: str, dt: datetime) -> dict | None:
+    """One trade in the form the report needs.
+
+    Two things can go wrong in the book's records and both have to be
+    handled here rather than guessed at later:
+
+    - The direction can be blank. The stop and the target still say which
+      way the trade pointed, so `infer_sign` recovers it. The old
+      fallback, which called anything that was not "long" a short, scored
+      three of this week's losers as winners and moved the weekly total by
+      $292.
+    - The dollars must come from the R-multiple and the dollar risk, the
+      same rule `contract_specs.trade_pnl_usd` uses. A trade that closed
+      on a partial or a breakeven move has no single price move that
+      explains it, while its R-multiple always does.
+    """
+    raw = str(t.get("direction", "")).lower()
+    if raw in ("long", "buy", "up", "bullish"):
+        sign = 1
+    elif raw in ("short", "sell", "down", "bearish"):
+        sign = -1
+    else:
+        sign = infer_sign(t, entry)
+        if sign == 0:
+            return None
+    mult = MULTIPLIERS.get(ticker, float(t.get("usd_per_point") or 1))
+    units = float(t.get("units") or 1)
+    sl_dist = float(t.get("sl_dist") or 0)
+    r_mult = t.get("R_multiple")
+    pips = sign * (exit_p - entry)
+    if r_mult is not None and sl_dist:
+        usd = float(r_mult) * sl_dist * mult * units
+    else:
+        usd = pips * mult * units
+    return {
+        "agent": agent, "ticker": ticker,
+        "direction": "long" if sign > 0 else "short",
+        "entry": entry, "exit": exit_p,
+        "exit_level": exit_level or "?",
+        "pips": pips, "usd": usd,
+        "dt": dt,
+        "day": dt.astimezone(NY_TZ).strftime("%Y-%m-%d"),
+        "r": r_mult,
+        "grade": t.get("grade"),
+    }
+
+
+    return 0
+
+
 def load_trades_live() -> list:
     path = REPO / "automation" / "reports" / "live_scan" / "trades.jsonl"
     out = []
@@ -102,9 +178,6 @@ def load_trades_live() -> list:
             continue
         if not entry or not exit_p:
             continue
-        direction = str(t.get("direction", "")).lower()
-        sign = 1 if direction in ("long", "buy", "up", "bullish") else -1
-        pips = sign * (exit_p - entry)
         ts = t.get("exit_time") or t.get("entry_time") or ""
         try:
             dt = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
@@ -112,21 +185,10 @@ def load_trades_live() -> list:
                 dt = dt.replace(tzinfo=timezone.utc)
         except Exception:
             continue
-        mult = MULTIPLIERS.get(t.get("ticker"), float(t.get("usd_per_point") or 1))
-        units = float(t.get("units") or 1)
-        out.append({
-            "agent": t.get("strategy", "?"),
-            "ticker": t.get("ticker", "?"),
-            "direction": "long" if sign > 0 else "short",
-            "entry": entry, "exit": exit_p,
-            "exit_level": t.get("exit_level") or "?",
-            "pips": pips,
-            "usd": pips * mult * units,
-            "dt": dt,
-            "day": dt.astimezone(NY_TZ).strftime("%Y-%m-%d"),
-            "r": t.get("R_multiple"),
-            "grade": t.get("grade"),
-        })
+        row = normalise_trade(t, entry, exit_p, t.get("strategy", "?"),
+                               t.get("ticker", "?"), t.get("exit_level") or "?", dt)
+        if row:
+            out.append(row)
     return out
 
 
@@ -149,8 +211,6 @@ def load_trades_arena() -> list:
             exit_p = float(t.get("exit") or 0)
             if not entry or not exit_p:
                 continue
-            direction = str(t.get("direction", "")).lower()
-            sign = 1 if direction in ("long", "buy", "up", "bullish") else -1
             ts = t.get("closed") or t.get("opened") or ""
             try:
                 dt = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
@@ -158,20 +218,10 @@ def load_trades_arena() -> list:
                     dt = dt.replace(tzinfo=timezone.utc)
             except Exception:
                 continue
-            mult = MULTIPLIERS.get(t.get("ticker"), float(t.get("usd_per_point") or 1))
-            units = float(t.get("units") or 1)
-            pts = sign * (exit_p - entry)
-            out.append({
-                "agent": agent, "ticker": t.get("ticker", "?"),
-                "direction": "long" if sign > 0 else "short",
-                "entry": entry, "exit": exit_p,
-                "exit_level": t.get("exit_level") or "?",
-                "pips": pts, "usd": pts * mult * units,
-                "dt": dt,
-                "day": dt.astimezone(NY_TZ).strftime("%Y-%m-%d"),
-                "r": t.get("R_multiple"),
-                "grade": None,
-            })
+            row = normalise_trade(t, entry, exit_p, agent, t.get("ticker", "?"),
+                                   t.get("exit_level") or "?", dt)
+            if row:
+                out.append(row)
     return out
 
 
@@ -263,7 +313,7 @@ h2 { font-size: 21px; color: #f0cb6a; }
 .tr { display: inline-block; width: 49%; font-size: 14px; line-height: 1.55;
   vertical-align: top; }
 .tr b { color: #ffd97a; }
-.long { color: #ff9a9a; } .short { color: #8fd0ff; }
+.long { color: #ff9a9a; } .short { color: #8fd0ff; } .flat { color: #b0a68c; }
 .foot { color: #8d8367; font-size: 12px; margin-top: 14px; text-align: center; }
 .legend { color: #a89a78; font-size: 13px; margin-top: 6px; }
 """
@@ -443,7 +493,7 @@ def render_arena_card(s: dict, standings: list, title: str, subtitle: str) -> st
             f'<td>{a["level"]}</td>'
             f'<td class="{"up" if a.get("lv_delta", 0) > 0 else ("down" if a.get("lv_delta", 0) < 0 else "")}">'
             f'{a.get("lv_delta", 0):+d}</td><td>{a["n"]}</td>'
-            f'<td class="{"up" if a["pips"] >= 0 else "down"}">{format_pts(a["pips"])}</td>'
+            f'<td class="{"up" if a["usd"] >= 0 else "down"}">${a["usd"]:+,.0f}</td>'
             f'<td class="{"up" if a["wins"] >= a["losses"] else "down"}">'
             f'{a["wins"]}勝{a["losses"]}輸</td></tr>')
     table = ("<table style='width:100%;border-collapse:collapse;font-size:15px'>"
@@ -512,6 +562,41 @@ def mark_posted(out_dir: Path, week: str, tag: str = "live"):
     (out_dir / f"last_posted_{tag}_{week}").write_text(week)
 
 
+def _send_photo_urllib(path: Path, caption: str) -> bool:
+    """Upload a photo with the standard library alone.
+
+    `requests` is not installed in every environment this report runs in
+    (the sandbox has no PyPI access), and a silent skip there means the
+    weekly card never reaches Telegram. The multipart body is small and
+    fixed, so it is cheaper to build it by hand than to depend on a
+    package that may not be there.
+    """
+    boundary = uuid.uuid4().hex
+    body = bytearray()
+
+    def field(name: str, value: str):
+        body.extend(f"--{boundary}\r\n".encode())
+        body.extend(
+            f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode())
+        body.extend(value.encode() + b"\r\n")
+
+    field("chat_id", str(TG_CHAT))
+    field("caption", caption[:1000])
+    body.extend(f"--{boundary}\r\n".encode())
+    body.extend(
+        f'Content-Disposition: form-data; name="photo"; filename="{path.name}"\r\n'.encode())
+    body.extend(b"Content-Type: image/png\r\n\r\n")
+    body.extend(path.read_bytes())
+    body.extend(f"\r\n--{boundary}--\r\n".encode())
+
+    req = urllib.request.Request(
+        f"https://api.telegram.org/bot{TG_TOKEN}/sendPhoto",
+        data=bytes(body),
+        headers={"Content-Type": f"multipart/form-data; boundary={boundary}"})
+    with urllib.request.urlopen(req, timeout=90) as r:
+        return bool(json.loads(r.read().decode()).get("ok"))
+
+
 def send_photo(path: Path, caption: str) -> bool:
     if not TG_TOKEN or not TG_CHAT:
         log("no telegram credentials — skipped")
@@ -519,7 +604,13 @@ def send_photo(path: Path, caption: str) -> bool:
     try:
         import requests
     except Exception:
-        return False
+        try:
+            ok = _send_photo_urllib(path, caption)
+        except Exception as e:
+            log(f"telegram photo failed: {type(e).__name__}: {e}")
+            return False
+        log(f"telegram photo {'sent' if ok else 'FAILED'} (urllib): {path.name}")
+        return ok
     try:
         with open(path, "rb") as f:
             files = {"photo": (path.name, f, "image/png")}
