@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-22T23:36:31.936340+00:00",
+  "timestamp": "2026-10-23T01:56:26.373826+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -8,9 +8,9 @@
       "no /tmp/ocs_btc/latest.json"
     ],
     "n_open": 0,
-    "n_trades_total": 5,
-    "win_rate": 20.0,
-    "profit_factor": 0.25,
+    "n_trades_total": 7,
+    "win_rate": 28.6,
+    "profit_factor": 0.52,
     "last_signal": null
   },
   "ranking": {
@@ -21,10 +21,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-10-22",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 39843494052
+    "today": "2026-10-23",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -79,22 +78,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 39872834182,
+          "id": 39886752656,
           "conclusion": "running",
-          "created_at": "2026-10-22T23:35:51Z",
+          "created_at": "2026-10-23T01:55:50Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 39866111503,
+          "id": 39879516499,
           "conclusion": "success",
-          "created_at": "2026-10-22T22:35:52Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 39863273239,
-          "conclusion": "success",
-          "created_at": "2026-10-22T22:12:56Z",
+          "created_at": "2026-10-23T00:40:32Z",
           "event": "schedule"
+        },
+        {
+          "id": 39876043493,
+          "conclusion": "success",
+          "created_at": "2026-10-23T00:06:13Z",
+          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -158,11 +157,11 @@
     "n_open": 4,
     "n_stale_24h": 0,
     "issues": [
-      "High total risk: $331"
+      "High total risk: $274"
     ],
-    "long_count": 2,
-    "short_count": 2,
-    "total_risk": 331.0981305803572,
+    "long_count": 3,
+    "short_count": 1,
+    "total_risk": 273.98373325892857,
     "deep_loss_positions": []
   }
 }
