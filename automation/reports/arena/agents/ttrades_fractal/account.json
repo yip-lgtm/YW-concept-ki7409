@@ -1,38 +1,39 @@
 {
   "agent": "TTrades-Fractal",
-  "level": 2,
-  "realised_usd": 104.43,
-  "last_day": "2026-10-22",
+  "level": 3,
+  "realised_usd": 555.23,
+  "last_day": "2026-10-23",
   "positions": [
     {
-      "id": "TTrades-Fractal|MGC=F|short|2026-10-22 00:00:00+00:00",
+      "id": "TTrades-Fractal|BTC-USD|long|2026-10-23 04:00:00+00:00",
       "strategy": "TTrades-Fractal",
-      "ticker": "MGC=F",
-      "direction": "short",
-      "entry": 4139.7001953125,
-      "sl": 4168.758101981027,
-      "t1": 4045.642288643973,
-      "t2": 4008.707544642857,
-      "t3": 3947.1496379743303,
-      "sl_dist": 29.05790666852681,
-      "units": 0.3441404129372883,
-      "usd_per_point": 10.0,
+      "ticker": "BTC-USD",
+      "direction": "long",
+      "entry": 81718.7109375,
+      "sl": 80891.28956473214,
+      "t1": 82302.69481026786,
+      "t2": 82726.11638392857,
+      "t3": 83431.81900669643,
+      "sl_dist": 827.421372767858,
+      "units": 0.12085740505527899,
+      "usd_per_point": 1.0,
       "risk_usd": 100.0,
-      "atr": 25.721330915178573,
-      "opened": "2026-10-22 00:00:00+00:00",
-      "opened_bar": "2026-10-22 00:00:00+00:00",
-      "reason": "Fractal bearish CISD",
-      "mark": 4037.10009765625,
-      "unrealised_usd": 353.0883997482798
+      "atr": 807.0279017857143,
+      "opened": "2026-10-23 04:00:00+00:00",
+      "opened_bar": "2026-10-23 04:00:00+00:00",
+      "reason": "Fractal bullish CISD",
+      "mark": 81596.9921875,
+      "unrealised_usd": -14.71061227157224
     }
   ],
   "cursors": {
-    "MNQ=F": "2026-10-23 00:05:00+00:00",
-    "MGC=F": "2026-10-23 00:05:00+00:00",
-    "BTC-USD": "2026-10-23 00:15:00+00:00"
+    "MNQ=F": "2026-10-23 04:55:00+00:00",
+    "MGC=F": "2026-10-23 04:55:00+00:00",
+    "BTC-USD": "2026-10-23 05:05:00+00:00"
   },
   "cooldowns": {
-    "MGC=F|ttrades": 3255
+    "MGC=F|ttrades": 3255,
+    "BTC-USD|ttrades": 4080
   },
   "days": {
     "2026-10-21": {
@@ -50,6 +51,20 @@
       "provisional": false
     },
     "2026-10-22": {
+      "n": 1,
+      "PF": 99.0,
+      "WR": 1.0,
+      "RR": 99.0,
+      "pnl_usd": 450.8,
+      "wins": 1,
+      "losses": 0,
+      "old_level": 2,
+      "new_level": 3,
+      "action": "promote",
+      "reason": "PF 99.0 > 1.0, WR 100%, n=1",
+      "provisional": false
+    },
+    "2026-10-23": {
       "n": 0,
       "PF": 0.0,
       "WR": 0.0,
@@ -61,6 +76,7 @@
     }
   },
   "settled_days": [
-    "2026-10-21"
+    "2026-10-21",
+    "2026-10-22"
   ]
 }

@@ -2,16 +2,50 @@
   "agent": "TTrades-L14",
   "level": 1,
   "realised_usd": 0.0,
-  "last_day": "2026-10-22",
-  "positions": [],
+  "last_day": "2026-10-23",
+  "positions": [
+    {
+      "id": "TTrades-L14|BTC-USD|long|2026-10-23 02:15:00+00:00",
+      "strategy": "TTrades-L14",
+      "ticker": "BTC-USD",
+      "direction": "long",
+      "entry": 81321.9921875,
+      "sl": 80665.07,
+      "t1": 82871.12,
+      "t2": null,
+      "t3": 84655.81,
+      "sl_dist": 656.922187499993,
+      "units": 0.15222503045690028,
+      "usd_per_point": 1.0,
+      "risk_usd": 100.0,
+      "atr": 830.27,
+      "opened": "2026-10-23 02:15:00+00:00",
+      "opened_bar": "2026-10-23 02:15:00+00:00",
+      "reason": "c2_closure \u2014 trade C3",
+      "mark": 81596.9921875,
+      "unrealised_usd": 41.86188337564758
+    }
+  ],
   "cursors": {
-    "MNQ=F": "2026-10-23 00:05:00+00:00",
-    "MGC=F": "2026-10-23 00:05:00+00:00",
-    "BTC-USD": "2026-10-23 00:15:00+00:00"
+    "MNQ=F": "2026-10-23 04:55:00+00:00",
+    "MGC=F": "2026-10-23 04:55:00+00:00",
+    "BTC-USD": "2026-10-23 05:05:00+00:00"
   },
-  "cooldowns": {},
+  "cooldowns": {
+    "BTC-USD|ttrades": 4059
+  },
   "days": {
     "2026-10-22": {
+      "n": 0,
+      "PF": 0.0,
+      "WR": 0.0,
+      "RR": 0.0,
+      "pnl_usd": 0,
+      "wins": 0,
+      "losses": 0,
+      "provisional": true
+    },
+    "2026-10-23": {
       "n": 0,
       "PF": 0.0,
       "WR": 0.0,
