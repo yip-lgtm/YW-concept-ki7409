@@ -1,23 +1,45 @@
 {
   "agent": "H-Pattern",
   "level": 0,
-  "realised_usd": -1376.4,
+  "realised_usd": -1214.6,
   "last_day": "2026-10-24",
-  "positions": [],
+  "positions": [
+    {
+      "id": "H-Pattern|BTC-USD|long|2026-10-24 19:00:00+00:00",
+      "strategy": "H-Pattern",
+      "ticker": "BTC-USD",
+      "direction": "long",
+      "entry": 80475.8203125,
+      "sl": 80337.5078125,
+      "t1": 80614.1328125,
+      "t2": 80699.6099375,
+      "t3": 80837.9224375,
+      "sl_dist": 138.3125,
+      "units": 0.7230004518752824,
+      "usd_per_point": 1.0,
+      "risk_usd": 100.0,
+      "atr": 86.4453125,
+      "opened": "2026-10-24 19:00:00+00:00",
+      "opened_bar": "2026-10-24 19:00:00+00:00",
+      "reason": "",
+      "mark": 80417.8984375,
+      "unrealised_usd": -41.877541798463625
+    }
+  ],
   "cursors": {
     "MNQ=F": "2026-10-23 20:55:00+00:00",
     "MES=F": "2026-10-23 20:55:00+00:00",
     "M2K=F": "2026-10-23 20:55:00+00:00",
     "MGC=F": "2026-10-23 20:55:00+00:00",
     "GC=F": "2026-10-23 20:55:00+00:00",
-    "BTC-USD": "2026-10-24 16:45:00+00:00"
+    "BTC-USD": "2026-10-24 19:05:00+00:00"
   },
   "cooldowns": {
     "MNQ=F|live_scan": 3468,
     "MES=F|live_scan": 3508,
     "MGC=F|live_scan": 3499,
     "GC=F|live_scan": 3499,
-    "BTC-USD|live_scan": 4236,
+    "BTC-USD|live_scan": 4260,
     "M2K=F|live_scan": 3340
   },
   "days": {
@@ -64,12 +86,12 @@
       "provisional": false
     },
     "2026-10-24": {
-      "n": 0,
-      "PF": 0.0,
-      "WR": 0.0,
-      "RR": 0.0,
-      "pnl_usd": 0,
-      "wins": 0,
+      "n": 1,
+      "PF": 99.0,
+      "WR": 1.0,
+      "RR": 99.0,
+      "pnl_usd": 161.8,
+      "wins": 1,
       "losses": 0,
       "provisional": true
     }
