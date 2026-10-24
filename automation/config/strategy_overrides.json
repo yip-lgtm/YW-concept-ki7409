@@ -2,42 +2,42 @@
   "_meta": {
     "_comment": "Live strategy param overrides — written by param_optimizer.py, read by live_scan.py at import. Auto-optimization output (weight/min_strength/resample_tf per strategy).",
     "created": "2026-10-07T13:30:00+00:00",
-    "applications": 7,
-    "last_run": "2026-10-23T19:49:22.885061+00:00",
+    "applications": 10,
+    "last_run": "2026-10-24T18:38:34.943396+00:00",
     "note": "Empty = all strategies use live_scan.py hardcoded defaults. 2026-10-07: weight became LIVE config (was dead) — see param_optimizer.py.",
-    "last_source": "iteration_all_20261024_034805.json",
-    "last_applied_n": 0,
-    "last_rejected_n": 2,
+    "last_source": "iteration_all_20261025_023701.json",
+    "last_applied_n": 3,
+    "last_rejected_n": 3,
     "last_log": [
-      "  H-Pattern: SKIP grade=D (LLM has no useful suggestion; live n=133)",
-      "  RSI-Div: SKIP (on cooldown, applied 2026-10-20)",
-      "  OCS-BTC-5m: SKIP grade=D (LLM has no useful suggestion; live n=0)",
-      "  Kell-Cycle: no change (grade=B conf=74 — proposed values already active)",
-      "  yw-argon-gold: no live_scan mapping (id=argon-gold)",
+      "  CRT: grade=C accepted via high-conf+sample path (conf=82, n=733)",
+      "  CRT: APPLY [C/82] weight 0.85→0.9",
+      "  OCS-BTC-5m: REJECT grade=C but live n=0 < 10 (insufficient evidence)",
       "  Two-Yang: SKIP grade=D (LLM has no useful suggestion; live n=223)",
-      "  B1: SKIP (on cooldown, applied 2026-10-20)",
+      "  H-Pattern: SKIP grade=D (LLM has no useful suggestion; live n=135)",
+      "  RSI-Div: APPLY [B/78] weight 0.6→0.5",
+      "  B1: APPLY [B/78] weight 0.9→0.8",
       "  50-20-Pullback: SKIP grade=D (LLM has no useful suggestion; live n=1015)",
       "  Stair: SKIP grade=D (LLM has no useful suggestion; live n=352)",
-      "  CRT: grade=C accepted via high-conf+sample path (conf=84, n=730)",
-      "  CRT: SKIP (on cooldown, applied 2026-10-20)",
-      "  3-Pushes: REJECT grade=? (unrecognised)"
+      "  yw-argon-gold: no live_scan mapping (id=argon-gold)",
+      "  3-Pushes: SKIP (on cooldown, applied 2026-10-21)",
+      "  Kell-Cycle: REJECT grade=? (unrecognised)"
     ]
   },
   "RSI-Div": {
-    "weight": 0.6,
+    "weight": 0.5,
     "resample_tf": "15min",
-    "last_applied": "2026-10-20T20:47:36.199367+00:00",
+    "last_applied": "2026-10-24T18:38:34.943396+00:00",
     "grade": "B",
-    "confidence": 90,
-    "reason": "樣本足且PF達1.52，但盈利集中BTC，細指數拖累明顯。",
-    "source_iteration": "iteration_all_20261021_044606.json",
+    "confidence": 78,
+    "reason": "整體盈利但依賴BTC，非BTC樣本表現偏弱。",
+    "source_iteration": "iteration_all_20261025_023701.json",
     "changes": {
       "weight": {
-        "from": 0.85,
-        "to": 0.6
+        "from": 0.6,
+        "to": 0.5
       }
     },
-    "applications": 2,
+    "applications": 3,
     "history": [
       {
         "date": "2026-10-17T18:10:36.458503+00:00",
@@ -54,6 +54,14 @@
         "confidence": 90,
         "changes": {
           "weight": 0.6
+        }
+      },
+      {
+        "date": "2026-10-24T18:38:34.943396+00:00",
+        "grade": "B",
+        "confidence": 78,
+        "changes": {
+          "weight": 0.5
         }
       }
     ]
@@ -125,25 +133,20 @@
     ]
   },
   "CRT": {
-    "weight": 0.85,
+    "weight": 0.9,
     "resample_tf": "15min",
-    "last_applied": "2026-10-20T20:47:36.199367+00:00",
+    "last_applied": "2026-10-24T18:38:34.943396+00:00",
     "grade": "C",
-    "confidence": 86,
-    "reason": "整體正R但PF僅1.07，MNQ拖累明顯，邊際偏弱。",
-    "source_iteration": "iteration_all_20261021_044606.json",
+    "confidence": 82,
+    "reason": "樣本足夠但勝率偏低；MES及BTC盈利，股指拖累整體表現。",
+    "source_iteration": "iteration_all_20261025_023701.json",
     "changes": {
       "weight": {
-        "from": 1.1,
-        "to": 0.85,
-        "note": "delta capped ±0.25 (LLM wanted 0.8)"
-      },
-      "resample_tf": {
-        "from": "",
-        "to": "15min"
+        "from": 0.85,
+        "to": 0.9
       }
     },
-    "applications": 1,
+    "applications": 2,
     "history": [
       {
         "date": "2026-10-20T20:47:36.199367+00:00",
@@ -153,28 +156,32 @@
           "weight": 0.85,
           "resample_tf": "15min"
         }
+      },
+      {
+        "date": "2026-10-24T18:38:34.943396+00:00",
+        "grade": "C",
+        "confidence": 82,
+        "changes": {
+          "weight": 0.9
+        }
       }
     ]
   },
   "B1": {
-    "weight": 0.9,
+    "weight": 0.8,
     "resample_tf": "15min",
-    "last_applied": "2026-10-20T20:47:36.199367+00:00",
+    "last_applied": "2026-10-24T18:38:34.943396+00:00",
     "grade": "B",
-    "confidence": 84,
-    "reason": "整體PF 1.42且R為正，但BTC拖累、樣本仍細。",
-    "source_iteration": "iteration_all_20261021_044606.json",
+    "confidence": 78,
+    "reason": "PF 1.42且總R正，但BTC -1.76拖累整體",
+    "source_iteration": "iteration_all_20261025_023701.json",
     "changes": {
       "weight": {
-        "from": 1.0,
-        "to": 0.9
-      },
-      "resample_tf": {
-        "from": "",
-        "to": "15min"
+        "from": 0.9,
+        "to": 0.8
       }
     },
-    "applications": 1,
+    "applications": 2,
     "history": [
       {
         "date": "2026-10-20T20:47:36.199367+00:00",
@@ -183,6 +190,14 @@
         "changes": {
           "weight": 0.9,
           "resample_tf": "15min"
+        }
+      },
+      {
+        "date": "2026-10-24T18:38:34.943396+00:00",
+        "grade": "B",
+        "confidence": 78,
+        "changes": {
+          "weight": 0.8
         }
       }
     ]
