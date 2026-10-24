@@ -14,12 +14,12 @@
 | 7 | B1 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-100 | — |
 | 8 | TTrades-L12 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-100 | — |
 | 9 | TTrades-L14 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-100 | — |
-| 10 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+494 | — |
+| 10 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+526 | — |
 | 11 | Argon-Gold | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 12 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 13 | Two-Yang | 0 | hold | 4 | down 0% | down 0.00 | down 0.00 | $-400 | $-2,976 | — |
 | 14 | RSI-Div | 0 | hold | 3 | down 33% | up 1.31 | up 2.62 | $+62 | $-2,908 | — |
-| 15 | H-Pattern | 0 | hold | 2 | down 0% | down 0.00 | down 0.00 | $-200 | $-1,256 | 1 單 · $+162 |
+| 15 | H-Pattern | 0 | hold | 2 | down 0% | down 0.00 | down 0.00 | $-200 | $-1,315 | 2 單 · $+62 |
 
 ⬆️ 升級：Kell-Cycle
 
