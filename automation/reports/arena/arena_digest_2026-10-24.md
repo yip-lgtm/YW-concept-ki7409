@@ -13,12 +13,12 @@
 | 6 | H-Pattern | 1 | promote | 4 | up 50% | up 1.62 | up 1.62 | $+124 | $-1,253 | — |
 | 7 | Two-Yang | 1 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+162 | $-2,815 | — |
 | 8 | Stair | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,763 | — |
-| 9 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+493 | — |
+| 9 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+505 | — |
 | 10 | Argon-Gold | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 11 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
-| 12 | B1 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-100 | — |
-| 13 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-100 | — |
-| 14 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-100 | — |
+| 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-100 | — |
+| 13 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-100 | — |
+| 14 | B1 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-200 | 1 單 · $-100 |
 | 15 | RSI-Div | 0 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-3,008 | — |
 
 ⬆️ 升級：50-20-Pullback、H-Pattern、Two-Yang
