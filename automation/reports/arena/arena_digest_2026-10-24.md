@@ -13,7 +13,7 @@
 | 6 | H-Pattern | 1 | promote | 4 | up 50% | up 1.62 | up 1.62 | $+124 | $-1,253 | — |
 | 7 | Two-Yang | 1 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+162 | $-2,815 | — |
 | 8 | Stair | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,763 | — |
-| 9 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+465 | — |
+| 9 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+449 | — |
 | 10 | Argon-Gold | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 11 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-100 | — |
