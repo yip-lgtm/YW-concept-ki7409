@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-26 05:53 HKT",
-  "hkt_timestamp": "2026-10-26T05:53:47.667658+08:00",
+  "generated_at": "2026-10-26 07:08 HKT",
+  "hkt_timestamp": "2026-10-26T07:08:28.604769+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 13,
@@ -42,26 +42,26 @@
     {
       "strategy": "Two-Yang",
       "ticker": "BTC-USD",
-      "n_trades": 2,
-      "n_wins": 1,
+      "n_trades": 1,
+      "n_wins": 0,
       "n_losses": 1,
-      "win_rate": 50.0,
-      "total_R": 0.62,
-      "avg_R": 0.309,
-      "total_pnl_usd": 61.8,
-      "profit_factor": 1.62,
+      "win_rate": 0.0,
+      "total_R": -1.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -100.0,
+      "profit_factor": 0.0,
       "rank": 3,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 15,
-    "n_wins": 8,
-    "win_rate": 53.3,
-    "total_R": 5.94,
-    "total_pnl_usd": 474.87
+    "n_trades": 14,
+    "n_wins": 7,
+    "win_rate": 50.0,
+    "total_R": 4.32,
+    "total_pnl_usd": 313.07
   },
-  "ranking_24h_updated": "2026-10-25T21:53:47.667678+00:00",
+  "ranking_24h_updated": "2026-10-25T23:08:28.604790+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -1148,19 +1148,19 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-10-26T03:16:18.296375+08:00",
+        "updated": "2026-10-26T06:18:20.281822+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "Monday skip (OSOK rule)",
-          "ts": "2026-10-25T15:16:18.055642-04:00"
+          "ts": "2026-10-25T18:18:19.968909-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [80134, 80690] misses nearest swing 82550 by 1859",
+            "detail": "C2 [80421, 80822] misses nearest swing 82544 by 1722",
             "direction": "short",
             "closure": null,
             "trade_candle": null,
@@ -1200,8 +1200,8 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [79982, 80588] misses nearest swing 81198 by 609",
-            "direction": "long",
+            "detail": "C2 [80134, 80696] misses nearest swing 82544 by 1848",
+            "direction": "short",
             "closure": "c2_closure",
             "trade_candle": null,
             "poi_note": null,
