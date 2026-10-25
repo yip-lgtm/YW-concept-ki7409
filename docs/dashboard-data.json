@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-10-25 07:22 HKT",
-  "hkt_timestamp": "2026-10-25T07:22:46.704602+08:00",
+  "generated_at": "2026-10-25 09:32 HKT",
+  "hkt_timestamp": "2026-10-25T09:32:21.628981+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 10,
@@ -26,6 +26,20 @@
       "medal_eligible": false
     },
     {
+      "strategy": "Two-Yang",
+      "ticker": "BTC-USD",
+      "n_trades": 2,
+      "n_wins": 2,
+      "n_losses": 0,
+      "win_rate": 100.0,
+      "total_R": 3.24,
+      "avg_R": 1.618,
+      "total_pnl_usd": 323.6,
+      "profit_factor": 10.0,
+      "rank": 2,
+      "medal_eligible": false
+    },
+    {
       "strategy": "CRT",
       "ticker": "BTC-USD",
       "n_trades": 3,
@@ -36,20 +50,6 @@
       "avg_R": 0.745,
       "total_pnl_usd": 223.6,
       "profit_factor": 3.24,
-      "rank": 2,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "Two-Yang",
-      "ticker": "BTC-USD",
-      "n_trades": 1,
-      "n_wins": 1,
-      "n_losses": 0,
-      "win_rate": 100.0,
-      "total_R": 1.62,
-      "avg_R": 1.618,
-      "total_pnl_usd": 161.8,
-      "profit_factor": 10.0,
       "rank": 3,
       "medal_eligible": false
     },
@@ -69,13 +69,13 @@
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 11,
-    "n_wins": 6,
-    "win_rate": 54.5,
-    "total_R": 4.71,
-    "total_pnl_usd": 820.71
+    "n_trades": 12,
+    "n_wins": 7,
+    "win_rate": 58.3,
+    "total_R": 6.33,
+    "total_pnl_usd": 982.51
   },
-  "ranking_24h_updated": "2026-10-24T23:22:46.704621+00:00",
+  "ranking_24h_updated": "2026-10-25T01:32:21.629001+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -1162,20 +1162,20 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-10-25T05:55:07.380594+08:00",
+        "updated": "2026-10-25T08:00:12.229279+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "CISD not confirmed; D1 counter-trend (ranging); London expanded (skip NY)",
-          "ts": "2026-10-24T17:55:07.020141-04:00"
+          "reason": "EQ not respected; D1 counter-trend (ranging); London expanded (skip NY)",
+          "ts": "2026-10-24T20:00:11.921730-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no C2 closure (sweep+reclaim) on C2",
-            "detail": null,
-            "direction": null,
+            "stage": "no POI",
+            "detail": "C2 [80381, 80523] misses nearest swing 82544 by 2021",
+            "direction": "short",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -1193,7 +1193,7 @@
           {
             "strategy": "TTrades-L13",
             "fired": false,
-            "stage": "C3 not an expansion candle (wick too large)",
+            "stage": "C2 not an expansion candle (wick too large)",
             "detail": null,
             "direction": null,
             "closure": null,
@@ -1214,9 +1214,9 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [79145, 80748] misses nearest swing 82550 by 1802",
-            "direction": "short",
-            "closure": "c2_closure",
+            "detail": "C2 [80381, 80523] misses nearest swing 81198 by 675",
+            "direction": "long",
+            "closure": "c3_closure",
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
