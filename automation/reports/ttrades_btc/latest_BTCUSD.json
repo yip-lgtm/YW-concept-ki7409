@@ -1,5 +1,5 @@
 {
-  "ts": "2026-10-25T08:18:57.757912-04:00",
+  "ts": "2026-10-25T09:50:36.138448-04:00",
   "ticker": "BTC-USD",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
@@ -9,26 +9,26 @@
     "side": "bullish",
     "c2_high": 80588.1796875,
     "c2_low": 79982.2265625,
-    "c2_close": 80476.8203125,
+    "c2_close": 80476.8125,
     "c2_eq": 80285.203125,
-    "c3_close": 80351.4296875,
+    "c3_close": 80267.890625,
     "swing_level": 79982.2265625,
     "direction": "long"
   },
   "cisd": {
     "confirmed": false,
-    "opposing_open": 82420.3515625,
-    "series_length": 2,
-    "last_close": 80351.4296875,
+    "opposing_open": 82420.34375,
+    "series_length": 1,
+    "last_close": 80267.890625,
     "reason": "no break"
   },
-  "eq_respected": true,
+  "eq_respected": false,
   "d1_trend": {
     "aligned": false,
     "trend": "ranging",
-    "d1_close": 80351.4296875,
-    "d1_ema50": 80776.8043112032,
-    "d1_ema20": 82073.56753519009,
+    "d1_close": 80267.890625,
+    "d1_ema50": 80773.52826953655,
+    "d1_ema20": 82065.61143399961,
     "reason": "D1 ranging (counter-trend)"
   },
   "weekly_profile": {
@@ -45,7 +45,7 @@
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "CISD not confirmed; D1 counter-trend (ranging); London expanded (skip NY)",
+  "reason": "CISD not confirmed; EQ not respected; D1 counter-trend (ranging); London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
