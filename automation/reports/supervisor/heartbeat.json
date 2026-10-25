@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-25T04:17:57.512396+00:00",
+  "timestamp": "2026-10-25T04:59:48.831685+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -8,9 +8,9 @@
       "no /tmp/ocs_btc/latest.json"
     ],
     "n_open": 1,
-    "n_trades_total": 20,
-    "win_rate": 40.0,
-    "profit_factor": 1.03,
+    "n_trades_total": 21,
+    "win_rate": 42.9,
+    "profit_factor": 1.16,
     "last_signal": null
   },
   "ranking": {
@@ -78,8 +78,14 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
+          "id": 40163853936,
+          "conclusion": "success",
+          "created_at": "2026-10-25T04:58:59Z",
+          "event": "workflow_dispatch"
+        },
+        {
           "id": 40161326304,
-          "conclusion": "running",
+          "conclusion": "success",
           "created_at": "2026-10-25T04:17:12Z",
           "event": "workflow_dispatch"
         },
@@ -88,12 +94,6 @@
           "conclusion": "success",
           "created_at": "2026-10-25T01:40:55Z",
           "event": "schedule"
-        },
-        {
-          "id": 40146176029,
-          "conclusion": "success",
-          "created_at": "2026-10-25T00:18:25Z",
-          "event": "workflow_dispatch"
         }
       ],
       "issues": []
@@ -154,14 +154,14 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 1,
+    "n_open": 2,
     "n_stale_24h": 1,
     "issues": [
       "Stale: Two-Yang M2K=F open 37h"
     ],
-    "long_count": 1,
+    "long_count": 2,
     "short_count": 0,
-    "total_risk": 7.588504464285714,
+    "total_risk": 65.41796875000001,
     "deep_loss_positions": []
   }
 }
