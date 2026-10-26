@@ -9,10 +9,10 @@
 | 2 | Kell-Cycle | 4 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+162 | $+1,663 | — |
 | 3 | 50-20-Pullback | 3 | promote | 2 | up 100% | up 99.00 | up 99.00 | $+324 | $-1,040 | — |
 | 4 | 3-Pushes | 3 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+200 | $+1,539 | — |
-| 5 | TTrades-Fractal | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+550 | — |
+| 5 | TTrades-Fractal | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+489 | — |
 | 6 | Two-Yang | 2 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+162 | $-2,629 | — |
-| 7 | TTrades-L13 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $+652 | — |
-| 8 | B1 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-200 | — |
+| 7 | TTrades-L13 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $+525 | — |
+| 8 | B1 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-38 | 1 單 · $+162 |
 | 9 | RSI-Div | 1 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+262 | $-2,726 | — |
 | 10 | Stair | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,763 | — |
 | 11 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
