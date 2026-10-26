@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-26T00:17:49.419597+00:00",
+  "timestamp": "2026-10-26T01:33:19.891479+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -78,6 +78,12 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
+          "id": 40254070144,
+          "conclusion": "success",
+          "created_at": "2026-10-26T01:24:36Z",
+          "event": "workflow_dispatch"
+        },
+        {
           "id": 40246724888,
           "conclusion": "success",
           "created_at": "2026-10-25T23:52:54Z",
@@ -87,12 +93,6 @@
           "id": 40244678904,
           "conclusion": "success",
           "created_at": "2026-10-25T23:25:13Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 40243343128,
-          "conclusion": "success",
-          "created_at": "2026-10-25T23:07:44Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -154,12 +154,14 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 0,
+    "n_open": 1,
     "n_stale_24h": 0,
-    "issues": [],
+    "issues": [
+      "High total risk: $251"
+    ],
     "long_count": 0,
-    "short_count": 0,
-    "total_risk": 0.0,
+    "short_count": 1,
+    "total_risk": 251.3151785714286,
     "deep_loss_positions": []
   }
 }
