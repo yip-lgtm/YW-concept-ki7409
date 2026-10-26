@@ -1,12 +1,26 @@
 {
   "date": "2026-10-26",
   "window_hours": 24,
-  "hkt_timestamp": "2026-10-26T13:34:13.537048+00:00",
+  "hkt_timestamp": "2026-10-26T14:13:36.536250+00:00",
   "type": "24h_live_ranking",
   "sort": "Total $ \u2192 PF \u2192 WR (R as footnote, per 9/22 \u6536\u7dca\u7248)",
-  "n_total": 24,
-  "n_disqualified_medal": 3,
+  "n_total": 26,
+  "n_disqualified_medal": 4,
   "ranking": [
+    {
+      "strategy": "CRT",
+      "ticker": "BTC-USD",
+      "n_trades": 16,
+      "n_wins": 7,
+      "n_losses": 9,
+      "win_rate": 43.8,
+      "total_R": 2.33,
+      "avg_R": 0.145,
+      "total_pnl_usd": 232.6,
+      "profit_factor": 1.26,
+      "rank": 1,
+      "medal_eligible": true
+    },
     {
       "strategy": "Two-Yang",
       "ticker": "M2K=F",
@@ -18,7 +32,7 @@
       "avg_R": 1.618,
       "total_pnl_usd": 161.8,
       "profit_factor": 10.0,
-      "rank": 1,
+      "rank": 2,
       "medal_eligible": false
     },
     {
@@ -32,22 +46,8 @@
       "avg_R": 0.122,
       "total_pnl_usd": 149.91,
       "profit_factor": 1.21,
-      "rank": 2,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "BTC-USD",
-      "n_trades": 15,
-      "n_wins": 6,
-      "n_losses": 9,
-      "win_rate": 40.0,
-      "total_R": 0.71,
-      "avg_R": 0.047,
-      "total_pnl_usd": 70.8,
-      "profit_factor": 1.08,
       "rank": 3,
-      "medal_eligible": true
+      "medal_eligible": false
     },
     {
       "strategy": "H-Pattern",
@@ -61,6 +61,20 @@
       "total_pnl_usd": -100.0,
       "profit_factor": 0.0,
       "rank": 4,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "Stair",
+      "ticker": "MNQ=F",
+      "n_trades": 1,
+      "n_wins": 0,
+      "n_losses": 1,
+      "win_rate": 0.0,
+      "total_R": -1.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -100.0,
+      "profit_factor": 0.0,
+      "rank": 5,
       "medal_eligible": false
     }
   ]
