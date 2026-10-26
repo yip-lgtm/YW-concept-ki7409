@@ -2,24 +2,24 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 17,
-    "last_run": "2026-10-25T18:44:22.908842+00:00",
-    "last_applied": 0,
+    "runs": 18,
+    "last_run": "2026-10-26T20:54:22.603172+00:00",
+    "last_applied": 2,
     "last_log": [
+      {
+        "agent": "50-20-Pullback",
+        "action": "relax"
+      },
+      {
+        "agent": "OCS-BTC-5m",
+        "action": "relax"
+      },
       {
         "agent": "Stair",
         "action": "error"
       },
       {
         "agent": "B1-3in1",
-        "action": "error"
-      },
-      {
-        "agent": "50-20-Pullback",
-        "action": "error"
-      },
-      {
-        "agent": "OCS-BTC-5m",
         "action": "error"
       }
     ]
@@ -62,18 +62,18 @@
     "tightened_count": 0
   },
   "50-20-Pullback": {
-    "last_revised": "2026-10-18T18:28:06.537825+00:00",
+    "last_revised": "2026-10-26T20:54:22.603172+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "50-20-Pullback 係 high-RR / low-WR 設計，WR 38% 完全正常；PF 0.996 屬於 breakeven 附近 (n=42 樣本噪音範圍內)，放寬 WR 至 profile-expected 水平 + 略放寬 PF 容忍 noise，RR 1.618 已經遠超門檻無需調整。",
-    "response_raw": "<think>The agent is stuck in neutral zone. Current metrics: PF=0.996, WR=38.1%, RR=1.618, n=42.\n\nCurrent global thresholds: PF > 1.0, WR > 50%, RR > 1.0, n ≥ 10.\n\nThis is a High-RR trend pullback strategy where low WR is expected. The strategy should be judged on PF + RR, not WR.\n\nLooking at current metrics:\n- PF = 0.996 — barely below 1.0 (losing slightly). This is a problem. High RR doesn't help if PF < 1.0 because PF accounts for both wins and losses.\n- WR = 38.1% — low, but expected for this strategy profile\n- RR = 1.618 — well above 1.0, good\n- n = 42 — sufficient sample\n\nThe key issue: PF is below 1.0 meaning the strategy isn't actually profitable right now. RR is good but WR is too low to compensate (38.1% × 1.618 = 0.616 average win rate, meaning the strategy is losing money overal",
+    "reasoning": "<一句話...>\\n\\n{...}\" but say JSON only, no other text. Contradiction: exact format includes REASONING line which makes not JSON. Perhaps perhaps expected format literally reasoning then JSON, but \"JSON ",
+    "response_raw": "<think>We need answer exact JSON only? They request \"REASONING: <一句話...>\\n\\n{...}\" but say JSON only, no other text. Contradiction: exact format includes REASONING line which makes not JSON. Perhaps perhaps expected format literally reasoning then JSON, but \"JSON only\" suggests output a JSON object? Yet exact format shows REASONING prefix. Need follow exact format, likely output reasoning line plus JSON. But JSON only means no prose beyond required reasoning. Need decide thresholds. Agent metrics PF 1.037, WR .372, RR 1.747, n 51. Existing global thresholds: PF >1.0, WR >.5, RR >1.0, n >=10. Strategy high RR low WR expected, judge PF + RR not WR. To allow promotion, relax WR only, perhaps threshold <= .372 and PF/RR. Strict comparisons matter: metrics says promote threshold >1.0 etc. If se",
     "overrides": {
-      "min_PF": 0.95,
+      "min_PF": 1.0,
       "min_WR": 0.35,
       "min_RR": 1.0,
       "min_trades": 10
     },
-    "relaxed_count": 2,
+    "relaxed_count": 1,
     "tightened_count": 0
   },
   "B1-3in1": {
@@ -156,6 +156,21 @@
       "min_trades": 10
     },
     "relaxed_count": 2,
+    "tightened_count": 0
+  },
+  "OCS-BTC-5m": {
+    "last_revised": "2026-10-26T20:54:22.603172+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "relax",
+    "reasoning": "ML/kNN...",
+    "response_raw": "<think>We need answer exact format JSON only plus REASONING? User says EXACT format (JSON only, no other text), then shows REASONING line and JSON. Contradiction perhaps wants reasoning then JSON, but \"JSON only\" likely output valid JSON only, perhaps include reasoning key? Need determine thresholds. Agent ML/kNN BTC 24/7, metrics PF1.213, WR.429, RR1.618, n28. Stuck because WR threshold &gt;.5 likely. Existing promote thresholds perhaps PF&gt;1, WR&gt;50, RR&gt;1, n&gt;=10. Need per-agent override, max relax 2 metrics. Strategy likely lower WR profile, high RR. Relax WR only maybe WR 0.40; retain PF1.0, RR1.0, min trades10. But exact inequalities \"promote 門檻 &gt; 1.0\"; if min PF 1.0 and metric1.213 passes. Min RR1.0 passes. WR0.40 passes 0.429. This is reasonable. Could tighten some? No. ",
+    "overrides": {
+      "min_PF": 1.0,
+      "min_WR": 0.4,
+      "min_RR": 1.0,
+      "min_trades": 10
+    },
+    "relaxed_count": 1,
     "tightened_count": 0
   }
 }

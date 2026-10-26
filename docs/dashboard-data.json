@@ -1,44 +1,16 @@
 {
-  "generated_at": "2026-10-27 01:17 HKT",
-  "hkt_timestamp": "2026-10-27T01:17:51.162487+08:00",
+  "generated_at": "2026-10-27 04:56 HKT",
+  "hkt_timestamp": "2026-10-27T04:56:21.979073+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 25,
-    "trades_today": 0,
-    "wins_24h": 10,
-    "R_24h": 1.18,
-    "signals_24h": 27,
-    "wr_24h": 40.0
+    "trades_24h": 28,
+    "trades_today": 2,
+    "wins_24h": 8,
+    "R_24h": -7.05,
+    "signals_24h": 29,
+    "wr_24h": 28.6
   },
   "ranking_24h": [
-    {
-      "strategy": "unknown",
-      "ticker": "\u2014",
-      "n_trades": 6,
-      "n_wins": 3,
-      "n_losses": 3,
-      "win_rate": 50.0,
-      "total_R": 1.85,
-      "avg_R": 0.309,
-      "total_pnl_usd": 235.0,
-      "profit_factor": 1.62,
-      "rank": 1,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "BTC-USD",
-      "n_trades": 16,
-      "n_wins": 7,
-      "n_losses": 9,
-      "win_rate": 43.8,
-      "total_R": 2.33,
-      "avg_R": 0.145,
-      "total_pnl_usd": 232.6,
-      "profit_factor": 1.26,
-      "rank": 2,
-      "medal_eligible": true
-    },
     {
       "strategy": "Two-Yang",
       "ticker": "M2K=F",
@@ -50,8 +22,36 @@
       "avg_R": 1.618,
       "total_pnl_usd": 161.8,
       "profit_factor": 10.0,
-      "rank": 3,
+      "rank": 1,
       "medal_eligible": false
+    },
+    {
+      "strategy": "unknown",
+      "ticker": "\u2014",
+      "n_trades": 3,
+      "n_wins": 1,
+      "n_losses": 2,
+      "win_rate": 33.3,
+      "total_R": -0.38,
+      "avg_R": -0.127,
+      "total_pnl_usd": 84.13,
+      "profit_factor": 0.81,
+      "rank": 2,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "BTC-USD",
+      "n_trades": 18,
+      "n_wins": 7,
+      "n_losses": 11,
+      "win_rate": 38.9,
+      "total_R": 0.33,
+      "avg_R": 0.018,
+      "total_pnl_usd": 32.6,
+      "profit_factor": 1.03,
+      "rank": 3,
+      "medal_eligible": true
     },
     {
       "strategy": "H-Pattern",
@@ -68,6 +68,20 @@
       "medal_eligible": false
     },
     {
+      "strategy": "B1",
+      "ticker": "MGC=F",
+      "n_trades": 1,
+      "n_wins": 0,
+      "n_losses": 1,
+      "win_rate": 0.0,
+      "total_R": -1.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -100.0,
+      "profit_factor": 0.0,
+      "rank": 5,
+      "medal_eligible": false
+    },
+    {
       "strategy": "Stair",
       "ticker": "MNQ=F",
       "n_trades": 2,
@@ -78,18 +92,18 @@
       "avg_R": -1.0,
       "total_pnl_usd": -200.0,
       "profit_factor": 0.0,
-      "rank": 5,
+      "rank": 6,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
     "n_trades": 26,
-    "n_wins": 11,
-    "win_rate": 42.3,
-    "total_R": 2.8,
-    "total_pnl_usd": 329.4
+    "n_wins": 9,
+    "win_rate": 34.6,
+    "total_R": -2.43,
+    "total_pnl_usd": -121.47
   },
-  "ranking_24h_updated": "2026-10-26T17:17:51.162508+00:00",
+  "ranking_24h_updated": "2026-10-26T20:56:21.979095+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -107,13 +121,13 @@
         5
       ],
       "live_24h": {
-        "n": 6,
-        "wins": 3,
-        "losses": 3,
-        "wr": 50.0,
-        "R": 1.85,
-        "pf": 1.62,
-        "pnl": 235.0
+        "n": 3,
+        "wins": 1,
+        "losses": 2,
+        "wr": 33.3,
+        "R": -0.38,
+        "pf": 0.81,
+        "pnl": 84.13
       },
       "live_today": {
         "n": 0,
@@ -138,9 +152,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "D",
+        "confidence": 25,
+        "reason": "\u96f6\u6210\u4ea4\u4e14\u7121ticker\u6578\u64da\uff0c\u73fe\u6709\u53c3\u6578\u7121\u6cd5\u9a57\u8b49"
       }
     },
     {
@@ -190,9 +204,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "D",
+        "confidence": 88,
+        "reason": "\u52dd\u738734%\u3001PF 0.82\u4e14\u56de\u64a4\u660e\u986f\uff0c\u9700\u964d\u98a8\u96aa\u4e26\u6e1b\u5c11\u4f4e\u9031\u671f\u96dc\u8a0a"
       }
     },
     {
@@ -242,9 +256,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "B",
+        "confidence": 84,
+        "reason": "\u6a23\u672c\u5145\u8db3\u4e14\u7e3dR\u70ba\u6b63\uff0c\u4f46PF\u504f\u4f4e\u3001\u8667\u640d\u5e02\u5834\u62d6\u7d2f\u660e\u986f"
       }
     },
     {
@@ -294,9 +308,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "D",
+        "confidence": 92,
+        "reason": "\u6a23\u672c\u8db3\u5920\u4f46PF\u50c50.86\uff0cMES\u62d6\u7d2f-23.49R"
       }
     },
     {
@@ -346,9 +360,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "B",
+        "confidence": 84,
+        "reason": "PF 1.52\u4e14\u7e3dR\u70ba\u6b63\uff0c\u4f46\u76c8\u5229\u9ad8\u5ea6\u96c6\u4e2dBTC"
       }
     },
     {
@@ -398,9 +412,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "D",
+        "confidence": 93,
+        "reason": "\u52dd\u738736%\u3001PF 0.89\uff0c\u7e3dR -68.2\uff0c\u9577\u671f\u671f\u671b\u70ba\u8ca0"
       }
     },
     {
@@ -450,9 +464,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "D",
+        "confidence": 90,
+        "reason": "PF\u50c50.89\u4e14\u53ea\u6709MNQ\u76c8\u5229\uff0c\u9700\u6e1b\u5009\u964d\u983b\u4e26\u52a0\u5f37\u904e\u6ffe"
       }
     },
     {
@@ -471,24 +485,24 @@
         5
       ],
       "live_24h": {
-        "n": 16,
+        "n": 18,
         "wins": 7,
-        "losses": 9,
-        "wr": 43.8,
-        "R": 2.33,
-        "pf": 1.26,
-        "pnl": 232.6
+        "losses": 11,
+        "wr": 38.9,
+        "R": 0.33,
+        "pf": 1.03,
+        "pnl": 32.6
       },
       "live_today": {
-        "n": 0,
+        "n": 2,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 2,
+        "wr": 0.0,
+        "R": -2.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -200.0
       },
-      "signals_24h": 18,
+      "signals_24h": 20,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -502,9 +516,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "B",
+        "confidence": 82,
+        "reason": "\u6574\u9ad4\u5fae\u5229\u4f46PF\u50c51.09\uff0c\u76c8\u5229\u96c6\u4e2dMES/BTC\uff0cMNQ/M2Q\u62d6\u7d2f"
       }
     },
     {
@@ -554,9 +568,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "C",
+        "confidence": 86,
+        "reason": "PF\u50c51.08\uff0cMES/MGC\u62d6\u7d2f\uff0c\u9700\u52a0\u8da8\u52e2\u53ca\u6ce2\u52d5\u904e\u6ffe"
       }
     },
     {
@@ -575,13 +589,13 @@
         5
       ],
       "live_24h": {
-        "n": 0,
+        "n": 1,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -100.0
       },
       "live_today": {
         "n": 0,
@@ -606,9 +620,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "B",
+        "confidence": 74,
+        "reason": "\u6574\u9ad4\u76c8\u5229\u4f46\u6a23\u672c\u504f\u5c0f\uff0cBTC\u8868\u73fe\u62d6\u7d2f\uff0c\u5b9c\u964d\u4f4e\u4ea4\u6613\u983b\u7387"
       }
     },
     {
@@ -627,13 +641,13 @@
         5
       ],
       "live_24h": {
-        "n": 0,
+        "n": 1,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -100.0
       },
       "live_today": {
         "n": 0,
@@ -658,9 +672,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "B",
+        "confidence": 74,
+        "reason": "\u6574\u9ad4\u76c8\u5229\u4f46\u6a23\u672c\u504f\u5c0f\uff0cBTC\u8868\u73fe\u62d6\u7d2f\uff0c\u5b9c\u964d\u4f4e\u4ea4\u6613\u983b\u7387"
       }
     },
     {
@@ -679,13 +693,13 @@
         5
       ],
       "live_24h": {
-        "n": 0,
+        "n": 1,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -100.0
       },
       "live_today": {
         "n": 0,
@@ -710,9 +724,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "B",
+        "confidence": 74,
+        "reason": "\u6574\u9ad4\u76c8\u5229\u4f46\u6a23\u672c\u504f\u5c0f\uff0cBTC\u8868\u73fe\u62d6\u7d2f\uff0c\u5b9c\u964d\u4f4e\u4ea4\u6613\u983b\u7387"
       }
     },
     {
@@ -731,13 +745,13 @@
         5
       ],
       "live_24h": {
-        "n": 0,
+        "n": 1,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -100.0
       },
       "live_today": {
         "n": 0,
@@ -762,9 +776,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "B",
+        "confidence": 74,
+        "reason": "\u6574\u9ad4\u76c8\u5229\u4f46\u6a23\u672c\u504f\u5c0f\uff0cBTC\u8868\u73fe\u62d6\u7d2f\uff0c\u5b9c\u964d\u4f4e\u4ea4\u6613\u983b\u7387"
       }
     },
     {
@@ -1022,9 +1036,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "D",
+        "confidence": 95,
+        "reason": "\u96f6\u4ea4\u6613\u4e14\u7121\u6a19\u7684\u6578\u64da\uff0c\u672a\u80fd\u9a57\u8b49\u7b56\u7565\u5be6\u969b\u8868\u73fe"
       }
     }
   ],
@@ -1176,12 +1190,12 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-10-26T22:39:59.584299+08:00",
+        "updated": "2026-10-27T04:09:18.387467+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "Monday skip (OSOK rule)",
-          "ts": "2026-10-26T10:39:59.305408-04:00"
+          "reason": "no H4 C3 closure (Fractal quiet)",
+          "ts": "2026-10-26T16:09:18.110183-04:00"
         },
         "l_series": [
           {
@@ -1228,9 +1242,9 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [79541, 80463] misses nearest swing 81097 by 634",
-            "direction": "long",
-            "closure": "c3_closure",
+            "detail": "C2 [79322, 80705] misses nearest swing 82169 by 1464",
+            "direction": "short",
+            "closure": "c2_closure",
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
@@ -1305,18 +1319,18 @@
     "levels": [
       {
         "strategy": "CRT",
-        "level": 5,
-        "last_settled": "2026-10-26",
-        "n_changes": 4,
+        "level": 6,
+        "last_settled": "2026-10-27",
+        "n_changes": 5,
         "last_action": "promote",
-        "last_reason": "PF>0.8 & WR>0.3 & RR>1.0, n=76 (new evidence), 3 consecutive qualifying day(s)",
-        "last_change_date": "2026-10-26",
-        "streak": 0
+        "last_reason": "PF>0.8 & WR>0.3 & RR>1.0, n=93 (new evidence), 2 consecutive qualifying day(s)",
+        "last_change_date": "2026-10-27",
+        "streak": 2
       },
       {
         "strategy": "H-Pattern",
         "level": 3,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 2,
         "last_action": "promote",
         "last_reason": "PF>1.0 & WR>0.5 & RR>1.0, n=6 (new evidence), 2 consecutive qualifying day(s)",
@@ -1326,7 +1340,7 @@
       {
         "strategy": "TTrades-L13",
         "level": 3,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 2,
         "last_action": "promote",
         "last_reason": "PF>1.0 & WR>0.39 & RR>1.0, n=32 (new evidence), 2 consecutive qualifying day(s)",
@@ -1336,7 +1350,7 @@
       {
         "strategy": "3-Pushes",
         "level": 2,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 1,
         "last_action": "promote",
         "last_reason": "PF>1.0 & WR>0.45 & RR>1.0, n=12 (new evidence), 2 consecutive qualifying day(s)",
@@ -1346,7 +1360,7 @@
       {
         "strategy": "50-20-Pullback",
         "level": 2,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 1,
         "last_action": "promote",
         "last_reason": "PF>0.95 & WR>0.35 & RR>1.0, n=77 (new evidence), 2 consecutive qualifying day(s)",
@@ -1356,7 +1370,7 @@
       {
         "strategy": "Stair",
         "level": 2,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 1,
         "last_action": "promote",
         "last_reason": "PF>0.85 & WR>0.33 & RR>1.0, n=35 (new evidence), 2 consecutive qualifying day(s)",
@@ -1366,7 +1380,7 @@
       {
         "strategy": "TTrades-L14",
         "level": 2,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 1,
         "last_action": "promote",
         "last_reason": "PF>0.8 & WR>0.3 & RR>1.0, n=12 (new evidence), 2 consecutive qualifying day(s)",
@@ -1376,7 +1390,7 @@
       {
         "strategy": "Argon-Gold",
         "level": 1,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1386,7 +1400,7 @@
       {
         "strategy": "B1",
         "level": 1,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1396,7 +1410,7 @@
       {
         "strategy": "B1-3in1",
         "level": 1,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1406,7 +1420,7 @@
       {
         "strategy": "Kell-Cycle",
         "level": 1,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1416,7 +1430,7 @@
       {
         "strategy": "OCS-BTC-5m",
         "level": 1,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1426,7 +1440,7 @@
       {
         "strategy": "RSI-Div",
         "level": 1,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1436,7 +1450,7 @@
       {
         "strategy": "TTrades-Fractal",
         "level": 1,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1446,7 +1460,7 @@
       {
         "strategy": "TTrades-L12",
         "level": 1,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1456,7 +1470,7 @@
       {
         "strategy": "Two-Yang",
         "level": 1,
-        "last_settled": "2026-10-26",
+        "last_settled": "2026-10-27",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1502,14 +1516,14 @@
       {
         "strategy": "50-20-Pullback",
         "action": "relax",
-        "reasoning": "50-20-Pullback \u4fc2 high-RR / low-WR \u8a2d\u8a08\uff0cWR 38% \u5b8c\u5168\u6b63\u5e38\uff1bPF 0.996 \u5c6c\u65bc breakeven \u9644\u8fd1 (n=42 \u6a23\u672c\u566a\u97f3\u7bc4\u570d\u5167)\uff0c\u653e\u5bec WR \u81f3 profile-expected \u6c34\u5e73 + \u7565\u653e\u5bec PF \u5bb9\u5fcd noise\uff0cRR 1.618 \u5df2\u7d93\u9060\u8d85\u9580\u6abb\u7121\u9700\u8abf\u6574\u3002",
+        "reasoning": "<\u4e00\u53e5\u8a71...>\\n\\n{...}\" but say JSON only, no other text. Contradiction: exact format includes REASONING line which makes not JSON. Perhaps perhaps expected format literally reasoning then JSON, but \"JSON ",
         "overrides": {
-          "min_PF": 0.95,
+          "min_PF": 1.0,
           "min_WR": 0.35,
           "min_RR": 1.0,
           "min_trades": 10
         },
-        "last_revised": "2026-10-18T18:28:06.537825+00:00",
+        "last_revised": "2026-10-26T20:54:22.603172+00:00",
         "stuck_days_at_revision": 3
       },
       {
@@ -1583,6 +1597,19 @@
           "min_trades": 10
         },
         "last_revised": "2026-10-22T04:16:23.620981+00:00",
+        "stuck_days_at_revision": 3
+      },
+      {
+        "strategy": "OCS-BTC-5m",
+        "action": "relax",
+        "reasoning": "ML/kNN...",
+        "overrides": {
+          "min_PF": 1.0,
+          "min_WR": 0.4,
+          "min_RR": 1.0,
+          "min_trades": 10
+        },
+        "last_revised": "2026-10-26T20:54:22.603172+00:00",
         "stuck_days_at_revision": 3
       }
     ],
