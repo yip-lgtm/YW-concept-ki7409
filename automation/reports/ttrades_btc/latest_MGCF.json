@@ -1,13 +1,52 @@
 {
-  "ts": "2026-10-23T16:41:18.179828-04:00",
+  "ts": "2026-10-26T19:50:37.334602-04:00",
   "ticker": "MGC=F",
-  "actionable": false,
-  "reason": "no H4 C3 closure (Fractal quiet)",
+  "strategy": "TTrades-Fractal",
+  "swing_type": "C2",
+  "side": "bearish",
+  "swing": {
+    "type": "c2_closure",
+    "side": "bearish",
+    "c2_high": 4044.300048828125,
+    "c2_low": 4022.10009765625,
+    "c2_close": 4026.89990234375,
+    "c2_eq": 4033.2000732421875,
+    "c3_close": 4023.5,
+    "swing_level": 4044.300048828125,
+    "direction": "short"
+  },
+  "cisd": {
+    "confirmed": true,
+    "opposing_open": 4194.60009765625,
+    "series_length": 1,
+    "last_close": 4023.5,
+    "reason": "cisd_short"
+  },
+  "eq_respected": true,
+  "d1_trend": {
+    "aligned": true,
+    "trend": "downtrend",
+    "d1_close": 4023.5,
+    "d1_ema50": 4217.308804664466,
+    "d1_ema20": 4135.224925490467,
+    "reason": "D1 downtrend"
+  },
   "weekly_profile": {
-    "profile": "consolidation_reversal",
+    "profile": "early_week",
     "valid_for_signal": true,
-    "notes": ""
+    "notes": "day 2 - too early, not blocking"
+  },
+  "daily_profile": {
+    "london_expanded": true,
+    "london_range": 42.10009765625,
+    "skip_ny": true
   },
   "account_size": 247000,
-  "risk_amount": 617.5
+  "risk_pct": 0.0025,
+  "risk_amount": 617.5,
+  "actionable": false,
+  "reason": "London expanded (skip NY)",
+  "paper_mode": true,
+  "trade_mode": "paper",
+  "paper_reason": "no paper trade history (default paper)"
 }
