@@ -1,7 +1,7 @@
 {
-  "day": "2026-10-25",
-  "live_day": "2026-10-26",
-  "generated_at": "2026-10-27T02:13:40.749506+00:00",
+  "day": "2026-10-26",
+  "live_day": "2026-10-27",
+  "generated_at": "2026-10-27T07:51:37.735956+00:00",
   "rules": {
     "_meta": {
       "_comment": "Arena rules \u2014 the 15 strategy agents trade each other on virtual accounts. This is a PAPER competition: it never places a broker order, it only moves numbers in its own account files. The governance ladder in strategy_levels.json is NOT touched by the arena; the arena keeps its own level counter so the live promotion rules (n>=10 over 14 days, 2 consecutive days) stay intact.",
@@ -48,9 +48,9 @@
     {
       "agent": "CRT",
       "level": 4,
-      "level_before": 3,
-      "action": "promote",
-      "reason": "PF 99.0 > 1.0, WR 100%, n=1",
+      "level_before": 4,
+      "action": "hold",
+      "reason": "no settled day yet",
       "equity_usd": 3410.2,
       "live": {
         "n": 0,
@@ -65,12 +65,12 @@
       "open_positions": 0,
       "unrealised_usd": 0,
       "today": {
-        "n": 1,
-        "PF": 99.0,
-        "WR": 1.0,
-        "RR": 99.0,
-        "pnl_usd": 161.8,
-        "wins": 1,
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
         "losses": 0
       },
       "instruments": [],
@@ -79,9 +79,9 @@
     {
       "agent": "Kell-Cycle",
       "level": 4,
-      "level_before": 3,
-      "action": "promote",
-      "reason": "PF 99.0 > 1.0, WR 100%, n=1",
+      "level_before": 4,
+      "action": "hold",
+      "reason": "no settled day yet",
       "equity_usd": 1663.0,
       "live": {
         "n": 0,
@@ -96,25 +96,6 @@
       "open_positions": 0,
       "unrealised_usd": 0,
       "today": {
-        "n": 1,
-        "PF": 99.0,
-        "WR": 1.0,
-        "RR": 99.0,
-        "pnl_usd": 161.8,
-        "wins": 1,
-        "losses": 0
-      },
-      "instruments": [],
-      "rank": 2
-    },
-    {
-      "agent": "50-20-Pullback",
-      "level": 3,
-      "level_before": 2,
-      "action": "promote",
-      "reason": "PF 99.0 > 1.0, WR 100%, n=2",
-      "equity_usd": -1040.4,
-      "live": {
         "n": 0,
         "PF": 0.0,
         "WR": 0.0,
@@ -123,27 +104,15 @@
         "wins": 0,
         "losses": 0
       },
-      "realised_usd": -1040.4,
-      "open_positions": 0,
-      "unrealised_usd": 0,
-      "today": {
-        "n": 2,
-        "PF": 99.0,
-        "WR": 1.0,
-        "RR": 99.0,
-        "pnl_usd": 323.6,
-        "wins": 2,
-        "losses": 0
-      },
       "instruments": [],
-      "rank": 3
+      "rank": 2
     },
     {
       "agent": "3-Pushes",
       "level": 3,
-      "level_before": 2,
-      "action": "promote",
-      "reason": "PF 99.0 > 1.0, WR 100%, n=1",
+      "level_before": 3,
+      "action": "hold",
+      "reason": "no settled day yet",
       "equity_usd": 1539.4,
       "live": {
         "n": 0,
@@ -158,16 +127,16 @@
       "open_positions": 0,
       "unrealised_usd": 0,
       "today": {
-        "n": 1,
-        "PF": 99.0,
-        "WR": 1.0,
-        "RR": 99.0,
-        "pnl_usd": 200.0,
-        "wins": 1,
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
         "losses": 0
       },
       "instruments": [],
-      "rank": 4
+      "rank": 3
     },
     {
       "agent": "TTrades-Fractal",
@@ -175,7 +144,7 @@
       "level_before": 3,
       "action": "hold",
       "reason": "no settled day yet",
-      "equity_usd": 497.98,
+      "equity_usd": 546.14,
       "live": {
         "n": 0,
         "PF": 0.0,
@@ -187,7 +156,7 @@
       },
       "realised_usd": 455.23,
       "open_positions": 1,
-      "unrealised_usd": 42.75,
+      "unrealised_usd": 90.91,
       "today": {
         "n": 0,
         "PF": 0.0,
@@ -200,15 +169,15 @@
       "instruments": [
         "MGC=F"
       ],
-      "rank": 5
+      "rank": 4
     },
     {
-      "agent": "Two-Yang",
-      "level": 2,
-      "level_before": 1,
-      "action": "promote",
-      "reason": "PF 99.0 > 1.0, WR 100%, n=1",
-      "equity_usd": -2629.2,
+      "agent": "50-20-Pullback",
+      "level": 3,
+      "level_before": 3,
+      "action": "hold",
+      "reason": "no settled day yet",
+      "equity_usd": -1040.4,
       "live": {
         "n": 0,
         "PF": 0.0,
@@ -218,7 +187,38 @@
         "wins": 0,
         "losses": 0
       },
-      "realised_usd": -2629.2,
+      "realised_usd": -1040.4,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "instruments": [],
+      "rank": 5
+    },
+    {
+      "agent": "Stair",
+      "level": 2,
+      "level_before": 1,
+      "action": "promote",
+      "reason": "PF 99.0 > 1.0, WR 100%, n=1",
+      "equity_usd": 1924.8,
+      "live": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "realised_usd": 1924.8,
       "open_positions": 0,
       "unrealised_usd": 0,
       "today": {
@@ -234,12 +234,105 @@
       "rank": 6
     },
     {
+      "agent": "B1",
+      "level": 2,
+      "level_before": 1,
+      "action": "promote",
+      "reason": "PF 99.0 > 1.0, WR 100%, n=1",
+      "equity_usd": -38.2,
+      "live": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "realised_usd": -38.2,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 1,
+        "PF": 99.0,
+        "WR": 1.0,
+        "RR": 99.0,
+        "pnl_usd": 161.8,
+        "wins": 1,
+        "losses": 0
+      },
+      "instruments": [],
+      "rank": 7
+    },
+    {
+      "agent": "Two-Yang",
+      "level": 2,
+      "level_before": 2,
+      "action": "hold",
+      "reason": "no settled day yet",
+      "equity_usd": -2629.2,
+      "live": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "realised_usd": -2629.2,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "instruments": [],
+      "rank": 8
+    },
+    {
+      "agent": "Argon-Gold",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "n=2, PF 0.0, WR 0% \u2014 did not qualify",
+      "equity_usd": -200.0,
+      "live": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "realised_usd": -200.0,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 2,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": -200.0,
+        "wins": 0,
+        "losses": 2
+      },
+      "instruments": [],
+      "rank": 9
+    },
+    {
       "agent": "TTrades-L13",
       "level": 1,
       "level_before": 1,
       "action": "hold",
-      "reason": "n=1, PF 0.0, WR 0% \u2014 did not qualify",
-      "equity_usd": 512.07,
+      "reason": "no settled day yet",
+      "equity_usd": 527.11,
       "live": {
         "n": 0,
         "PF": 0.0,
@@ -251,112 +344,19 @@
       },
       "realised_usd": -100.0,
       "open_positions": 1,
-      "unrealised_usd": 612.07,
+      "unrealised_usd": 627.11,
       "today": {
-        "n": 1,
+        "n": 0,
         "PF": 0.0,
         "WR": 0.0,
         "RR": 0.0,
-        "pnl_usd": -100.0,
+        "pnl_usd": 0,
         "wins": 0,
-        "losses": 1
+        "losses": 0
       },
       "instruments": [
         "BTC-USD"
       ],
-      "rank": 7
-    },
-    {
-      "agent": "B1",
-      "level": 1,
-      "level_before": 1,
-      "action": "hold",
-      "reason": "n=1, PF 0.0, WR 0% \u2014 did not qualify",
-      "equity_usd": -38.2,
-      "live": {
-        "n": 1,
-        "PF": 99.0,
-        "WR": 1.0,
-        "RR": 99.0,
-        "pnl_usd": 161.8,
-        "wins": 1,
-        "losses": 0
-      },
-      "realised_usd": -38.2,
-      "open_positions": 0,
-      "unrealised_usd": 0,
-      "today": {
-        "n": 1,
-        "PF": 0.0,
-        "WR": 0.0,
-        "RR": 0.0,
-        "pnl_usd": -100.0,
-        "wins": 0,
-        "losses": 1
-      },
-      "instruments": [],
-      "rank": 8
-    },
-    {
-      "agent": "RSI-Div",
-      "level": 1,
-      "level_before": 0,
-      "action": "promote",
-      "reason": "PF 99.0 > 1.0, WR 100%, n=1",
-      "equity_usd": -2725.8,
-      "live": {
-        "n": 0,
-        "PF": 0.0,
-        "WR": 0.0,
-        "RR": 0.0,
-        "pnl_usd": 0,
-        "wins": 0,
-        "losses": 0
-      },
-      "realised_usd": -2725.8,
-      "open_positions": 0,
-      "unrealised_usd": 0,
-      "today": {
-        "n": 1,
-        "PF": 99.0,
-        "WR": 1.0,
-        "RR": 99.0,
-        "pnl_usd": 261.8,
-        "wins": 1,
-        "losses": 0
-      },
-      "instruments": [],
-      "rank": 9
-    },
-    {
-      "agent": "Stair",
-      "level": 1,
-      "level_before": 1,
-      "action": "hold",
-      "reason": "no settled day yet",
-      "equity_usd": 1924.8,
-      "live": {
-        "n": 1,
-        "PF": 99.0,
-        "WR": 1.0,
-        "RR": 99.0,
-        "pnl_usd": 161.8,
-        "wins": 1,
-        "losses": 0
-      },
-      "realised_usd": 1924.8,
-      "open_positions": 0,
-      "unrealised_usd": 0,
-      "today": {
-        "n": 0,
-        "PF": 0.0,
-        "WR": 0.0,
-        "RR": 0.0,
-        "pnl_usd": 0,
-        "wins": 0,
-        "losses": 0
-      },
-      "instruments": [],
       "rank": 10
     },
     {
@@ -453,37 +453,6 @@
       "rank": 13
     },
     {
-      "agent": "Argon-Gold",
-      "level": 1,
-      "level_before": 1,
-      "action": "hold",
-      "reason": "no settled day yet",
-      "equity_usd": -200.0,
-      "live": {
-        "n": 2,
-        "PF": 0.0,
-        "WR": 0.0,
-        "RR": 0.0,
-        "pnl_usd": -200.0,
-        "wins": 0,
-        "losses": 2
-      },
-      "realised_usd": -200.0,
-      "open_positions": 0,
-      "unrealised_usd": 0,
-      "today": {
-        "n": 0,
-        "PF": 0.0,
-        "WR": 0.0,
-        "RR": 0.0,
-        "pnl_usd": 0,
-        "wins": 0,
-        "losses": 0
-      },
-      "instruments": [],
-      "rank": 14
-    },
-    {
       "agent": "H-Pattern",
       "level": 1,
       "level_before": 1,
@@ -500,6 +469,37 @@
         "losses": 0
       },
       "realised_usd": -1252.8,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "instruments": [],
+      "rank": 14
+    },
+    {
+      "agent": "RSI-Div",
+      "level": 1,
+      "level_before": 1,
+      "action": "hold",
+      "reason": "no settled day yet",
+      "equity_usd": -2725.8,
+      "live": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "realised_usd": -2725.8,
       "open_positions": 0,
       "unrealised_usd": 0,
       "today": {
