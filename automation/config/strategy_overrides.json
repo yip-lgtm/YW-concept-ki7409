@@ -2,42 +2,44 @@
   "_meta": {
     "_comment": "Live strategy param overrides — written by param_optimizer.py, read by live_scan.py at import. Auto-optimization output (weight/min_strength/resample_tf per strategy).",
     "created": "2026-10-07T13:30:00+00:00",
-    "applications": 10,
-    "last_run": "2026-10-26T20:56:14.134163+00:00",
+    "applications": 14,
+    "last_run": "2026-10-27T20:29:46.169679+00:00",
     "note": "Empty = all strategies use live_scan.py hardcoded defaults. 2026-10-07: weight became LIVE config (was dead) — see param_optimizer.py.",
-    "last_source": "iteration_all_20261027_045456.json",
-    "last_applied_n": 0,
-    "last_rejected_n": 1,
+    "last_source": "iteration_all_20261028_042810.json",
+    "last_applied_n": 4,
+    "last_rejected_n": 2,
     "last_log": [
       "  OCS-BTC-5m: SKIP grade=D (LLM has no useful suggestion; live n=0)",
-      "  RSI-Div: SKIP (on cooldown, applied 2026-10-24)",
-      "  3-Pushes: no change (grade=B conf=84 — proposed values already active)",
-      "  CRT: SKIP (on cooldown, applied 2026-10-24)",
-      "  B1: SKIP (on cooldown, applied 2026-10-24)",
+      "  RSI-Div: APPLY [B/82] weight 0.5→0.75 (delta capped ±0.25 (LLM wanted 0.8))",
+      "  Stair: grade=C accepted via high-conf+sample path (conf=86, n=357)",
+      "  Stair: APPLY [C/86] weight 0.9→0.65 (delta capped ±0.25 (LLM wanted 0.5)), resample_tf →15min",
+      "  H-Pattern: SKIP grade=D (LLM has no useful suggestion; live n=137)",
+      "  Two-Yang: SKIP grade=D (LLM has no useful suggestion; live n=228)",
+      "  B1: no change (grade=B conf=74 — proposed values already active)",
       "  yw-argon-gold: no live_scan mapping (id=argon-gold)",
-      "  Stair: SKIP grade=D (LLM has no useful suggestion; live n=354)",
-      "  Kell-Cycle: grade=C accepted via high-conf+sample path (conf=86, n=194)",
-      "  Kell-Cycle: no change (grade=C conf=86 — proposed values already active)",
-      "  Two-Yang: SKIP grade=D (LLM has no useful suggestion; live n=227)",
       "  50-20-Pullback: SKIP grade=D (LLM has no useful suggestion; live n=1015)",
-      "  H-Pattern: SKIP grade=D (LLM has no useful suggestion; live n=136)"
+      "  CRT: grade=C accepted via high-conf+sample path (conf=78, n=769)",
+      "  CRT: APPLY [C/78] weight 0.9→0.8",
+      "  Kell-Cycle: REJECT grade=? (unrecognised)",
+      "  3-Pushes: APPLY [B/80] weight 0.7→0.95 (delta capped ±0.25 (LLM wanted 1.1))"
     ]
   },
   "RSI-Div": {
-    "weight": 0.5,
+    "weight": 0.75,
     "resample_tf": "15min",
-    "last_applied": "2026-10-24T18:38:34.943396+00:00",
+    "last_applied": "2026-10-27T20:29:46.169679+00:00",
     "grade": "B",
-    "confidence": 78,
-    "reason": "整體盈利但依賴BTC，非BTC樣本表現偏弱。",
-    "source_iteration": "iteration_all_20261025_023701.json",
+    "confidence": 82,
+    "reason": "PF及總R理想，但盈利集中BTC，MNQ與金屬期貨拖累。",
+    "source_iteration": "iteration_all_20261028_042810.json",
     "changes": {
       "weight": {
-        "from": 0.6,
-        "to": 0.5
+        "from": 0.5,
+        "to": 0.75,
+        "note": "delta capped ±0.25 (LLM wanted 0.8)"
       }
     },
-    "applications": 3,
+    "applications": 4,
     "history": [
       {
         "date": "2026-10-17T18:10:36.458503+00:00",
@@ -63,24 +65,33 @@
         "changes": {
           "weight": 0.5
         }
+      },
+      {
+        "date": "2026-10-27T20:29:46.169679+00:00",
+        "grade": "B",
+        "confidence": 82,
+        "changes": {
+          "weight": 0.75
+        }
       }
     ]
   },
   "3-Pushes": {
-    "weight": 0.7,
+    "weight": 0.95,
     "resample_tf": "15min",
-    "last_applied": "2026-10-21T19:57:33.780363+00:00",
+    "last_applied": "2026-10-27T20:29:46.169679+00:00",
     "grade": "B",
-    "confidence": 88,
-    "reason": "425筆仍正R，但PF僅1.14且盈利主要靠MNQ，穩健性不足",
-    "source_iteration": "iteration_all_20261022_035614.json",
+    "confidence": 80,
+    "reason": "整體正期望，但PF僅1.14且盈利集中MNQ，宜保守加碼。",
+    "source_iteration": "iteration_all_20261028_042810.json",
     "changes": {
       "weight": {
-        "from": 0.9,
-        "to": 0.7
+        "from": 0.7,
+        "to": 0.95,
+        "note": "delta capped ±0.25 (LLM wanted 1.1)"
       }
     },
-    "applications": 2,
+    "applications": 3,
     "history": [
       {
         "date": "2026-10-18T18:28:41.474034+00:00",
@@ -97,6 +108,14 @@
         "confidence": 88,
         "changes": {
           "weight": 0.7
+        }
+      },
+      {
+        "date": "2026-10-27T20:29:46.169679+00:00",
+        "grade": "B",
+        "confidence": 80,
+        "changes": {
+          "weight": 0.95
         }
       }
     ]
@@ -133,20 +152,20 @@
     ]
   },
   "CRT": {
-    "weight": 0.9,
+    "weight": 0.8,
     "resample_tf": "15min",
-    "last_applied": "2026-10-24T18:38:34.943396+00:00",
+    "last_applied": "2026-10-27T20:29:46.169679+00:00",
     "grade": "C",
-    "confidence": 82,
-    "reason": "樣本足夠但勝率偏低；MES及BTC盈利，股指拖累整體表現。",
-    "source_iteration": "iteration_all_20261025_023701.json",
+    "confidence": 78,
+    "reason": "PF僅1.07且勝率40%，邊際薄；正R主要靠MES，宜降權控回撤。",
+    "source_iteration": "iteration_all_20261028_042810.json",
     "changes": {
       "weight": {
-        "from": 0.85,
-        "to": 0.9
+        "from": 0.9,
+        "to": 0.8
       }
     },
-    "applications": 2,
+    "applications": 3,
     "history": [
       {
         "date": "2026-10-20T20:47:36.199367+00:00",
@@ -163,6 +182,14 @@
         "confidence": 82,
         "changes": {
           "weight": 0.9
+        }
+      },
+      {
+        "date": "2026-10-27T20:29:46.169679+00:00",
+        "grade": "C",
+        "confidence": 78,
+        "changes": {
+          "weight": 0.8
         }
       }
     ]
@@ -198,6 +225,38 @@
         "confidence": 78,
         "changes": {
           "weight": 0.8
+        }
+      }
+    ]
+  },
+  "Stair": {
+    "weight": 0.65,
+    "resample_tf": "15min",
+    "last_applied": "2026-10-27T20:29:46.169679+00:00",
+    "grade": "C",
+    "confidence": 86,
+    "reason": "勝率及PF未達標，僅MNQ盈利；應降權重並加強訊號過濾。",
+    "source_iteration": "iteration_all_20261028_042810.json",
+    "changes": {
+      "weight": {
+        "from": 0.9,
+        "to": 0.65,
+        "note": "delta capped ±0.25 (LLM wanted 0.5)"
+      },
+      "resample_tf": {
+        "from": "",
+        "to": "15min"
+      }
+    },
+    "applications": 1,
+    "history": [
+      {
+        "date": "2026-10-27T20:29:46.169679+00:00",
+        "grade": "C",
+        "confidence": 86,
+        "changes": {
+          "weight": 0.65,
+          "resample_tf": "15min"
         }
       }
     ]

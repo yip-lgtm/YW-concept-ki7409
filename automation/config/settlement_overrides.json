@@ -2,24 +2,24 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 18,
-    "last_run": "2026-10-26T20:54:22.603172+00:00",
-    "last_applied": 2,
+    "runs": 19,
+    "last_run": "2026-10-27T20:27:25.656763+00:00",
+    "last_applied": 3,
     "last_log": [
       {
-        "agent": "50-20-Pullback",
-        "action": "relax"
-      },
-      {
-        "agent": "OCS-BTC-5m",
+        "agent": "Two-Yang",
         "action": "relax"
       },
       {
         "agent": "Stair",
-        "action": "error"
+        "action": "relax"
       },
       {
         "agent": "B1-3in1",
+        "action": "tighten"
+      },
+      {
+        "agent": "H-Pattern",
         "action": "error"
       }
     ]
@@ -40,21 +40,29 @@
     "tightened_count": 0
   },
   "Two-Yang": {
-    "last_revised": "2026-10-20T12:02:42.518772+00:00",
-    "stuck_days_at_revision": 3,
-    "action": "hold",
-    "reasoning": "Two-Yang 嘅 PF=0.405 同 WR=20% 都低過硬限制嘅下限 (PF min 0.80, WR min 0.30)，即使放到最寬都過唔到，策略其實係輸緊錢嘅 (EV = 0.20×1.618 - 0.80 = -0.476)，唔應該升 lv，hold 唔調整。",
-    "response_raw": "<think>The agent is Two-Yang, a candle pattern strategy with low sample count typical. Current metrics over 7 days (n=10):\n- PF = 0.405 (need > 1.0)\n- WR = 20.0% (need > 50%)\n- RR = 1.618 (need > 1.0)\n- n = 10 (need ≥ 10)\n\nThe agent is stuck in neutral zone for 3 days. Neither promote nor demote.\n\nLet me think about this carefully:\n\n1. PF = 0.405 is genuinely terrible. A profit factor below 1.0 means the strategy is losing money overall. Even for a candle pattern strategy, PF of 0.405 is not just \"below average\" — it's actively losing money.\n\n2. WR = 20% is very low, but RR = 1.618 means the strategy aims for high reward-to-risk trades (low win rate, high payoff). For such a strategy, WR of 20% with RR 1.618 means:\n   - Expected value per trade = 0.20 * 1.618 - 0.80 * 1 = 0.3236 - 0.80 = -"
-  },
-  "Stair": {
-    "last_revised": "2026-10-18T18:28:06.537825+00:00",
+    "last_revised": "2026-10-27T20:27:25.656763+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "Trend continuation 設計係 high-RR / low-WR，WR 33.3% 屬正常偏低但 RR 1.618 已經穩過線；PF 0.809 雖然 < 1.0 但「thin PF」係呢類 strategy 常態，所以同步放寬 WR 同 PF 上限，令表現真正改善時有機會 promote，min_trades 同 RR 保持原樣要求樣本量同風報結構唔變。",
-    "response_raw": "<think>Let me analyze the situation:\n\n**Agent:** Stair\n**Profile:** Trend continuation strategy - needs momentum, WR should be OK but PF thin is common.\n\n**Current metrics (7d rolling, n=15):**\n- PF = 0.809 (promote threshold > 1.0)\n- WR = 33.3% (promote threshold > 50%)\n- RR = 1.618 (promote threshold > 1.0) ✓ already exceeds\n- n = 15 (min ≥ 10) ✓\n\n**Strategy character:** Trend continuation. Low WR is normal because trend strategies wait for momentum and might have lower hit rates but higher reward-to-risk ratios.\n\n**Analysis:**\n- RR is already good (1.618 > 1.0) — this fits the trend continuation profile perfectly\n- PF of 0.809 is thin but close to breakeven; for trend continuation this is somewhat acceptable\n- WR of 33.3% is low but expected for trend continuation (waits for confirmatio",
+    "reasoning": "<一句話點解咁調>",
+    "response_raw": "<think>We need answer exact format JSON only? User says use EXACT format (JSON only, no other text):\n\nREASONING: <一句話點解咁調>\n\n{\n...\n}\n\nNeed include reasoning line then JSON. Need decide thresholds per-agent override based actual metrics + strategy nature, max relax 2 indicators, min trades etc.\n\nWe need carefully interpret. Agent stuck 3 days neutral zone, promotion/demotion not trigger. Metrics 7d rolling n=10:\nPF 1.294 global promote >1.0\nWR 40% global >50%\nRR 1.942 global >1.0\nn=10 min >=10.\nCandle pattern, low sample count typical. Need recommend agent-specific promotion thresholds. Can relax max 2 indicators, not all 3. Need likely relax WR because candle pattern low WR normal; perhaps PF/RR retain? Current PF 1.294, RR 1.942 pass global thresholds, WR fails. n passes. To enable promoti",
+    "overrides": {
+      "min_PF": 1.0,
+      "min_WR": 0.38,
+      "min_RR": 1.0,
+      "min_trades": 10
+    },
+    "relaxed_count": 1,
+    "tightened_count": 0
+  },
+  "Stair": {
+    "last_revised": "2026-10-27T20:27:25.656763+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "relax",
+    "reasoning": "sentence\" then JSON. Need decide thresholds. Need analyze carefully. Agent Stair trend continuation. Metrics PF .852, WR .312, RR 1.873, n32. Global thresholds >1 PF, >50 WR, >1 RR. Need per-agent ove",
+    "response_raw": "<think>We need answer exact format: \"REASONING: sentence\" then JSON. Need decide thresholds. Need analyze carefully. Agent Stair trend continuation. Metrics PF .852, WR .312, RR 1.873, n32. Global thresholds >1 PF, >50 WR, >1 RR. Need per-agent override max relax only 2 indicators. Hard ranges. Could relax WR to .30 and RR perhaps 1.5? PF currently .852. Trend continuation needs momentum, WR should be okay but PF thin common. Actual RR high 1.873, WR 31.2, PF .852. Promotion perhaps relax PF to .85 and WR .30, keep RR 1.8? That relaxes two indicators: PF from 1.0 to 0.85, WR 0.5 to 0.30. RR could stay 1.0 though actual 1.873 passes. n 10. But strategy needs momentum and low PF common. High RR supports. Is .85 PF too low? Allowed .8. Sample n 32. likely promote now or soon. Need infer likel",
     "overrides": {
       "min_PF": 0.85,
-      "min_WR": 0.33,
+      "min_WR": 0.3,
       "min_RR": 1.0,
       "min_trades": 10
     },
@@ -77,11 +85,19 @@
     "tightened_count": 0
   },
   "B1-3in1": {
-    "last_revised": "2026-10-18T18:28:06.537825+00:00",
+    "last_revised": "2026-10-27T20:27:25.656763+00:00",
     "stuck_days_at_revision": 3,
-    "action": "hold",
-    "reasoning": "呢個 agent 嘅 profile 係 multi-asset diversified moderate-both，global 門檻 (PF>1.0 / WR>50% / RR>1.0) 已經完美對齊呢個 profile，唔存在 profile 錯配嘅問題。0 嘅 metrics 唔係「差少少」而係完全冇訊號（n=7 但 PF/WR/RR 全 0），放寬任何門檻都冇意義因為佢唔會過——呢個係真",
-    "response_raw": "<think>The agent has zero trades essentially - n=7, PF=0.000, WR=0.0%, RR=0.000. This is terrible performance, not a high-RR/low-WR strategy that's just below threshold. The note says \"Multi-asset combined. Diversified, expect moderate both\" - meaning this should have moderate PF and moderate WR, not zero everything.\n\nThe data shows essentially no winning trades at all. This is bad performance, not a strategy that's being unfairly penalized by thresholds. The agent shouldn't be promoted.\n\nI should hold or tighten. The global thresholds are already quite lenient (PF>1.0, WR>50%, RR>1.0). The fact that this agent can't even meet those with n=7 trades suggests genuine poor performance, not a profile mismatch.\n\nAction: hold - the global thresholds are appropriate for this strategy type. The ag"
+    "action": "tighten",
+    "reasoning": "...\" then JSON object. They demand JSON only perhaps maybe output a JSON object? Exact format has reasoning outside JSON, impossible valid JSON only. Could include reasoning as a field? But exact sche",
+    "response_raw": "<think>We need answer exactly requested, JSON only, but format includes REASONING line then JSON. \"用 EXACT format 回覆 (JSON only, 唔好其他文字)\" Contradiction: exact format starts REASONING then JSON. Probably output reasoning plus JSON, no prose. Need judge per-agent override based actual data and strategy. Metrics awful: PF .101, WR .059, RR 1.618, n17. Multi-asset combined, diversified, expect moderate both. Need perhaps tighten thresholds to make harder? Current promotion presumably global >1 PF, >.5 WR, >1 RR and n>=10. Agent is far below PF/WR but RR good. It isn't triggering demotion either (maybe due threshold logic). Task can tighten if performance bad. Within ranges. Max relax 2 metrics. We should not relax WR/PF given catastrophic. Could tighten PF to 1.2? WR .55? RR maybe current 1.0,",
+    "overrides": {
+      "min_PF": 1.2,
+      "min_WR": 0.55,
+      "min_RR": 1.0,
+      "min_trades": 10
+    },
+    "relaxed_count": 0,
+    "tightened_count": 2
   },
   "CRT": {
     "last_revised": "2026-10-21T15:16:00.370251+00:00",
