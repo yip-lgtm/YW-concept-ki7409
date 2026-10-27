@@ -37,6 +37,28 @@ try:
 except ImportError:
     NY_TZ = timezone(timedelta(hours=-5))
 
+
+def _tg_token() -> str:
+    """The bot token, preferring the on-disk copy over the environment.
+
+    The sandbox injects TELEGRAM_BOT_TOKEN when a session starts, so a token
+    rotated mid-session would keep posting from the old bot — and the old
+    bot is the one whose token a third-party panel had. The file wins
+    whenever it is there; CI has no such file and reads the GitHub Actions
+    secret, which is updated the same way.
+    """
+    path = Path(os.environ.get("TELEGRAM_BOT_TOKEN_FILE",
+                                "/workspace/.secrets/telegram_bot_token"))
+    try:
+        if path.exists():
+            value = path.read_text().strip()
+            if value:
+                return value
+    except Exception:
+        pass
+    return os.environ.get("TELEGRAM_BOT_TOKEN", "")
+
+
 def to_ny_time() -> str:
     """Current NY time as ISO string."""
     return datetime.now(NY_TZ).isoformat()
@@ -72,7 +94,7 @@ SIGNALS_FILE = REPO / "automation" / "reports" / "live_scan" / "signals.jsonl"
 LAST_RUN_FILE = TA_DIR / "last_run.json"
 COVERAGE_FILE = TA_DIR / "coverage.json"
 
-TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+TG_TOKEN = _tg_token()
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
 
 HKT = timezone(timedelta(hours=8))
