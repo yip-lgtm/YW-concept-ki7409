@@ -15,6 +15,11 @@ v2 corrections (after user review of v1):
 """
 from __future__ import annotations
 import os, sys, json, requests
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import get_token as _tg_token
+except ImportError:  # not running from the scripts directory
+    def _tg_token() -> str:
+        return os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import yfinance as yf
 import pandas as pd
 import numpy as np
@@ -48,7 +53,7 @@ def _find_repo() -> Path:
 REPO = _find_repo()
 
 HKT = timezone(timedelta(hours=8))
-TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
 
 TICKER = os.environ.get("TTRADES_TICKER", "BTC-USD")

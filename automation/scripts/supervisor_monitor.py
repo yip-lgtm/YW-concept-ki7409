@@ -21,6 +21,10 @@ State files:
 """
 from __future__ import annotations
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import TG_TOKEN
+except ImportError:  # not running from the scripts directory
+    TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import sys
 import re
 import json
@@ -71,7 +75,7 @@ GH_TOKEN = (
     or os.environ.get("APEX_PAT")
     or os.environ.get("GITHUB_TOKEN", "")
 )
-TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID")
 OCS_DIR = REPO / "automation" / "reports" / "ocs_btc_5m"
 RANKING_DIR = REPO / "automation" / "reports" / "strategy_ranking"

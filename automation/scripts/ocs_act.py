@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """OCS BTC 5m — act on signal (TG alert + AI-Trader publish + log)."""
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import get_token as _tg_token
+except ImportError:  # not running from the scripts directory
+    def _tg_token() -> str:
+        return os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import json
 import requests
 from pathlib import Path
@@ -68,7 +73,7 @@ def main():
 """
 
     # 1. TG alert
-    tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    tg_token = _tg_token()
     tg_chat = os.environ.get("TELEGRAM_CHAT_ID", "")
     if tg_token and tg_chat:
         r = requests.post(

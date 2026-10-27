@@ -35,6 +35,10 @@ Cost optimization:
 """
 from __future__ import annotations
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import TG_TOKEN
+except ImportError:  # not running from the scripts directory
+    TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import sys
 import json
 import time
@@ -226,7 +230,7 @@ except Exception:
 
 STRATEGY_WEIGHT = {k: v.get("weight", 1.0) for k, v in STRATEGIES.items()}
 
-TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID")
 AI_TOKEN = os.environ.get("AI_TRADER_TOKEN")
 MINIMAX_KEY = os.environ.get("MINIMAX_API_KEY")

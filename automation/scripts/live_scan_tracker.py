@@ -8,6 +8,10 @@ Mirrors OCS tracker logic but operates on the live_scan position file.
 """
 from __future__ import annotations
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import TG_TOKEN
+except ImportError:  # not running from the scripts directory
+    TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import sys
 import json
 import requests
@@ -60,7 +64,7 @@ POSITIONS_FILE = LS_DIR / "positions.json"
 TRADES_FILE = LS_DIR / "trades.jsonl"
 STATS_FILE = LS_DIR / "stats.json"
 
-TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID")
 
 

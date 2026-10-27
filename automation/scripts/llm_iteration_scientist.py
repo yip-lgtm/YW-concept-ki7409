@@ -23,6 +23,10 @@ Per-agent workflow:
 """
 from __future__ import annotations
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import TG_TOKEN
+except ImportError:  # not running from the scripts directory
+    TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import sys
 import json
 import re
@@ -58,7 +62,7 @@ SRC_DIR = REPO / "automation/src"
 ITER_DIR.mkdir(parents=True, exist_ok=True)
 HKT = timezone(timedelta(hours=8))
 
-TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
 MINIMAX_KEY = os.environ.get("MINIMAX_API_KEY", "")
 MINIMAX_URL = "https://api.minimax.io/v1/chat/completions"

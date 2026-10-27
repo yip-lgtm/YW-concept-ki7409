@@ -6,6 +6,11 @@ Returns per-strategy ranking by PF / WR / R.
 """
 from __future__ import annotations
 import os, sys, json, argparse
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import get_token as _tg_token
+except ImportError:  # not running from the scripts directory
+    def _tg_token() -> str:
+        return os.environ.get("TELEGRAM_BOT_TOKEN", "")
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -278,7 +283,7 @@ def main():
             else:
                 lines.append(f"{medal} {r['strategy']:18s} {r['n_trades']:2d} trades WR {r['win_rate']:5.1f}% R {r['total_R']:+.2f} PF {r['profit_factor']:.2f}")
         r = requests.post(
-            f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
+            f"https://api.telegram.org/bot{_tg_token()}/sendMessage",
             json={"chat_id": os.environ['TELEGRAM_CHAT_ID'], "text": "\n".join(lines)},
             timeout=15,
         )

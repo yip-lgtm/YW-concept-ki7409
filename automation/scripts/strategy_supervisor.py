@@ -20,6 +20,11 @@ Usage:
 """
 from __future__ import annotations
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import get_token as _tg_token
+except ImportError:  # not running from the scripts directory
+    def _tg_token() -> str:
+        return os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import sys
 import json
 import argparse
@@ -236,7 +241,7 @@ def send_tg(results: list, bugs_only: bool = False):
 
     msg = "\n".join(lines)
     r = requests.post(
-        f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
+        f"https://api.telegram.org/bot{_tg_token()}/sendMessage",
         json={"chat_id": os.environ['TELEGRAM_CHAT_ID'], "text": msg},
         timeout=15,
     )

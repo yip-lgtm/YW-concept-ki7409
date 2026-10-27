@@ -1,5 +1,10 @@
 """Send daily strategy ranking summary to TG."""
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import get_token as _tg_token
+except ImportError:  # not running from the scripts directory
+    def _tg_token() -> str:
+        return os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import requests
 from pathlib import Path
 import json
@@ -29,7 +34,7 @@ msg = (
 )
 
 r = requests.post(
-    f'https://api.telegram.org/bot{os.environ["TELEGRAM_BOT_TOKEN"]}/sendMessage',
+    f'https://api.telegram.org/bot{_tg_token()}/sendMessage',
     json={'chat_id': os.environ['TELEGRAM_CHAT_ID'], 'text': msg},
     timeout=15,
 )

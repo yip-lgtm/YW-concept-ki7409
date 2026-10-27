@@ -7,6 +7,10 @@ Our own cron service has no such limits.
 """
 from pathlib import Path
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import TG_TOKEN
+except ImportError:  # not running from the scripts directory
+    TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import time
 import json
 import requests
@@ -29,7 +33,7 @@ INTERVAL_SEC = 300  # 5 min
 # Historical note: prior versions hardcoded a real bot token here; that token
 # is now considered compromised and must be rotated via @BotFather.
 # 2026-10-07: removed hardcoded credentials (commit security/hardcoded-tg-token).
-TG_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+
 TG_CHAT = os.environ.get('TELEGRAM_CHAT_ID', '')
 
 HKT = timezone(timedelta(hours=8))

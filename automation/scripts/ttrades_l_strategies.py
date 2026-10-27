@@ -38,6 +38,11 @@ distinguishable from a broken detector.
 """
 from __future__ import annotations
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import get_token as _tg_token
+except ImportError:  # not running from the scripts directory
+    def _tg_token() -> str:
+        return os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import sys
 import json
 from datetime import datetime, timezone, timedelta
@@ -677,7 +682,7 @@ def _notify_tg(ticker: str, results: dict, now) -> None:
       - one message per ticker per cycle, batching up to 3 fires, rather
         than one message per agent
     """
-    tok = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    tok = _tg_token()
     chat = os.environ.get("TELEGRAM_CHAT_ID", "")
     if not (tok and chat):
         return

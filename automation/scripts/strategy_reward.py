@@ -14,6 +14,11 @@ GHA workflow: strategy-reward.yml
 """
 from __future__ import annotations
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import get_token as _tg_token
+except ImportError:  # not running from the scripts directory
+    def _tg_token() -> str:
+        return os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import sys
 import json
 from datetime import datetime, timezone, timedelta
@@ -95,7 +100,7 @@ def publish_signal_to_ai_trader(strategy_name: str, pf: float, total_r: float,
 
 def send_tg_message(text: str) -> int:
     """Send message to Telegram."""
-    tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+    tg_token = _tg_token()
     tg_chat = os.environ.get("TELEGRAM_CHAT_ID", "")
     if not tg_token or not tg_chat:
         print("  TG: no token/chat_id")

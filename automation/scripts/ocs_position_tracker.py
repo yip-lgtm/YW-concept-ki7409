@@ -6,6 +6,11 @@ On close: logs to trades.jsonl, updates stats.json, sends TG alert.
 """
 from __future__ import annotations
 import os
+try:  # the token may have been rotated; the file wins over the env
+    from tg_token import get_token as _tg_token
+except ImportError:  # not running from the scripts directory
+    def _tg_token() -> str:
+        return os.environ.get("TELEGRAM_BOT_TOKEN", "")
 import sys
 import json
 from datetime import datetime, timezone, timedelta
@@ -281,7 +286,7 @@ def main():
         print(f"[tracker] {len(closed)} new close(s) — full journey TG")
         try:
             import requests
-            tg_token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+            tg_token = _tg_token()
             tg_chat = os.environ.get("TELEGRAM_CHAT_ID", "")
             if tg_token and tg_chat and new_closes:
                 lines = ["<b>🎯 OCS BTC 5m — Trade Journey Closed</b>\n"]
