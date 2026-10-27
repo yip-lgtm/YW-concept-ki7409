@@ -55,6 +55,12 @@ jobs:
           python -m venv .venv
           .venv/bin/pip install -q -r requirements.txt
 
+      - name: Install CJK fonts for the charts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
+
       - name: Run 9-strategy live scan
         id: scan
         working-directory: automation

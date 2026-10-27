@@ -49,6 +49,12 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
           cache-dependency-path: automation/requirements.txt
+      - name: Install CJK fonts for the charts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-cache -f
+
       - name: Install + Run
         working-directory: automation
         run: |

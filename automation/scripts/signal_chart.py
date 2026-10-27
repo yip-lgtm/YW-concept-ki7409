@@ -22,13 +22,32 @@ import numpy as np
 import pandas as pd
 import pytz
 
-plt.rcParams['font.sans-serif'] = ['Noto Sans CJK SC', 'Noto Sans CJK TC', 'DejaVu Sans', 'Arial Unicode MS', 'SimHei']
+# A Chinese-capable font, resolved from what is actually installed. The
+# runner had none of these — only DejaVu Sans, which has no CJK glyphs — so
+# every Chinese label came out as a row of tofu boxes. The list ends in
+# fonts that are present on most systems; whatever is found first is used,
+# and if none of them exists the text still renders, just with boxes.
+_CJK_CANDIDATES = ['Noto Sans CJK SC', 'Noto Sans CJK TC', 'Noto Sans CJK JP',
+                   'Noto Serif CJK SC', 'Noto Serif CJK JP',
+                   'WenQuanYi Zen Hei', 'AR PL UMing TW', 'SimHei',
+                   'Arial Unicode MS']
+from matplotlib.font_manager import FontProperties, fontManager
+
+_installed = {f.name for f in fontManager.ttflist}
+_CJK_FAMILY = next((f for f in _CJK_CANDIDATES if f in _installed), None)
+if _CJK_FAMILY is None:
+    print("[signal_chart] WARNING: no CJK font installed — Chinese labels will "
+          "render as boxes. Install fonts-noto-cjk on the runner.")
+    _CJK_FAMILY = 'DejaVu Sans'
+
+plt.rcParams['font.sans-serif'] = [_CJK_FAMILY] + [
+    f for f in ('Noto Sans CJK SC', 'Noto Sans CJK TC', 'DejaVu Sans',
+                'Arial Unicode MS', 'SimHei') if f != _CJK_FAMILY]
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['axes.unicode_minus'] = False
 
 # Import FontProperties for explicit use
-from matplotlib.font_manager import FontProperties
-CJK_FONT = FontProperties(family='Noto Sans CJK SC')
+CJK_FONT = FontProperties(family=_CJK_FAMILY)
 
 # Prefer GITHUB_WORKSPACE (Actions), else this repo root — never hardcode /workspace
 # (mkdir on /workspace fails with EACCES on GHA runners → charts silently skipped)
