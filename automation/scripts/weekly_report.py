@@ -37,6 +37,30 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 
+
+def _tg_token() -> str | None:
+    """The bot token, preferring the on-disk copy over the environment.
+
+    The sandbox injects TELEGRAM_BOT_TOKEN when a session starts, so a token
+    rotated mid-session would keep pointing at the old bot — and a bot whose
+    token leaked to a third-party panel is exactly the one that must stop
+    being used. The file wins whenever it is there.
+
+    CI never has the file; it reads the GitHub Actions secret, which is
+    updated the same way.
+    """
+    path = Path(os.environ.get("TELEGRAM_BOT_TOKEN_FILE",
+                                "/workspace/.secrets/telegram_bot_token"))
+    try:
+        if path.exists():
+            value = path.read_text().strip()
+            if value:
+                return value
+    except Exception:
+        pass
+    return os.environ.get("TELEGRAM_BOT_TOKEN")
+
+
 def _find_repo() -> Path:
     if "GITHUB_WORKSPACE" in os.environ:
         return Path(os.environ["GITHUB_WORKSPACE"])
@@ -53,7 +77,7 @@ try:
 except Exception:                                          # pragma: no cover
     NY_TZ = timezone(timedelta(hours=-4))
 
-TG_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+TG_TOKEN = _tg_token()
 TG_CHAT = os.environ.get("TELEGRAM_CHAT_ID")
 
 WEEKDAYS = ["一", "二", "三", "四", "五", "六", "日"]
