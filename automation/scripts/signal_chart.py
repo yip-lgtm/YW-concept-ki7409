@@ -309,7 +309,11 @@ def main():
     
     success = 0
     for s in recent:
-        signal_id = s.get('position_id', s.get('signal_id', 'unknown'))
+        # `or`, not a default argument: a record can carry the key with a
+        # null value, and `dict.get(key, default)` only falls back when the
+        # key is missing. That is what made one chart per run die with
+        # "'NoneType' object has no attribute 'replace'".
+        signal_id = s.get('position_id') or s.get('signal_id') or 'unknown'
         safe = signal_id.replace('|', '_').replace(':', '-').replace('/', '_')[:80]
         out = CHARTS_DIR / f"{safe}.png"
         try:
