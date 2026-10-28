@@ -1,5 +1,5 @@
 {
-  "ts": "2026-10-28T15:26:51.283857+08:00",
+  "ts": "2026-10-28T15:34:48.817378+08:00",
   "ticker": "MNQ=F",
   "h4_bars": 150,
   "m15_bars": 474,
@@ -12,18 +12,53 @@
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C3 not an expansion candle (wick too large)",
+      "stage": "C2 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
-      "fired": false,
-      "stage": "no POI",
-      "detail": "C2 [29798, 29947] misses nearest swing 29959 by 12",
+      "fired": true,
+      "strategy": "TTrades-L14",
       "direction": "long",
       "closure": "c3_closure",
-      "strategy": "TTrades-L14",
-      "has_levels": false
+      "trade_candle": "C4",
+      "stage": "c3_closure \u2014 trade C4",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 29575.0,
+        "swing_levels": [
+          29575.0,
+          29622.25,
+          29653.25,
+          29726.75,
+          29958.75
+        ],
+        "pivot_count": 25,
+        "fvg_count": 17
+      },
+      "poi_note": "C2 range [29798, 29962] contains swing 29959",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 29849.5,
+        "series_length": 1,
+        "last_close": 29966.75,
+        "reason": "cisd_long"
+      },
+      "c_eq": 29879.625,
+      "swing_level": 29797.75,
+      "entry_ref": 29966.75,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 29966.75,
+      "sl": 29767.2,
+      "t1": 30166.3,
+      "t2_close": 30289.62,
+      "t3": 30489.18,
+      "risk": 199.55,
+      "sl_basis": "beyond protected swing (C2/C3 extreme)",
+      "sl_buffer": 30.55,
+      "atr_h4": 203.68
     }
   }
 }
