@@ -1,26 +1,29 @@
 {
-  "ts": "2026-10-29T03:51:29.552403+08:00",
+  "ts": "2026-10-29T04:31:00.648963+08:00",
   "ticker": "MGC=F",
-  "h4_bars": 153,
-  "m15_bars": 524,
+  "h4_bars": 154,
+  "m15_bars": 527,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
       "stage": "no POI",
-      "detail": "C2 [4050, 4074] misses nearest swing 4166 by 93",
-      "direction": "short",
+      "detail": "C2 [4037, 4090] misses nearest swing 4134 by 44",
+      "direction": "long",
       "strategy": "TTrades-L12",
       "has_levels": false
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C2 not an expansion candle (wick too large)",
+      "stage": "C3 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "stage": "no POI",
+      "detail": "C2 [4050, 4074] misses nearest swing 4166 by 93",
+      "direction": "short",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }

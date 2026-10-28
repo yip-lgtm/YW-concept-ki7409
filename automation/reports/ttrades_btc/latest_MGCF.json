@@ -1,35 +1,35 @@
 {
-  "ts": "2026-10-28T15:51:29.297530-04:00",
+  "ts": "2026-10-28T16:31:00.300729-04:00",
   "ticker": "MGC=F",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
-  "side": "bearish",
+  "side": "bullish",
   "swing": {
     "type": "c2_closure",
-    "side": "bearish",
-    "c2_high": 4073.800048828125,
-    "c2_low": 4049.699951171875,
-    "c2_close": 4054.699951171875,
-    "c2_eq": 4061.75,
-    "c3_close": 4063.699951171875,
-    "swing_level": 4073.800048828125,
-    "direction": "short"
+    "side": "bullish",
+    "c2_high": 4090.0,
+    "c2_low": 4037.300048828125,
+    "c2_close": 4089.60009765625,
+    "c2_eq": 4063.6500244140625,
+    "c3_close": 4082.10009765625,
+    "swing_level": 4037.300048828125,
+    "direction": "long"
   },
   "cisd": {
-    "confirmed": true,
-    "opposing_open": 4137.60009765625,
+    "confirmed": false,
+    "opposing_open": 4146.2998046875,
     "series_length": 2,
-    "last_close": 4063.699951171875,
-    "reason": "cisd_short"
+    "last_close": 4082.0,
+    "reason": "no break"
   },
-  "eq_respected": false,
+  "eq_respected": true,
   "d1_trend": {
-    "aligned": true,
+    "aligned": false,
     "trend": "downtrend",
-    "d1_close": 4063.699951171875,
-    "d1_ema50": 4205.26922574636,
-    "d1_ema20": 4121.734109847271,
-    "reason": "D1 downtrend"
+    "d1_close": 4082.0,
+    "d1_ema50": 4205.986874720012,
+    "d1_ema20": 4123.476971640425,
+    "reason": "D1 downtrend (counter-trend)"
   },
   "weekly_profile": {
     "profile": "unknown",
@@ -38,14 +38,14 @@
   },
   "daily_profile": {
     "london_expanded": true,
-    "london_range": 44.0,
+    "london_range": 52.699951171875,
     "skip_ny": true
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "EQ not respected; London expanded (skip NY)",
+  "reason": "CISD not confirmed; D1 counter-trend (downtrend); London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
