@@ -13,8 +13,8 @@
 | 6 | Stair | 2 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+162 | $+1,925 | — |
 | 7 | B1 | 2 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+162 | $-38 | — |
 | 8 | Two-Yang | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,629 | — |
-| 9 | Argon-Gold | 1 | hold | 2 | down 0% | down 0.00 | down 0.00 | $-200 | $-200 | — |
-| 10 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+278 | — |
+| 9 | Argon-Gold | 1 | hold | 2 | down 0% | down 0.00 | down 0.00 | $-200 | $-300 | 1 單 · $-100 |
+| 10 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+256 | — |
 | 11 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-100 | — |
 | 13 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-100 | — |
