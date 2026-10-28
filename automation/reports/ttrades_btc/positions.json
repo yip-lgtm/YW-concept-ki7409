@@ -2282,9 +2282,10 @@
     "entry_time": "2026-10-28T03:26:52.773309-04:00",
     "entry_ts": "2026-10-28T07:26:52.773309+00:00",
     "t1_hit": false,
-    "status": "open",
+    "status": "expired",
     "reason": "TTrades Fractal: H4 C2 closure (bearish) + M15 CISD (1-bar series) + EQ respected",
-    "swing_type": "C2"
+    "swing_type": "C2",
+    "note": "no SL/T2 within 96 bars"
   },
   "TTrades-L14|MNQ=F|2026-10-28T15:34:48.817378+08:00": {
     "signal_id": "TTrades-L14|MNQ=F|2026-10-28T15:34:48.817378+08:00",
@@ -2303,9 +2304,10 @@
     "entry_time": "2026-10-28T15:34:48.817378+08:00",
     "entry_ts": "2026-10-28T07:34:48.817378+00:00",
     "t1_hit": false,
-    "status": "open",
+    "status": "expired",
     "reason": "TTrades-L14: c3_closure \u2014 trade C4",
-    "swing_type": "c3_closure"
+    "swing_type": "c3_closure",
+    "note": "no SL/T2 within 96 bars"
   },
   "TTrades-L12|MNQ=F|2026-10-28T22:19:46.336748+08:00": {
     "signal_id": "TTrades-L12|MNQ=F|2026-10-28T22:19:46.336748+08:00",
@@ -2327,5 +2329,26 @@
     "status": "open",
     "reason": "TTrades-L12: all L12 gates passed",
     "swing_type": "all L12 gates passed"
+  },
+  "TTrades-L13|BTC-USD|2026-10-29T03:44:54.341145+08:00": {
+    "signal_id": "TTrades-L13|BTC-USD|2026-10-29T03:44:54.341145+08:00",
+    "strategy": "TTrades-L13",
+    "ticker": "BTC-USD",
+    "direction": "short",
+    "grade": null,
+    "confidence": null,
+    "entry": 81261.23,
+    "sl": 81370.84,
+    "t1": 81151.61,
+    "t2": 81083.87,
+    "units": 0.5,
+    "risk_per_unit": 109.61,
+    "usd_per_point": 1.0,
+    "entry_time": "2026-10-29T03:44:54.341145+08:00",
+    "entry_ts": "2026-10-28T19:44:54.341145+00:00",
+    "t1_hit": false,
+    "status": "open",
+    "reason": "TTrades-L13: C3 continuation order block",
+    "swing_type": "C3 continuation order block"
   }
 }

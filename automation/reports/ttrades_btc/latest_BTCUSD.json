@@ -1,13 +1,50 @@
 {
-  "ts": "2026-10-28T11:30:32.810267-04:00",
+  "ts": "2026-10-28T15:44:53.917429-04:00",
   "ticker": "BTC-USD",
-  "actionable": false,
-  "reason": "no H4 C3 closure (Fractal quiet)",
+  "strategy": "TTrades-Fractal",
+  "swing_type": "C3",
+  "side": "bearish",
+  "swing": {
+    "type": "c3_closure",
+    "side": "bearish",
+    "c2_high": 81694.390625,
+    "c2_eq": 81337.19140625,
+    "c4_close": 81261.2265625,
+    "swing_level": 81694.390625,
+    "direction": "short"
+  },
+  "cisd": {
+    "confirmed": true,
+    "opposing_open": 83674.9765625,
+    "series_length": 3,
+    "last_close": 81261.2265625,
+    "reason": "cisd_short"
+  },
+  "eq_respected": true,
+  "d1_trend": {
+    "aligned": false,
+    "trend": "uptrend",
+    "d1_close": 81261.2265625,
+    "d1_ema50": 80757.59906037302,
+    "d1_ema20": 81702.66442784574,
+    "reason": "D1 uptrend (counter-trend)"
+  },
   "weekly_profile": {
-    "profile": "unknown",
+    "profile": "consolidation_reversal",
     "valid_for_signal": true,
     "notes": ""
   },
+  "daily_profile": {
+    "london_expanded": true,
+    "london_range": 1396.9296875,
+    "skip_ny": true
+  },
   "account_size": 247000,
-  "risk_amount": 617.5
+  "risk_pct": 0.0025,
+  "risk_amount": 617.5,
+  "actionable": false,
+  "reason": "D1 counter-trend (uptrend); London expanded (skip NY)",
+  "paper_mode": true,
+  "trade_mode": "paper",
+  "paper_reason": "no paper trade history (default paper)"
 }

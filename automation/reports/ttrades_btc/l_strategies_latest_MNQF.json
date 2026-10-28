@@ -1,54 +1,14 @@
 {
-  "ts": "2026-10-28T23:30:28.517087+08:00",
+  "ts": "2026-10-29T03:44:49.636872+08:00",
   "ticker": "MNQ=F",
-  "h4_bars": 152,
-  "m15_bars": 506,
+  "h4_bars": 153,
+  "m15_bars": 523,
   "strategies": {
     "TTrades-L12": {
-      "fired": true,
+      "fired": false,
+      "stage": "no C2 closure (sweep+reclaim) on C2",
       "strategy": "TTrades-L12",
-      "direction": "short",
-      "stage": "all L12 gates passed",
-      "poi": {
-        "found": true,
-        "basis": "structural pivots",
-        "prior_extreme": 30224.5,
-        "swing_levels": [
-          29983.25,
-          30010.25,
-          30114.0,
-          30197.0,
-          30224.5
-        ],
-        "pivot_count": 26,
-        "fvg_count": 16
-      },
-      "poi_note": "C2 range [29891, 29989] contains swing 29983",
-      "cisd": {
-        "confirmed": true,
-        "opposing_open": 29891.5,
-        "series_length": 1,
-        "last_close": 29843.25,
-        "reason": "cisd_short"
-      },
-      "c2_eq": 29939.875,
-      "c2_high": 29989.0,
-      "c2_low": 29890.75,
-      "c2_close": 29919.75,
-      "c3_close": 29843.25,
-      "swing_level": 29989.0,
-      "entry_ref": 29843.25,
-      "target_r": 2.0,
-      "has_levels": true,
-      "entry": 29843.25,
-      "sl": 30018.57,
-      "t1": 29667.93,
-      "t2_close": 29559.58,
-      "t3": 29384.27,
-      "risk": 175.32,
-      "sl_basis": "beyond protected swing (C2/C3 extreme)",
-      "sl_buffer": 29.57,
-      "atr_h4": 197.12
+      "has_levels": false
     },
     "TTrades-L13": {
       "fired": false,
@@ -58,7 +18,10 @@
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "stage": "CISD not confirmed",
+      "detail": "no break",
+      "direction": "short",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
