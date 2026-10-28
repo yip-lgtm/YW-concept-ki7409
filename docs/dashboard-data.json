@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-10-28 14:10 HKT",
-  "hkt_timestamp": "2026-10-28T14:10:20.984840+08:00",
+  "generated_at": "2026-10-28 15:32 HKT",
+  "hkt_timestamp": "2026-10-28T15:32:07.942255+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 20,
-    "trades_today": 10,
-    "wins_24h": 9,
-    "R_24h": 3.57,
-    "signals_24h": 20,
-    "wr_24h": 45.0
+    "trades_24h": 19,
+    "trades_today": 13,
+    "wins_24h": 7,
+    "R_24h": -0.67,
+    "signals_24h": 17,
+    "wr_24h": 36.8
   },
   "ranking_24h": [
     {
@@ -40,20 +40,6 @@
       "medal_eligible": false
     },
     {
-      "strategy": "CRT",
-      "ticker": "MNQ=F",
-      "n_trades": 10,
-      "n_wins": 4,
-      "n_losses": 6,
-      "win_rate": 40.0,
-      "total_R": 0.47,
-      "avg_R": 0.047,
-      "total_pnl_usd": 47.2,
-      "profit_factor": 1.08,
-      "rank": 3,
-      "medal_eligible": true
-    },
-    {
       "strategy": "unknown",
       "ticker": "\u2014",
       "n_trades": 5,
@@ -64,8 +50,22 @@
       "avg_R": 0.047,
       "total_pnl_usd": -19.47,
       "profit_factor": 1.08,
-      "rank": 4,
+      "rank": 3,
       "medal_eligible": false
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MNQ=F",
+      "n_trades": 11,
+      "n_wins": 4,
+      "n_losses": 7,
+      "win_rate": 36.4,
+      "total_R": -0.53,
+      "avg_R": -0.048,
+      "total_pnl_usd": -52.8,
+      "profit_factor": 0.92,
+      "rank": 4,
+      "medal_eligible": true
     },
     {
       "strategy": "Two-Yang",
@@ -97,13 +97,13 @@
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 23,
+    "n_trades": 24,
     "n_wins": 9,
-    "win_rate": 39.1,
-    "total_R": 1.57,
-    "total_pnl_usd": 113.13
+    "win_rate": 37.5,
+    "total_R": 0.57,
+    "total_pnl_usd": 13.13
   },
-  "ranking_24h_updated": "2026-10-28T06:10:20.984856+00:00",
+  "ranking_24h_updated": "2026-10-28T07:32:07.942274+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -433,13 +433,13 @@
         5
       ],
       "live_24h": {
-        "n": 4,
-        "wins": 2,
+        "n": 2,
+        "wins": 0,
         "losses": 2,
-        "wr": 50.0,
-        "R": 1.24,
-        "pf": 1.62,
-        "pnl": 123.6
+        "wr": 0.0,
+        "R": -2.0,
+        "pf": 0.0,
+        "pnl": -200.0
       },
       "live_today": {
         "n": 1,
@@ -450,7 +450,7 @@
         "pf": 0.0,
         "pnl": -100.0
       },
-      "signals_24h": 4,
+      "signals_24h": 2,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -485,24 +485,24 @@
         5
       ],
       "live_24h": {
-        "n": 10,
+        "n": 11,
         "wins": 4,
-        "losses": 6,
-        "wr": 40.0,
-        "R": 0.47,
-        "pf": 1.08,
-        "pnl": 47.2
+        "losses": 7,
+        "wr": 36.4,
+        "R": -0.53,
+        "pf": 0.92,
+        "pnl": -52.8
       },
       "live_today": {
-        "n": 4,
-        "wins": 1,
-        "losses": 3,
-        "wr": 25.0,
-        "R": -1.38,
-        "pf": 0.54,
-        "pnl": -138.2
+        "n": 7,
+        "wins": 3,
+        "losses": 4,
+        "wr": 42.9,
+        "R": 0.85,
+        "pf": 1.21,
+        "pnl": 85.4
       },
-      "signals_24h": 14,
+      "signals_24h": 13,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -1046,12 +1046,12 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-10-28T10:28:24.998004+08:00",
+        "updated": "2026-10-28T15:26:51.283857+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-10-27T22:28:24.612823-04:00"
+          "ts": "2026-10-28T03:26:50.885600-04:00"
         },
         "l_series": [
           {
@@ -1077,7 +1077,7 @@
           {
             "strategy": "TTrades-L13",
             "fired": false,
-            "stage": "C2 not an expansion candle (wick too large)",
+            "stage": "C3 not an expansion candle (wick too large)",
             "detail": null,
             "direction": null,
             "closure": null,
@@ -1098,9 +1098,9 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [29763, 29882] misses nearest swing 29983 by 102",
-            "direction": "short",
-            "closure": "c2_closure",
+            "detail": "C2 [29798, 29947] misses nearest swing 29959 by 12",
+            "direction": "long",
+            "closure": "c3_closure",
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
@@ -1118,20 +1118,20 @@
       },
       {
         "ticker": "MGC=F",
-        "updated": "2026-10-28T10:28:26.945429+08:00",
+        "updated": "2026-10-28T15:26:53.158271+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
-          "actionable": false,
-          "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-10-27T22:28:26.570700-04:00"
+          "actionable": true,
+          "reason": "TTrades Fractal: H4 C2 closure (bearish) + M15 CISD (1-bar series) + EQ respected",
+          "ts": "2026-10-28T03:26:52.773309-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no C2 closure (sweep+reclaim) on C2",
-            "detail": null,
-            "direction": null,
+            "stage": "no POI",
+            "detail": "C2 [4056, 4084] misses nearest swing 4166 by 82",
+            "direction": "short",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -1149,7 +1149,7 @@
           {
             "strategy": "TTrades-L13",
             "fired": false,
-            "stage": "C2 not an expansion candle (wick too large)",
+            "stage": "C3 not an expansion candle (wick too large)",
             "detail": null,
             "direction": null,
             "closure": null,
@@ -1170,9 +1170,9 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [4068, 4080] misses nearest swing 4166 by 87",
+            "detail": "C2 [4056, 4084] misses nearest swing 4166 by 82",
             "direction": "short",
-            "closure": "c2_closure",
+            "closure": "c3_closure",
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
@@ -1190,20 +1190,20 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-10-28T10:28:28.725983+08:00",
+        "updated": "2026-10-28T15:26:55.035604+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-10-27T22:28:28.353735-04:00"
+          "reason": "CISD not confirmed",
+          "ts": "2026-10-28T03:26:54.653924-04:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no C2 closure (sweep+reclaim) on C2",
-            "detail": null,
-            "direction": null,
+            "stage": "CISD not confirmed",
+            "detail": "no break",
+            "direction": "long",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -1311,7 +1311,18 @@
         }
       }
     ],
-    "open_positions": [],
+    "open_positions": [
+      {
+        "strategy": "TTrades-Fractal",
+        "ticker": "MGC=F",
+        "direction": "short",
+        "entry": 4046.89990234375,
+        "sl": 4085.527901785714,
+        "t2": 3985.0951032366074,
+        "entry_time": "2026-10-28T03:26:52.773309-04:00",
+        "status": "open"
+      }
+    ],
     "n_closed": 63,
     "note": "All four agents publish entry/SL/T1/T2 (T2 closes at 1.618R) as of 2026-10-09, so the whole family is trackable and scoreable. A fired row with has_levels=false means the stop reference sat on the wrong side of entry, which is reported rather than papered over."
   },
