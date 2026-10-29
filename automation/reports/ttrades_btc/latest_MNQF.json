@@ -1,5 +1,5 @@
 {
-  "ts": "2026-10-29T12:32:39.951486-04:00",
+  "ts": "2026-10-29T14:44:10.121285-04:00",
   "ticker": "MNQ=F",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
@@ -9,26 +9,26 @@
     "side": "bullish",
     "c2_high": 29707.5,
     "c2_low": 29407.5,
-    "c2_close": 29655.5,
+    "c2_close": 29655.75,
     "c2_eq": 29557.5,
-    "c3_close": 29576.25,
+    "c3_close": 29432.0,
     "swing_level": 29407.5,
     "direction": "long"
   },
   "cisd": {
-    "confirmed": true,
-    "opposing_open": 29573.75,
-    "series_length": 1,
-    "last_close": 29576.25,
-    "reason": "cisd_long"
+    "confirmed": false,
+    "opposing_open": 29575.0,
+    "series_length": 2,
+    "last_close": 29432.0,
+    "reason": "no break"
   },
-  "eq_respected": true,
+  "eq_respected": false,
   "d1_trend": {
     "aligned": false,
     "trend": "ranging",
-    "d1_close": 29576.25,
-    "d1_ema50": 29946.034402796846,
-    "d1_ema20": 29963.235421101213,
+    "d1_close": 29432.0,
+    "d1_ema50": 29940.377540051748,
+    "d1_ema20": 29949.497325863118,
     "reason": "D1 ranging (counter-trend)"
   },
   "weekly_profile": {
@@ -45,7 +45,7 @@
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "D1 counter-trend (ranging); London expanded (skip NY)",
+  "reason": "CISD not confirmed; EQ not respected; D1 counter-trend (ranging); London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
