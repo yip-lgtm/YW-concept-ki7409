@@ -5,21 +5,21 @@
 
 | # | agent | lv | 昨日結果 | n | WR | PF | RR | 昨日 P&L | equity | 今日進行中 |
 |---:|---|--:|---|--:|--:|--:|--:|--:|--:|---|
-| 1 | CRT | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+3,410 | — |
-| 2 | Kell-Cycle | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,663 | — |
-| 3 | TTrades-Fractal | 3 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $+298 | 3 單 · $-57 |
-| 4 | 3-Pushes | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,539 | — |
-| 5 | 50-20-Pullback | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-1,180 | 2 單 · $-200 |
-| 6 | Stair | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+2,084 | 2 單 · $+62 |
-| 7 | B1 | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+146 | 3 單 · $+224 |
-| 8 | Two-Yang | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,343 | 2 單 · $+324 |
+| 1 | CRT | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+3,744 | 4 單 · $+322 |
+| 2 | Kell-Cycle | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,602 | 5 單 · $-200 |
+| 3 | TTrades-Fractal | 3 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $+308 | 3 單 · $-57 |
+| 4 | 3-Pushes | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,218 | 4 單 · $-400 |
+| 5 | 50-20-Pullback | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-1,935 | 12 單 · $-938 |
+| 6 | Stair | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,742 | 7 單 · $-176 |
+| 7 | B1 | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+85 | 4 單 · $+124 |
+| 8 | Two-Yang | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,202 | 3 單 · $+485 |
 | 9 | Argon-Gold | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-300 | — |
-| 10 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+115 | — |
+| 10 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+542 | — |
 | 11 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
-| 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-200 | 1 單 · $-100 |
+| 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-170 | 1 單 · $-100 |
 | 13 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-300 | 2 單 · $-200 |
 | 14 | H-Pattern | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-1,253 | — |
-| 15 | RSI-Div | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,810 | 2 單 · $-200 |
+| 15 | RSI-Div | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-3,515 | 11 單 · $-838 |
 
 ──── 互噴環節 ────
 
