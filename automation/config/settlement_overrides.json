@@ -2,21 +2,13 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 19,
-    "last_run": "2026-10-27T20:27:25.656763+00:00",
-    "last_applied": 3,
+    "runs": 20,
+    "last_run": "2026-10-29T01:24:12.721892+00:00",
+    "last_applied": 1,
     "last_log": [
       {
-        "agent": "Two-Yang",
+        "agent": "3-Pushes",
         "action": "relax"
-      },
-      {
-        "agent": "Stair",
-        "action": "relax"
-      },
-      {
-        "agent": "B1-3in1",
-        "action": "tighten"
       },
       {
         "agent": "H-Pattern",
@@ -25,18 +17,18 @@
     ]
   },
   "3-Pushes": {
-    "last_revised": "2026-10-21T15:16:00.370251+00:00",
+    "last_revised": "2026-10-29T01:24:12.721892+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "...",
-    "response_raw": "<think>We need answer exact format JSON only? They specify REASONING sentence then JSON, technically not JSON only contradictory \"EXACT format (JSON only, no other text)\" but template includes reasoning outside JSON. Need follow exact. Need decide thresholds. Metrics exceed current all: PF 2.157 >1, WR57.1 >50, RR1.618 >1, n14>=10, so why stuck? Maybe actual global ranges? Agent-specific override perhaps thresholds within allowed. Need recommend. Strategy exhaustion reversal countertrend, WR can low if RR high. But actual WR 57.1 is not low, RR 1.618. PF strong. Could set thresholds perhaps PF 1.2, WR .40, RR 1.2, n 10. Which indicators relaxed? Compare global stated promote thresholds: PF >1, WR>50, RR>1, n>=10. Relax WR to .40 and maybe n to? But n already qualifies. Need \"max only relax",
+    "reasoning": "<一句話...>\\n\\n{...}\" and \"JSON only, 唔好其他文字\". Slight contradiction because REASONING outside JSON, but exact format explicitly asks reasoning line plus JSON. Need follow likely output reasoning then JSO",
+    "response_raw": "<think>We need answer exact format JSON only? User says EXACT format: \"REASONING: <一句話...>\\n\\n{...}\" and \"JSON only, 唔好其他文字\". Slight contradiction because REASONING outside JSON, but exact format explicitly asks reasoning line plus JSON. Need follow likely output reasoning then JSON object, no extra. Need determine thresholds based actual data + strategy personality, max relax 2 indicators, min trades floor 5, ranges.\n\nWe need carefully reason. Agent 3-Pushes exhaustion reversal, low WR normal if high RR. Metrics PF 1.079, WR .4, RR 1.618, n 5. Global thresholds likely PF >1, WR >.5, RR >1, n>=10. Need suggest per-agent override allowing promotion perhaps relax WR and n, while PF/RR remain? Need ensure at most 2 indicators relaxed. Need choose thresholds that current metrics meet, and sens",
     "overrides": {
       "min_PF": 1.0,
-      "min_WR": 0.45,
+      "min_WR": 0.35,
       "min_RR": 1.0,
-      "min_trades": 10
+      "min_trades": 5
     },
-    "relaxed_count": 1,
+    "relaxed_count": 2,
     "tightened_count": 0
   },
   "Two-Yang": {
