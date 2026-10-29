@@ -2,17 +2,17 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 20,
-    "last_run": "2026-10-29T01:24:12.721892+00:00",
-    "last_applied": 1,
+    "runs": 21,
+    "last_run": "2026-10-29T20:53:20.337306+00:00",
+    "last_applied": 2,
     "last_log": [
       {
-        "agent": "3-Pushes",
+        "agent": "H-Pattern",
         "action": "relax"
       },
       {
-        "agent": "H-Pattern",
-        "action": "error"
+        "agent": "TTrades-L13",
+        "action": "relax"
       }
     ]
   },
@@ -107,18 +107,18 @@
     "tightened_count": 0
   },
   "H-Pattern": {
-    "last_revised": "2026-10-20T12:02:42.518772+00:00",
+    "last_revised": "2026-10-29T20:53:20.337306+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "H-Pattern 嘅 metrics (PF 6.47, WR 80%, RR 1.62) 全部遠超 global 門檻，唯一 blocker 係 n=5 未達 10。考慮到 PF 強勁（即使 WR 回落至 strategy 正常嘅 moderate 水平，PF 仍會 > 1.0），呢個表現係 genuine edge 唔係 noise，只需放寬 min_trades 至硬限制下限 5 即可解封",
-    "response_raw": "<think>Let me analyze this case carefully.\n\nThe agent is H-Pattern, which is described as \"Structural reversal. Moderate WR, moderate RR.\" This is important context.\n\nCurrent metrics (7d rolling, n=5):\n- PF = 6.472 (excellent, far above 1.0 threshold)\n- WR = 80.0% (well above 50% threshold)\n- RR = 1.618 (well above 1.0 threshold)\n- n = 5 (below minimum of 10)\n\nThe agent is stuck because n=5 doesn't meet the minimum trade requirement of 10.\n\nStrategy profile: H-Pattern is \"Structural reversal. Moderate WR, moderate RR.\" — meaning historically it's designed around 50% WR and around 1.0-1.5 RR. But the recent 7-day window shows 80% WR, which is unusually high. This suggests either:\n1. Lucky streak\n2. Small sample in favorable market conditions\n\nThe conflict: n=5 is the blocker. The other metr",
+    "reasoning": "sentence",
+    "response_raw": "<think>We need answer exact format: REASONING one sentence then JSON. Need decide override. We need parse constraints. Agent H-Pattern structural reversal moderate WR, moderate RR. Metrics n=9, PF 1.171, WR .444, RR1.464. Current global thresholds all fail: PF >1, WR >.5, RR>1, n>=10. Need max relax 2 indicators, not all. Min trades can lower to 5 meaningful. Need suggest perhaps relax WR and min_trades; retain PF and RR. This is natural structural reversal moderate WR. Since PF and RR clearly > thresholds, WR should be adjusted to e.g. 0.40, min trades 9? But min_trades lowest 5 and meaningful. We're setting promotion criteria. Current n=9. To let promotion, lower min trades to perhaps 8 or 9, while WR threshold 0.40. How many indicators relaxed? \"最多只可以放寬 2 個指標\" likely compare thresholds.",
     "overrides": {
       "min_PF": 1.0,
-      "min_WR": 0.5,
+      "min_WR": 0.4,
       "min_RR": 1.0,
-      "min_trades": 5
+      "min_trades": 8
     },
-    "relaxed_count": 1,
+    "relaxed_count": 2,
     "tightened_count": 0
   },
   "TTrades-L12": {
@@ -137,11 +137,11 @@
     "tightened_count": 4
   },
   "TTrades-L13": {
-    "last_revised": "2026-10-22T04:16:23.620981+00:00",
+    "last_revised": "2026-10-29T20:53:20.337306+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "&lt;一句話點解咁調&gt;",
-    "response_raw": "<think>We need answer exact format JSON only? User says EXACT format: REASONING sentence then JSON, but \"JSON only, 唔好其他文字\" contradictory because includes REASONING. Need likely follow requested exact format perhaps reasoning line plus JSON, no think. Need assess metrics, unknown strategy character, can't infer high RR low WR definitively. Need suggest per-agent promotion thresholds, max relax 2 indicators, min trades >=5 and meaningful, range. Actual PF 1.079 >1, RR1.618 >1, n30, WR40 <50. Need likely relax WR only to <=0.40? Need strict inequalities: metrics WR=40.0%; promotion threshold min_WR perhaps 0.40? They state promote WR >50%, actual 40, so threshold at 0.40 would still not trigger if strict >. Could set 0.39 or 0.38, based uncertainty/unknown strategy character. Need decide. PF",
+    "reasoning": "PF 1.079、RR 1.618 已達正期望且 30 單樣本足夠，只將 WR 門檻降至 0.39 可讓實際 40% 勝率過關，毋須再放寬其餘指標。",
+    "response_raw": "<think>We need solve request in Cantonese/Chinese JSON exact format, Need produce final only with reasoning one sentence + JSON. We must choose sensible thresholds based on actual metrics + unknown strategy character, max relax 2, min trades floor 5, bounds. Need carefully assess metrics PF 1.079 WR .4 RR 1.618 n 30. Current promote PF>1 WR>.5 RR>1 n>=10. PF/RR qualify, n qualify, WR not. We can relax only WR to <=.4 likely .40, keeping PF>1.0, RR>1.0 n 10. Then action relax. Strategy unknown not assume high RR low WR but actual metrics show PF modest 1.079 WR 40 RR 1.618. Need judge promotion threshold adjusted to agent profile, don't loosen 3. Could set min_PF 1.05 min_WR .38 min_RR 1.30 min trades 10. That relaxes PF and WR two; keeps RR 1.0 and n 10. Or only WR .40, PF 1.0 RR 1.0 n 10.",
     "overrides": {
       "min_PF": 1.0,
       "min_WR": 0.39,

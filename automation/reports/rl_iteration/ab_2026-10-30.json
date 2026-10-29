@@ -1,0 +1,174 @@
+{
+  "date": "2026-10-30",
+  "generated_at": "2026-10-29T20:54:06.385248+00:00",
+  "n_closed_total": 3407,
+  "n_armed": 158,
+  "n_unlabelled": 3249,
+  "rl": {
+    "n": 36,
+    "wins": 8,
+    "wr": 22.2,
+    "pf": 0.69,
+    "total_r": -5.61,
+    "avg_r": -0.1558,
+    "pnl": -466.23,
+    "first": "2026-10-20 08:20",
+    "last": "2026-10-29 17:40"
+  },
+  "control": {
+    "n": 122,
+    "wins": 40,
+    "wr": 32.8,
+    "pf": 0.79,
+    "total_r": -17.28,
+    "avg_r": -0.1416,
+    "pnl": -1201.89,
+    "first": "2026-10-20 06:35",
+    "last": "2026-10-29 08:10"
+  },
+  "difference_r": 11.67,
+  "n_strategies_both_arms": 4,
+  "within_strategy": {
+    "rl_total_r": -2.61,
+    "control_total_r": -5.89
+  },
+  "open_by_arm": {},
+  "per_strategy": {
+    "5020pullback": {
+      "RL": {
+        "n": 8,
+        "wins": 1,
+        "wr": 12.5,
+        "pf": 0.4,
+        "total_r": -3.0,
+        "avg_r": -0.375,
+        "pnl": -626.06,
+        "first": "2026-10-20 11:25",
+        "last": "2026-10-21 20:35"
+      }
+    },
+    "b1": {
+      "CONTROL": {
+        "n": 2,
+        "wins": 0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "total_r": -2.0,
+        "avg_r": -1.0,
+        "pnl": -200.0,
+        "first": "2026-10-26 14:55",
+        "last": "2026-10-28 07:00"
+      }
+    },
+    "b13in1": {
+      "CONTROL": {
+        "n": 12,
+        "wins": 1,
+        "wr": 8.3,
+        "pf": 0.15,
+        "total_r": -9.38,
+        "avg_r": -0.7818,
+        "pnl": -938.2,
+        "first": "2026-10-22 15:35",
+        "last": "2026-10-28 22:25"
+      }
+    },
+    "crt": {
+      "RL": {
+        "n": 10,
+        "wins": 1,
+        "wr": 10.0,
+        "pf": 0.19,
+        "total_r": -5.7,
+        "avg_r": -0.57,
+        "pnl": -391.99,
+        "first": "2026-10-20 09:45",
+        "last": "2026-10-29 17:40"
+      },
+      "CONTROL": {
+        "n": 87,
+        "wins": 34,
+        "wr": 39.1,
+        "pf": 1.04,
+        "total_r": 2.01,
+        "avg_r": 0.0231,
+        "pnl": 542.41,
+        "first": "2026-10-20 16:45",
+        "last": "2026-10-29 01:10"
+      }
+    },
+    "hpattern": {
+      "CONTROL": {
+        "n": 7,
+        "wins": 2,
+        "wr": 28.6,
+        "pf": 0.65,
+        "total_r": -1.76,
+        "avg_r": -0.252,
+        "pnl": -176.4,
+        "first": "2026-10-23 12:15",
+        "last": "2026-10-28 15:45"
+      },
+      "RL": {
+        "n": 1,
+        "wins": 1,
+        "wr": 100.0,
+        "pf": 10.0,
+        "total_r": 1.0,
+        "avg_r": 1.0,
+        "pnl": 100.0,
+        "first": "2026-10-29 14:35",
+        "last": "2026-10-29 14:35"
+      }
+    },
+    "stair": {
+      "CONTROL": {
+        "n": 12,
+        "wins": 2,
+        "wr": 16.7,
+        "pf": 0.32,
+        "total_r": -6.76,
+        "avg_r": -0.5637,
+        "pnl": -582.3,
+        "first": "2026-10-20 06:35",
+        "last": "2026-10-28 19:50"
+      },
+      "RL": {
+        "n": 6,
+        "wins": 0,
+        "wr": 0.0,
+        "pf": 0.0,
+        "total_r": -3.0,
+        "avg_r": -0.5,
+        "pnl": -57.18,
+        "first": "2026-10-20 08:20",
+        "last": "2026-10-21 20:05"
+      }
+    },
+    "twoyang": {
+      "CONTROL": {
+        "n": 2,
+        "wins": 1,
+        "wr": 50.0,
+        "pf": 1.62,
+        "total_r": 0.62,
+        "avg_r": 0.309,
+        "pnl": 152.6,
+        "first": "2026-10-20 14:35",
+        "last": "2026-10-29 08:10"
+      },
+      "RL": {
+        "n": 11,
+        "wins": 5,
+        "wr": 45.5,
+        "pf": 2.7,
+        "total_r": 5.09,
+        "avg_r": 0.4627,
+        "pnl": 509.0,
+        "first": "2026-10-23 12:50",
+        "last": "2026-10-28 20:10"
+      }
+    }
+  },
+  "caveat": "The arm alternates inside each strategy, so strategy quality cancels out of the comparison. The market regime is NOT controlled: the two arms do not see the same price path, and each arm's date span is reported so the reader can judge it. This is a crossover, not a randomised trial."
+}
