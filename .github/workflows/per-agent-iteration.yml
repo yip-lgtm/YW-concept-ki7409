@@ -1,249 +1,117 @@
-name: Per-Agent LLM Iteration — 10 Agents @ 00:00 HKT
+name: Per-Agent LLM Iteration — 11 Agents @ 00:25 HKT
 
-# Each of the 10 strategy sub-agents gets its own iteration job
-# All run in parallel at 00:00 HKT (16:00 UTC) weekdays
-# Self-optimizing — auto-applies high-confidence suggestions
+# 2026-10-29 — collapsed 10 parallel jobs into 1.
+#
+# What was broken (measured 2026-10-29, git log + Actions job logs):
+#
+#   1. SELF-RACE. Ten parallel jobs each ran `git-auto-commit-action`
+#      against `main`. Only one push can win a non-fast-forward race, so
+#      9 of the 10 iterations were thrown away on every run. The
+#      workflow failed on EVERY scheduled run from 2026-10-05 onward
+#      ("[rejected] main -> main (non-fast-forward)"). Only 4 of the 10
+#      agents (h-pattern, b1, rsi-div, 50-20-pullback) ever landed a
+#      file, and only because they happened to win the race.
+#
+#   2. CROSS-WORKFLOW CRON CLASH. Four workflows all started at
+#      16:00 UTC and all pushed to `main`: per-agent-iteration,
+#      strategy-ranking, llm-iteration-scientist, yw-daily.
+#
+#   3. WRONG OUTPUT SHAPE. The per-agent mode writes
+#      `iteration_<agent>_<TS>.json`, which nothing downstream reads.
+#      The consumers — param_optimizer, regen_strategy_doc,
+#      update_dashboard_data, regen_review_manifests — all read
+#      `iteration_all_<TS>.json`, which is produced by the all-agents
+#      mode and was already landing fine via strategy-ranking.yml.
+#
+# What this version does:
+#
+#   - ONE job, ONE push. `llm_iterate_all.py` already fans out to the
+#     11 agents across parallel threads internally, so wall-clock time
+#     is unchanged — there is just one commit instead of ten racing
+#     ones.
+#   - It emits `iteration_all_*.json`, the shape the pipeline actually
+#     consumes.
+#   - Cron moved to 00:25 HKT so it no longer starts in the same minute
+#     as the other three 16:00 UTC workflows.
+#   - The push does rebase + retry, because ~15 other workflows push to
+#     `main` throughout the day and a non-fast-forward rejection is
+#     expected occasionally, not a workflow failure.
+#
+# Side effect worth knowing: the old job list had only 10 agents and
+# silently skipped argon-gold. This version iterates all 11.
+#
+# Daily LLM call count is unchanged (10 jobs x 1 agent before, 1 job x
+# 11 agents now) — this does not add quota pressure.
 
 on:
   schedule:
-    - cron: '0 16 * * 1-5'  # 00:00 HKT weekdays
+    - cron: '25 16 * * 1-5'  # 00:25 HKT weekdays (staggered off 00:00)
   workflow_dispatch:
     inputs:
       agent:
-        description: 'Run iteration for specific agent (id)'
+        description: 'Run iteration for one agent id only. Leave empty for all 11.'
         required: false
 
 permissions:
   contents: write
 
+# Two runs of this workflow must never overlap.
+concurrency:
+  group: per-agent-iteration
+  cancel-in-progress: false
+
 jobs:
-  # 10 parallel jobs, one per agent
-  iterate-rsi-div:
-    name: '🔁 yw-rsi-div (RSI Divergence)'
+  iterate:
+    name: '🔁 LLM iteration — 11 strategy agents'
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 20
     env:
       TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
       TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 0}
+
       - uses: actions/setup-python@v5
         with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
+
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
-      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent rsi-div
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'auto(iter): rsi-div iteration @ '
-          rebase: true
-          skip_dirty_check: false
 
+      - name: Run LLM iteration (all 11 agents, or one when dispatched with an agent id)
+        working-directory: automation
+        env:
+          MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
+        run: |
+          AGENT="${{ inputs.agent }}"
+          if [ -n "$AGENT" ]; then
+            echo "[iterate] single agent: $AGENT"
+            .venv/bin/python scripts/llm_iterate_all.py --agent "$AGENT" 2>&1 | tee /tmp/iterate_log.txt
+          else
+            echo "[iterate] all 11 agents"
+            .venv/bin/python scripts/llm_iterate_all.py 2>&1 | tee /tmp/iterate_log.txt
+          fi
 
-  iterate-50-20-pullback:
-    name: '🔁 yw-50-20-pullback'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
-      - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
-      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent 50-20-pullback
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'auto(iter): 50-20-pullback iteration @ '
-          rebase: true
-          skip_dirty_check: false
-
-
-  iterate-h-pattern:
-    name: '🔁 yw-h-pattern (H-Pattern)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
-      - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
-      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent h-pattern
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'auto(iter): h-pattern iteration @ '
-          rebase: true
-          skip_dirty_check: false
-
-
-  iterate-3-pushes:
-    name: '🔁 yw-3-pushes (3-Pushes)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
-      - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
-      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent 3-pushes
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'auto(iter): 3-pushes iteration @ '
-          rebase: true
-          skip_dirty_check: false
-
-
-  iterate-two-yang:
-    name: '🔁 yw-two-yang (兩陽夾一陰)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
-      - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
-      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent two-yang
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'auto(iter): two-yang iteration @ '
-          rebase: true
-          skip_dirty_check: false
-
-
-  iterate-stair-pattern:
-    name: '🔁 yw-stair-pattern (Stair)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
-      - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
-      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent stair-pattern
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'auto(iter): stair-pattern iteration @ '
-          rebase: true
-          skip_dirty_check: false
-
-
-  iterate-crt:
-    name: '🔁 yw-crt (CRT)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
-      - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
-      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent crt
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'auto(iter): crt iteration @ '
-          rebase: true
-          skip_dirty_check: false
-
-
-  iterate-kell-cycle:
-    name: '🔁 yw-kell-cycle (Kell Cycle)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
-      - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
-      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent kell-cycle
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'auto(iter): kell-cycle iteration @ '
-          rebase: true
-          skip_dirty_check: false
-
-
-  iterate-b1:
-    name: '🔁 yw-b1 (B1 战法)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
-      - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
-      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent b1
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'auto(iter): b1 iteration @ '
-          rebase: true
-          skip_dirty_check: false
-
-
-  iterate-ocs-btc:
-    name: '🔁 ocs-btc-5m (OCS BTC 5m)'
-    runs-on: ubuntu-latest
-    timeout-minutes: 8
-    env:
-      TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-      TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-      MINIMAX_API_KEY: ${{ secrets.MINIMAX_API_KEY }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - uses: actions/checkout@v4
-        with: {fetch-depth: 0}
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11', cache: 'pip', cache-dependency-path: automation/requirements.txt}
-      - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
-      - run: .venv/bin/python automation/scripts/llm_iterate_all.py --agent ocs-btc
-      - uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'auto(iter): ocs-btc iteration @ '
-          rebase: true
-          skip_dirty_check: false
-
+      - name: Commit + push (rebase and retry on non-fast-forward)
+        run: |
+          git add automation/reports/strategy_ranking/iterations/
+          if git diff --cached --quiet; then
+            echo "no iteration files changed — nothing to commit"
+            exit 0
+          fi
+          git commit -m "auto(iter): LLM iteration for 11 agents @ $(date -u +%Y-%m-%dT%H:%M)"
+          # ~15 other workflows push to main throughout the day. A push
+          # rejected as non-fast-forward is an expected race, not a
+          # failure — rebase onto the new tip and try again.
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+            git pull --rebase origin main || true
+            if git push origin main; then
+              echo "pushed on attempt $i"
+              exit 0
+            fi
+            echo "push attempt $i rejected (non-fast-forward) — retrying"
+            sleep 10
+          done
+          echo "push failed after 5 attempts"
+          exit 1

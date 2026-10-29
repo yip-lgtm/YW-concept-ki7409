@@ -437,7 +437,7 @@ Circuit breaker: open=False
 | `update-dashboard-data.yml` | `workflow_dispatch` | triggered | Web dashboard JSON |
 | `daily-watchdog.yml` | `30 16 * * *` (daily) | 00:30 HKT | Auto-trigger daily if stalled |
 | `llm-iteration-scientist.yml` | `0 16 * * 1-5` | 00:00 HKT weekdays | Per-agent LLM self-optimize |
-| `per-agent-iteration.yml` | `0 16 * * 1-5` | 00:00 HKT weekdays | 10 agents iteration |
+| `per-agent-iteration.yml` | `25 16 * * 1-5` | 00:25 HKT weekdays | 11 agents iteration (single job, staggered off 00:00) |
 | `strategy-ranking.yml` | `0 16 * * 0` + `12,20 UTC Sun` | 00:00 + 20:00 + 04:00 HKT Sun | Ranking + LLM iter (3× daily) |
 | `strategy-reward.yml` | `10 16 * * 1-5` | 00:10 HKT weekdays | Top 3 PnL daily reward |
 | `yw-daily.yml` | `0 16 * * 1-5` + `0 16 * * 6,0` | 00:00 HKT every day | Daily LLM reminder + 4-Chart |

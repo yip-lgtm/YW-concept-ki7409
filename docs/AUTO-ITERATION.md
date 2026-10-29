@@ -49,8 +49,13 @@
 | 觸發 | 頻率 | 指令 |
 |------|------|------|
 | **GHA 自動** (主) | 21:30 HKT 週一至五 | `.github/workflows/strategy-ranking.yml` |
+| **GHA 自動** (副) | 00:25 HKT 週一至五 | `.github/workflows/per-agent-iteration.yml` |
 | **手動 GHA** | on-demand | `gh workflow run strategy-ranking.yml` |
 | **本地手動** | 即時 | `cd automation && .venv/bin/python scripts/llm_iterate_all.py [--tg]` |
+
+> **2026-10-29 修正**：`per-agent-iteration.yml` 原本開 10 個 parallel job，每個都對 `main` 做 `git-auto-commit-action`，10 個 push 撞 non-fast-forward，**每次跑只贏到 1 個 agent，另外 9 個報告直接掉咗**（由 2026-10-05 開始每日全滅）。而家收窄成 **1 個 job**：`llm_iterate_all.py` 內部本身已經用 thread pool 平行跑晒 11 個 agent，wall-clock 唔變，但只剩 **1 個 commit、1 次 push**。
+> 另外 cron 由 `0 16 * * 1-5` 錯開到 `25 16 * * 1-5`，因為原本佢同 `strategy-ranking` / `llm-iteration-scientist` / `yw-daily` 四個 workflow 一齊喺 16:00 UTC 開跑。
+> 順帶修好咗兩件事：舊 job 清單得 10 個 agent、**漏咗 argon-gold**；而 per-agent 模式出嘅 `iteration_<agent>_<TS>.json` **冇任何下游消費**（param_optimizer / regen_strategy_doc / update_dashboard_data 全部只讀 `iteration_all_<TS>.json`），而家統一輸出返真正被消費嘅格式。
 
 ---
 
