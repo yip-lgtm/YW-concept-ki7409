@@ -1,25 +1,60 @@
 {
-  "ts": "2026-10-29T07:48:32.502823+08:00",
+  "ts": "2026-10-29T08:20:36.017640+08:00",
   "ticker": "BTC-USD",
-  "h4_bars": 180,
-  "m15_bars": 672,
+  "h4_bars": 175,
+  "m15_bars": 565,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
-      "stage": "C2 already expansion (shallow wick, big body)",
-      "direction": "long",
+      "stage": "no POI",
+      "detail": "C2 [81002, 81708] misses nearest swing 82165 by 456",
+      "direction": "short",
       "strategy": "TTrades-L12",
       "has_levels": false
     },
     "TTrades-L13": {
-      "fired": false,
-      "stage": "C3 not an expansion candle (wick too large)",
+      "fired": true,
       "strategy": "TTrades-L13",
-      "has_levels": false
+      "direction": "short",
+      "stage": "C3 continuation order block",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 81325.1875,
+        "series_length": 1,
+        "last_close": 81166.171875,
+        "reason": "cisd_short"
+      },
+      "order_block": {
+        "ob_high": 81177.3828125,
+        "ob_low": 81029.9765625,
+        "ob_eq": 81103.6796875,
+        "rule": "opposing (bullish) candle confirms HTF wick"
+      },
+      "c2_eq": 81355.03515625,
+      "c2_high": 81708.3984375,
+      "c2_low": 81001.671875,
+      "c3_high": 81288.1015625,
+      "c3_low": 81159.7578125,
+      "swing_level": 81708.3984375,
+      "entry_ref": 81166.171875,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 81166.17,
+      "sl": 81273.68,
+      "t1": 81058.66,
+      "t2_close": 80992.22,
+      "t3": 80884.7,
+      "risk": 107.51,
+      "sl_basis": "outside continuation order block (L13 \u00a72)",
+      "sl_buffer": 96.3,
+      "atr_h4": 642.01
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "stage": "CISD not confirmed",
+      "detail": "no break",
+      "direction": "long",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
