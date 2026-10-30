@@ -5,19 +5,19 @@
 
 | # | agent | lv | 昨日結果 | n | WR | PF | RR | 昨日 P&L | equity | 今日進行中 |
 |---:|---|--:|---|--:|--:|--:|--:|--:|--:|---|
-| 1 | CRT | 5 | promote | 4 | up 75% | up 4.22 | up 1.41 | $+322 | $+3,862 | 1 單 · $+130 |
+| 1 | CRT | 5 | promote | 4 | up 75% | up 4.22 | up 1.41 | $+322 | $+3,861 | 1 單 · $+130 |
 | 2 | Kell-Cycle | 4 | hold | 5 | down 20% | down 0.50 | up 2.00 | $-200 | $+1,063 | 4 單 · $-400 |
 | 3 | 3-Pushes | 3 | hold | 4 | down 0% | down 0.00 | down 0.00 | $-400 | $+1,039 | 1 單 · $-100 |
 | 4 | B1 | 3 | promote | 4 | up 50% | up 1.62 | up 1.62 | $+124 | $+85 | — |
-| 5 | TTrades-Fractal | 3 | hold | 3 | down 0% | down 0.00 | down 0.00 | $-57 | $+363 | — |
-| 6 | Two-Yang | 3 | promote | 3 | up 100% | up 99.00 | up 99.00 | $+485 | $-1,982 | 1 單 · $+162 |
+| 5 | TTrades-Fractal | 3 | hold | 3 | down 0% | down 0.00 | down 0.00 | $-57 | $+375 | — |
+| 6 | Two-Yang | 3 | promote | 3 | up 100% | up 99.00 | up 99.00 | $+485 | $-2,006 | 2 單 · $+62 |
 | 7 | 50-20-Pullback | 2 | demote | 12 | down 8% | down 0.15 | up 1.62 | $-938 | $-2,079 | 1 單 · $-100 |
-| 8 | Stair | 2 | hold | 8 | down 25% | down 0.54 | up 1.62 | $-276 | $+1,910 | 1 單 · $+262 |
+| 8 | Stair | 2 | hold | 8 | down 25% | down 0.54 | up 1.62 | $-276 | $+1,810 | 2 單 · $+162 |
 | 9 | TTrades-L14 | 1 | hold | 2 | down 0% | down 0.00 | down 0.00 | $-200 | $-400 | 1 單 · $-100 |
-| 10 | TTrades-L12 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-119 | — |
-| 11 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+812 | — |
+| 10 | TTrades-L12 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-72 | — |
+| 11 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,624 | — |
 | 12 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
-| 13 | Argon-Gold | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-300 | — |
+| 13 | Argon-Gold | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-148 | 1 單 · $+152 |
 | 14 | H-Pattern | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-1,253 | — |
 | 15 | RSI-Div | 0 | demote | 11 | down 9% | down 0.16 | up 1.62 | $-838 | $-3,402 | 2 單 · $+162 |
 
