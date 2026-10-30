@@ -2,27 +2,27 @@
   "_meta": {
     "_comment": "Live strategy param overrides — written by param_optimizer.py, read by live_scan.py at import. Auto-optimization output (weight/min_strength/resample_tf per strategy).",
     "created": "2026-10-07T13:30:00+00:00",
-    "applications": 14,
-    "last_run": "2026-10-29T20:55:39.632283+00:00",
+    "applications": 16,
+    "last_run": "2026-10-30T20:26:16.545230+00:00",
     "note": "Empty = all strategies use live_scan.py hardcoded defaults. 2026-10-07: weight became LIVE config (was dead) — see param_optimizer.py.",
-    "last_source": "iteration_all_20261030_045406.json",
-    "last_applied_n": 0,
-    "last_rejected_n": 3,
+    "last_source": "iteration_all_20261031_042521.json",
+    "last_applied_n": 2,
+    "last_rejected_n": 1,
     "last_log": [
-      "  OCS-BTC-5m: REJECT grade=C conf=35 < 75",
-      "  H-Pattern: SKIP grade=D (LLM has no useful suggestion; live n=140)",
-      "  CRT: grade=C accepted via high-conf+sample path (conf=86, n=791)",
-      "  CRT: SKIP (on cooldown, applied 2026-10-27)",
-      "  B1: grade=C accepted via high-conf+sample path (conf=78, n=17)",
-      "  B1: no change (grade=C conf=78 — proposed values already active)",
-      "  Stair: SKIP grade=D (LLM has no useful suggestion; live n=360)",
-      "  Two-Yang: SKIP grade=D (LLM has no useful suggestion; live n=234)",
+      "  Stair: grade=C accepted via high-conf+sample path (conf=88, n=368)",
+      "  Stair: SKIP (on cooldown, applied 2026-10-27)",
+      "  OCS-BTC-5m: SKIP grade=D (LLM has no useful suggestion; live n=0)",
+      "  Two-Yang: grade=C accepted via high-conf+sample path (conf=91, n=235)",
+      "  Two-Yang: APPLY [C/91] weight 0.8→0.55 (delta capped ±0.25 (LLM wanted 0.3)), resample_tf →15min",
       "  RSI-Div: SKIP (on cooldown, applied 2026-10-27)",
       "  yw-argon-gold: no live_scan mapping (id=argon-gold)",
-      "  3-Pushes: grade=C accepted via high-conf+sample path (conf=78, n=425)",
+      "  H-Pattern: SKIP grade=D (LLM has no useful suggestion; live n=140)",
+      "  CRT: SKIP (on cooldown, applied 2026-10-27)",
+      "  B1: no change (grade=B conf=68 — proposed values already active)",
+      "  50-20-Pullback: SKIP grade=D (LLM has no useful suggestion; live n=1015)",
       "  3-Pushes: SKIP (on cooldown, applied 2026-10-27)",
-      "  Kell-Cycle: REJECT grade=? (unrecognised)",
-      "  50-20-Pullback: SKIP grade=D (LLM has no useful suggestion; live n=1015)"
+      "  Kell-Cycle: grade=C accepted via high-conf+sample path (conf=78, n=194)",
+      "  Kell-Cycle: APPLY [C/78] weight 0.7→0.8"
     ]
   },
   "RSI-Div": {
@@ -122,24 +122,20 @@
     ]
   },
   "Kell-Cycle": {
-    "weight": 0.7,
+    "weight": 0.8,
     "resample_tf": "15min",
-    "last_applied": "2026-10-20T12:03:43.790019+00:00",
+    "last_applied": "2026-10-30T20:26:16.545230+00:00",
     "grade": "C",
-    "confidence": 88,
-    "reason": "整體正回報但PF偏低，MGC拖累明顯，需降權減噪",
-    "source_iteration": "iteration_all_20261020_200325.json",
+    "confidence": 78,
+    "reason": "PF僅1.08，MES/MGC拖累；樣本足夠但優勢偏薄",
+    "source_iteration": "iteration_all_20261031_042521.json",
     "changes": {
       "weight": {
-        "from": 0.9,
-        "to": 0.7
-      },
-      "resample_tf": {
-        "from": "",
-        "to": "15min"
+        "from": 0.7,
+        "to": 0.8
       }
     },
-    "applications": 1,
+    "applications": 2,
     "history": [
       {
         "date": "2026-10-20T12:03:43.790019+00:00",
@@ -148,6 +144,14 @@
         "changes": {
           "weight": 0.7,
           "resample_tf": "15min"
+        }
+      },
+      {
+        "date": "2026-10-30T20:26:16.545230+00:00",
+        "grade": "C",
+        "confidence": 78,
+        "changes": {
+          "weight": 0.8
         }
       }
     ]
@@ -257,6 +261,38 @@
         "confidence": 86,
         "changes": {
           "weight": 0.65,
+          "resample_tf": "15min"
+        }
+      }
+    ]
+  },
+  "Two-Yang": {
+    "weight": 0.55,
+    "resample_tf": "15min",
+    "last_applied": "2026-10-30T20:26:16.545230+00:00",
+    "grade": "C",
+    "confidence": 91,
+    "reason": "MES拖累近23R，整體PF僅0.88，宜降權重及延長週期。",
+    "source_iteration": "iteration_all_20261031_042521.json",
+    "changes": {
+      "weight": {
+        "from": 0.8,
+        "to": 0.55,
+        "note": "delta capped ±0.25 (LLM wanted 0.3)"
+      },
+      "resample_tf": {
+        "from": "",
+        "to": "15min"
+      }
+    },
+    "applications": 1,
+    "history": [
+      {
+        "date": "2026-10-30T20:26:16.545230+00:00",
+        "grade": "C",
+        "confidence": 91,
+        "changes": {
+          "weight": 0.55,
           "resample_tf": "15min"
         }
       }
