@@ -2,45 +2,43 @@
   "_meta": {
     "_comment": "Live strategy param overrides — written by param_optimizer.py, read by live_scan.py at import. Auto-optimization output (weight/min_strength/resample_tf per strategy).",
     "created": "2026-10-07T13:30:00+00:00",
-    "applications": 16,
-    "last_run": "2026-10-30T20:26:16.545230+00:00",
+    "applications": 18,
+    "last_run": "2026-10-31T19:46:54.475544+00:00",
     "note": "Empty = all strategies use live_scan.py hardcoded defaults. 2026-10-07: weight became LIVE config (was dead) — see param_optimizer.py.",
-    "last_source": "iteration_all_20261031_042521.json",
+    "last_source": "iteration_all_20261101_034517.json",
     "last_applied_n": 2,
-    "last_rejected_n": 1,
+    "last_rejected_n": 4,
     "last_log": [
-      "  Stair: grade=C accepted via high-conf+sample path (conf=88, n=368)",
-      "  Stair: SKIP (on cooldown, applied 2026-10-27)",
-      "  OCS-BTC-5m: SKIP grade=D (LLM has no useful suggestion; live n=0)",
-      "  Two-Yang: grade=C accepted via high-conf+sample path (conf=91, n=235)",
-      "  Two-Yang: APPLY [C/91] weight 0.8→0.55 (delta capped ±0.25 (LLM wanted 0.3)), resample_tf →15min",
-      "  RSI-Div: SKIP (on cooldown, applied 2026-10-27)",
-      "  yw-argon-gold: no live_scan mapping (id=argon-gold)",
+      "  OCS-BTC-5m: REJECT grade=C but live n=0 < 10 (insufficient evidence)",
+      "  Kell-Cycle: grade=C accepted via high-conf+sample path (conf=84, n=194)",
+      "  Kell-Cycle: SKIP (on cooldown, applied 2026-10-30)",
+      "  CRT: no change (grade=B conf=84 — proposed values already active)",
+      "  RSI-Div: APPLY [B/86] weight 0.75→0.6",
+      "  B1: REJECT grade=C conf=68 < 75",
       "  H-Pattern: SKIP grade=D (LLM has no useful suggestion; live n=140)",
-      "  CRT: SKIP (on cooldown, applied 2026-10-27)",
-      "  B1: no change (grade=B conf=68 — proposed values already active)",
       "  50-20-Pullback: SKIP grade=D (LLM has no useful suggestion; live n=1015)",
-      "  3-Pushes: SKIP (on cooldown, applied 2026-10-27)",
-      "  Kell-Cycle: grade=C accepted via high-conf+sample path (conf=78, n=194)",
-      "  Kell-Cycle: APPLY [C/78] weight 0.7→0.8"
+      "  yw-argon-gold: no live_scan mapping (id=argon-gold)",
+      "  Stair: grade=C accepted via high-conf+sample path (conf=84, n=368)",
+      "  Stair: APPLY [C/84] weight 0.65→0.5",
+      "  Two-Yang: SKIP grade=D (LLM has no useful suggestion; live n=235)",
+      "  3-Pushes: REJECT grade=? (unrecognised)"
     ]
   },
   "RSI-Div": {
-    "weight": 0.75,
+    "weight": 0.6,
     "resample_tf": "15min",
-    "last_applied": "2026-10-27T20:29:46.169679+00:00",
+    "last_applied": "2026-10-31T19:46:54.475544+00:00",
     "grade": "B",
-    "confidence": 82,
-    "reason": "PF及總R理想，但盈利集中BTC，MNQ與金屬期貨拖累。",
-    "source_iteration": "iteration_all_20261028_042810.json",
+    "confidence": 86,
+    "reason": "盈利集中於BTC，其他市場偏弱，但整體PF 1.52仍屬正期望",
+    "source_iteration": "iteration_all_20261101_034517.json",
     "changes": {
       "weight": {
-        "from": 0.5,
-        "to": 0.75,
-        "note": "delta capped ±0.25 (LLM wanted 0.8)"
+        "from": 0.75,
+        "to": 0.6
       }
     },
-    "applications": 4,
+    "applications": 5,
     "history": [
       {
         "date": "2026-10-17T18:10:36.458503+00:00",
@@ -73,6 +71,14 @@
         "confidence": 82,
         "changes": {
           "weight": 0.75
+        }
+      },
+      {
+        "date": "2026-10-31T19:46:54.475544+00:00",
+        "grade": "B",
+        "confidence": 86,
+        "changes": {
+          "weight": 0.6
         }
       }
     ]
@@ -235,25 +241,20 @@
     ]
   },
   "Stair": {
-    "weight": 0.65,
+    "weight": 0.5,
     "resample_tf": "15min",
-    "last_applied": "2026-10-27T20:29:46.169679+00:00",
+    "last_applied": "2026-10-31T19:46:54.475544+00:00",
     "grade": "C",
-    "confidence": 86,
-    "reason": "勝率及PF未達標，僅MNQ盈利；應降權重並加強訊號過濾。",
-    "source_iteration": "iteration_all_20261028_042810.json",
+    "confidence": 84,
+    "reason": "PF僅0.95且總R為-12.5，主要樣本除MNQ外偏弱，宜減倉過濾。",
+    "source_iteration": "iteration_all_20261101_034517.json",
     "changes": {
       "weight": {
-        "from": 0.9,
-        "to": 0.65,
-        "note": "delta capped ±0.25 (LLM wanted 0.5)"
-      },
-      "resample_tf": {
-        "from": "",
-        "to": "15min"
+        "from": 0.65,
+        "to": 0.5
       }
     },
-    "applications": 1,
+    "applications": 2,
     "history": [
       {
         "date": "2026-10-27T20:29:46.169679+00:00",
@@ -262,6 +263,14 @@
         "changes": {
           "weight": 0.65,
           "resample_tf": "15min"
+        }
+      },
+      {
+        "date": "2026-10-31T19:46:54.475544+00:00",
+        "grade": "C",
+        "confidence": 84,
+        "changes": {
+          "weight": 0.5
         }
       }
     ]
