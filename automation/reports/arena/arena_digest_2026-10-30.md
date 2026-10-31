@@ -6,7 +6,7 @@
 | # | agent | lv | 昨日結果 | n | WR | PF | RR | 昨日 P&L | equity | 今日進行中 |
 |---:|---|--:|---|--:|--:|--:|--:|--:|--:|---|
 | 1 | CRT | 6 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+4,122 | — |
-| 2 | TTrades-Fractal | 4 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+187 | $+485 | — |
+| 2 | TTrades-Fractal | 4 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+187 | $+486 | — |
 | 3 | Kell-Cycle | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,063 | — |
 | 4 | Stair | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,810 | — |
 | 5 | 3-Pushes | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,039 | — |
@@ -14,9 +14,9 @@
 | 7 | Two-Yang | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,282 | — |
 | 8 | Argon-Gold | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-148 | — |
 | 9 | 50-20-Pullback | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,079 | — |
-| 10 | TTrades-L13 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $+1,230 | — |
-| 11 | H-Pattern | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-1,353 | — |
-| 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+7 | — |
+| 10 | TTrades-L13 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $+1,170 | — |
+| 11 | H-Pattern | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-1,365 | — |
+| 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+9 | — |
 | 13 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 14 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-400 | — |
 | 15 | RSI-Div | 0 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-3,502 | — |
