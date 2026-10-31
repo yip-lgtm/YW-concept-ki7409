@@ -15,7 +15,7 @@
 | 8 | Argon-Gold | 2 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+152 | $-148 | — |
 | 9 | 50-20-Pullback | 2 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-2,079 | — |
 | 10 | TTrades-L14 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-400 | — |
-| 11 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,345 | 1 單 · $-100 |
+| 11 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,209 | 1 單 · $-100 |
 | 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+7 | — |
 | 13 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 14 | H-Pattern | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-1,353 | 1 單 · $-100 |
