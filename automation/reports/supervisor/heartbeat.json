@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-01T01:36:48.756498+00:00",
+  "timestamp": "2026-11-01T05:39:52.689358+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -8,9 +8,9 @@
       "no /tmp/ocs_btc/latest.json"
     ],
     "n_open": 1,
-    "n_trades_total": 56,
-    "win_rate": 44.6,
-    "profit_factor": 1.28,
+    "n_trades_total": 58,
+    "win_rate": 43.1,
+    "profit_factor": 1.21,
     "last_signal": null
   },
   "ranking": {
@@ -78,21 +78,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 41261744692,
+          "id": 41277755745,
           "conclusion": "running",
+          "created_at": "2026-11-01T05:39:06Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 41264118132,
+          "conclusion": "success",
+          "created_at": "2026-11-01T02:11:00Z",
+          "event": "schedule"
+        },
+        {
+          "id": 41261744692,
+          "conclusion": "success",
           "created_at": "2026-11-01T01:35:53Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 41255980021,
-          "conclusion": "success",
-          "created_at": "2026-11-01T00:15:56Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 41253236858,
-          "conclusion": "success",
-          "created_at": "2026-10-31T23:36:22Z",
           "event": "workflow_dispatch"
         }
       ],
