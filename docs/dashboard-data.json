@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-11-01 13:39 HKT",
-  "hkt_timestamp": "2026-11-01T13:39:50.385627+08:00",
+  "generated_at": "2026-11-01 16:04 HKT",
+  "hkt_timestamp": "2026-11-01T16:04:24.772528+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 7,
-    "trades_today": 5,
-    "wins_24h": 1,
-    "R_24h": -4.38,
-    "signals_24h": 2,
-    "wr_24h": 14.3
+    "trades_24h": 9,
+    "trades_today": 7,
+    "wins_24h": 2,
+    "R_24h": -4.08,
+    "signals_24h": 3,
+    "wr_24h": 22.2
   },
   "ranking_24h": [
     {
@@ -28,14 +28,14 @@
     {
       "strategy": "CRT",
       "ticker": "BTC-USD",
-      "n_trades": 1,
-      "n_wins": 0,
+      "n_trades": 2,
+      "n_wins": 1,
       "n_losses": 1,
-      "win_rate": 0.0,
-      "total_R": -1.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -100.0,
-      "profit_factor": 0.0,
+      "win_rate": 50.0,
+      "total_R": 0.3,
+      "avg_R": 0.15,
+      "total_pnl_usd": 30.0,
+      "profit_factor": 1.3,
       "rank": 2,
       "medal_eligible": false
     },
@@ -56,26 +56,26 @@
     {
       "strategy": "unknown",
       "ticker": "\u2014",
-      "n_trades": 6,
+      "n_trades": 7,
       "n_wins": 1,
-      "n_losses": 5,
-      "win_rate": 16.7,
-      "total_R": -3.38,
-      "avg_R": -0.564,
-      "total_pnl_usd": -203.44,
-      "profit_factor": 0.32,
+      "n_losses": 6,
+      "win_rate": 14.3,
+      "total_R": -4.38,
+      "avg_R": -0.626,
+      "total_pnl_usd": -303.77,
+      "profit_factor": 0.27,
       "rank": 4,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 12,
-    "n_wins": 5,
-    "win_rate": 41.7,
-    "total_R": -1.38,
-    "total_pnl_usd": -3.44
+    "n_trades": 14,
+    "n_wins": 6,
+    "win_rate": 42.9,
+    "total_R": -1.08,
+    "total_pnl_usd": 26.23
   },
-  "ranking_24h_updated": "2026-11-01T05:39:50.385673+00:00",
+  "ranking_24h_updated": "2026-11-01T08:04:24.772549+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -93,22 +93,22 @@
         5
       ],
       "live_24h": {
+        "n": 7,
+        "wins": 1,
+        "losses": 6,
+        "wr": 14.3,
+        "R": -4.38,
+        "pf": 0.27,
+        "pnl": -303.77
+      },
+      "live_today": {
         "n": 6,
         "wins": 1,
         "losses": 5,
         "wr": 16.7,
         "R": -3.38,
         "pf": 0.32,
-        "pnl": -203.44
-      },
-      "live_today": {
-        "n": 5,
-        "wins": 1,
-        "losses": 4,
-        "wr": 20.0,
-        "R": -2.38,
-        "pf": 0.4,
-        "pnl": -139.67
+        "pnl": -240.0
       },
       "signals_24h": 0,
       "backtest_4d": {
@@ -457,24 +457,24 @@
         5
       ],
       "live_24h": {
-        "n": 1,
-        "wins": 0,
+        "n": 2,
+        "wins": 1,
         "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
-        "pf": 0.0,
-        "pnl": -100.0
+        "wr": 50.0,
+        "R": 0.3,
+        "pf": 1.3,
+        "pnl": 30.0
       },
       "live_today": {
-        "n": 0,
-        "wins": 0,
+        "n": 1,
+        "wins": 1,
         "losses": 0,
-        "wr": 0,
-        "R": 0,
-        "pf": 0.0,
-        "pnl": 0
+        "wr": 100.0,
+        "R": 1.3,
+        "pf": 10.0,
+        "pnl": 130.0
       },
-      "signals_24h": 2,
+      "signals_24h": 3,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -1162,20 +1162,20 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-01T09:24:45.601713+08:00",
+        "updated": "2026-11-01T15:52:07.475878+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "CISD not confirmed; D1 counter-trend (ranging); London expanded (skip NY)",
-          "ts": "2026-10-31T21:24:45.160704-04:00"
+          "reason": "no H4 C3 closure (Fractal quiet)",
+          "ts": "2026-11-01T02:52:07.210625-05:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no POI",
-            "detail": "C2 [77289, 77614] misses nearest swing 80409 by 2795",
-            "direction": "long",
+            "stage": "no C2 closure (sweep+reclaim) on C2",
+            "detail": null,
+            "direction": null,
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -1193,7 +1193,7 @@
           {
             "strategy": "TTrades-L13",
             "fired": false,
-            "stage": "C2 not an expansion candle (wick too large)",
+            "stage": "C3 not an expansion candle (wick too large)",
             "detail": null,
             "direction": null,
             "closure": null,
@@ -1214,8 +1214,8 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [77400, 77640] misses nearest swing 81694 by 4054",
-            "direction": "short",
+            "detail": "C2 [77289, 77614] misses nearest swing 80409 by 2795",
+            "direction": "long",
             "closure": "c2_closure",
             "trade_candle": null,
             "poi_note": null,
