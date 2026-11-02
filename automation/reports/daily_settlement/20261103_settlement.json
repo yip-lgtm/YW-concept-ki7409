@@ -1,0 +1,217 @@
+{
+  "date_hkt": "2026-11-03",
+  "date_ymd": "20261103",
+  "generated_at_hkt": "2026-11-03 06:59:11 HKT",
+  "repo": "/home/runner/work/YW-concept-ki7409/YW-concept-ki7409",
+  "account": "PAAPEX…091",
+  "equity": {
+    "equity_start": null,
+    "equity_end": null,
+    "open_pl": null,
+    "working_count": null,
+    "day_pnl": 0.0,
+    "dd_amount": 0.0,
+    "dd_vs": "day_start",
+    "dd_limit_usd": -100.0,
+    "dd_hold": false,
+    "pnl_source": "paper_allowlisted_pnl_fallback",
+    "account": "PAAPEX…091",
+    "session_high_equity": null
+  },
+  "dd_hold": false,
+  "dd_state": {
+    "dd": "unlocked",
+    "dd_hold": false,
+    "updated_at_hkt": "2026-11-03 06:59 HKT",
+    "date": "2026-11-03",
+    "day_pnl": 0.0,
+    "dd_amount": 0.0,
+    "dd_limit_usd": -100.0,
+    "no_new_entries": false,
+    "account": "PAAPEX…091",
+    "path": "automation/state/ops_dd_hold.json"
+  },
+  "dd_state_path": "automation/state/ops_dd_hold.json",
+  "dd_limit_usd": -100.0,
+  "tp_limit_usd": 300.0,
+  "fills": {
+    "n_fills_total": 0,
+    "n_allowlisted": 0,
+    "n_non_allowlisted": 0,
+    "pnl_allowlisted_usd": 0,
+    "pnl_all_sources_usd": 0,
+    "by_strategy": {},
+    "rows": []
+  },
+  "signals": {
+    "n_allowlisted": 9,
+    "n_gated": 9,
+    "n_fired_or_ungated": 0,
+    "by_strategy": {
+      "crt": {
+        "n": 5,
+        "gated": 5,
+        "fired": 0
+      },
+      "stair": {
+        "n": 4,
+        "gated": 4,
+        "fired": 0
+      }
+    },
+    "outcomes_tail": [
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CIRCUIT BREAKER: circuit open (TTL expired but only 0/3 good scans) — no auto-open while Analyst degraded",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": "CIRCUIT BREAKER: circuit open (TTL expired but only 0/3 good scans) — no auto-open while Analyst degraded",
+        "gate_blocked": true,
+        "confidence": 94
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": "CIRCUIT BREAKER: circuit open (TTL expired but only 0/3 good scans) — no auto-open while Analyst degraded",
+        "gate_blocked": true,
+        "confidence": 101
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "bearish",
+        "gate_skip": "CIRCUIT BREAKER: circuit open (TTL expired but only 0/3 good scans) — no auto-open while Analyst degraded",
+        "gate_blocked": true,
+        "confidence": 101
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "short",
+        "gate_skip": "CIRCUIT BREAKER: circuit open (TTL expired but only 0/3 good scans) — no auto-open while Analyst degraded",
+        "gate_blocked": true,
+        "confidence": 86
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "MGC=F",
+        "grade": "B",
+        "direction": "short",
+        "gate_skip": "CIRCUIT BREAKER: circuit open (TTL expired but only 0/3 good scans) — no auto-open while Analyst degraded",
+        "gate_blocked": true,
+        "confidence": 86
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MNQ=F",
+        "grade": "B",
+        "direction": "bearish",
+        "gate_skip": "CIRCUIT BREAKER: circuit open: analyst charts_failed/charts_total = 37/37 = 100% — no auto-open while Analyst degraded",
+        "gate_blocked": true,
+        "confidence": 101
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "short",
+        "gate_skip": "CIRCUIT BREAKER: circuit open: analyst charts_failed/charts_total = 37/37 = 100% — no auto-open while Analyst degraded",
+        "gate_blocked": true,
+        "confidence": 97
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "GC=F",
+        "grade": "B",
+        "direction": "short",
+        "gate_skip": "CIRCUIT BREAKER: circuit open: analyst charts_failed/charts_total = 37/37 = 100% — no auto-open while Analyst degraded",
+        "gate_blocked": true,
+        "confidence": 86
+      }
+    ]
+  },
+  "llm": {
+    "llm_status": "ok",
+    "scientist_invoked": true,
+    "returncode": 0,
+    "stdout_tail": "de=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.18 WR=15.4% R=-47.1\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.67 WR=40.0% R=+32.0\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.57 WR=36.1% R=-12.5\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.53 WR=34.7% R=-19.6\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.54 WR=35.0% R=-13.0\n    [FALLBACK] C conf=50\n    LLM: grade=C conf=50 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Marginal: PF=0.96 WR=48.9% R=+47.9\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.56 WR=36.0% R=-68.2\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.67 WR=40.2% R=+9.6\n\n[scientist] Saved: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261103_065910.json\n[scientist] Markdown: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261103_065910.md\n[scientist] TG: 200\n",
+    "stderr_tail": "",
+    "latest_report": "automation/reports/strategy_ranking/iterations/iteration_scientist_20261103_065910.json"
+  },
+  "drift_flags": [],
+  "ops_lessons": [
+    "Never treat Order Ticket Limit as sim last (MBT 83660 false OUT_OF_GATE) — use chart/DOM/explicit last.",
+    "Bracket SL/TP: prefer paper-anchored absolute levels vs fill-offset when fill ≠ paper; flag drift.",
+    "Handoff text must say QTY=1 Bracket (NOT Group QTY20). Ops-only Tradovate; A皮 coordinates.",
+    "Live allowlist only: 50-20-Pullback, CRT, Stair, H-Pattern.",
+    "Envelope defaults: −$100 DD hold / +$300 TP (historical). Change only with explicit user choice."
+  ],
+  "ops_briefing": [
+    "Settlement 2026-11-03 HKT · PAAPEX…091 · day P/L $+0.00 (src=paper_allowlisted_pnl_fallback) · DD +0.00 vs limit -100.0",
+    "✅ DD unlocked — under −$100 limit.",
+    "Allowlist fills: n=0 pnl=$+0.00; signals allow n=9 gated=9",
+    "Policy: QTY=1 Bracket only (NOT Group QTY20); never use Order Ticket Limit as sim last.",
+    "LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261103_065910.json",
+    "Never re-handoff stale/gated/null-position signals; stay quiet if nothing changed."
+  ],
+  "live_scan": {
+    "live_dir": "/home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/live_scan",
+    "n_positions": 0,
+    "positions": [],
+    "heartbeat_ts": "2026-11-02T20:19:43.004573+00:00",
+    "heartbeat": {
+      "timestamp": "2026-11-02T20:19:43.004573+00:00",
+      "n_detections": 54,
+      "n_signals": 7,
+      "n_errors": 1,
+      "n_fired": 0,
+      "n_gated": 6,
+      "n_pre_gate": 6,
+      "circuit_breaker": {
+        "consecutive_good_scans": 0,
+        "open": true,
+        "opened_at": "2026-11-01T23:05:44.450017+00:00",
+        "until": "2026-11-02T21:55:18.621106+00:00",
+        "reason": "analyst charts_failed/charts_total = 37/37 = 100%"
+      },
+      "elapsed_sec": 33.9,
+      "tickers": [
+        "MNQ=F",
+        "MES=F",
+        "M2K=F",
+        "MGC=F",
+        "GC=F",
+        "BTC-USD"
+      ]
+    },
+    "circuit_breaker": {
+      "consecutive_good_scans": 0,
+      "open": true,
+      "opened_at": "2026-11-01T23:05:44.450017+00:00",
+      "until": "2026-11-02T21:55:18.621106+00:00",
+      "reason": "analyst charts_failed/charts_total = 37/37 = 100%"
+    },
+    "n_day_trades": 0,
+    "n_day_signals": 21
+  },
+  "allowlist": [
+    "50-20-Pullback",
+    "CRT",
+    "Stair",
+    "H-Pattern"
+  ],
+  "book_path": null
+}
