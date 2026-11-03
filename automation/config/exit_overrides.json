@@ -2,9 +2,15 @@
   "_meta": {
     "_comment": "Per-strategy exit overrides learned by the RL iteration agent. Written by rl_iterate.py, read by live_scan.py.",
     "created": "2026-10-20T14:00:02.325747+00:00",
-    "runs": 30,
-    "last_run": "2026-11-02T23:19:42.746230+00:00",
-    "last_applied": []
+    "runs": 31,
+    "last_run": "2026-11-03T21:31:20.749587+00:00",
+    "last_applied": [
+      "Two-Yang",
+      "Stair",
+      "50-20-Pullback",
+      "Kell-Cycle",
+      "RSI-Div"
+    ]
   },
   "Two-Yang": {
     "config": {
@@ -13,11 +19,11 @@
       "partial_at_r": 0.0,
       "partial_r": 1.0
     },
-    "last_changed": "2026-10-27T20:27:46.545717+00:00",
-    "gain_r": 27.55,
-    "baseline_r": -24.27,
-    "candidate_r": 3.28,
-    "n_scored": 218,
+    "last_changed": "2026-11-03T21:31:20.749587+00:00",
+    "gain_r": 24.02,
+    "baseline_r": -17.03,
+    "candidate_r": 6.99,
+    "n_scored": 216,
     "source": "rl_iterate"
   },
   "H-Pattern": {
@@ -41,53 +47,53 @@
       "partial_at_r": 0.0,
       "partial_r": 1.0
     },
-    "last_changed": "2026-10-27T20:27:46.545717+00:00",
-    "gain_r": 15.65,
-    "baseline_r": -17.9,
-    "candidate_r": -2.25,
-    "n_scored": 353,
+    "last_changed": "2026-11-03T21:31:20.749587+00:00",
+    "gain_r": 22.89,
+    "baseline_r": -13.42,
+    "candidate_r": 9.46,
+    "n_scored": 359,
     "source": "rl_iterate"
   },
   "50-20-Pullback": {
     "config": {
-      "t2_r": 2.0,
+      "t2_r": 2.618,
       "breakeven_at_r": 0.5,
       "partial_at_r": 0.0,
       "partial_r": 1.0
     },
-    "last_changed": "2026-10-27T20:27:46.545717+00:00",
-    "gain_r": 84.67,
-    "baseline_r": -59.67,
-    "candidate_r": 25.0,
-    "n_scored": 1010,
+    "last_changed": "2026-11-03T21:31:20.749587+00:00",
+    "gain_r": 78.67,
+    "baseline_r": -51.03,
+    "candidate_r": 27.64,
+    "n_scored": 949,
     "source": "rl_iterate"
   },
   "Kell-Cycle": {
     "config": {
-      "t2_r": 2.0,
-      "breakeven_at_r": 1.5,
+      "t2_r": 3.0,
+      "breakeven_at_r": 0.5,
       "partial_at_r": 0.0,
       "partial_r": 1.0
     },
-    "last_changed": "2026-10-27T20:27:46.545717+00:00",
-    "gain_r": 10.41,
-    "baseline_r": 25.59,
-    "candidate_r": 36.0,
-    "n_scored": 192,
+    "last_changed": "2026-11-03T21:31:20.749587+00:00",
+    "gain_r": 16.74,
+    "baseline_r": 30.26,
+    "candidate_r": 47.0,
+    "n_scored": 165,
     "source": "rl_iterate"
   },
   "RSI-Div": {
     "config": {
-      "t2_r": 2.618,
+      "t2_r": 2.0,
       "breakeven_at_r": 0.0,
       "partial_at_r": 0.0,
       "partial_r": 1.0
     },
-    "last_changed": "2026-10-27T20:27:46.545717+00:00",
-    "gain_r": 28.11,
-    "baseline_r": 37.06,
-    "candidate_r": 65.17,
-    "n_scored": 175,
+    "last_changed": "2026-11-03T21:31:20.749587+00:00",
+    "gain_r": 19.59,
+    "baseline_r": 38.41,
+    "candidate_r": 58.0,
+    "n_scored": 137,
     "source": "rl_iterate"
   },
   "B1-3in1": {
