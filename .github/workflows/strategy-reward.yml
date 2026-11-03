@@ -15,6 +15,21 @@ on:
 permissions:
   contents: write
 
+# 2026-11-03: serialise every workflow that pushes to `main`.
+#
+# 13 workflows push to `main` and they used to do it concurrently, so two
+# of them could reach `git push` at the same moment. The loser got a
+# non-fast-forward rejection, which most workflows swallow with
+# `|| echo "push failed"` — so the commit was silently lost. Measured
+# example: tech-analyst generated 36 charts at 18:05 CST, committed
+# 29d16cd, and that commit never reached origin/main while six other
+# workflows pushed in the same two-minute window.
+#
+# A shared group makes GitHub queue the runs instead. `cancel-in-progress:
+# false` because a cancelled run loses all its work.
+concurrency:
+  group: push-main
+  cancel-in-progress: false
 jobs:
   daily-reward:
     name: Daily reward top 3 PnL strategies

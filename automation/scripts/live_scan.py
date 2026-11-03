@@ -1462,18 +1462,44 @@ def send_telegram_photo(photo_path: str, caption: str = "") -> int:
 
 
 def publish_ai_trader(signal: dict) -> int:
-    """Publish signal to AI-Trader. Returns HTTP code."""
+    """Publish signal to AI-Trader. Returns HTTP code.
+
+    Endpoint note (2026-11-03): this used to post to
+    ``https://ai-trader.hkuds.hku.hk/api/signals``. That host no longer
+    resolves in DNS (the whole ``hkuds.hku.hk`` domain is gone), so every
+    publish silently returned 0 and no signal ever reached the AI-Trader
+    side. The live endpoint is ``https://ai4trade.ai/api`` — the same one
+    ``ocs_act.py`` and ``yw-publish-signal.yml`` already use.
+
+    The payload shape follows ``ocs_act.py``: the platform expects
+    ``market`` / ``title`` / ``content`` / ``symbols`` / ``tags``, not the
+    flat symbol/action/confidence dict this function used to send.
+    """
     if not AI_TOKEN:
         return 0
+    ticker = signal.get("symbol") or "?"
+    strategy = signal.get("source") or "live_scan"
+    action = signal.get("action") or ""
+    payload = {
+        "market": "crypto" if "-" in ticker else "futures",
+        "title": f"{ticker} {action.upper()} ({strategy})"[:100],
+        "content": str(signal.get("reason") or "")[:1500],
+        "symbols": ticker,
+        "tags": ",".join(["yw-live-scan", strategy, action, ticker]),
+    }
     try:
         r = requests.post(
-            "https://ai-trader.hkuds.hku.hk/api/signals",
-            headers={"Authorization": f"Bearer {AI_TOKEN}"},
-            json=signal,
+            "https://ai4trade.ai/api/signals/strategy",
+            headers={"Authorization": f"Bearer {AI_TOKEN}",
+                     "Content-Type": "application/json"},
+            json=payload,
             timeout=20,
         )
+        if r.status_code != 200:
+            print(f"  [ai-trader] HTTP {r.status_code}: {r.text[:200]}")
         return r.status_code
-    except Exception:
+    except Exception as e:
+        print(f"  [ai-trader] publish failed: {type(e).__name__}: {e}")
         return 0
 
 
