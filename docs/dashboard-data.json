@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-11-04 06:37 HKT",
-  "hkt_timestamp": "2026-11-04T06:37:31.852353+08:00",
+  "generated_at": "2026-11-04 07:09 HKT",
+  "hkt_timestamp": "2026-11-04T07:09:50.664090+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 7,
-    "trades_today": 1,
+    "trades_24h": 9,
+    "trades_today": 3,
     "wins_24h": 5,
-    "R_24h": 4.52,
+    "R_24h": 2.52,
     "signals_24h": 6,
-    "wr_24h": 71.4
+    "wr_24h": 55.6
   },
   "ranking_24h": [
     {
@@ -26,20 +26,6 @@
       "medal_eligible": false
     },
     {
-      "strategy": "unknown",
-      "ticker": "\u2014",
-      "n_trades": 1,
-      "n_wins": 1,
-      "n_losses": 0,
-      "win_rate": 100.0,
-      "total_R": 1.62,
-      "avg_R": 1.618,
-      "total_pnl_usd": 253.19,
-      "profit_factor": 10.0,
-      "rank": 2,
-      "medal_eligible": false
-    },
-    {
       "strategy": "Two-Yang",
       "ticker": "MES=F",
       "n_trades": 1,
@@ -50,7 +36,7 @@
       "avg_R": 1.618,
       "total_pnl_usd": 161.8,
       "profit_factor": 10.0,
-      "rank": 3,
+      "rank": 2,
       "medal_eligible": false
     },
     {
@@ -64,7 +50,7 @@
       "avg_R": 1.0,
       "total_pnl_usd": 100.0,
       "profit_factor": 10.0,
-      "rank": 4,
+      "rank": 3,
       "medal_eligible": false
     },
     {
@@ -78,18 +64,32 @@
       "avg_R": -1.0,
       "total_pnl_usd": -100.0,
       "profit_factor": 0.0,
+      "rank": 4,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "unknown",
+      "ticker": "\u2014",
+      "n_trades": 3,
+      "n_wins": 1,
+      "n_losses": 2,
+      "win_rate": 33.3,
+      "total_R": -0.38,
+      "avg_R": -0.127,
+      "total_pnl_usd": -138.02,
+      "profit_factor": 0.81,
       "rank": 5,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 8,
+    "n_trades": 10,
     "n_wins": 6,
-    "win_rate": 75.0,
-    "total_R": 6.14,
-    "total_pnl_usd": 704.99
+    "win_rate": 60.0,
+    "total_R": 4.14,
+    "total_pnl_usd": 313.78
   },
-  "ranking_24h_updated": "2026-11-03T22:37:31.852373+00:00",
+  "ranking_24h_updated": "2026-11-03T23:09:50.664112+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -107,22 +107,22 @@
         5
       ],
       "live_24h": {
-        "n": 1,
+        "n": 3,
         "wins": 1,
-        "losses": 0,
-        "wr": 100.0,
-        "R": 1.62,
-        "pf": 10.0,
-        "pnl": 253.19
+        "losses": 2,
+        "wr": 33.3,
+        "R": -0.38,
+        "pf": 0.81,
+        "pnl": -138.02
       },
       "live_today": {
-        "n": 0,
+        "n": 2,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 2,
+        "wr": 0.0,
+        "R": -2.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -391.21
       },
       "signals_24h": 0,
       "backtest_4d": {
@@ -1032,12 +1032,12 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-11-04T06:19:21.171203+08:00",
+        "updated": "2026-11-04T06:38:32.839525+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "EQ not respected",
-          "ts": "2026-11-03T17:19:20.804214-05:00"
+          "ts": "2026-11-03T17:38:32.482407-05:00"
         },
         "l_series": [
           {
@@ -1104,12 +1104,12 @@
       },
       {
         "ticker": "MGC=F",
-        "updated": "2026-11-04T06:19:24.168117+08:00",
+        "updated": "2026-11-04T06:38:34.767717+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "London expanded (skip NY)",
-          "ts": "2026-11-03T17:19:23.807507-05:00"
+          "ts": "2026-11-03T17:38:34.404050-05:00"
         },
         "l_series": [
           {
@@ -1176,19 +1176,19 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-04T06:19:27.277926+08:00",
+        "updated": "2026-11-04T06:38:36.681011+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "EQ not respected; London expanded (skip NY)",
-          "ts": "2026-11-03T17:19:26.740216-05:00"
+          "ts": "2026-11-03T17:38:36.327439-05:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [77260, 77804] misses nearest swing 80925 by 3121",
+            "detail": "C2 [77260, 77786] misses nearest swing 80925 by 3139",
             "direction": "short",
             "closure": null,
             "trade_candle": null,
