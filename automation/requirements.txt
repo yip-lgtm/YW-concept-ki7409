@@ -5,3 +5,18 @@ numpy>=1.24.0
 matplotlib>=3.7.0
 # Signal chart rendering (candlestick charts)
 mplfinance>=0.12.10b0
+# 2026-10-29: mplfinance 0.12.10b0 does `from six.moves import zip` in
+# mplfinance/_utils.py, but never declared `six` as a dependency. A clean
+# CI venv therefore blew up with `ModuleNotFoundError: No module named
+# 'six'` the moment signal_chart.py imported mplfinance.
+#
+# Knock-on effect was silent and severe: every chart failed to generate
+# (tech_analyst logged charts_failed/charts_total = 30/30 = 100%), which
+# tripped the analyst circuit breaker, which made live_scan gate ALL
+# position opens — so no new signal could reach Telegram from 2026-11-01
+# onward even though the scans themselves kept reporting success.
+#
+# `six` is a tiny pure-python wheel, so declaring it is safe and
+# deterministic. There is no newer mplfinance release to move to (0.12.10b0
+# is the latest), so pinning it is the only durable option.
+six>=1.16.0
