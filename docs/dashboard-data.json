@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-04 05:32 HKT",
-  "hkt_timestamp": "2026-11-04T05:32:09.332108+08:00",
+  "generated_at": "2026-11-04 06:37 HKT",
+  "hkt_timestamp": "2026-11-04T06:37:31.852353+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 7,
@@ -89,7 +89,7 @@
     "total_R": 6.14,
     "total_pnl_usd": 704.99
   },
-  "ranking_24h_updated": "2026-11-03T21:32:09.332128+00:00",
+  "ranking_24h_updated": "2026-11-03T22:37:31.852373+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -1032,12 +1032,12 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-11-04T05:15:51.657525+08:00",
+        "updated": "2026-11-04T06:19:21.171203+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "London expanded (skip NY)",
-          "ts": "2026-11-03T16:15:51.302450-05:00"
+          "reason": "EQ not respected",
+          "ts": "2026-11-03T17:19:20.804214-05:00"
         },
         "l_series": [
           {
@@ -1062,23 +1062,23 @@
           },
           {
             "strategy": "TTrades-L13",
-            "fired": false,
-            "stage": "C3 not an expansion candle (wick too large)",
+            "fired": true,
+            "stage": "C3 continuation order block",
             "detail": null,
-            "direction": null,
+            "direction": "short",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
-            "entry_ref": null,
-            "swing_level": null,
-            "target_r": null,
-            "has_levels": false,
-            "entry": null,
-            "sl": null,
-            "t1": null,
-            "t2_close": null,
-            "risk": null,
-            "sl_basis": null
+            "entry_ref": 28416.75,
+            "swing_level": 28443.75,
+            "target_r": 2.0,
+            "has_levels": true,
+            "entry": 28416.75,
+            "sl": 28479.13,
+            "t1": 28354.37,
+            "t2_close": 28315.82,
+            "risk": 62.38,
+            "sl_basis": "outside continuation order block (L13 \u00a72)"
           },
           {
             "strategy": "TTrades-L14",
@@ -1104,12 +1104,12 @@
       },
       {
         "ticker": "MGC=F",
-        "updated": "2026-11-04T05:15:53.752030+08:00",
+        "updated": "2026-11-04T06:19:24.168117+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "London expanded (skip NY)",
-          "ts": "2026-11-03T16:15:53.392770-05:00"
+          "ts": "2026-11-03T17:19:23.807507-05:00"
         },
         "l_series": [
           {
@@ -1134,23 +1134,23 @@
           },
           {
             "strategy": "TTrades-L13",
-            "fired": false,
-            "stage": "C3 not an expansion candle (wick too large)",
+            "fired": true,
+            "stage": "C3 continuation order block",
             "detail": null,
-            "direction": null,
+            "direction": "short",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
-            "entry_ref": null,
-            "swing_level": null,
-            "target_r": null,
-            "has_levels": false,
-            "entry": null,
-            "sl": null,
-            "t1": null,
-            "t2_close": null,
-            "risk": null,
-            "sl_basis": null
+            "entry_ref": 3939.89990234375,
+            "swing_level": 3948.0,
+            "target_r": 2.0,
+            "has_levels": true,
+            "entry": 3939.9,
+            "sl": 3945.89,
+            "t1": 3933.91,
+            "t2_close": 3930.2,
+            "risk": 5.99,
+            "sl_basis": "outside continuation order block (L13 \u00a72)"
           },
           {
             "strategy": "TTrades-L14",
@@ -1176,19 +1176,19 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-04T05:15:56.048739+08:00",
+        "updated": "2026-11-04T06:19:27.277926+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "EQ not respected; London expanded (skip NY)",
-          "ts": "2026-11-03T16:15:55.569979-05:00"
+          "ts": "2026-11-03T17:19:26.740216-05:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [77260, 77786] misses nearest swing 80925 by 3139",
+            "detail": "C2 [77260, 77804] misses nearest swing 80925 by 3121",
             "direction": "short",
             "closure": null,
             "trade_candle": null,
@@ -1299,7 +1299,28 @@
         }
       }
     ],
-    "open_positions": [],
+    "open_positions": [
+      {
+        "strategy": "TTrades-L13",
+        "ticker": "MGC=F",
+        "direction": "short",
+        "entry": 3939.9,
+        "sl": 3944.58,
+        "t2": 3932.33,
+        "entry_time": "2026-11-04T06:07:31.866089+08:00",
+        "status": "open"
+      },
+      {
+        "strategy": "TTrades-L13",
+        "ticker": "MNQ=F",
+        "direction": "short",
+        "entry": 28425.0,
+        "sl": 28479.13,
+        "t2": 28337.42,
+        "entry_time": "2026-11-04T06:07:28.947079+08:00",
+        "status": "open"
+      }
+    ],
     "n_closed": 85,
     "note": "All four agents publish entry/SL/T1/T2 (T2 closes at 1.618R) as of 2026-10-09, so the whole family is trackable and scoreable. A fired row with has_levels=false means the stop reference sat on the wrong side of entry, which is reported rather than papered over."
   },
