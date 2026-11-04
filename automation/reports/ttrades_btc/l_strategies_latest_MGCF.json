@@ -1,18 +1,41 @@
 {
-  "ts": "2026-11-04T23:45:48.589069+08:00",
+  "ts": "2026-11-05T01:27:43.725540+08:00",
   "ticker": "MGC=F",
-  "h4_bars": 152,
-  "m15_bars": 503,
+  "h4_bars": 153,
+  "m15_bars": 510,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
-      "stage": "no C2 closure (sweep+reclaim) on C2",
+      "stage": "CISD not confirmed",
+      "detail": "no break",
+      "direction": "short",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 4164.89990234375,
+        "swing_levels": [
+          4049.89990234375,
+          4079.5,
+          4084.300048828125,
+          4097.2998046875,
+          4164.89990234375
+        ],
+        "pivot_count": 26,
+        "fvg_count": 14
+      },
+      "cisd": {
+        "confirmed": false,
+        "opposing_open": 4048.60009765625,
+        "series_length": 1,
+        "last_close": 4075.800048828125,
+        "reason": "no break"
+      },
       "strategy": "TTrades-L12",
       "has_levels": false
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C3 not an expansion candle (wick too large)",
+      "stage": "C2 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
