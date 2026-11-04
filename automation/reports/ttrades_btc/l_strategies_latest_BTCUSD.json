@@ -1,8 +1,8 @@
 {
-  "ts": "2026-11-05T05:32:03.615387+08:00",
+  "ts": "2026-11-05T06:46:41.569296+08:00",
   "ticker": "BTC-USD",
   "h4_bars": 180,
-  "m15_bars": 663,
+  "m15_bars": 668,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -17,13 +17,48 @@
       "has_levels": false
     },
     "TTrades-L14": {
-      "fired": false,
-      "stage": "CISD not confirmed",
-      "detail": "no break",
+      "fired": true,
+      "strategy": "TTrades-L14",
       "direction": "long",
       "closure": "c2_closure",
-      "strategy": "TTrades-L14",
-      "has_levels": false
+      "trade_candle": "C3",
+      "stage": "c2_closure \u2014 trade C3",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 79322.0,
+        "swing_levels": [
+          79322.0,
+          79369.6875,
+          79586.171875,
+          80277.203125,
+          80494.6328125
+        ],
+        "pivot_count": 28,
+        "fvg_count": 10
+      },
+      "poi_note": "C2 range [77900, 81076] contains swing 79322",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 80442.890625,
+        "series_length": 1,
+        "last_close": 80791.8515625,
+        "reason": "cisd_long"
+      },
+      "c_eq": 79487.9609375,
+      "swing_level": 77900.3203125,
+      "entry_ref": 80791.8515625,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 80791.85,
+      "sl": 77737.15,
+      "t1": 83846.56,
+      "t2_close": 85734.37,
+      "t3": 88789.07,
+      "risk": 3054.71,
+      "sl_basis": "beyond protected swing (C2/C3 extreme)",
+      "sl_buffer": 163.18,
+      "atr_h4": 1087.84
     }
   }
 }
