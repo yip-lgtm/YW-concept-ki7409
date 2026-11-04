@@ -2964,9 +2964,12 @@
     "entry_time": "2026-11-04T06:07:31.866089+08:00",
     "entry_ts": "2026-11-03T22:07:31.866089+00:00",
     "t1_hit": false,
-    "status": "open",
+    "status": "closed",
     "reason": "TTrades-L13: C3 continuation order block",
-    "swing_type": "C3 continuation order block"
+    "swing_type": "C3 continuation order block",
+    "exit_time": "2026-11-03T18:35:00-05:00",
+    "exit_level": "SL",
+    "R_multiple": -1.0
   },
   "TTrades-L13|MNQ=F|2026-11-04T06:07:28.947079+08:00": {
     "signal_id": "TTrades-L13|MNQ=F|2026-11-04T06:07:28.947079+08:00",
@@ -2985,8 +2988,32 @@
     "entry_time": "2026-11-04T06:07:28.947079+08:00",
     "entry_ts": "2026-11-03T22:07:28.947079+00:00",
     "t1_hit": false,
-    "status": "open",
+    "status": "closed",
     "reason": "TTrades-L13: C3 continuation order block",
-    "swing_type": "C3 continuation order block"
+    "swing_type": "C3 continuation order block",
+    "exit_time": "2026-11-03T18:15:00-05:00",
+    "exit_level": "SL",
+    "R_multiple": -1.0
+  },
+  "TTrades-Fractal|MNQ=F|2026-11-03T20:22:15.738446-05:00": {
+    "signal_id": "TTrades-Fractal|MNQ=F|2026-11-03T20:22:15.738446-05:00",
+    "strategy": "TTrades-Fractal",
+    "ticker": "MNQ=F",
+    "direction": "short",
+    "grade": "B",
+    "confidence": 72,
+    "entry": 27946.75,
+    "sl": 28536.899107142857,
+    "t1": 27356.600892857143,
+    "t2": 27002.51142857143,
+    "units": 0.5,
+    "risk_per_unit": 590.1491071428572,
+    "usd_per_point": 2.0,
+    "entry_time": "2026-11-03T20:22:15.738446-05:00",
+    "entry_ts": "2026-11-04T01:22:15.738446+00:00",
+    "t1_hit": false,
+    "status": "open",
+    "reason": "TTrades Fractal: H4 C2 closure (bearish) + M15 CISD (1-bar series) + EQ respected",
+    "swing_type": "C2"
   }
 }
