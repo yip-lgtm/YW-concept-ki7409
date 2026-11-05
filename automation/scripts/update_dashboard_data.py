@@ -262,8 +262,24 @@ if RANKING_24H_FILE.exists():
 iter_files = sorted((REPO / 'automation/reports/strategy_ranking/iterations').glob('iteration_all_*.json'), reverse=True)
 latest_iter = {}
 latest_iter_ts = '?'
-if iter_files:
-    d = json.loads(iter_files[0].read_text())
+# Pick the newest iteration_all that actually carries grades. A run where
+# every agent errored (exhausted Token Plan -> HTTP 402) still writes a
+# well-formed JSON file, so taking the newest file unconditionally blanked
+# the whole LLM Iterations column even though older runs had real grades.
+# Fall back to the newest file only if none of them has a grade.
+chosen = None
+for f in iter_files:
+    try:
+        cand = json.loads(f.read_text())
+    except Exception:
+        continue
+    if any(r.get('grade') for r in cand.get('results', [])):
+        chosen = (f, cand)
+        break
+if chosen is None and iter_files:
+    chosen = (iter_files[0], json.loads(iter_files[0].read_text()))
+if chosen:
+    iter_files[0], d = chosen
     latest_iter_ts = d.get('hkt_timestamp', iter_files[0].stem)
     for r in d['results']:
         agent = r.get('agent', '').replace('yw-', '')
