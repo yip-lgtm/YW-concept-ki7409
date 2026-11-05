@@ -1,27 +1,27 @@
 {
-  "generated_at": "2026-11-05 10:16 HKT",
-  "hkt_timestamp": "2026-11-05T10:16:17.460613+08:00",
+  "generated_at": "2026-11-05 11:43 HKT",
+  "hkt_timestamp": "2026-11-05T11:43:32.486694+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 14,
-    "trades_today": 8,
-    "wins_24h": 4,
-    "R_24h": -1.16,
-    "signals_24h": 23,
-    "wr_24h": 28.6
+    "trades_24h": 15,
+    "trades_today": 9,
+    "wins_24h": 5,
+    "R_24h": 0.45,
+    "signals_24h": 24,
+    "wr_24h": 33.3
   },
   "ranking_24h": [
     {
       "strategy": "CRT",
       "ticker": "MGC=F",
-      "n_trades": 8,
-      "n_wins": 4,
+      "n_trades": 9,
+      "n_wins": 5,
       "n_losses": 4,
-      "win_rate": 50.0,
-      "total_R": 2.84,
-      "avg_R": 0.355,
-      "total_pnl_usd": 283.6,
-      "profit_factor": 1.95,
+      "win_rate": 55.6,
+      "total_R": 4.45,
+      "avg_R": 0.495,
+      "total_pnl_usd": 445.4,
+      "profit_factor": 2.48,
       "rank": 1,
       "medal_eligible": false
     },
@@ -83,13 +83,13 @@
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 18,
-    "n_wins": 6,
-    "win_rate": 33.3,
-    "total_R": -1.16,
-    "total_pnl_usd": -116.4
+    "n_trades": 19,
+    "n_wins": 7,
+    "win_rate": 36.8,
+    "total_R": 0.45,
+    "total_pnl_usd": 45.4
   },
-  "ranking_24h_updated": "2026-11-05T02:16:17.460631+00:00",
+  "ranking_24h_updated": "2026-11-05T03:43:32.486711+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -471,24 +471,24 @@
         5
       ],
       "live_24h": {
-        "n": 8,
-        "wins": 4,
+        "n": 9,
+        "wins": 5,
         "losses": 4,
-        "wr": 50.0,
-        "R": 2.84,
-        "pf": 1.95,
-        "pnl": 283.6
+        "wr": 55.6,
+        "R": 4.45,
+        "pf": 2.48,
+        "pnl": 445.4
       },
       "live_today": {
-        "n": 6,
-        "wins": 2,
+        "n": 7,
+        "wins": 3,
         "losses": 4,
-        "wr": 33.3,
-        "R": 0.24,
-        "pf": 1.08,
-        "pnl": 23.6
+        "wr": 42.9,
+        "R": 1.85,
+        "pf": 1.62,
+        "pnl": 185.4
       },
-      "signals_24h": 17,
+      "signals_24h": 18,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -1032,12 +1032,12 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-11-05T09:47:52.389767+08:00",
+        "updated": "2026-11-05T11:11:45.976379+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-11-04T20:47:52.095962-05:00"
+          "ts": "2026-11-04T22:11:45.594155-05:00"
         },
         "l_series": [
           {
@@ -1104,12 +1104,12 @@
       },
       {
         "ticker": "MGC=F",
-        "updated": "2026-11-05T09:47:54.193376+08:00",
+        "updated": "2026-11-05T11:11:47.885098+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "CISD not confirmed; EQ not respected; London expanded (skip NY)",
-          "ts": "2026-11-04T20:47:53.667474-05:00"
+          "ts": "2026-11-04T22:11:47.512904-05:00"
         },
         "l_series": [
           {
@@ -1176,12 +1176,12 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-05T09:47:56.039505+08:00",
+        "updated": "2026-11-05T11:11:49.950857+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "CISD not confirmed; EQ not respected; D1 counter-trend (ranging); London expanded (skip NY)",
-          "ts": "2026-11-04T20:47:55.667608-05:00"
+          "ts": "2026-11-04T22:11:49.475520-05:00"
         },
         "l_series": [
           {
@@ -1233,15 +1233,15 @@
             "closure": "c3_closure",
             "trade_candle": "C4",
             "poi_note": "C2 range [79857, 80881] contains swing 80277",
-            "entry_ref": 80671.9296875,
+            "entry_ref": 80451.90625,
             "swing_level": 79856.546875,
             "target_r": 2.0,
             "has_levels": true,
-            "entry": 80671.93,
-            "sl": 79697.85,
-            "t1": 81646.01,
-            "t2_close": 82248.0,
-            "risk": 974.08,
+            "entry": 80451.91,
+            "sl": 79697.04,
+            "t1": 81206.77,
+            "t2_close": 81673.28,
+            "risk": 754.86,
             "sl_basis": "beyond protected swing (C2/C3 extreme)"
           }
         ]
