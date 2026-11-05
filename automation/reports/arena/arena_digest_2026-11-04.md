@@ -15,8 +15,8 @@
 | 8 | Two-Yang | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,282 | — |
 | 9 | 50-20-Pullback | 2 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-2,179 | — |
 | 10 | Argon-Gold | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-148 | — |
-| 11 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,237 | — |
-| 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+144 | 1 單 · $-100 |
+| 11 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,329 | 1 單 · $-100 |
+| 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+264 | 1 單 · $-100 |
 | 13 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 14 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-400 | — |
 | 15 | RSI-Div | 0 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-3,502 | — |
