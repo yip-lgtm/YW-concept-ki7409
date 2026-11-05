@@ -59,16 +59,24 @@ AGENTS = [
 ]
 
 
-def call_minimax(prompt: str, system: str = "") -> str:
-    """One LLM call, through the shared client.
+def call_minimax(prompt: str, system: str = "") -> tuple:
+    """One LLM call, through the shared client. Returns (text, error).
 
     This used to fire a requests.post purely to read its status code, throw
     the body away, and then make a second call through chat() — doubling the
     token spend for every candidate signal, while the token plan is the
     binding constraint. The shared client returns (text, error) so the real
     API error is surfaced instead of being swallowed.
+
+    The error half used to be dropped here, so an exhausted Token Plan
+    (HTTP 402 insufficient_balance_error) surfaced downstream as the
+    useless string "no LLM response". Keep it — the CI log and the saved
+    artefact are the only places the real cause is visible.
     """
-    return chat(prompt, system=system)[0]
+    text, err = chat(prompt, system=system)
+    if err:
+        print(f"  [llm] error: {err}")
+    return text, err
 
 
 def strip_think(content: str) -> str:
@@ -257,9 +265,12 @@ suggested_params = {{
 
 禁止 <think> 標籤。直接輸出。"""
 
-    response = call_minimax(prompt, system=f"你是 {agent['agent']} sub-agent，負責自己嘅 strategy 優化。")
+    response, llm_err = call_minimax(prompt, system=f"你是 {agent['agent']} sub-agent，負責自己嘅 strategy 優化。")
     if not response:
-        return {"agent": agent["agent"], "error": "no LLM response"}
+        # "no LLM response" hid the actual cause — an exhausted Token Plan
+        # (HTTP 402) looks identical to a parse failure downstream. Keep the
+        # upstream error so the artefact explains itself.
+        return {"agent": agent["agent"], "error": llm_err or "no LLM response"}
 
     parsed = parse_response(response)
     parsed["agent"] = agent["agent"]

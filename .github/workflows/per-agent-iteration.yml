@@ -90,6 +90,12 @@ jobs:
 
       - run: python -m venv .venv && .venv/bin/pip install -q -r automation/requirements.txt
 
+      # The venv is created at the repo root (step above has no
+      # working-directory), but this step runs from automation/ — so the
+      # interpreter is ../.venv/bin/python, NOT .venv/bin/python. The
+      # latter resolved to automation/.venv/bin/python, which does not
+      # exist, and the job failed with "No such file or directory" on
+      # every run while still reporting success.
       - name: Run LLM iteration (all 11 agents, or one when dispatched with an agent id)
         working-directory: automation
         env:
@@ -98,10 +104,19 @@ jobs:
           AGENT="${{ inputs.agent }}"
           if [ -n "$AGENT" ]; then
             echo "[iterate] single agent: $AGENT"
-            .venv/bin/python scripts/llm_iterate_all.py --agent "$AGENT" 2>&1 | tee /tmp/iterate_log.txt
+            ../.venv/bin/python scripts/llm_iterate_all.py --agent "$AGENT" 2>&1 | tee /tmp/iterate_log.txt
           else
             echo "[iterate] all 11 agents"
-            .venv/bin/python scripts/llm_iterate_all.py 2>&1 | tee /tmp/iterate_log.txt
+            ../.venv/bin/python scripts/llm_iterate_all.py 2>&1 | tee /tmp/iterate_log.txt
+          fi
+          # A run where every agent errored (e.g. Token Plan exhausted ->
+          # HTTP 402 insufficient_balance_error) produces a JSON file that
+          # looks valid but carries no grades. Fail loudly instead of
+          # committing an empty iteration as if it were a normal run.
+          # The script prints one "grade=<letter>" line per successful agent.
+          if ! grep -qE 'grade=[A-D]' /tmp/iterate_log.txt; then
+            echo "::error::no agent produced a grade — LLM calls failed (check Token Plan / API key above)"
+            exit 1
           fi
 
       - name: Commit + push (rebase and retry on non-fast-forward)
