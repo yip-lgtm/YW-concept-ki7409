@@ -121,6 +121,12 @@ jobs:
 
       - name: Commit + push (rebase and retry on non-fast-forward)
         run: |
+          # Every other pusher in this repo sets the committer identity
+          # before committing. Without it, git aborts with "Author identity
+          # unknown" and the iteration is lost even though the LLM run
+          # succeeded.
+          git config --global user.name "Mavis bot"
+          git config --global user.email "mavis@MiniMax"
           git add automation/reports/strategy_ranking/iterations/
           if git diff --cached --quiet; then
             echo "no iteration files changed — nothing to commit"
