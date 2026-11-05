@@ -99,7 +99,25 @@ def strip_think(content: str) -> str:
 
 
 def parse_response(content: str) -> dict:
-    content = strip_think(content)
+    # Parse the visible answer first. If the model put the answer inside
+    # the <think> block instead of after it — which MiniMax-M3 does often
+    # enough that a whole run came back with grade "?" for every agent —
+    # fall back to searching the reasoning block rather than giving up.
+    candidates = [strip_think(content)]
+    if "<think>" in content:
+        think_body = content.split("<think>", 1)[1].split("</think>", 1)[0]
+        if think_body.strip():
+            candidates.append(think_body)
+
+    parsed = {}
+    for candidate in candidates:
+        parsed = _parse_fields(candidate)
+        if parsed["grade"] != "?":
+            break
+    return parsed
+
+
+def _parse_fields(content: str) -> dict:
     m = re.search(r"GRADE:\s*([ABCD?])\s*\|\s*CONFIDENCE:\s*(\d+)\s*\|\s*REASON:\s*(.+)", content, re.IGNORECASE)
     grade = m.group(1).upper() if m else "?"
     conf = int(m.group(2)) if m else 0
@@ -364,6 +382,13 @@ if __name__ == "__main__":
                 print(f"  - {a['id']} ({a['agent']})")
             sys.exit(1)
         r = iterate_strategy(agent)
+        # Print the same per-agent summary line that the all-agents path
+        # prints. Without it, a single-agent run produces no "grade=X" in
+        # stdout, and the CI guard that checks for at least one grade
+        # cannot tell "every agent failed" from "the agent path never
+        # printed anything".
+        print(f"  [{agent['agent']:18s}] grade={r.get('grade', '?')} conf={r.get('confidence', 0):3d}"
+              f" → weight={r.get('weight', '?')} tf={r.get('timeframe', '?')}")
         # Save
         out = ITER_DIR / f"iteration_{args.agent}_{ts}.json"
         out.write_text(json.dumps({"date": datetime.now(HKT).strftime("%Y-%m-%d"), "agent": agent["agent"], "result": r}, indent=2, default=str))
