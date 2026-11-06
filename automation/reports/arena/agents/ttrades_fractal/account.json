@@ -1,17 +1,39 @@
 {
   "agent": "TTrades-Fractal",
-  "level": 4,
+  "level": 5,
   "realised_usd": 544.09,
-  "last_day": "2026-11-05",
-  "positions": [],
+  "last_day": "2026-11-06",
+  "positions": [
+    {
+      "id": "TTrades-Fractal|BTC-USD|short|2026-11-06 06:00:00+00:00",
+      "strategy": "TTrades-Fractal",
+      "ticker": "BTC-USD",
+      "direction": "short",
+      "entry": 75548.28125,
+      "sl": 76487.3640625,
+      "t1": 74511.4171875,
+      "t2": 73918.63312500001,
+      "t3": 72930.65968750001,
+      "sl_dist": 939.0828124999971,
+      "units": 0.10648688131537953,
+      "usd_per_point": 1.0,
+      "risk_usd": 100.0,
+      "atr": 1395.5,
+      "opened": "2026-11-06 06:00:00+00:00",
+      "opened_bar": "2026-11-06 06:00:00+00:00",
+      "reason": "Fractal bearish CISD",
+      "mark": 75960.421875,
+      "unrealised_usd": -43.88756981962134
+    }
+  ],
   "cursors": {
-    "MNQ=F": "2026-11-06 02:30:00+00:00",
-    "MGC=F": "2026-11-06 02:30:00+00:00",
-    "BTC-USD": "2026-11-06 02:40:00+00:00"
+    "MNQ=F": "2026-11-06 09:40:00+00:00",
+    "MGC=F": "2026-11-06 09:40:00+00:00",
+    "BTC-USD": "2026-11-06 09:50:00+00:00"
   },
   "cooldowns": {
     "MGC=F|ttrades": 3534,
-    "BTC-USD|ttrades": 4092,
+    "BTC-USD|ttrades": 4104,
     "MNQ=F|ttrades": 3487
   },
   "days": {
@@ -201,6 +223,20 @@
       "pnl_usd": 159.15,
       "wins": 1,
       "losses": 0,
+      "old_level": 4,
+      "new_level": 5,
+      "action": "promote",
+      "reason": "PF 99.0 > 1.0, WR 100%, n=1",
+      "provisional": false
+    },
+    "2026-11-06": {
+      "n": 0,
+      "PF": 0.0,
+      "WR": 0.0,
+      "RR": 0.0,
+      "pnl_usd": 0,
+      "wins": 0,
+      "losses": 0,
       "provisional": true
     }
   },
@@ -211,6 +247,7 @@
     "2026-10-27",
     "2026-10-28",
     "2026-10-30",
-    "2026-11-03"
+    "2026-11-03",
+    "2026-11-05"
   ]
 }

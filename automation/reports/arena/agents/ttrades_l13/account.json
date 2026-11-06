@@ -1,8 +1,8 @@
 {
   "agent": "TTrades-L13",
   "level": 1,
-  "realised_usd": -500.0,
-  "last_day": "2026-11-05",
+  "realised_usd": -600.0,
+  "last_day": "2026-11-06",
   "positions": [
     {
       "id": "TTrades-L13|BTC-USD|short|2026-10-22 08:15:00+00:00",
@@ -22,35 +22,14 @@
       "opened": "2026-10-22 08:15:00+00:00",
       "opened_bar": "2026-10-22 08:15:00+00:00",
       "reason": "C3 continuation order block",
-      "mark": 75999.0,
-      "unrealised_usd": 1789.5728801888654
-    },
-    {
-      "id": "TTrades-L13|MNQ=F|short|2026-11-06 02:30:00+00:00",
-      "strategy": "TTrades-L13",
-      "ticker": "MNQ=F",
-      "direction": "short",
-      "entry": 27131.5,
-      "sl": 27219.4,
-      "t1": 27041.6,
-      "t2": null,
-      "t3": 26897.77,
-      "sl_dist": 87.90000000000146,
-      "units": 0.568828213879399,
-      "usd_per_point": 2.0,
-      "risk_usd": 100.0,
-      "atr": 542.64,
-      "opened": "2026-11-06 02:30:00+00:00",
-      "opened_bar": "2026-11-06 02:30:00+00:00",
-      "reason": "C3 continuation order block",
-      "mark": 27131.5,
-      "unrealised_usd": -0.0
+      "mark": 75960.421875,
+      "unrealised_usd": 1801.1226010589164
     }
   ],
   "cursors": {
-    "MNQ=F": "2026-11-06 02:30:00+00:00",
-    "MGC=F": "2026-11-06 02:30:00+00:00",
-    "BTC-USD": "2026-11-06 02:40:00+00:00"
+    "MNQ=F": "2026-11-06 09:40:00+00:00",
+    "MGC=F": "2026-11-06 09:40:00+00:00",
+    "BTC-USD": "2026-11-06 09:50:00+00:00"
   },
   "cooldowns": {
     "BTC-USD|ttrades": 4131,
@@ -218,12 +197,27 @@
       "pnl_usd": -100.0,
       "wins": 1,
       "losses": 2,
+      "old_level": 1,
+      "new_level": 1,
+      "action": "hold",
+      "reason": "n=3, PF 0.5, WR 33% \u2014 did not qualify",
+      "provisional": false
+    },
+    "2026-11-06": {
+      "n": 1,
+      "PF": 0.0,
+      "WR": 0.0,
+      "RR": 0.0,
+      "pnl_usd": -100.0,
+      "wins": 0,
+      "losses": 1,
       "provisional": true
     }
   },
   "settled_days": [
     "2026-10-25",
     "2026-10-30",
-    "2026-11-03"
+    "2026-11-03",
+    "2026-11-05"
   ]
 }
