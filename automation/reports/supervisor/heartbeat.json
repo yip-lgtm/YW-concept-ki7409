@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-05T22:52:28.656823+00:00",
+  "timestamp": "2026-11-06T02:57:52.028674+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -8,9 +8,9 @@
       "no /tmp/ocs_btc/latest.json"
     ],
     "n_open": 1,
-    "n_trades_total": 73,
-    "win_rate": 37.0,
-    "profit_factor": 0.94,
+    "n_trades_total": 74,
+    "win_rate": 36.5,
+    "profit_factor": 0.92,
     "last_signal": null
   },
   "ranking": {
@@ -21,10 +21,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-11-05",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 42116108235
+    "today": "2026-11-06",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -79,21 +78,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 42121440384,
-          "conclusion": "cancelled",
-          "created_at": "2026-11-05T22:25:59Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 42116582362,
-          "conclusion": "cancelled",
-          "created_at": "2026-11-05T21:52:44Z",
-          "event": "workflow_dispatch"
-        },
-        {
-          "id": 42089245763,
+          "id": 42153398897,
           "conclusion": "success",
-          "created_at": "2026-11-05T18:57:34Z",
+          "created_at": "2026-11-06T02:55:55Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 42148507138,
+          "conclusion": "success",
+          "created_at": "2026-11-06T02:09:32Z",
+          "event": "workflow_dispatch"
+        },
+        {
+          "id": 42133164568,
+          "conclusion": "success",
+          "created_at": "2026-11-05T23:56:38Z",
           "event": "schedule"
         }
       ],
@@ -155,12 +154,15 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 0,
+    "n_open": 4,
     "n_stale_24h": 0,
-    "issues": [],
-    "long_count": 0,
+    "issues": [
+      "All 4 positions LONG (correlated bull risk)",
+      "High total risk: $459"
+    ],
+    "long_count": 4,
     "short_count": 0,
-    "total_risk": 0.0,
+    "total_risk": 459.40267857142857,
     "deep_loss_positions": []
   }
 }
