@@ -2,12 +2,16 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 25,
-    "last_run": "2026-11-05T21:48:01.549037+00:00",
-    "last_applied": 0,
+    "runs": 26,
+    "last_run": "2026-11-06T21:17:13.922983+00:00",
+    "last_applied": 2,
     "last_log": [
       {
-        "agent": "CRT",
+        "agent": "Stair",
+        "action": "error"
+      },
+      {
+        "agent": "Two-Yang",
         "action": "error"
       },
       {
@@ -15,15 +19,19 @@
         "action": "error"
       },
       {
-        "agent": "Stair",
+        "agent": "CRT",
+        "action": "relax"
+      },
+      {
+        "agent": "TTrades-L14",
+        "action": "tighten"
+      },
+      {
+        "agent": "TTrades-Fractal",
         "action": "error"
       },
       {
         "agent": "OCS-BTC-5m",
-        "action": "error"
-      },
-      {
-        "agent": "TTrades-Fractal",
         "action": "error"
       },
       {
@@ -108,19 +116,19 @@
     "tightened_count": 2
   },
   "CRT": {
-    "last_revised": "2026-10-21T15:16:00.370251+00:00",
+    "last_revised": "2026-11-06T21:17:13.922983+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "... { ... }\" Yet \"JSON only, 唔好其他文字\" means perhaps need JSON only, but exact format says reasoning line. Could include \"REASONING\" key? But template explicitly line. Need decide. They demand exact for",
-    "response_raw": "<think>We need answer exact JSON only? They include REASONING line then object, but say JSON only and exact format. Contradiction: exact format has reasoning outside JSON making not valid JSON. Need likely follow specified exact format literally? \"REASONING: ... { ... }\" Yet \"JSON only, 唔好其他文字\" means perhaps need JSON only, but exact format says reasoning line. Could include \"REASONING\" key? But template explicitly line. Need decide. They demand exact format likely output:\nREASONING: ...\n{\n...\n}\nBut that's not JSON. Maybe \"JSON only\" means no prose beyond prescribed reasoning. Yet \"REASONING: <一句話>\" is prose. They may be testing format. Highest priority user. We need satisfy exact formatting as closely as possible, perhaps reasoning line then JSON. But system says no constraints. Need asse",
+    "reasoning": "CRT 屬 high-RR range reversal，WR 42.4% 對呢類策略合理，故只將 WR 門檻降至 0.40，並把 min_trades 收緊至 50 以維持樣本量，其餘 PF/RR 門檻不變。\" Then JSON min_PF 1.0 min_WR 0.4 min_RR 1.0 min_trades 50 action relax.",
+    "response_raw": "<think>We need produce final response per exact format in Cantonese likely reasoning one sentence then JSON only no other text. Need carefully interpret thresholds and relax max 2 indicators, min trades nuance. Need comply output exactly. We have system generic assistant API, Need assess task thresholds per agent CRT, metrics PF 1.219 WR 42.4% RR 1.657 n 118. Strategy high-RR range reversal, WR moderate natural, RR edge. Global PF >1 WR >.5 RR >1 n>=10. Need recommend override PF [0.8,1.5], WR [.3,.7], RR [.8,2], n[5,50]. Current n 118 over 50 max? Need set min_trades 50 (upper bound) and relax WR alone to .40, maybe keep PF 1.0 RR 1.0, min trades 50. Relaxation count ambiguity min_trades decreased 10->5 also counts? They say at most only relax 2 indicators no 3 all loosen; min_trades lowe",
     "overrides": {
-      "min_PF": 0.8,
-      "min_WR": 0.3,
+      "min_PF": 1.0,
+      "min_WR": 0.4,
       "min_RR": 1.0,
-      "min_trades": 10
+      "min_trades": 50
     },
-    "relaxed_count": 2,
-    "tightened_count": 0
+    "relaxed_count": 1,
+    "tightened_count": 1
   },
   "H-Pattern": {
     "last_revised": "2026-10-29T20:53:20.337306+00:00",
@@ -168,18 +176,18 @@
     "tightened_count": 0
   },
   "TTrades-L14": {
-    "last_revised": "2026-10-22T04:16:23.620981+00:00",
+    "last_revised": "2026-11-06T21:17:13.922983+00:00",
     "stuck_days_at_revision": 3,
-    "action": "relax",
-    "reasoning": "&lt;一句話...&gt;\" then JSON. Need ensure valid? \"JSON only\" but REASONING makes not valid JSON. They explicitly request exact format with REASONING preceding object. We should follow exact. Maybe they m",
-    "response_raw": "<think>We need answer exact format JSON only? They show REASONING line then JSON, despite \"JSON only\" contradictory. Need comply exact likely reasoning plus object, no other text. Need assess. Agent unknown strategy character, actual PF .809, WR .333, RR 1.618, n12. Promotion thresholds global PF>1, WR>.5 RR>1 n>=10. Need per-agent override, max relax 2 indicators. Could relax PF and WR, retain RR 1.0 and n10. But actual metrics: PF .809, WR .333. Set min PF perhaps .80 (or .81? Actual .809), WR .30. This lets promotion if strict > thresholds. RR already passes, n passes. Is this justified despite performance poor? They say unknown character, could hold/tighten because PF near 0.8 indicates poor. But purpose stuck and allow profile-specific threshold; strategy character unknown, metrics lo",
+    "action": "tighten",
+    "reasoning": "樣本只有 6 單且 PF、WR 顯示策略表現極差，即使 RR 較高亦不足以支持 promotion，因此維持現有收緊門檻並延後評估。</think>",
+    "response_raw": "<think>REASONING: 樣本只有 6 單且 PF、WR 顯示策略表現極差，即使 RR 較高亦不足以支持 promotion，因此維持現有收緊門檻並延後評估。</think>\n\nREASONING: 樣本只有 6 單，而且 PF 僅 0.324、WR 僅 16.7%，整體表現明顯偏差，即使 RR 較高亦不足以支持 promotion。\n\n{\n  \"min_PF\": 1.0,\n  \"min_WR\": 0.5,\n  \"min_RR\": 1.0,\n  \"min_trades\": 10,\n  \"action\": \"tighten\"\n}",
     "overrides": {
-      "min_PF": 0.8,
-      "min_WR": 0.3,
+      "min_PF": 1.0,
+      "min_WR": 0.5,
       "min_RR": 1.0,
       "min_trades": 10
     },
-    "relaxed_count": 2,
+    "relaxed_count": 0,
     "tightened_count": 0
   },
   "OCS-BTC-5m": {

@@ -2,41 +2,43 @@
   "_meta": {
     "_comment": "Live strategy param overrides — written by param_optimizer.py, read by live_scan.py at import. Auto-optimization output (weight/min_strength/resample_tf per strategy).",
     "created": "2026-10-07T13:30:00+00:00",
-    "applications": 20,
-    "last_run": "2026-11-05T21:49:06.060841+00:00",
+    "applications": 24,
+    "last_run": "2026-11-06T21:19:05.564792+00:00",
     "note": "Empty = all strategies use live_scan.py hardcoded defaults. 2026-10-07: weight became LIVE config (was dead) — see param_optimizer.py.",
-    "last_source": "iteration_all_20261106_054817.json",
-    "last_applied_n": 0,
-    "last_rejected_n": 11,
+    "last_source": "iteration_all_20261107_051803.json",
+    "last_applied_n": 4,
+    "last_rejected_n": 1,
     "last_log": [
-      "  ocs-btc-5m: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca1993b19410a22f666e9fececb\"}\n",
-      "  yw-stair-pattern: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca1dadab3b853d3966934392507\"}\n",
-      "  yw-rsi-div: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca10a07eb5f54b4682ce5f5cadf\"}\n",
-      "  yw-3-pushes: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca14892fe52203c9016dfa6627e\"}\n",
-      "  yw-two-yang: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca1e46286fdadd5034cdbf86670\"}\n",
-      "  yw-kell-cycle: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca19c772b33cf32096df93d571f\"}\n",
-      "  yw-h-pattern: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca1b7b38531813646c00fa9a5a8\"}\n",
-      "  yw-crt: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca10b5e7c881e52cbd9365b9308\"}\n",
-      "  yw-50-20-pullback: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca102caaecfa291401e0ce21ba6\"}\n",
-      "  yw-b1: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca1dc5247e0c82a6a252f58aa09\"}\n",
-      "  yw-argon-gold: ERROR HTTP 402: {\"type\":\"error\",\"error\":{\"type\":\"insufficient_balance_error\",\"message\":\"The Token Plan usage limit has been reached. To avoid interruption, please upgrade your plan or buy credits and turn on auto consumption. (2067)\",\"http_code\":\"402\"},\"request_id\":\"073c2ca173eda7503b30fe4d4501943d\"}\n"
+      "  OCS-BTC-5m: SKIP grade=D (LLM has no useful suggestion; live n=0)",
+      "  RSI-Div: APPLY [B/86] weight 0.6→0.7",
+      "  B1: grade=C accepted via high-conf+sample path (conf=78, n=18)",
+      "  B1: APPLY [C/78] weight 0.7→0.8",
+      "  H-Pattern: SKIP grade=D (LLM has no useful suggestion; live n=146)",
+      "  yw-argon-gold: no live_scan mapping (id=argon-gold)",
+      "  Kell-Cycle: no change (grade=B conf=72 — proposed values already active)",
+      "  3-Pushes: APPLY [B/84] weight 0.8→0.9",
+      "  Stair: grade=C accepted via high-conf+sample path (conf=84, n=385)",
+      "  Stair: no change (grade=C conf=84 — proposed values already active)",
+      "  Two-Yang: SKIP grade=D (LLM has no useful suggestion; live n=250)",
+      "  50-20-Pullback: SKIP grade=D (LLM has no useful suggestion; live n=1015)",
+      "  CRT: APPLY [B/78] weight 0.8→1.0"
     ]
   },
   "RSI-Div": {
-    "weight": 0.6,
+    "weight": 0.7,
     "resample_tf": "15min",
-    "last_applied": "2026-10-31T19:46:54.475544+00:00",
+    "last_applied": "2026-11-06T21:19:05.564792+00:00",
     "grade": "B",
     "confidence": 86,
-    "reason": "盈利集中於BTC，其他市場偏弱，但整體PF 1.52仍屬正期望",
-    "source_iteration": "iteration_all_20261101_034517.json",
+    "reason": "PF達1.52且總R為正，但盈利集中BTC，MNQ等合約拖累表現",
+    "source_iteration": "iteration_all_20261107_051803.json",
     "changes": {
       "weight": {
-        "from": 0.75,
-        "to": 0.6
+        "from": 0.6,
+        "to": 0.7
       }
     },
-    "applications": 5,
+    "applications": 6,
     "history": [
       {
         "date": "2026-10-17T18:10:36.458503+00:00",
@@ -78,24 +80,32 @@
         "changes": {
           "weight": 0.6
         }
+      },
+      {
+        "date": "2026-11-06T21:19:05.564792+00:00",
+        "grade": "B",
+        "confidence": 86,
+        "changes": {
+          "weight": 0.7
+        }
       }
     ]
   },
   "3-Pushes": {
-    "weight": 0.8,
+    "weight": 0.9,
     "resample_tf": "15min",
-    "last_applied": "2026-11-01T20:14:36.848535+00:00",
+    "last_applied": "2026-11-06T21:19:05.564792+00:00",
     "grade": "B",
-    "confidence": 82,
-    "reason": "樣本足夠且正期望，但PF偏低、跨品種表現分化",
-    "source_iteration": "iteration_all_20261102_041305.json",
+    "confidence": 84,
+    "reason": "整體盈利但依賴MNQ，MES及MGC拖累明顯。",
+    "source_iteration": "iteration_all_20261107_051803.json",
     "changes": {
       "weight": {
-        "from": 0.95,
-        "to": 0.8
+        "from": 0.8,
+        "to": 0.9
       }
     },
-    "applications": 4,
+    "applications": 5,
     "history": [
       {
         "date": "2026-10-18T18:28:41.474034+00:00",
@@ -128,6 +138,14 @@
         "confidence": 82,
         "changes": {
           "weight": 0.8
+        }
+      },
+      {
+        "date": "2026-11-06T21:19:05.564792+00:00",
+        "grade": "B",
+        "confidence": 84,
+        "changes": {
+          "weight": 0.9
         }
       }
     ]
@@ -168,20 +186,20 @@
     ]
   },
   "CRT": {
-    "weight": 0.8,
+    "weight": 1.0,
     "resample_tf": "15min",
-    "last_applied": "2026-10-27T20:29:46.169679+00:00",
-    "grade": "C",
+    "last_applied": "2026-11-06T21:19:05.564792+00:00",
+    "grade": "B",
     "confidence": 78,
-    "reason": "PF僅1.07且勝率40%，邊際薄；正R主要靠MES，宜降權控回撤。",
-    "source_iteration": "iteration_all_20261028_042810.json",
+    "reason": "樣本足夠且總R為正，但PF僅1.10、產品表現分化",
+    "source_iteration": "iteration_all_20261107_051803.json",
     "changes": {
       "weight": {
-        "from": 0.9,
-        "to": 0.8
+        "from": 0.8,
+        "to": 1.0
       }
     },
-    "applications": 3,
+    "applications": 4,
     "history": [
       {
         "date": "2026-10-20T20:47:36.199367+00:00",
@@ -207,24 +225,32 @@
         "changes": {
           "weight": 0.8
         }
+      },
+      {
+        "date": "2026-11-06T21:19:05.564792+00:00",
+        "grade": "B",
+        "confidence": 78,
+        "changes": {
+          "weight": 1.0
+        }
       }
     ]
   },
   "B1": {
-    "weight": 0.7,
+    "weight": 0.8,
     "resample_tf": "15min",
-    "last_applied": "2026-11-01T20:14:36.848535+00:00",
-    "grade": "B",
-    "confidence": 72,
-    "reason": "樣本偏少但PF>1且總R為正，BTC拖累明顯，宜降權。",
-    "source_iteration": "iteration_all_20261102_041305.json",
+    "last_applied": "2026-11-06T21:19:05.564792+00:00",
+    "grade": "C",
+    "confidence": 78,
+    "reason": "PF僅1.03且樣本偏小，BTC拖累明顯，宜降頻控損",
+    "source_iteration": "iteration_all_20261107_051803.json",
     "changes": {
       "weight": {
-        "from": 0.8,
-        "to": 0.7
+        "from": 0.7,
+        "to": 0.8
       }
     },
-    "applications": 3,
+    "applications": 4,
     "history": [
       {
         "date": "2026-10-20T20:47:36.199367+00:00",
@@ -249,6 +275,14 @@
         "confidence": 72,
         "changes": {
           "weight": 0.7
+        }
+      },
+      {
+        "date": "2026-11-06T21:19:05.564792+00:00",
+        "grade": "C",
+        "confidence": 78,
+        "changes": {
+          "weight": 0.8
         }
       }
     ]
