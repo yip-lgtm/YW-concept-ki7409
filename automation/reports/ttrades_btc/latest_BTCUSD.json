@@ -1,35 +1,33 @@
 {
-  "ts": "2026-11-06T02:05:19.214747-05:00",
+  "ts": "2026-11-06T07:59:11.420358-05:00",
   "ticker": "BTC-USD",
   "strategy": "TTrades-Fractal",
-  "swing_type": "C2",
-  "side": "bearish",
+  "swing_type": "C3",
+  "side": "bullish",
   "swing": {
-    "type": "c2_closure",
-    "side": "bearish",
-    "c2_high": 76290.25,
-    "c2_low": 75649.3984375,
-    "c2_close": 75787.546875,
-    "c2_eq": 75969.82421875,
-    "c3_close": 75361.2890625,
-    "swing_level": 76290.25,
-    "direction": "short"
+    "type": "c3_closure",
+    "side": "bullish",
+    "c2_low": 75197.5703125,
+    "c2_eq": 75493.5859375,
+    "c4_close": 75916.4921875,
+    "swing_level": 75197.5703125,
+    "direction": "long"
   },
   "cisd": {
-    "confirmed": true,
-    "opposing_open": 77360.34375,
+    "confirmed": false,
+    "opposing_open": 77298.0,
     "series_length": 2,
-    "last_close": 75361.2890625,
-    "reason": "cisd_short"
+    "last_close": 75917.6171875,
+    "reason": "no break"
   },
   "eq_respected": true,
   "d1_trend": {
-    "aligned": true,
+    "aligned": false,
     "trend": "downtrend",
-    "d1_close": 75361.2890625,
-    "d1_ema50": 79723.4438539505,
-    "d1_ema20": 79070.08808310148,
-    "reason": "D1 downtrend"
+    "d1_close": 75917.6171875,
+    "d1_ema50": 79745.26064316618,
+    "d1_ema20": 79123.07171405386,
+    "reason": "D1 downtrend (counter-trend)"
   },
   "weekly_profile": {
     "profile": "consolidation_reversal",
@@ -37,31 +35,15 @@
     "notes": ""
   },
   "daily_profile": {
-    "london_expanded": false,
-    "skip_ny": false
+    "london_expanded": true,
+    "london_range": 891.9375,
+    "skip_ny": true
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
-  "entry": 75361.2890625,
-  "sl": 76362.00574776786,
-  "t1": 74360.57237723214,
-  "t2_close": 73760.14236607142,
-  "t3": 72759.42568080356,
-  "t4": 71758.7089955357,
-  "t5": 70357.70563616068,
-  "risk_per_unit": 1000.7166852678638,
-  "units": 0.5,
-  "notional": 37680.64453125,
-  "manipulation_pivot": 76290.25,
-  "projection_neg2": 74432.328125,
-  "projection_neg4": 73503.3671875,
-  "sl_buffer_atr": 71.75574776785714,
-  "actionable": true,
-  "direction": "short",
-  "grade": "A",
-  "confidence": 85,
-  "reason": "TTrades Fractal: H4 C2 closure (bearish) + M15 CISD (2-bar series) + EQ respected",
+  "actionable": false,
+  "reason": "CISD not confirmed; D1 counter-trend (downtrend); London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
