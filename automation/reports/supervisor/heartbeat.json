@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-06T22:15:38.059331+00:00",
+  "timestamp": "2026-11-07T01:57:04.513617+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -7,10 +7,10 @@
     "issues": [
       "no /tmp/ocs_btc/latest.json"
     ],
-    "n_open": 1,
-    "n_trades_total": 78,
-    "win_rate": 35.9,
-    "profit_factor": 0.89,
+    "n_open": 0,
+    "n_trades_total": 79,
+    "win_rate": 36.7,
+    "profit_factor": 0.93,
     "last_signal": null
   },
   "ranking": {
@@ -21,10 +21,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-11-06",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 42296151663
+    "today": "2026-11-07",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -79,21 +78,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 42300809887,
-          "conclusion": "success",
-          "created_at": "2026-11-06T21:56:43Z",
+          "id": 42324319803,
+          "conclusion": "cancelled",
+          "created_at": "2026-11-07T01:29:19Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 42282654876,
+          "id": 42314851239,
           "conclusion": "success",
-          "created_at": "2026-11-06T19:47:01Z",
+          "created_at": "2026-11-06T23:53:57Z",
           "event": "schedule"
         },
         {
-          "id": 42257447984,
-          "conclusion": "cancelled",
-          "created_at": "2026-11-06T16:59:25Z",
+          "id": 42300809887,
+          "conclusion": "success",
+          "created_at": "2026-11-06T21:56:43Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -155,12 +154,12 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 0,
+    "n_open": 1,
     "n_stale_24h": 0,
     "issues": [],
-    "long_count": 0,
+    "long_count": 1,
     "short_count": 0,
-    "total_risk": 0.0,
+    "total_risk": 78.71875,
     "deep_loss_positions": []
   }
 }
