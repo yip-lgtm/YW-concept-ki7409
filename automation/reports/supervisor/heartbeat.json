@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-07T22:28:49.884443+00:00",
+  "timestamp": "2026-11-08T01:42:14.299790+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -8,9 +8,9 @@
       "no /tmp/ocs_btc/latest.json"
     ],
     "n_open": 1,
-    "n_trades_total": 83,
-    "win_rate": 36.1,
-    "profit_factor": 0.9,
+    "n_trades_total": 84,
+    "win_rate": 36.9,
+    "profit_factor": 0.93,
     "last_signal": null
   },
   "ranking": {
@@ -21,10 +21,9 @@
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-11-07",
-    "ran_today": true,
-    "success_today": true,
-    "last_id": 42408037456
+    "today": "2026-11-08",
+    "ran_today": false,
+    "success_today": false
   },
   "workflows": [
     {
@@ -79,21 +78,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 42420578066,
+          "id": 42435246225,
           "conclusion": "cancelled",
-          "created_at": "2026-11-07T22:25:54Z",
+          "created_at": "2026-11-08T01:40:15Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 42411959558,
+          "id": 42427517458,
           "conclusion": "success",
-          "created_at": "2026-11-07T20:37:35Z",
+          "created_at": "2026-11-07T23:56:59Z",
           "event": "schedule"
         },
         {
-          "id": 42409364272,
+          "id": 42427117748,
           "conclusion": "success",
-          "created_at": "2026-11-07T20:05:43Z",
+          "created_at": "2026-11-07T23:51:23Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -155,12 +154,12 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 0,
+    "n_open": 1,
     "n_stale_24h": 0,
     "issues": [],
     "long_count": 0,
-    "short_count": 0,
-    "total_risk": 0.0,
+    "short_count": 1,
+    "total_risk": 45.167857142857144,
     "deep_loss_positions": []
   }
 }
