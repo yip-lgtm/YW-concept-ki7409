@@ -1,16 +1,30 @@
 {
-  "generated_at": "2026-11-08 15:32 HKT",
-  "hkt_timestamp": "2026-11-08T15:32:08.087096+08:00",
+  "generated_at": "2026-11-08 21:10 HKT",
+  "hkt_timestamp": "2026-11-08T21:10:22.727292+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 9,
-    "trades_today": 6,
+    "trades_today": 8,
     "wins_24h": 5,
-    "R_24h": 4.1,
+    "R_24h": 4.09,
     "signals_24h": 7,
     "wr_24h": 55.6
   },
   "ranking_24h": [
+    {
+      "strategy": "CRT",
+      "ticker": "BTC-USD",
+      "n_trades": 4,
+      "n_wins": 3,
+      "n_losses": 1,
+      "win_rate": 75.0,
+      "total_R": 3.85,
+      "avg_R": 0.964,
+      "total_pnl_usd": 385.4,
+      "profit_factor": 4.85,
+      "rank": 1,
+      "medal_eligible": false
+    },
     {
       "strategy": "H-Pattern",
       "ticker": "BTC-USD",
@@ -22,20 +36,6 @@
       "avg_R": 1.618,
       "total_pnl_usd": 161.8,
       "profit_factor": 10.0,
-      "rank": 1,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "BTC-USD",
-      "n_trades": 4,
-      "n_wins": 2,
-      "n_losses": 2,
-      "win_rate": 50.0,
-      "total_R": 1.24,
-      "avg_R": 0.309,
-      "total_pnl_usd": 123.6,
-      "profit_factor": 1.62,
       "rank": 2,
       "medal_eligible": false
     },
@@ -43,13 +43,13 @@
       "strategy": "unknown",
       "ticker": "\u2014",
       "n_trades": 4,
-      "n_wins": 2,
-      "n_losses": 2,
-      "win_rate": 50.0,
-      "total_R": 1.24,
-      "avg_R": 0.309,
-      "total_pnl_usd": 8.86,
-      "profit_factor": 1.62,
+      "n_wins": 1,
+      "n_losses": 3,
+      "win_rate": 25.0,
+      "total_R": -1.38,
+      "avg_R": -0.345,
+      "total_pnl_usd": -126.42,
+      "profit_factor": 0.54,
       "rank": 3,
       "medal_eligible": false
     }
@@ -58,10 +58,10 @@
     "n_trades": 9,
     "n_wins": 5,
     "win_rate": 55.6,
-    "total_R": 4.1,
-    "total_pnl_usd": 294.26
+    "total_R": 4.09,
+    "total_pnl_usd": 420.78
   },
-  "ranking_24h_updated": "2026-11-08T07:32:08.087117+00:00",
+  "ranking_24h_updated": "2026-11-08T13:10:22.727308+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -80,21 +80,21 @@
       ],
       "live_24h": {
         "n": 4,
-        "wins": 2,
-        "losses": 2,
-        "wr": 50.0,
-        "R": 1.24,
-        "pf": 1.62,
-        "pnl": 8.86
+        "wins": 1,
+        "losses": 3,
+        "wr": 25.0,
+        "R": -1.38,
+        "pf": 0.54,
+        "pnl": -126.42
       },
       "live_today": {
-        "n": 3,
+        "n": 4,
         "wins": 1,
-        "losses": 2,
-        "wr": 33.3,
-        "R": -0.38,
-        "pf": 0.81,
-        "pnl": -84.27
+        "losses": 3,
+        "wr": 25.0,
+        "R": -1.38,
+        "pf": 0.54,
+        "pnl": -126.42
       },
       "signals_24h": 0,
       "backtest_4d": {
@@ -444,21 +444,21 @@
       ],
       "live_24h": {
         "n": 4,
-        "wins": 2,
-        "losses": 2,
-        "wr": 50.0,
-        "R": 1.24,
-        "pf": 1.62,
-        "pnl": 123.6
+        "wins": 3,
+        "losses": 1,
+        "wr": 75.0,
+        "R": 3.85,
+        "pf": 4.85,
+        "pnl": 385.4
       },
       "live_today": {
-        "n": 2,
-        "wins": 2,
+        "n": 3,
+        "wins": 3,
         "losses": 0,
         "wr": 100.0,
-        "R": 3.24,
+        "R": 4.85,
         "pf": 10.0,
-        "pnl": 323.6
+        "pnl": 485.4
       },
       "signals_24h": 6,
       "backtest_4d": {
@@ -1148,20 +1148,20 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-08T14:45:21.248287+08:00",
+        "updated": "2026-11-08T17:27:43.509693+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
-          "actionable": true,
-          "reason": "TTrades Fractal: H4 C2 closure (bearish) + M15 CISD (1-bar series) + EQ respected",
-          "ts": "2026-11-08T01:45:20.883975-05:00"
+          "actionable": false,
+          "reason": "no H4 C3 closure (Fractal quiet)",
+          "ts": "2026-11-08T04:27:42.970532-05:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no POI",
-            "detail": "C2 [75545, 75818] misses nearest swing 78614 by 2796",
-            "direction": "short",
+            "stage": "no C2 closure (sweep+reclaim) on C2",
+            "detail": null,
+            "direction": null,
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -1200,7 +1200,7 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [75460, 75812] misses nearest swing 78614 by 2802",
+            "detail": "C2 [75545, 75818] misses nearest swing 78614 by 2796",
             "direction": "short",
             "closure": "c2_closure",
             "trade_candle": null,
@@ -1222,13 +1222,13 @@
     "performance": [
       {
         "strategy": "TTrades-Fractal",
-        "n": 12,
-        "pf": 0.54,
-        "wr": 25.0,
-        "total_r": -4.15,
-        "pnl": 167.53,
+        "n": 13,
+        "pf": 0.49,
+        "wr": 23.1,
+        "total_r": -5.15,
+        "pnl": 83.69,
         "tickers": {
-          "BTC-USD": 7,
+          "BTC-USD": 8,
           "MGC=F": 3,
           "MNQ=F": 2
         }
@@ -1292,19 +1292,9 @@
         "t2": 4146.67,
         "entry_time": "2026-11-07T04:51:31.875204+08:00",
         "status": "open"
-      },
-      {
-        "strategy": "TTrades-Fractal",
-        "ticker": "BTC-USD",
-        "direction": "short",
-        "entry": 75669.203125,
-        "sl": 75836.87946428571,
-        "t2": 75400.92098214287,
-        "entry_time": "2026-11-08T01:45:20.883975-05:00",
-        "status": "open"
       }
     ],
-    "n_closed": 100,
+    "n_closed": 101,
     "note": "All four agents publish entry/SL/T1/T2 (T2 closes at 1.618R) as of 2026-10-09, so the whole family is trackable and scoreable. A fired row with has_levels=false means the stop reference sat on the wrong side of entry, which is reported rather than papered over."
   },
   "agent_control": {
