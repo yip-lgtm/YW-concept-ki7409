@@ -2,33 +2,21 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 27,
-    "last_run": "2026-11-07T19:53:47.515897+00:00",
-    "last_applied": 3,
+    "runs": 28,
+    "last_run": "2026-11-08T20:13:05.115776+00:00",
+    "last_applied": 2,
     "last_log": [
       {
-        "agent": "B1-3in1",
-        "action": "relax"
-      },
-      {
         "agent": "Stair",
-        "action": "error"
-      },
-      {
-        "agent": "OCS-BTC-5m",
         "action": "relax"
-      },
-      {
-        "agent": "H-Pattern",
-        "action": "error"
-      },
-      {
-        "agent": "TTrades-Fractal",
-        "action": "tighten"
       },
       {
         "agent": "Two-Yang",
         "action": "error"
+      },
+      {
+        "agent": "H-Pattern",
+        "action": "relax"
       },
       {
         "agent": "TTrades-L13",
@@ -67,18 +55,18 @@
     "tightened_count": 0
   },
   "Stair": {
-    "last_revised": "2026-10-27T20:27:25.656763+00:00",
+    "last_revised": "2026-11-08T20:13:05.115776+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "sentence\" then JSON. Need decide thresholds. Need analyze carefully. Agent Stair trend continuation. Metrics PF .852, WR .312, RR 1.873, n32. Global thresholds >1 PF, >50 WR, >1 RR. Need per-agent ove",
-    "response_raw": "<think>We need answer exact format: \"REASONING: sentence\" then JSON. Need decide thresholds. Need analyze carefully. Agent Stair trend continuation. Metrics PF .852, WR .312, RR 1.873, n32. Global thresholds >1 PF, >50 WR, >1 RR. Need per-agent override max relax only 2 indicators. Hard ranges. Could relax WR to .30 and RR perhaps 1.5? PF currently .852. Trend continuation needs momentum, WR should be okay but PF thin common. Actual RR high 1.873, WR 31.2, PF .852. Promotion perhaps relax PF to .85 and WR .30, keep RR 1.8? That relaxes two indicators: PF from 1.0 to 0.85, WR 0.5 to 0.30. RR could stay 1.0 though actual 1.873 passes. n 10. But strategy needs momentum and low PF common. High RR supports. Is .85 PF too low? Allowed .8. Sample n 32. likely promote now or soon. Need infer likel",
+    "reasoning": "&lt;一句話&gt;",
+    "response_raw": "<think>We need answer exact format? They say EXACT format (JSON only, no other text) but then show REASONING line followed JSON, contradiction \"JSON only\". Need likely output exactly reasoning + JSON? They explicitly require:\nREASONING: &lt;一句話&gt;\n{\n...\n}\nand \"禁止 think，直接輸出\". \"JSON only\" perhaps means no prose except prescribed reasoning. Need satisfy. Need determine thresholds based actual data + strategy personality. Stair trend continuation, WR should be okay but PF thin common. Metrics PF1.627, WR39.4%, RR2.503, n33. Current thresholds &gt;1 PF &gt;50 WR &gt;1 RR, n&gt;=10. Yet stuck because perhaps promotion uses max? Weird actual metrics all exceed PF, RR, n but WR fails. Thus relax only WR. Set min_WR perhaps 0.38 or 0.39? Profile says WR should be OK but PF thin common; this agent",
     "overrides": {
-      "min_PF": 0.85,
-      "min_WR": 0.3,
+      "min_PF": 1.0,
+      "min_WR": 0.38,
       "min_RR": 1.0,
       "min_trades": 10
     },
-    "relaxed_count": 2,
+    "relaxed_count": 1,
     "tightened_count": 0
   },
   "50-20-Pullback": {
@@ -127,18 +115,18 @@
     "tightened_count": 1
   },
   "H-Pattern": {
-    "last_revised": "2026-10-29T20:53:20.337306+00:00",
+    "last_revised": "2026-11-08T20:13:05.115776+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "sentence",
-    "response_raw": "<think>We need answer exact format: REASONING one sentence then JSON. Need decide override. We need parse constraints. Agent H-Pattern structural reversal moderate WR, moderate RR. Metrics n=9, PF 1.171, WR .444, RR1.464. Current global thresholds all fail: PF >1, WR >.5, RR>1, n>=10. Need max relax 2 indicators, not all. Min trades can lower to 5 meaningful. Need suggest perhaps relax WR and min_trades; retain PF and RR. This is natural structural reversal moderate WR. Since PF and RR clearly > thresholds, WR should be adjusted to e.g. 0.40, min trades 9? But min_trades lowest 5 and meaningful. We're setting promotion criteria. Current n=9. To let promotion, lower min trades to perhaps 8 or 9, while WR threshold 0.40. How many indicators relaxed? \"最多只可以放寬 2 個指標\" likely compare thresholds.",
+    "reasoning": "...\\n\\n{ ... }\". JSON only? They say \"請用 EXACT format 回覆 (JSON only, 唔好其他文字): REASONING: <一句話點解咲調>\\n\\n{...}\" contradictory JSON only plus reasoning line but exact follow line and valid JSON. Output re",
+    "response_raw": "<think>We need produce final exact requested format reasoning one sentence then JSON no other text. Need think through thresholds respecting hard ranges, max relax 2 metrics relative global promote PF>1.0 WR>50% RR>1.0 n≥10. Metrics PF 2.018 WR .538 RR 1.73 n 13. Need per agent override for structural reversal moderate WR moderate RR. Actual PF strong RR strong WR moderate n enough. Could relax WR to 0.48 or .50, hold others PF 1.0 RR 1.0 n 10; qualifies two metrics relaxed WR only so action relax. Need make sense structural reversal might high RR low WR but this one moderate. We can set min_WR 0.48 or .50, keep PF 1.0 RR 1.0 n 10. They explicitly thresholds ranges WR ∈ [.30,.70] etc and PF ∈ [.8,1.5] RR [.8,2]. Using min_PF 1.0 min_RR 1.0 n 10 is within ranges. Global thresholds PF >1 WR>",
     "overrides": {
       "min_PF": 1.0,
-      "min_WR": 0.4,
+      "min_WR": 0.45,
       "min_RR": 1.0,
-      "min_trades": 8
+      "min_trades": 10
     },
-    "relaxed_count": 2,
+    "relaxed_count": 1,
     "tightened_count": 0
   },
   "TTrades-L12": {

@@ -1,28 +1,42 @@
 {
-  "generated_at": "2026-11-09 03:03 HKT",
-  "hkt_timestamp": "2026-11-09T03:03:28.607771+08:00",
+  "generated_at": "2026-11-09 04:15 HKT",
+  "hkt_timestamp": "2026-11-09T04:15:50.101179+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 10,
-    "trades_today": 3,
-    "wins_24h": 4,
-    "R_24h": 0.47,
-    "signals_24h": 6,
-    "wr_24h": 40.0
+    "trades_today": 4,
+    "wins_24h": 3,
+    "R_24h": -2.14,
+    "signals_24h": 7,
+    "wr_24h": 30.0
   },
   "ranking_24h": [
     {
       "strategy": "CRT",
       "ticker": "BTC-USD",
-      "n_trades": 6,
-      "n_wins": 3,
+      "n_trades": 5,
+      "n_wins": 2,
       "n_losses": 3,
-      "win_rate": 50.0,
-      "total_R": 1.85,
-      "avg_R": 0.309,
-      "total_pnl_usd": 185.4,
-      "profit_factor": 1.62,
+      "win_rate": 40.0,
+      "total_R": 0.24,
+      "avg_R": 0.047,
+      "total_pnl_usd": 23.6,
+      "profit_factor": 1.08,
       "rank": 1,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "H-Pattern",
+      "ticker": "BTC-USD",
+      "n_trades": 1,
+      "n_wins": 0,
+      "n_losses": 1,
+      "win_rate": 0.0,
+      "total_R": -1.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -100.0,
+      "profit_factor": 0.0,
+      "rank": 2,
       "medal_eligible": false
     },
     {
@@ -36,18 +50,18 @@
       "avg_R": -0.345,
       "total_pnl_usd": -152.47,
       "profit_factor": 0.54,
-      "rank": 2,
+      "rank": 3,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
     "n_trades": 10,
-    "n_wins": 4,
-    "win_rate": 40.0,
-    "total_R": 0.47,
-    "total_pnl_usd": 32.93
+    "n_wins": 3,
+    "win_rate": 30.0,
+    "total_R": -2.14,
+    "total_pnl_usd": -228.87
   },
-  "ranking_24h_updated": "2026-11-08T19:03:28.607789+00:00",
+  "ranking_24h_updated": "2026-11-08T20:15:50.101200+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -96,9 +110,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "D",
-        "confidence": 95,
-        "reason": "\u96f6\u4ea4\u6613\u4e14\u7121ticker\u6578\u64da\uff0c\u672a\u80fd\u9a57\u8b49\u7b56\u7565\u6709\u6548"
+        "grade": "C",
+        "confidence": 88,
+        "reason": "\u96f6\u6210\u4ea4\u4e14\u7121\u6a19\u7684\u62c6\u89e3\uff0c\u6a23\u672c\u4e0d\u8db3\uff0c\u66ab\u4e0d\u61c9\u5927\u5e45\u6539\u53c3\u6578"
       }
     },
     {
@@ -117,24 +131,24 @@
         5
       ],
       "live_24h": {
-        "n": 0,
+        "n": 1,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -100.0
       },
       "live_today": {
-        "n": 0,
+        "n": 1,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -100.0
       },
-      "signals_24h": 0,
+      "signals_24h": 1,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -149,8 +163,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 85,
-        "reason": "\u52dd\u7387\u50c536%\u3001PF\u4f4e\u65bc1\u4e14R\u70ba\u8ca0\uff0c\u9700\u964d\u98a8\u96aa\u53ca\u6e1b\u5c11\u8a0a\u865f\u566a\u97f3"
+        "confidence": 92,
+        "reason": "\u52dd\u738736%\u3001PF 0.89\u5c6c\u8ca0\u671f\u671b\uff1bBTC\u4f5497%\u4ea4\u6613\u4e14\u8667\u640d\u96c6\u4e2d\u3002"
       }
     },
     {
@@ -200,9 +214,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "B",
-        "confidence": 84,
-        "reason": "\u6a23\u672c\u5145\u8db3\u4e14\u6b63\u671f\u671b\uff0c\u4f46PF\u504f\u5f31\uff0c\u76c8\u5229\u9ad8\u5ea6\u96c6\u4e2dMNQ"
+        "grade": "C",
+        "confidence": 82,
+        "reason": "425\u7b46\u6a23\u672c\u8db3\u4e14\u7e3dR\u70ba\u6b63\uff0c\u4f46PF\u50c51.14\uff0c\u76c8\u5229\u96c6\u4e2d"
       }
     },
     {
@@ -253,8 +267,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 96,
-        "reason": "250\u7b46\u6a23\u672c\u4e0bPF\u50c50.85\uff0cMES\u62d6\u7d2f-22.26R\uff0c\u6574\u9ad4\u986f\u8457\u5931\u6548"
+        "confidence": 92,
+        "reason": "PF\u4f4e\u65bc1\u4e14R\u70ba\u8ca0\uff0cMES\u9020\u6210\u4e3b\u8981\u8667\u640d\uff0c\u9700\u964d\u4f4e\u98a8\u96aa\u53ca\u904e\u6ffe\u5047\u8a0a\u865f\u3002"
       }
     },
     {
@@ -305,8 +319,8 @@
       },
       "iteration": {
         "grade": "B",
-        "confidence": 90,
-        "reason": "180\u7b46\u6a23\u672c\u8db3\u4e14PF\u90541.52\uff0c\u4f46\u76c8\u5229\u9ad8\u5ea6\u96c6\u4e2dBTC"
+        "confidence": 84,
+        "reason": "PF\u8207\u7e3dR\u70ba\u6b63\uff0c\u4f46\u76c8\u5229\u9ad8\u5ea6\u96c6\u4e2dBTC\uff0c\u8de8\u5e02\u5834\u7a69\u5b9a\u6027\u4e0d\u8db3"
       }
     },
     {
@@ -357,8 +371,8 @@
       },
       "iteration": {
         "grade": "D",
-        "confidence": 93,
-        "reason": "1015\u7b46\u4ecd\u930468.2R\u8667\u640d\uff0c5\u5206\u9418\u904e\u5ea6\u4ea4\u6613\u53ca\u4f4e\u52dd\u7387\u70ba\u4e3b\u56e0"
+        "confidence": 96,
+        "reason": "1015\u7b46\u6a23\u672cPF\u50c50.89\u3001WR 36%\uff0c\u8ca0R\u4e0b\u9808\u964d\u6b0a\u52a0\u6ffe\u7db2"
       }
     },
     {
@@ -408,9 +422,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "D",
-        "confidence": 92,
-        "reason": "385\u55ae\u6a23\u672c\u5145\u8db3\uff0c\u4f46\u52dd\u738736%\u3001PF0.95\u4e14R\u70ba\u8ca0"
+        "grade": "C",
+        "confidence": 78,
+        "reason": "PF 0.95\u3001R -12.8\uff1bMES\u62d6\u7d2f\u6700\u5927\uff0c\u50c5MNQ\u53caGC\u6a23\u672c\u76c8\u5229"
       }
     },
     {
@@ -429,13 +443,13 @@
         5
       ],
       "live_24h": {
-        "n": 6,
-        "wins": 3,
+        "n": 5,
+        "wins": 2,
         "losses": 3,
-        "wr": 50.0,
-        "R": 1.85,
-        "pf": 1.62,
-        "pnl": 185.4
+        "wr": 40.0,
+        "R": 0.24,
+        "pf": 1.08,
+        "pnl": 23.6
       },
       "live_today": {
         "n": 2,
@@ -460,9 +474,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "?",
-        "confidence": 0,
-        "reason": ""
+        "grade": "B",
+        "confidence": 78,
+        "reason": "858\u7b46\u6a23\u672c\u8db3\u5920\u4e14\u6574\u9ad4\u6b63R\uff0c\u4f46PF\u50c51.10\u3001\u932f\u914d\u62d6\u7d2f\u660e\u986f\uff0c\u5b9c\u964d\u6b0a\u3002"
       }
     },
     {
@@ -513,8 +527,8 @@
       },
       "iteration": {
         "grade": "C",
-        "confidence": 78,
-        "reason": "PF\u50c51.08\uff0cMES\u53caMGC\u62d6\u7d2f\u8868\u73fe\uff0c\u6574\u9ad4\u512a\u52e2\u4ecd\u504f\u5f31"
+        "confidence": 86,
+        "reason": "\u6574\u9ad4\u6b63\u6536\u76ca\u4f46PF\u50c51.08\uff0cMGC\u53caMES\u6301\u7e8c\u62d6\u7d2f"
       }
     },
     {
@@ -566,7 +580,7 @@
       "iteration": {
         "grade": "C",
         "confidence": 74,
-        "reason": "PF\u50c51.03\u4e14\u6a23\u672c\u504f\u5c0f\uff0c\u52dd\u7387\u4e0d\u8db3\uff0c\u5b9c\u964d\u98a8\u96aa\u6536\u7a84\u76ee\u6a19"
+        "reason": "\u6a23\u672c\u504f\u5c11\u4e14PF\u50c51.03\uff0cBTC\u62d6\u7d2f\u6574\u9ad4\uff0c\u5b9c\u964d\u6b0a\u8a66\u904b\u884c"
       }
     },
     {
@@ -618,7 +632,7 @@
       "iteration": {
         "grade": "C",
         "confidence": 74,
-        "reason": "PF\u50c51.03\u4e14\u6a23\u672c\u504f\u5c0f\uff0c\u52dd\u7387\u4e0d\u8db3\uff0c\u5b9c\u964d\u98a8\u96aa\u6536\u7a84\u76ee\u6a19"
+        "reason": "\u6a23\u672c\u504f\u5c11\u4e14PF\u50c51.03\uff0cBTC\u62d6\u7d2f\u6574\u9ad4\uff0c\u5b9c\u964d\u6b0a\u8a66\u904b\u884c"
       }
     },
     {
@@ -670,7 +684,7 @@
       "iteration": {
         "grade": "C",
         "confidence": 74,
-        "reason": "PF\u50c51.03\u4e14\u6a23\u672c\u504f\u5c0f\uff0c\u52dd\u7387\u4e0d\u8db3\uff0c\u5b9c\u964d\u98a8\u96aa\u6536\u7a84\u76ee\u6a19"
+        "reason": "\u6a23\u672c\u504f\u5c11\u4e14PF\u50c51.03\uff0cBTC\u62d6\u7d2f\u6574\u9ad4\uff0c\u5b9c\u964d\u6b0a\u8a66\u904b\u884c"
       }
     },
     {
@@ -722,7 +736,7 @@
       "iteration": {
         "grade": "C",
         "confidence": 74,
-        "reason": "PF\u50c51.03\u4e14\u6a23\u672c\u504f\u5c0f\uff0c\u52dd\u7387\u4e0d\u8db3\uff0c\u5b9c\u964d\u98a8\u96aa\u6536\u7a84\u76ee\u6a19"
+        "reason": "\u6a23\u672c\u504f\u5c11\u4e14PF\u50c51.03\uff0cBTC\u62d6\u7d2f\u6574\u9ad4\uff0c\u5b9c\u964d\u6b0a\u8a66\u904b\u884c"
       }
     },
     {
@@ -980,9 +994,9 @@
         "pf": 0
       },
       "iteration": {
-        "grade": "C",
-        "confidence": 35,
-        "reason": "\u96f6\u6210\u4ea4\u7121\u6cd5\u9a57\u8b49\u8a0a\u865f\uff0c\u53ea\u6709\u9810\u8a2d\u52dd\u7387\u53caPF\uff0c\u8b49\u64da\u4e0d\u8db3"
+        "grade": "D",
+        "confidence": 85,
+        "reason": "\u96f6\u4ea4\u6613\u4e14\u7121\u6a23\u672c\uff0c\u672a\u80fd\u9a57\u8b49\u8a0a\u865f\u53ca\u76c8\u5229\u80fd\u529b"
       }
     }
   ],
@@ -1134,12 +1148,12 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-09T02:40:29.591728+08:00",
+        "updated": "2026-11-09T03:09:04.514267+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "Monday skip (OSOK rule)",
-          "ts": "2026-11-08T13:40:29.227179-05:00"
+          "ts": "2026-11-08T14:09:04.122439-05:00"
         },
         "l_series": [
           {
@@ -1186,7 +1200,7 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [75694, 75918] misses nearest swing 78614 by 2696",
+            "detail": "C2 [75694, 75918] misses nearest swing 78616 by 2698",
             "direction": "short",
             "closure": "c2_closure",
             "trade_candle": null,
@@ -1287,18 +1301,18 @@
     "levels": [
       {
         "strategy": "CRT",
-        "level": 13,
-        "last_settled": "2026-11-08",
-        "n_changes": 12,
+        "level": 14,
+        "last_settled": "2026-11-09",
+        "n_changes": 13,
         "last_action": "promote",
-        "last_reason": "PF>1.0 & WR>0.4 & RR>1.0, n=120 (new evidence), 2 consecutive qualifying day(s)",
-        "last_change_date": "2026-11-08",
-        "streak": 2
+        "last_reason": "PF>1.0 & WR>0.4 & RR>1.0, n=121 (new evidence), 3 consecutive qualifying day(s)",
+        "last_change_date": "2026-11-09",
+        "streak": 0
       },
       {
         "strategy": "H-Pattern",
         "level": 6,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 5,
         "last_action": "promote",
         "last_reason": "PF>1.0 & WR>0.4 & RR>1.0, n=13 (new evidence), 3 consecutive qualifying day(s)",
@@ -1308,7 +1322,7 @@
       {
         "strategy": "OCS-BTC-5m",
         "level": 6,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 5,
         "last_action": "promote",
         "last_reason": "PF>1.0 & WR>0.4 & RR>1.0, n=51 (new evidence), 2 consecutive qualifying day(s)",
@@ -1318,7 +1332,7 @@
       {
         "strategy": "TTrades-L13",
         "level": 6,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 5,
         "last_action": "promote",
         "last_reason": "PF>1.0 & WR>0.39 & RR>1.0, n=35 (new evidence), 3 consecutive qualifying day(s)",
@@ -1328,7 +1342,7 @@
       {
         "strategy": "Two-Yang",
         "level": 5,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 4,
         "last_action": "promote",
         "last_reason": "PF>1.0 & WR>0.38 & RR>1.0, n=17 (new evidence), 2 consecutive qualifying day(s)",
@@ -1338,7 +1352,7 @@
       {
         "strategy": "3-Pushes",
         "level": 2,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 1,
         "last_action": "promote",
         "last_reason": "PF>1.0 & WR>0.45 & RR>1.0, n=12 (new evidence), 2 consecutive qualifying day(s)",
@@ -1348,7 +1362,7 @@
       {
         "strategy": "50-20-Pullback",
         "level": 2,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 1,
         "last_action": "promote",
         "last_reason": "PF>0.95 & WR>0.35 & RR>1.0, n=77 (new evidence), 2 consecutive qualifying day(s)",
@@ -1358,7 +1372,7 @@
       {
         "strategy": "Stair",
         "level": 2,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 1,
         "last_action": "promote",
         "last_reason": "PF>0.85 & WR>0.33 & RR>1.0, n=35 (new evidence), 2 consecutive qualifying day(s)",
@@ -1368,7 +1382,7 @@
       {
         "strategy": "TTrades-L14",
         "level": 2,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 1,
         "last_action": "promote",
         "last_reason": "PF>0.8 & WR>0.3 & RR>1.0, n=12 (new evidence), 2 consecutive qualifying day(s)",
@@ -1378,7 +1392,7 @@
       {
         "strategy": "Argon-Gold",
         "level": 1,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1388,7 +1402,7 @@
       {
         "strategy": "B1",
         "level": 1,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1398,7 +1412,7 @@
       {
         "strategy": "B1-3in1",
         "level": 1,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1408,7 +1422,7 @@
       {
         "strategy": "Kell-Cycle",
         "level": 1,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1418,7 +1432,7 @@
       {
         "strategy": "RSI-Div",
         "level": 1,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1428,7 +1442,7 @@
       {
         "strategy": "TTrades-Fractal",
         "level": 1,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1438,7 +1452,7 @@
       {
         "strategy": "TTrades-L12",
         "level": 1,
-        "last_settled": "2026-11-08",
+        "last_settled": "2026-11-09",
         "n_changes": 0,
         "last_action": null,
         "last_reason": null,
@@ -1476,14 +1490,14 @@
       {
         "strategy": "Stair",
         "action": "relax",
-        "reasoning": "sentence\" then JSON. Need decide thresholds. Need analyze carefully. Agent Stair trend continuation. Metrics PF .852, WR .312, RR 1.873, n32. Global thresholds >1 PF, >50 WR, >1 RR. Need per-agent ove",
+        "reasoning": "&lt;\u4e00\u53e5\u8a71&gt;",
         "overrides": {
-          "min_PF": 0.85,
-          "min_WR": 0.3,
+          "min_PF": 1.0,
+          "min_WR": 0.38,
           "min_RR": 1.0,
           "min_trades": 10
         },
-        "last_revised": "2026-10-27T20:27:25.656763+00:00",
+        "last_revised": "2026-11-08T20:13:05.115776+00:00",
         "stuck_days_at_revision": 3
       },
       {
@@ -1528,14 +1542,14 @@
       {
         "strategy": "H-Pattern",
         "action": "relax",
-        "reasoning": "sentence",
+        "reasoning": "...\\n\\n{ ... }\". JSON only? They say \"\u8acb\u7528 EXACT format \u56de\u8986 (JSON only, \u5514\u597d\u5176\u4ed6\u6587\u5b57): REASONING: <\u4e00\u53e5\u8a71\u9ede\u89e3\u54b2\u8abf>\\n\\n{...}\" contradictory JSON only plus reasoning line but exact follow line and valid JSON. Output re",
         "overrides": {
           "min_PF": 1.0,
-          "min_WR": 0.4,
+          "min_WR": 0.45,
           "min_RR": 1.0,
-          "min_trades": 8
+          "min_trades": 10
         },
-        "last_revised": "2026-10-29T20:53:20.337306+00:00",
+        "last_revised": "2026-11-08T20:13:05.115776+00:00",
         "stuck_days_at_revision": 3
       },
       {
