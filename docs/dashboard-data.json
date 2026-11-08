@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-11-08 13:42 HKT",
-  "hkt_timestamp": "2026-11-08T13:42:32.420856+08:00",
+  "generated_at": "2026-11-08 15:32 HKT",
+  "hkt_timestamp": "2026-11-08T15:32:08.087096+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 9,
     "trades_today": 6,
     "wins_24h": 5,
     "R_24h": 4.1,
-    "signals_24h": 6,
+    "signals_24h": 7,
     "wr_24h": 55.6
   },
   "ranking_24h": [
@@ -61,7 +61,7 @@
     "total_R": 4.1,
     "total_pnl_usd": 294.26
   },
-  "ranking_24h_updated": "2026-11-08T05:42:32.420871+00:00",
+  "ranking_24h_updated": "2026-11-08T07:32:08.087117+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -460,7 +460,7 @@
         "pf": 10.0,
         "pnl": 323.6
       },
-      "signals_24h": 5,
+      "signals_24h": 6,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -1148,19 +1148,19 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-08T10:31:01.865302+08:00",
+        "updated": "2026-11-08T14:45:21.248287+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
-          "actionable": false,
-          "reason": "London expanded (skip NY)",
-          "ts": "2026-11-07T21:31:01.552871-05:00"
+          "actionable": true,
+          "reason": "TTrades Fractal: H4 C2 closure (bearish) + M15 CISD (1-bar series) + EQ respected",
+          "ts": "2026-11-08T01:45:20.883975-05:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [75467, 75812] misses nearest swing 78735 by 2923",
+            "detail": "C2 [75545, 75818] misses nearest swing 78614 by 2796",
             "direction": "short",
             "closure": null,
             "trade_candle": null,
@@ -1200,9 +1200,9 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [75467, 75812] misses nearest swing 77288 by 1476",
-            "direction": "long",
-            "closure": "c3_closure",
+            "detail": "C2 [75460, 75812] misses nearest swing 78614 by 2802",
+            "direction": "short",
+            "closure": "c2_closure",
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
@@ -1291,6 +1291,16 @@
         "sl": 4026.18,
         "t2": 4146.67,
         "entry_time": "2026-11-07T04:51:31.875204+08:00",
+        "status": "open"
+      },
+      {
+        "strategy": "TTrades-Fractal",
+        "ticker": "BTC-USD",
+        "direction": "short",
+        "entry": 75669.203125,
+        "sl": 75836.87946428571,
+        "t2": 75400.92098214287,
+        "entry_time": "2026-11-08T01:45:20.883975-05:00",
         "status": "open"
       }
     ],
