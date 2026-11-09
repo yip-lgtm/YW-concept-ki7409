@@ -1,7 +1,7 @@
 {
-  "day": "2026-11-07",
-  "live_day": "2026-11-08",
-  "generated_at": "2026-11-09T02:49:48.199793+00:00",
+  "day": "2026-11-08",
+  "live_day": "2026-11-09",
+  "generated_at": "2026-11-09T10:35:48.270992+00:00",
   "rules": {
     "_meta": {
       "_comment": "Arena rules \u2014 the 15 strategy agents trade each other on virtual accounts. This is a PAPER competition: it never places a broker order, it only moves numbers in its own account files. The governance ladder in strategy_levels.json is NOT touched by the arena; the arena keeps its own level counter so the live promotion rules (n>=10 over 14 days, 2 consecutive days) stay intact.",
@@ -46,6 +46,37 @@
   },
   "board": [
     {
+      "agent": "TTrades-Fractal",
+      "level": 6,
+      "level_before": 5,
+      "action": "promote",
+      "reason": "PF 99.0 > 1.0, WR 100%, n=1",
+      "equity_usd": 717.63,
+      "live": {
+        "n": 0,
+        "PF": 0.0,
+        "WR": 0.0,
+        "RR": 0.0,
+        "pnl_usd": 0,
+        "wins": 0,
+        "losses": 0
+      },
+      "realised_usd": 717.63,
+      "open_positions": 0,
+      "unrealised_usd": 0,
+      "today": {
+        "n": 1,
+        "PF": 99.0,
+        "WR": 1.0,
+        "RR": 99.0,
+        "pnl_usd": 173.54,
+        "wins": 1,
+        "losses": 0
+      },
+      "instruments": [],
+      "rank": 1
+    },
+    {
       "agent": "CRT",
       "level": 6,
       "level_before": 6,
@@ -62,37 +93,6 @@
         "losses": 0
       },
       "realised_usd": 4022.0,
-      "open_positions": 0,
-      "unrealised_usd": 0,
-      "today": {
-        "n": 0,
-        "PF": 0.0,
-        "WR": 0.0,
-        "RR": 0.0,
-        "pnl_usd": 0,
-        "wins": 0,
-        "losses": 0
-      },
-      "instruments": [],
-      "rank": 1
-    },
-    {
-      "agent": "TTrades-Fractal",
-      "level": 5,
-      "level_before": 5,
-      "action": "hold",
-      "reason": "no settled day yet",
-      "equity_usd": 717.63,
-      "live": {
-        "n": 1,
-        "PF": 99.0,
-        "WR": 1.0,
-        "RR": 99.0,
-        "pnl_usd": 173.54,
-        "wins": 1,
-        "losses": 0
-      },
-      "realised_usd": 717.63,
       "open_positions": 0,
       "unrealised_usd": 0,
       "today": {
@@ -361,7 +361,7 @@
       "level_before": 1,
       "action": "hold",
       "reason": "no settled day yet",
-      "equity_usd": 1421.41,
+      "equity_usd": 1788.95,
       "live": {
         "n": 0,
         "PF": 0.0,
@@ -373,7 +373,7 @@
       },
       "realised_usd": -600.0,
       "open_positions": 1,
-      "unrealised_usd": 2021.41,
+      "unrealised_usd": 2388.95,
       "today": {
         "n": 0,
         "PF": 0.0,
@@ -394,7 +394,7 @@
       "level_before": 1,
       "action": "hold",
       "reason": "no settled day yet",
-      "equity_usd": 301.84,
+      "equity_usd": 251.62,
       "live": {
         "n": 0,
         "PF": 0.0,
@@ -406,7 +406,7 @@
       },
       "realised_usd": -300.0,
       "open_positions": 2,
-      "unrealised_usd": 601.84,
+      "unrealised_usd": 551.62,
       "today": {
         "n": 0,
         "PF": 0.0,
@@ -459,7 +459,7 @@
       "level_before": 1,
       "action": "hold",
       "reason": "no settled day yet",
-      "equity_usd": -252.67,
+      "equity_usd": -318.62,
       "live": {
         "n": 0,
         "PF": 0.0,
@@ -471,7 +471,7 @@
       },
       "realised_usd": -400.0,
       "open_positions": 1,
-      "unrealised_usd": 147.33,
+      "unrealised_usd": 81.38,
       "today": {
         "n": 0,
         "PF": 0.0,
