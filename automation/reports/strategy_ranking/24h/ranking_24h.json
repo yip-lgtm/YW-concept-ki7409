@@ -1,12 +1,26 @@
 {
-  "date": "2026-11-09",
+  "date": "2026-11-10",
   "window_hours": 24,
-  "hkt_timestamp": "2026-11-09T12:23:37.952504+00:00",
+  "hkt_timestamp": "2026-11-09T16:00:45.988501+00:00",
   "type": "24h_live_ranking",
   "sort": "Total $ \u2192 PF \u2192 WR (R as footnote, per 9/22 \u6536\u7dca\u7248)",
-  "n_total": 44,
-  "n_disqualified_medal": 5,
+  "n_total": 56,
+  "n_disqualified_medal": 7,
   "ranking": [
+    {
+      "strategy": "CRT",
+      "ticker": "BTC-USD",
+      "n_trades": 29,
+      "n_wins": 14,
+      "n_losses": 15,
+      "win_rate": 48.3,
+      "total_R": 7.65,
+      "avg_R": 0.264,
+      "total_pnl_usd": 765.2,
+      "profit_factor": 1.51,
+      "rank": 1,
+      "medal_eligible": true
+    },
     {
       "strategy": "unknown",
       "ticker": "\u2014",
@@ -18,22 +32,8 @@
       "avg_R": 0.745,
       "total_pnl_usd": 741.2,
       "profit_factor": 3.24,
-      "rank": 1,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "BTC-USD",
-      "n_trades": 25,
-      "n_wins": 12,
-      "n_losses": 13,
-      "win_rate": 48.0,
-      "total_R": 6.42,
-      "avg_R": 0.257,
-      "total_pnl_usd": 641.6,
-      "profit_factor": 1.49,
       "rank": 2,
-      "medal_eligible": true
+      "medal_eligible": false
     },
     {
       "strategy": "RSI-Div",
@@ -50,6 +50,20 @@
       "medal_eligible": false
     },
     {
+      "strategy": "B1",
+      "ticker": "MGC=F",
+      "n_trades": 1,
+      "n_wins": 1,
+      "n_losses": 0,
+      "win_rate": 100.0,
+      "total_R": 1.62,
+      "avg_R": 1.618,
+      "total_pnl_usd": 161.8,
+      "profit_factor": 10.0,
+      "rank": 4,
+      "medal_eligible": false
+    },
+    {
       "strategy": "Stair",
       "ticker": "MGC=F",
       "n_trades": 8,
@@ -60,7 +74,7 @@
       "avg_R": -0.018,
       "total_pnl_usd": -14.6,
       "profit_factor": 0.97,
-      "rank": 4,
+      "rank": 5,
       "medal_eligible": false
     },
     {
@@ -74,21 +88,35 @@
       "avg_R": -0.667,
       "total_pnl_usd": -200.0,
       "profit_factor": 0.0,
-      "rank": 5,
+      "rank": 6,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "BTC-USD",
+      "n_trades": 5,
+      "n_wins": 1,
+      "n_losses": 4,
+      "win_rate": 20.0,
+      "total_R": -2.38,
+      "avg_R": -0.476,
+      "total_pnl_usd": -238.2,
+      "profit_factor": 0.4,
+      "rank": 7,
       "medal_eligible": false
     },
     {
       "strategy": "H-Pattern",
       "ticker": "BTC-USD",
-      "n_trades": 4,
-      "n_wins": 0,
-      "n_losses": 4,
-      "win_rate": 0.0,
-      "total_R": -4.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -400.0,
-      "profit_factor": 0.0,
-      "rank": 6,
+      "n_trades": 6,
+      "n_wins": 1,
+      "n_losses": 5,
+      "win_rate": 16.7,
+      "total_R": -3.38,
+      "avg_R": -0.564,
+      "total_pnl_usd": -338.2,
+      "profit_factor": 0.32,
+      "rank": 8,
       "medal_eligible": false
     }
   ]
