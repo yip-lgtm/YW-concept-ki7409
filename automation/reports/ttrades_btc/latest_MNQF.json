@@ -1,51 +1,51 @@
 {
-  "ts": "2026-11-10T10:36:33.093216-05:00",
+  "ts": "2026-11-10T13:08:44.398271-05:00",
   "ticker": "MNQ=F",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
-  "side": "bullish",
+  "side": "bearish",
   "swing": {
     "type": "c2_closure",
-    "side": "bullish",
-    "c2_high": 28044.5,
-    "c2_low": 27872.0,
-    "c2_close": 27940.0,
-    "c2_eq": 27958.25,
-    "c3_close": 27922.25,
-    "swing_level": 27872.0,
-    "direction": "long"
+    "side": "bearish",
+    "c2_high": 28090.25,
+    "c2_low": 27598.5,
+    "c2_close": 27740.75,
+    "c2_eq": 27844.375,
+    "c3_close": 27643.75,
+    "swing_level": 28090.25,
+    "direction": "short"
   },
   "cisd": {
-    "confirmed": false,
+    "confirmed": true,
     "opposing_open": 28103.75,
     "series_length": 1,
-    "last_close": 27922.25,
-    "reason": "no break"
+    "last_close": 27643.75,
+    "reason": "cisd_short"
   },
-  "eq_respected": false,
+  "eq_respected": true,
   "d1_trend": {
-    "aligned": false,
+    "aligned": true,
     "trend": "downtrend",
-    "d1_close": 27922.25,
-    "d1_ema50": 29382.136634475006,
-    "d1_ema20": 28801.164838073644,
-    "reason": "D1 downtrend (counter-trend)"
+    "d1_close": 27646.0,
+    "d1_ema50": 29371.303301141674,
+    "d1_ema20": 28774.85531426412,
+    "reason": "D1 downtrend"
   },
   "weekly_profile": {
-    "profile": "early_week",
+    "profile": "unknown",
     "valid_for_signal": true,
-    "notes": "day 2 - too early, not blocking"
+    "notes": ""
   },
   "daily_profile": {
     "london_expanded": true,
-    "london_range": 491.75,
+    "london_range": 572.75,
     "skip_ny": true
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "CISD not confirmed; EQ not respected; D1 counter-trend (downtrend); London expanded (skip NY)",
+  "reason": "London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
