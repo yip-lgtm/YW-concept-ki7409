@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-09T20:07:08.160174+00:00",
+  "timestamp": "2026-11-10T02:43:45.822647+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -8,27 +8,34 @@
       "no /tmp/ocs_btc/latest.json"
     ],
     "n_open": 0,
-    "n_trades_total": 90,
-    "win_rate": 36.7,
-    "profit_factor": 0.93,
+    "n_trades_total": 91,
+    "win_rate": 36.3,
+    "profit_factor": 0.91,
     "last_signal": null
   },
   "ranking": {
     "component": "strategy-ranking",
     "issues": [],
-    "latest_file": "ranking_2026-11-09.md",
-    "latest_date": "2026-11-09"
+    "latest_file": "ranking_2026-11-10.md",
+    "latest_date": "2026-11-10"
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
-    "today": "2026-11-09",
-    "ran_today": false,
-    "success_today": false
+    "today": "2026-11-10",
+    "ran_today": true,
+    "success_today": true,
+    "last_id": 42724885064
   },
   "workflows": [
     {
       "workflow": "yw-daily.yml",
       "runs": [
+        {
+          "id": 42724885064,
+          "conclusion": "success",
+          "created_at": "2026-11-10T00:00:06Z",
+          "event": "schedule"
+        },
         {
           "id": 42518344440,
           "conclusion": "success",
@@ -40,12 +47,6 @@
           "conclusion": "success",
           "created_at": "2026-11-07T19:49:08Z",
           "event": "schedule"
-        },
-        {
-          "id": 42296151663,
-          "conclusion": "success",
-          "created_at": "2026-11-06T21:22:11Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -53,6 +54,12 @@
     {
       "workflow": "yw-publish-signal.yml",
       "runs": [
+        {
+          "id": 42726186435,
+          "conclusion": "success",
+          "created_at": "2026-11-10T00:10:01Z",
+          "event": "schedule"
+        },
         {
           "id": 42521229183,
           "conclusion": "success",
@@ -64,12 +71,6 @@
           "conclusion": "success",
           "created_at": "2026-11-07T20:25:06Z",
           "event": "workflow_dispatch"
-        },
-        {
-          "id": 42296786244,
-          "conclusion": "success",
-          "created_at": "2026-11-06T21:26:48Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -78,21 +79,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 42689512707,
+          "id": 42744496803,
           "conclusion": "success",
-          "created_at": "2026-11-09T20:05:05Z",
+          "created_at": "2026-11-10T02:41:38Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 42668201443,
+          "id": 42732743086,
           "conclusion": "success",
-          "created_at": "2026-11-09T17:48:30Z",
+          "created_at": "2026-11-10T01:01:45Z",
           "event": "schedule"
         },
         {
-          "id": 42594362342,
-          "conclusion": "cancelled",
-          "created_at": "2026-11-09T09:33:36Z",
+          "id": 42694622641,
+          "conclusion": "success",
+          "created_at": "2026-11-09T20:36:43Z",
           "event": "workflow_dispatch"
         }
       ],
@@ -101,6 +102,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 42724554102,
+          "conclusion": "success",
+          "created_at": "2026-11-09T23:57:24Z",
+          "event": "schedule"
+        },
         {
           "id": 42518914938,
           "conclusion": "success",
@@ -112,12 +119,6 @@
           "conclusion": "success",
           "created_at": "2026-11-07T19:53:04Z",
           "event": "schedule"
-        },
-        {
-          "id": 42295370058,
-          "conclusion": "success",
-          "created_at": "2026-11-06T21:16:37Z",
-          "event": "schedule"
         }
       ],
       "issues": []
@@ -125,6 +126,12 @@
     {
       "workflow": "strategy-reward.yml",
       "runs": [
+        {
+          "id": 42726633090,
+          "conclusion": "success",
+          "created_at": "2026-11-10T00:13:25Z",
+          "event": "schedule"
+        },
         {
           "id": 42521226639,
           "conclusion": "success",
@@ -136,12 +143,6 @@
           "conclusion": "success",
           "created_at": "2026-11-07T20:25:04Z",
           "event": "workflow_dispatch"
-        },
-        {
-          "id": 42296897748,
-          "conclusion": "success",
-          "created_at": "2026-11-06T21:27:38Z",
-          "event": "schedule"
         }
       ],
       "issues": []
