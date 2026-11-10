@@ -1,47 +1,28 @@
 {
-  "ts": "2026-11-10T11:00:38.476521+08:00",
+  "ts": "2026-11-10T12:18:54.634364+08:00",
   "ticker": "MGC=F",
-  "h4_bars": 155,
-  "m15_bars": 544,
+  "h4_bars": 156,
+  "m15_bars": 549,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
-      "stage": "CISD not confirmed",
-      "detail": "no break",
-      "direction": "short",
-      "poi": {
-        "found": true,
-        "basis": "structural pivots",
-        "prior_extreme": 4156.0,
-        "swing_levels": [
-          4088.199951171875,
-          4091.0,
-          4097.2998046875,
-          4143.2998046875,
-          4156.0
-        ],
-        "pivot_count": 27,
-        "fvg_count": 15
-      },
-      "cisd": {
-        "confirmed": false,
-        "opposing_open": 3922.39990234375,
-        "series_length": 1,
-        "last_close": 4120.5,
-        "reason": "no break"
-      },
+      "stage": "no C2 closure (sweep+reclaim) on C2",
       "strategy": "TTrades-L12",
       "has_levels": false
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C2 not an expansion candle (wick too large)",
+      "stage": "CISD not confirmed",
+      "detail": "no break",
+      "direction": "short",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "stage": "prior high too close to be worth trading",
+      "direction": "short",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
