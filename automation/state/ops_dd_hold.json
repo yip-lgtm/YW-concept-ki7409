@@ -1,12 +1,15 @@
 {
-  "dd": "unlocked",
-  "dd_hold": false,
-  "updated_at_hkt": "2026-11-10 07:41 HKT",
-  "date": "2026-11-10",
-  "day_pnl": 447.2,
-  "dd_amount": 447.2,
+  "dd": "held",
+  "dd_hold": true,
+  "held_at_hkt": "2026-11-11 05:11 HKT",
+  "date": "2026-11-11",
+  "day_pnl": -638.2,
+  "dd_amount": -638.2,
+  "dd_vs": "day_start",
   "dd_limit_usd": -100.0,
-  "no_new_entries": false,
+  "reason": "day DD -638.2 <= -100.0 (vs day_start)",
+  "unlock": "next HKT session settlement if day_pnl > limit, or operator --clear-hold / set dd=unlocked",
+  "no_new_entries": true,
   "account": "PAAPEX…091",
   "path": "automation/state/ops_dd_hold.json"
 }
