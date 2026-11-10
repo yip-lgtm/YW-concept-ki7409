@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-11-11 02:38 HKT",
-  "hkt_timestamp": "2026-11-11T02:38:29.327829+08:00",
+  "generated_at": "2026-11-11 03:37 HKT",
+  "hkt_timestamp": "2026-11-11T03:37:13.394189+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 32,
-    "trades_today": 5,
-    "wins_24h": 7,
-    "R_24h": -13.67,
+    "trades_today": 6,
+    "wins_24h": 6,
+    "R_24h": -16.29,
     "signals_24h": 49,
-    "wr_24h": 21.9
+    "wr_24h": 18.8
   },
   "ranking_24h": [
     {
@@ -41,15 +41,15 @@
     },
     {
       "strategy": "Two-Yang",
-      "ticker": "BTC-USD",
+      "ticker": "MES=F",
       "n_trades": 9,
-      "n_wins": 2,
-      "n_losses": 7,
-      "win_rate": 22.2,
-      "total_R": 1.24,
-      "avg_R": 0.137,
-      "total_pnl_usd": 123.6,
-      "profit_factor": 1.62,
+      "n_wins": 3,
+      "n_losses": 6,
+      "win_rate": 33.3,
+      "total_R": 2.85,
+      "avg_R": 0.317,
+      "total_pnl_usd": 285.4,
+      "profit_factor": 2.43,
       "rank": 3,
       "medal_eligible": false
     },
@@ -97,27 +97,27 @@
     },
     {
       "strategy": "CRT",
-      "ticker": "MNQ=F",
-      "n_trades": 19,
-      "n_wins": 3,
-      "n_losses": 16,
-      "win_rate": 15.8,
-      "total_R": -11.15,
-      "avg_R": -0.587,
-      "total_pnl_usd": -1114.6,
-      "profit_factor": 0.3,
+      "ticker": "BTC-USD",
+      "n_trades": 18,
+      "n_wins": 1,
+      "n_losses": 17,
+      "win_rate": 5.6,
+      "total_R": -15.38,
+      "avg_R": -0.855,
+      "total_pnl_usd": -1538.2,
+      "profit_factor": 0.1,
       "rank": 7,
       "medal_eligible": true
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 43,
-    "n_wins": 14,
-    "win_rate": 32.6,
-    "total_R": -1.35,
-    "total_pnl_usd": -252.76
+    "n_trades": 42,
+    "n_wins": 13,
+    "win_rate": 31.0,
+    "total_R": -3.97,
+    "total_pnl_usd": -514.56
   },
-  "ranking_24h_updated": "2026-11-10T18:38:29.327852+00:00",
+  "ranking_24h_updated": "2026-11-10T19:37:13.394206+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -500,21 +500,21 @@
       ],
       "live_24h": {
         "n": 18,
-        "wins": 2,
-        "losses": 16,
-        "wr": 11.1,
-        "R": -12.76,
-        "pf": 0.2,
-        "pnl": -1276.4
+        "wins": 1,
+        "losses": 17,
+        "wr": 5.6,
+        "R": -15.38,
+        "pf": 0.1,
+        "pnl": -1538.2
       },
       "live_today": {
-        "n": 4,
+        "n": 5,
         "wins": 0,
-        "losses": 4,
+        "losses": 5,
         "wr": 0.0,
-        "R": -4.0,
+        "R": -5.0,
         "pf": 0.0,
-        "pnl": -400.0
+        "pnl": -500.0
       },
       "signals_24h": 32,
       "backtest_4d": {
@@ -1060,12 +1060,12 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-11-11T02:08:44.635641+08:00",
+        "updated": "2026-11-11T02:39:41.303385+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "London expanded (skip NY)",
-          "ts": "2026-11-10T13:08:44.398271-05:00"
+          "ts": "2026-11-10T13:39:40.960980-05:00"
         },
         "l_series": [
           {
@@ -1132,12 +1132,12 @@
       },
       {
         "ticker": "MGC=F",
-        "updated": "2026-11-11T02:08:46.893725+08:00",
+        "updated": "2026-11-11T02:39:42.799839+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-11-10T13:08:46.639874-05:00"
+          "ts": "2026-11-10T13:39:42.494118-05:00"
         },
         "l_series": [
           {
@@ -1204,12 +1204,12 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-11T02:08:49.151601+08:00",
+        "updated": "2026-11-11T02:39:44.291698+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-11-10T13:08:48.905498-05:00"
+          "ts": "2026-11-10T13:39:43.976185-05:00"
         },
         "l_series": [
           {
