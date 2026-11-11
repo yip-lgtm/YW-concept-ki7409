@@ -15,10 +15,10 @@
 | 8 | Two-Yang | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,482 | — |
 | 9 | Argon-Gold | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-148 | — |
 | 10 | 50-20-Pullback | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,179 | — |
-| 11 | TTrades-L12 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-159 | — |
+| 11 | TTrades-L12 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-220 | — |
 | 12 | TTrades-L14 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-500 | — |
 | 13 | RSI-Div | 1 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+200 | $-3,302 | — |
-| 14 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,813 | — |
+| 14 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,671 | — |
 | 15 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 
 ⬆️ 升級：TTrades-Fractal、RSI-Div
