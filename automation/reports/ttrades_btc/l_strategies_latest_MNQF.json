@@ -1,14 +1,28 @@
 {
-  "ts": "2026-11-12T02:48:54.887336+08:00",
+  "ts": "2026-11-12T05:54:19.506473+08:00",
   "ticker": "MNQ=F",
-  "h4_bars": 153,
-  "m15_bars": 516,
+  "h4_bars": 154,
+  "m15_bars": 528,
   "strategies": {
     "TTrades-L12": {
-      "fired": true,
+      "fired": false,
+      "stage": "no C2 closure (sweep+reclaim) on C2",
       "strategy": "TTrades-L12",
+      "has_levels": false
+    },
+    "TTrades-L13": {
+      "fired": false,
+      "stage": "C2 not an expansion candle (wick too large)",
+      "strategy": "TTrades-L13",
+      "has_levels": false
+    },
+    "TTrades-L14": {
+      "fired": true,
+      "strategy": "TTrades-L14",
       "direction": "long",
-      "stage": "all L12 gates passed",
+      "closure": "c2_closure",
+      "trade_candle": "C3",
+      "stage": "c2_closure \u2014 trade C3",
       "poi": {
         "found": true,
         "basis": "structural pivots",
@@ -20,47 +34,31 @@
           29407.5,
           29483.25
         ],
-        "pivot_count": 26,
+        "pivot_count": 25,
         "fvg_count": 13
       },
       "poi_note": "C2 range [28199, 28550] contains swing 28233",
       "cisd": {
         "confirmed": true,
-        "opposing_open": 28192.0,
-        "series_length": 1,
-        "last_close": 28665.25,
+        "opposing_open": 28204.75,
+        "series_length": 7,
+        "last_close": 28472.25,
         "reason": "cisd_long"
       },
-      "c2_eq": 28374.625,
-      "c2_high": 28550.5,
-      "c2_low": 28198.75,
-      "c2_close": 28549.25,
-      "c3_close": 28665.25,
+      "c_eq": 28374.625,
       "swing_level": 28198.75,
-      "entry_ref": 28665.25,
+      "entry_ref": 28472.25,
       "target_r": 2.0,
       "has_levels": true,
-      "entry": 28665.25,
-      "sl": 28154.68,
-      "t1": 29175.82,
-      "t2_close": 29491.35,
-      "t3": 30001.92,
-      "risk": 510.57,
+      "entry": 28472.25,
+      "sl": 28161.8,
+      "t1": 28782.7,
+      "t2_close": 28974.56,
+      "t3": 29285.0,
+      "risk": 310.45,
       "sl_basis": "beyond protected swing (C2/C3 extreme)",
-      "sl_buffer": 44.07,
-      "atr_h4": 293.8
-    },
-    "TTrades-L13": {
-      "fired": false,
-      "stage": "C2 not an expansion candle (wick too large)",
-      "strategy": "TTrades-L13",
-      "has_levels": false
-    },
-    "TTrades-L14": {
-      "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
-      "strategy": "TTrades-L14",
-      "has_levels": false
+      "sl_buffer": 36.95,
+      "atr_h4": 246.32
     }
   }
 }
