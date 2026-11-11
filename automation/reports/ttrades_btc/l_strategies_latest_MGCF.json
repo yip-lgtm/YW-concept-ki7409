@@ -1,8 +1,8 @@
 {
-  "ts": "2026-11-11T10:57:37.605933+08:00",
+  "ts": "2026-11-11T15:07:06.558585+08:00",
   "ticker": "MGC=F",
-  "h4_bars": 155,
-  "m15_bars": 544,
+  "h4_bars": 150,
+  "m15_bars": 468,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -12,15 +12,53 @@
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C3 not an expansion candle (wick too large)",
+      "stage": "C2 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
-      "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "fired": true,
       "strategy": "TTrades-L14",
-      "has_levels": false
+      "direction": "long",
+      "closure": "c3_closure",
+      "trade_candle": "C4",
+      "stage": "c3_closure \u2014 trade C4",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 4043.300048828125,
+        "swing_levels": [
+          4043.300048828125,
+          4062.300048828125,
+          4074.89990234375,
+          4085.699951171875,
+          4117.10009765625
+        ],
+        "pivot_count": 25,
+        "fvg_count": 17
+      },
+      "poi_note": "C2 range [4034, 4061] contains swing 4043",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 4028.199951171875,
+        "series_length": 4,
+        "last_close": 4068.60009765625,
+        "reason": "cisd_long"
+      },
+      "c_eq": 4047.25,
+      "swing_level": 4033.89990234375,
+      "entry_ref": 4068.60009765625,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 4068.6,
+      "sl": 4028.11,
+      "t1": 4109.09,
+      "t2_close": 4134.11,
+      "t3": 4174.59,
+      "risk": 40.49,
+      "sl_basis": "beyond protected swing (C2/C3 extreme)",
+      "sl_buffer": 5.79,
+      "atr_h4": 38.57
     }
   }
 }
