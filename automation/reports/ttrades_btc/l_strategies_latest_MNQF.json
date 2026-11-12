@@ -1,8 +1,8 @@
 {
-  "ts": "2026-11-12T19:20:56.782719+08:00",
+  "ts": "2026-11-13T00:20:55.096257+08:00",
   "ticker": "MNQ=F",
-  "h4_bars": 151,
-  "m15_bars": 486,
+  "h4_bars": 153,
+  "m15_bars": 506,
   "strategies": {
     "TTrades-L12": {
       "fired": true,
@@ -12,43 +12,43 @@
       "poi": {
         "found": true,
         "basis": "structural pivots",
-        "prior_extreme": 28167.0,
+        "prior_extreme": 28130.5,
         "swing_levels": [
+          28130.5,
           28167.0,
           28198.75,
           28233.0,
-          28820.25,
-          29407.5
+          28820.25
         ],
         "pivot_count": 26,
-        "fvg_count": 14
+        "fvg_count": 15
       },
-      "poi_note": "C2 range [28134, 28275] contains swing 28167",
+      "poi_note": "C2 range [28014, 28542] contains swing 28130",
       "cisd": {
         "confirmed": true,
-        "opposing_open": 28245.5,
-        "series_length": 2,
-        "last_close": 28253.75,
+        "opposing_open": 28213.0,
+        "series_length": 1,
+        "last_close": 28604.25,
         "reason": "cisd_long"
       },
-      "c2_eq": 28204.625,
-      "c2_high": 28275.25,
-      "c2_low": 28134.0,
-      "c2_close": 28214.75,
-      "c3_close": 28253.75,
-      "swing_level": 28134.0,
-      "entry_ref": 28253.75,
+      "c2_eq": 28277.75,
+      "c2_high": 28541.75,
+      "c2_low": 28013.75,
+      "c2_close": 28537.25,
+      "c3_close": 28608.75,
+      "swing_level": 28013.75,
+      "entry_ref": 28608.75,
       "target_r": 2.0,
       "has_levels": true,
-      "entry": 28253.75,
-      "sl": 28096.07,
-      "t1": 28411.43,
-      "t2_close": 28508.88,
-      "t3": 28666.56,
-      "risk": 157.68,
+      "entry": 28608.75,
+      "sl": 27972.22,
+      "t1": 29245.28,
+      "t2_close": 29638.65,
+      "t3": 30275.18,
+      "risk": 636.53,
       "sl_basis": "beyond protected swing (C2/C3 extreme)",
-      "sl_buffer": 37.93,
-      "atr_h4": 252.88
+      "sl_buffer": 41.53,
+      "atr_h4": 276.86
     },
     "TTrades-L13": {
       "fired": false,
@@ -58,7 +58,10 @@
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "no sweep and no body break \u2014 outside the model, no subjective fill",
+      "stage": "no POI",
+      "detail": "C2 [28191, 28313] misses nearest swing 28697 by 384",
+      "direction": "short",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
