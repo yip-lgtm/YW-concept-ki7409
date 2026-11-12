@@ -1,44 +1,16 @@
 {
-  "generated_at": "2026-11-12 11:48 HKT",
-  "hkt_timestamp": "2026-11-12T11:48:10.633635+08:00",
+  "generated_at": "2026-11-12 16:14 HKT",
+  "hkt_timestamp": "2026-11-12T16:14:31.512411+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 49,
-    "trades_today": 18,
-    "wins_24h": 19,
-    "R_24h": 1.13,
-    "signals_24h": 67,
-    "wr_24h": 38.8
+    "trades_today": 27,
+    "wins_24h": 15,
+    "R_24h": -7.96,
+    "signals_24h": 69,
+    "wr_24h": 30.6
   },
   "ranking_24h": [
-    {
-      "strategy": "CRT",
-      "ticker": "BTC-USD",
-      "n_trades": 33,
-      "n_wins": 15,
-      "n_losses": 18,
-      "win_rate": 45.5,
-      "total_R": 6.65,
-      "avg_R": 0.202,
-      "total_pnl_usd": 665.2,
-      "profit_factor": 1.37,
-      "rank": 1,
-      "medal_eligible": true
-    },
-    {
-      "strategy": "B1-3in1",
-      "ticker": "MGC=F",
-      "n_trades": 10,
-      "n_wins": 6,
-      "n_losses": 4,
-      "win_rate": 60.0,
-      "total_R": 4.47,
-      "avg_R": 0.447,
-      "total_pnl_usd": 447.2,
-      "profit_factor": 2.12,
-      "rank": 2,
-      "medal_eligible": true
-    },
     {
       "strategy": "Two-Yang",
       "ticker": "MES=F",
@@ -50,7 +22,21 @@
       "avg_R": 0.309,
       "total_pnl_usd": 61.8,
       "profit_factor": 1.62,
-      "rank": 3,
+      "rank": 1,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "B1-3in1",
+      "ticker": "MGC=F",
+      "n_trades": 9,
+      "n_wins": 4,
+      "n_losses": 5,
+      "win_rate": 44.4,
+      "total_R": 0.24,
+      "avg_R": 0.026,
+      "total_pnl_usd": 23.6,
+      "profit_factor": 1.05,
+      "rank": 2,
       "medal_eligible": false
     },
     {
@@ -64,8 +50,22 @@
       "avg_R": 0.047,
       "total_pnl_usd": -163.35,
       "profit_factor": 1.08,
-      "rank": 4,
+      "rank": 3,
       "medal_eligible": false
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "M2K=F",
+      "n_trades": 32,
+      "n_wins": 11,
+      "n_losses": 21,
+      "win_rate": 34.4,
+      "total_R": -2.44,
+      "avg_R": -0.076,
+      "total_pnl_usd": -243.8,
+      "profit_factor": 0.88,
+      "rank": 4,
+      "medal_eligible": true
     },
     {
       "strategy": "Stair",
@@ -84,12 +84,12 @@
     {
       "strategy": "H-Pattern",
       "ticker": "BTC-USD",
-      "n_trades": 3,
+      "n_trades": 4,
       "n_wins": 0,
-      "n_losses": 3,
+      "n_losses": 4,
       "win_rate": 0.0,
       "total_R": -3.0,
-      "avg_R": -1.0,
+      "avg_R": -0.75,
       "total_pnl_usd": -300.0,
       "profit_factor": 0.0,
       "rank": 6,
@@ -97,13 +97,13 @@
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 61,
-    "n_wins": 26,
-    "win_rate": 42.6,
-    "total_R": 6.22,
-    "total_pnl_usd": 434.45
+    "n_trades": 60,
+    "n_wins": 20,
+    "win_rate": 33.3,
+    "total_R": -7.1,
+    "total_pnl_usd": -898.15
   },
-  "ranking_24h_updated": "2026-11-12T03:48:10.633653+00:00",
+  "ranking_24h_updated": "2026-11-12T08:14:31.512429+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -173,24 +173,24 @@
         5
       ],
       "live_24h": {
-        "n": 3,
+        "n": 4,
         "wins": 0,
-        "losses": 3,
+        "losses": 4,
         "wr": 0.0,
         "R": -3.0,
         "pf": 0.0,
         "pnl": -300.0
       },
       "live_today": {
-        "n": 1,
+        "n": 2,
         "wins": 0,
-        "losses": 1,
+        "losses": 2,
         "wr": 0.0,
         "R": -1.0,
         "pf": 0.0,
         "pnl": -100.0
       },
-      "signals_24h": 10,
+      "signals_24h": 8,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -450,7 +450,7 @@
         "pf": 0.0,
         "pnl": -200.0
       },
-      "signals_24h": 8,
+      "signals_24h": 11,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -485,24 +485,24 @@
         5
       ],
       "live_24h": {
-        "n": 33,
-        "wins": 15,
-        "losses": 18,
-        "wr": 45.5,
-        "R": 6.65,
-        "pf": 1.37,
-        "pnl": 665.2
+        "n": 32,
+        "wins": 11,
+        "losses": 21,
+        "wr": 34.4,
+        "R": -2.44,
+        "pf": 0.88,
+        "pnl": -243.8
       },
       "live_today": {
-        "n": 12,
-        "wins": 4,
-        "losses": 8,
-        "wr": 33.3,
-        "R": -1.15,
-        "pf": 0.86,
-        "pnl": -114.6
+        "n": 20,
+        "wins": 5,
+        "losses": 15,
+        "wr": 25.0,
+        "R": -6.15,
+        "pf": 0.59,
+        "pnl": -614.6
       },
-      "signals_24h": 49,
+      "signals_24h": 50,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -1046,12 +1046,12 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-11-12T11:13:26.230854+08:00",
+        "updated": "2026-11-12T15:38:04.194576+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "CISD not confirmed; London expanded (skip NY)",
-          "ts": "2026-11-11T22:13:25.938108-05:00"
+          "reason": "no H4 C3 closure (Fractal quiet)",
+          "ts": "2026-11-12T02:38:03.829880-05:00"
         },
         "l_series": [
           {
@@ -1077,9 +1077,9 @@
           {
             "strategy": "TTrades-L13",
             "fired": false,
-            "stage": "CISD not confirmed",
-            "detail": "no break",
-            "direction": "short",
+            "stage": "C2 not an expansion candle (wick too large)",
+            "detail": null,
+            "direction": null,
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -1118,20 +1118,20 @@
       },
       {
         "ticker": "MGC=F",
-        "updated": "2026-11-12T11:13:27.989548+08:00",
+        "updated": "2026-11-12T15:38:06.099669+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-11-11T22:13:27.704908-05:00"
+          "reason": "London expanded (skip NY)",
+          "ts": "2026-11-12T02:38:05.733070-05:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no C2 closure (sweep+reclaim) on C2",
-            "detail": null,
-            "direction": null,
+            "stage": "no POI",
+            "detail": "C2 [3974, 4006] misses nearest swing 4088 by 82",
+            "direction": "short",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -1190,20 +1190,20 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-12T11:13:30.018064+08:00",
+        "updated": "2026-11-12T15:38:07.848950+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "London expanded (skip NY)",
-          "ts": "2026-11-11T22:13:29.717016-05:00"
+          "reason": "no H4 C3 closure (Fractal quiet)",
+          "ts": "2026-11-12T02:38:07.485194-05:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no POI",
-            "detail": "C2 [73392, 74724] misses nearest swing 77184 by 2460",
-            "direction": "short",
+            "stage": "no C2 closure (sweep+reclaim) on C2",
+            "detail": null,
+            "direction": null,
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -1242,7 +1242,7 @@
             "strategy": "TTrades-L14",
             "fired": false,
             "stage": "no POI",
-            "detail": "C2 [73837, 74684] misses nearest swing 77184 by 2500",
+            "detail": "C2 [73392, 74724] misses nearest swing 77184 by 2460",
             "direction": "short",
             "closure": "c2_closure",
             "trade_candle": null,
@@ -1302,20 +1302,20 @@
       },
       {
         "strategy": "TTrades-L14",
-        "n": 22,
-        "pf": 0.61,
-        "wr": 27.3,
-        "total_r": -6.29,
-        "pnl": -2108.32,
+        "n": 23,
+        "pf": 0.57,
+        "wr": 26.1,
+        "total_r": -7.29,
+        "pnl": -2232.61,
         "tickers": {
           "MGC=F": 12,
           "BTC-USD": 5,
-          "MNQ=F": 5
+          "MNQ=F": 6
         }
       }
     ],
     "open_positions": [],
-    "n_closed": 114,
+    "n_closed": 115,
     "note": "All four agents publish entry/SL/T1/T2 (T2 closes at 1.618R) as of 2026-10-09, so the whole family is trackable and scoreable. A fired row with has_levels=false means the stop reference sat on the wrong side of entry, which is reported rather than papered over."
   },
   "agent_control": {
