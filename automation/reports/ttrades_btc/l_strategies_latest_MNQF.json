@@ -1,12 +1,35 @@
 {
-  "ts": "2026-11-12T15:38:04.194576+08:00",
+  "ts": "2026-11-12T16:17:26.394719+08:00",
   "ticker": "MNQ=F",
-  "h4_bars": 150,
-  "m15_bars": 471,
+  "h4_bars": 151,
+  "m15_bars": 474,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
-      "stage": "no C2 closure (sweep+reclaim) on C2",
+      "stage": "CISD not confirmed",
+      "detail": "no break",
+      "direction": "long",
+      "poi": {
+        "found": true,
+        "basis": "structural pivots",
+        "prior_extreme": 28167.0,
+        "swing_levels": [
+          28167.0,
+          28198.75,
+          28233.0,
+          28820.25,
+          29407.5
+        ],
+        "pivot_count": 26,
+        "fvg_count": 14
+      },
+      "cisd": {
+        "confirmed": false,
+        "opposing_open": 28236.75,
+        "series_length": 1,
+        "last_close": 28216.0,
+        "reason": "no break"
+      },
       "strategy": "TTrades-L12",
       "has_levels": false
     },
@@ -18,7 +41,7 @@
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
+      "stage": "no sweep and no body break \u2014 outside the model, no subjective fill",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
