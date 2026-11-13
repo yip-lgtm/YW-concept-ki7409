@@ -1,5 +1,5 @@
 {
-  "ts": "2026-11-12T22:00:18.680906-05:00",
+  "ts": "2026-11-12T22:58:59.358300-05:00",
   "ticker": "MNQ=F",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
@@ -11,24 +11,24 @@
     "c2_low": 28301.5,
     "c2_close": 28543.75,
     "c2_eq": 28454.75,
-    "c3_close": 28503.75,
+    "c3_close": 28410.75,
     "swing_level": 28301.5,
     "direction": "long"
   },
   "cisd": {
     "confirmed": true,
-    "opposing_open": 28245.5,
-    "series_length": 1,
-    "last_close": 28503.75,
+    "opposing_open": 28256.0,
+    "series_length": 7,
+    "last_close": 28411.75,
     "reason": "cisd_long"
   },
-  "eq_respected": true,
+  "eq_respected": false,
   "d1_trend": {
     "aligned": false,
     "trend": "downtrend",
-    "d1_close": 28503.75,
-    "d1_ema50": 29310.2958139896,
-    "d1_ema20": 28737.801278202816,
+    "d1_close": 28410.75,
+    "d1_ema50": 29306.64875516607,
+    "d1_ema20": 28728.944135345675,
     "reason": "D1 downtrend (counter-trend)"
   },
   "weekly_profile": {
@@ -45,7 +45,7 @@
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "D1 counter-trend (downtrend); London expanded (skip NY)",
+  "reason": "EQ not respected; D1 counter-trend (downtrend); London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
