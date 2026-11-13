@@ -6,19 +6,19 @@
 | # | agent | lv | 昨日結果 | n | WR | PF | RR | 昨日 P&L | equity | 今日進行中 |
 |---:|---|--:|---|--:|--:|--:|--:|--:|--:|---|
 | 1 | TTrades-Fractal | 7 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+858 | — |
-| 2 | CRT | 6 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+4,022 | — |
+| 2 | CRT | 6 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+4,020 | — |
 | 3 | Stair | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,872 | — |
-| 4 | 3-Pushes | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,339 | — |
+| 4 | 3-Pushes | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,239 | 1 單 · $-100 |
 | 5 | Kell-Cycle | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,063 | — |
 | 6 | B1 | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+85 | — |
 | 7 | H-Pattern | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-1,191 | — |
-| 8 | Two-Yang | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,482 | — |
+| 8 | Two-Yang | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,616 | 2 單 · $-200 |
 | 9 | Argon-Gold | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-148 | — |
-| 10 | 50-20-Pullback | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,179 | — |
+| 10 | 50-20-Pullback | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,067 | — |
 | 11 | TTrades-L14 | 1 | hold | 1 | down 0% | down 0.00 | down 0.00 | $-100 | $-700 | 1 單 · $-100 |
-| 12 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+2,568 | — |
+| 12 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+2,939 | — |
 | 13 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
-| 14 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-167 | — |
+| 14 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-192 | — |
 | 15 | RSI-Div | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-3,302 | — |
 
 ──── 互噴環節 ────
