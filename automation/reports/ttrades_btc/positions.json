@@ -3932,9 +3932,10 @@
     "entry_time": "2026-11-13T00:20:55.096257+08:00",
     "entry_ts": "2026-11-12T16:20:55.096257+00:00",
     "t1_hit": false,
-    "status": "open",
+    "status": "expired",
     "reason": "TTrades-L12: all L12 gates passed",
-    "swing_type": "all L12 gates passed"
+    "swing_type": "all L12 gates passed",
+    "note": "no SL/T2 within 96 bars"
   },
   "TTrades-L14|MNQ=F|2026-11-13T06:23:29.234984+08:00": {
     "signal_id": "TTrades-L14|MNQ=F|2026-11-13T06:23:29.234984+08:00",
@@ -3956,5 +3957,26 @@
     "status": "open",
     "reason": "TTrades-L14: c2_closure \u2014 trade C3",
     "swing_type": "c2_closure"
+  },
+  "TTrades-L13|BTC-USD|2026-11-13T11:00:22.898475+08:00": {
+    "signal_id": "TTrades-L13|BTC-USD|2026-11-13T11:00:22.898475+08:00",
+    "strategy": "TTrades-L13",
+    "ticker": "BTC-USD",
+    "direction": "short",
+    "grade": null,
+    "confidence": null,
+    "entry": 70161.93,
+    "sl": 70432.37,
+    "t1": 69891.49,
+    "t2": 69724.36,
+    "units": 0.5,
+    "risk_per_unit": 270.44,
+    "usd_per_point": 1.0,
+    "entry_time": "2026-11-13T11:00:22.898475+08:00",
+    "entry_ts": "2026-11-13T03:00:22.898475+00:00",
+    "t1_hit": false,
+    "status": "open",
+    "reason": "TTrades-L13: C3 continuation order block",
+    "swing_type": "C3 continuation order block"
   }
 }
