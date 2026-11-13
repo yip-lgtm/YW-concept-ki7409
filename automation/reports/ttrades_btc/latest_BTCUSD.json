@@ -1,35 +1,35 @@
 {
-  "ts": "2026-11-13T06:58:19.604574-05:00",
+  "ts": "2026-11-13T13:06:22.333466-05:00",
   "ticker": "BTC-USD",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
-  "side": "bullish",
+  "side": "bearish",
   "swing": {
     "type": "c2_closure",
-    "side": "bullish",
-    "c2_high": 69278.0390625,
-    "c2_low": 67624.9296875,
-    "c2_close": 68517.921875,
-    "c2_eq": 68451.484375,
-    "c3_close": 69261.1796875,
-    "swing_level": 67624.9296875,
-    "direction": "long"
+    "side": "bearish",
+    "c2_high": 70119.203125,
+    "c2_low": 68039.1796875,
+    "c2_close": 68829.3828125,
+    "c2_eq": 69079.19140625,
+    "c3_close": 68777.84375,
+    "swing_level": 70119.203125,
+    "direction": "short"
   },
   "cisd": {
-    "confirmed": false,
-    "opposing_open": 75905.8984375,
+    "confirmed": true,
+    "opposing_open": 75792.75,
     "series_length": 1,
-    "last_close": 69261.1796875,
-    "reason": "no break"
+    "last_close": 68777.84375,
+    "reason": "cisd_short"
   },
   "eq_respected": true,
   "d1_trend": {
-    "aligned": false,
+    "aligned": true,
     "trend": "downtrend",
-    "d1_close": 69261.1796875,
-    "d1_ema50": 78153.53798642466,
-    "d1_ema20": 76034.82384144918,
-    "reason": "D1 downtrend (counter-trend)"
+    "d1_close": 68777.84375,
+    "d1_ema50": 78134.58363593447,
+    "d1_ema20": 75988.79184740156,
+    "reason": "D1 downtrend"
   },
   "weekly_profile": {
     "profile": "consolidation_reversal",
@@ -37,15 +37,15 @@
     "notes": ""
   },
   "daily_profile": {
-    "london_expanded": false,
-    "london_range": 1053.3671875,
-    "skip_ny": false
+    "london_expanded": true,
+    "london_range": 2080.0234375,
+    "skip_ny": true
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "CISD not confirmed; D1 counter-trend (downtrend)",
+  "reason": "London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
