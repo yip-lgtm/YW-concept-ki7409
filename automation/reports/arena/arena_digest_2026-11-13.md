@@ -15,8 +15,8 @@
 | 8 | H-Pattern | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-1,191 | — |
 | 9 | Argon-Gold | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-148 | — |
 | 10 | 50-20-Pullback | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,279 | — |
-| 11 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+4,368 | — |
+| 11 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+4,523 | — |
 | 12 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
-| 13 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-99 | — |
+| 13 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-80 | — |
 | 14 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-700 | — |
 | 15 | RSI-Div | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-3,302 | — |
