@@ -121,31 +121,39 @@ TICKERS = [
 # Futures market: Sun-Fri 6pm-5pm ET (closed Sat)
 # Crypto: 24/7
 def is_market_open(symbol: str) -> bool:
-    """Check if market is open for this symbol (in HKT).
+    """Check if market is open for this symbol (US Eastern time).
 
-    Futures market hours (CME Globex):
-    - Opens: Sunday 6pm ET (EDT) = Monday 6am HKT
-    - Closes: Friday 5pm ET = Saturday 5am HKT
+    CME Globex equity-index futures:
+    - Opens:  Sunday 18:00 ET
+    - Closes: Friday 17:00 ET
 
-    Schedule in HKT (UTC+8):
-    - Saturday (all day): CLOSED
-    - Sunday (all day): CLOSED
-    - Monday 0-5:59am: CLOSED
-    - Monday 6am - Friday 23:59: OPEN
+    The previous implementation judged the weekday and hour in HKT, which
+    closed the market at Saturday 00:00 HKT — that is Friday 11:00 ET, six
+    hours before the actual Friday close. Its own docstring said the close
+    was "Friday 5pm ET = Saturday 5am HKT", so the code did not implement
+    what it documented.
+
+    The consequence was that the Friday US afternoon session, the busiest
+    window of the week, was never scanned: over five weeks the same ET
+    window (11:00-17:00) produced 25.5 fired signals on the day it was
+    covered and 8.8 on the day it was skipped.
+
+    Crypto trades 24/7.
     """
     # Crypto: 24/7
     if symbol in ("BTC-USD", "BTC=F", "ETH-USD"):
         return True
-    # For futures: weekend + Mon early morning closed
-    now_hkt = datetime.now(timezone(timedelta(hours=8)))
-    weekday = now_hkt.weekday()  # 0=Mon, 5=Sat, 6=Sun
-    hour = now_hkt.hour
-    if weekday == 5:  # Saturday all day
+    # For futures: CME Globex hours, evaluated in US Eastern time.
+    now_et = datetime.now(NY_TZ)
+    weekday = now_et.weekday()  # 0=Mon, 4=Fri, 5=Sat, 6=Sun
+    hour, minute = now_et.hour, now_et.minute
+    if weekday == 6:              # Sunday: opens 18:00 ET
+        return hour >= 18
+    if weekday == 5:              # Saturday: closed all day
         return False
-    if weekday == 6:  # Sunday all day
-        return False
-    if weekday == 0 and hour < 6:  # Monday before 6am
-        return False
+    if weekday == 4:              # Friday: closes 17:00 ET
+        return (hour, minute) < (17, 0)
+    # Monday-Thursday: open
     return True
 
 def get_active_tickers() -> list:
