@@ -4156,8 +4156,30 @@
     "entry_time": "2026-11-14T11:41:49.302795+08:00",
     "entry_ts": "2026-11-14T03:41:49.302795+00:00",
     "t1_hit": false,
-    "status": "open",
+    "status": "expired",
     "reason": "TTrades-L13: C3 continuation order block",
-    "swing_type": "C3 continuation order block"
+    "swing_type": "C3 continuation order block",
+    "note": "no SL/T2 within 96 bars"
+  },
+  "TTrades-Fractal|BTC-USD|2026-11-14T08:51:42.645542-05:00": {
+    "signal_id": "TTrades-Fractal|BTC-USD|2026-11-14T08:51:42.645542-05:00",
+    "strategy": "TTrades-Fractal",
+    "ticker": "BTC-USD",
+    "direction": "short",
+    "grade": "A",
+    "confidence": 85,
+    "entry": 66780.53125,
+    "sl": 67528.10892857143,
+    "t1": 66032.95357142857,
+    "t2": 65584.40696428572,
+    "units": 0.5,
+    "risk_per_unit": 747.5776785714261,
+    "usd_per_point": 1.0,
+    "entry_time": "2026-11-14T08:51:42.645542-05:00",
+    "entry_ts": "2026-11-14T13:51:42.645542+00:00",
+    "t1_hit": false,
+    "status": "open",
+    "reason": "TTrades Fractal: H4 C2 closure (bearish) + M15 CISD (2-bar series) + EQ respected",
+    "swing_type": "C2"
   }
 }
