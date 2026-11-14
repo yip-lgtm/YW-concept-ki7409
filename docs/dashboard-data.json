@@ -1,16 +1,30 @@
 {
-  "generated_at": "2026-11-15 04:29 HKT",
-  "hkt_timestamp": "2026-11-15T04:29:50.153286+08:00",
+  "generated_at": "2026-11-15 05:18 HKT",
+  "hkt_timestamp": "2026-11-15T05:18:17.535779+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 9,
-    "trades_today": 4,
-    "wins_24h": 2,
-    "R_24h": -3.0,
+    "trades_24h": 10,
+    "trades_today": 5,
+    "wins_24h": 3,
+    "R_24h": 0.0,
     "signals_24h": 17,
-    "wr_24h": 22.2
+    "wr_24h": 30.0
   },
   "ranking_24h": [
+    {
+      "strategy": "CRT",
+      "ticker": "BTC-USD",
+      "n_trades": 6,
+      "n_wins": 2,
+      "n_losses": 4,
+      "win_rate": 33.3,
+      "total_R": 2.0,
+      "avg_R": 0.333,
+      "total_pnl_usd": 200.0,
+      "profit_factor": 1.5,
+      "rank": 1,
+      "medal_eligible": false
+    },
     {
       "strategy": "H-Pattern",
       "ticker": "BTC-USD",
@@ -22,20 +36,6 @@
       "avg_R": 0.0,
       "total_pnl_usd": 0.0,
       "profit_factor": 1.0,
-      "rank": 1,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "CRT",
-      "ticker": "BTC-USD",
-      "n_trades": 5,
-      "n_wins": 1,
-      "n_losses": 4,
-      "win_rate": 20.0,
-      "total_R": -1.0,
-      "avg_R": -0.2,
-      "total_pnl_usd": -100.0,
-      "profit_factor": 0.75,
       "rank": 2,
       "medal_eligible": false
     },
@@ -69,13 +69,13 @@
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 12,
-    "n_wins": 2,
-    "win_rate": 16.7,
-    "total_R": -6.0,
-    "total_pnl_usd": -922.22
+    "n_trades": 13,
+    "n_wins": 3,
+    "win_rate": 23.1,
+    "total_R": -3.0,
+    "total_pnl_usd": -622.22
   },
-  "ranking_24h_updated": "2026-11-14T20:29:50.153306+00:00",
+  "ranking_24h_updated": "2026-11-14T21:18:17.535797+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -457,22 +457,22 @@
         5
       ],
       "live_24h": {
-        "n": 5,
-        "wins": 1,
+        "n": 6,
+        "wins": 2,
         "losses": 4,
-        "wr": 20.0,
-        "R": -1.0,
-        "pf": 0.75,
-        "pnl": -100.0
+        "wr": 33.3,
+        "R": 2.0,
+        "pf": 1.5,
+        "pnl": 200.0
       },
       "live_today": {
-        "n": 1,
-        "wins": 0,
+        "n": 2,
+        "wins": 1,
         "losses": 1,
-        "wr": 0.0,
-        "R": -1.0,
-        "pf": 0.0,
-        "pnl": -100.0
+        "wr": 50.0,
+        "R": 2.0,
+        "pf": 3.0,
+        "pnl": 200.0
       },
       "signals_24h": 12,
       "backtest_4d": {
