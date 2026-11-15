@@ -2,44 +2,43 @@
   "_meta": {
     "_comment": "Live strategy param overrides — written by param_optimizer.py, read by live_scan.py at import. Auto-optimization output (weight/min_strength/resample_tf per strategy).",
     "created": "2026-10-07T13:30:00+00:00",
-    "applications": 30,
-    "last_run": "2026-11-14T20:29:19.676101+00:00",
+    "applications": 33,
+    "last_run": "2026-11-15T20:53:09.216780+00:00",
     "note": "Empty = all strategies use live_scan.py hardcoded defaults. 2026-10-07: weight became LIVE config (was dead) — see param_optimizer.py.",
-    "last_source": "iteration_all_20261115_042718.json",
+    "last_source": "iteration_all_20261116_045120.json",
     "last_applied_n": 3,
-    "last_rejected_n": 3,
+    "last_rejected_n": 4,
     "last_log": [
-      "  CRT: grade=C accepted via high-conf+sample path (conf=82, n=1010)",
-      "  CRT: APPLY [C/82] weight 1.0→0.9, resample_tf 15min→",
-      "  OCS-BTC-5m: SKIP grade=D (LLM has no useful suggestion; live n=0)",
       "  H-Pattern: SKIP grade=D (LLM has no useful suggestion; live n=168)",
+      "  RSI-Div: APPLY [B/88] weight 0.6→0.7",
       "  Two-Yang: SKIP grade=D (LLM has no useful suggestion; live n=279)",
-      "  RSI-Div: SKIP (on cooldown, applied 2026-11-12)",
-      "  B1: grade=C accepted via high-conf+sample path (conf=78, n=20)",
-      "  B1: no change (grade=C conf=78 — proposed values already active)",
+      "  OCS-BTC-5m: REJECT grade=C conf=30 < 75",
+      "  CRT: SKIP (on cooldown, applied 2026-11-14)",
       "  yw-argon-gold: no live_scan mapping (id=argon-gold)",
-      "  50-20-Pullback: REJECT grade=C conf=58 < 75",
-      "  Kell-Cycle: APPLY [B/72] weight 0.7→0.85",
-      "  Stair: grade=C accepted via high-conf+sample path (conf=82, n=425)",
-      "  Stair: APPLY [C/82] weight 0.6→0.55",
-      "  yw-3-pushes: ERROR request failed: ReadTimeout: HTTPSConnectionPool(host='api.minimax.io', port=443): Read timed out. (read timeout=45)"
+      "  50-20-Pullback: REJECT grade=C conf=68 < 75",
+      "  Kell-Cycle: SKIP (on cooldown, applied 2026-11-14)",
+      "  3-Pushes: grade=C accepted via high-conf+sample path (conf=76, n=425)",
+      "  3-Pushes: APPLY [C/76] weight 0.9→0.8",
+      "  B1: grade=C accepted via high-conf+sample path (conf=80, n=22)",
+      "  B1: APPLY [C/80] weight 0.8→0.7",
+      "  yw-stair-pattern: ERROR could not convert string to float: 'T1..T5'"
     ]
   },
   "RSI-Div": {
-    "weight": 0.6,
+    "weight": 0.7,
     "resample_tf": "15min",
-    "last_applied": "2026-11-12T03:47:42.976781+00:00",
+    "last_applied": "2026-11-15T20:53:09.216780+00:00",
     "grade": "B",
     "confidence": 88,
-    "reason": "PF 1.54且總R為正，但盈利高度集中BTC，跨市場穩定性不足",
-    "source_iteration": "iteration_all_20261112_114543.json",
+    "reason": "PF 1.60、R+54.8且樣本足，惟盈利高度集中BTC",
+    "source_iteration": "iteration_all_20261116_045120.json",
     "changes": {
       "weight": {
-        "from": 0.7,
-        "to": 0.6
+        "from": 0.6,
+        "to": 0.7
       }
     },
-    "applications": 7,
+    "applications": 8,
     "history": [
       {
         "date": "2026-10-17T18:10:36.458503+00:00",
@@ -97,24 +96,32 @@
         "changes": {
           "weight": 0.6
         }
+      },
+      {
+        "date": "2026-11-15T20:53:09.216780+00:00",
+        "grade": "B",
+        "confidence": 88,
+        "changes": {
+          "weight": 0.7
+        }
       }
     ]
   },
   "3-Pushes": {
-    "weight": 0.9,
+    "weight": 0.8,
     "resample_tf": "15min",
-    "last_applied": "2026-11-06T21:19:05.564792+00:00",
-    "grade": "B",
-    "confidence": 84,
-    "reason": "整體盈利但依賴MNQ，MES及MGC拖累明顯。",
-    "source_iteration": "iteration_all_20261107_051803.json",
+    "last_applied": "2026-11-15T20:53:09.216780+00:00",
+    "grade": "C",
+    "confidence": 76,
+    "reason": "R為正但PF僅1.14，盈利集中MNQ，三個品種拖累",
+    "source_iteration": "iteration_all_20261116_045120.json",
     "changes": {
       "weight": {
-        "from": 0.8,
-        "to": 0.9
+        "from": 0.9,
+        "to": 0.8
       }
     },
-    "applications": 5,
+    "applications": 6,
     "history": [
       {
         "date": "2026-10-18T18:28:41.474034+00:00",
@@ -155,6 +162,14 @@
         "confidence": 84,
         "changes": {
           "weight": 0.9
+        }
+      },
+      {
+        "date": "2026-11-15T20:53:09.216780+00:00",
+        "grade": "C",
+        "confidence": 76,
+        "changes": {
+          "weight": 0.8
         }
       }
     ]
@@ -275,20 +290,20 @@
     ]
   },
   "B1": {
-    "weight": 0.8,
+    "weight": 0.7,
     "resample_tf": "15min",
-    "last_applied": "2026-11-06T21:19:05.564792+00:00",
+    "last_applied": "2026-11-15T20:53:09.216780+00:00",
     "grade": "C",
-    "confidence": 78,
-    "reason": "PF僅1.03且樣本偏小，BTC拖累明顯，宜降頻控損",
-    "source_iteration": "iteration_all_20261107_051803.json",
+    "confidence": 80,
+    "reason": "勝率僅36%、PF低於1，BTC虧損拖累整體",
+    "source_iteration": "iteration_all_20261116_045120.json",
     "changes": {
       "weight": {
-        "from": 0.7,
-        "to": 0.8
+        "from": 0.8,
+        "to": 0.7
       }
     },
-    "applications": 4,
+    "applications": 5,
     "history": [
       {
         "date": "2026-10-20T20:47:36.199367+00:00",
@@ -321,6 +336,14 @@
         "confidence": 78,
         "changes": {
           "weight": 0.8
+        }
+      },
+      {
+        "date": "2026-11-15T20:53:09.216780+00:00",
+        "grade": "C",
+        "confidence": 80,
+        "changes": {
+          "weight": 0.7
         }
       }
     ]
