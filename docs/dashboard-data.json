@@ -1,16 +1,30 @@
 {
-  "generated_at": "2026-11-17 01:09 HKT",
-  "hkt_timestamp": "2026-11-17T01:09:49.967898+08:00",
+  "generated_at": "2026-11-17 02:18 HKT",
+  "hkt_timestamp": "2026-11-17T02:18:58.480870+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 51,
+    "trades_24h": 49,
     "trades_today": 1,
     "wins_24h": 7,
-    "R_24h": -23.38,
-    "signals_24h": 98,
-    "wr_24h": 13.7
+    "R_24h": -21.38,
+    "signals_24h": 99,
+    "wr_24h": 14.3
   },
   "ranking_24h": [
+    {
+      "strategy": "B1-3in1",
+      "ticker": "BTC-USD",
+      "n_trades": 1,
+      "n_wins": 1,
+      "n_losses": 0,
+      "win_rate": 100.0,
+      "total_R": 1.0,
+      "avg_R": 1.0,
+      "total_pnl_usd": 100.0,
+      "profit_factor": 10.0,
+      "rank": 1,
+      "medal_eligible": false
+    },
     {
       "strategy": "Stair",
       "ticker": "M2K=F",
@@ -22,7 +36,7 @@
       "avg_R": 0.206,
       "total_pnl_usd": 61.8,
       "profit_factor": 1.31,
-      "rank": 1,
+      "rank": 2,
       "medal_eligible": false
     },
     {
@@ -36,7 +50,7 @@
       "avg_R": -1.0,
       "total_pnl_usd": -100.0,
       "profit_factor": 0.0,
-      "rank": 2,
+      "rank": 3,
       "medal_eligible": false
     },
     {
@@ -50,7 +64,7 @@
       "avg_R": -1.0,
       "total_pnl_usd": -200.0,
       "profit_factor": 0.0,
-      "rank": 3,
+      "rank": 4,
       "medal_eligible": false
     },
     {
@@ -64,46 +78,46 @@
       "avg_R": -1.0,
       "total_pnl_usd": -300.0,
       "profit_factor": 0.0,
-      "rank": 4,
+      "rank": 5,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "unknown",
+      "ticker": "\u2014",
+      "n_trades": 3,
+      "n_wins": 0,
+      "n_losses": 3,
+      "win_rate": 0.0,
+      "total_R": -3.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -596.26,
+      "profit_factor": 0.0,
+      "rank": 6,
       "medal_eligible": false
     },
     {
       "strategy": "CRT",
       "ticker": "BTC-USD",
-      "n_trades": 32,
+      "n_trades": 31,
       "n_wins": 6,
-      "n_losses": 26,
-      "win_rate": 18.8,
-      "total_R": -8.0,
-      "avg_R": -0.25,
-      "total_pnl_usd": -800.0,
-      "profit_factor": 0.69,
-      "rank": 5,
+      "n_losses": 25,
+      "win_rate": 19.4,
+      "total_R": -7.0,
+      "avg_R": -0.226,
+      "total_pnl_usd": -700.0,
+      "profit_factor": 0.72,
+      "rank": 7,
       "medal_eligible": true
-    },
-    {
-      "strategy": "unknown",
-      "ticker": "\u2014",
-      "n_trades": 4,
-      "n_wins": 0,
-      "n_losses": 4,
-      "win_rate": 0.0,
-      "total_R": -4.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -885.32,
-      "profit_factor": 0.0,
-      "rank": 6,
-      "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 45,
-    "n_wins": 7,
-    "win_rate": 15.6,
-    "total_R": -17.38,
-    "total_pnl_usd": -2223.52
+    "n_trades": 44,
+    "n_wins": 8,
+    "win_rate": 18.2,
+    "total_R": -14.38,
+    "total_pnl_usd": -1734.46
   },
-  "ranking_24h_updated": "2026-11-16T17:09:49.967917+00:00",
+  "ranking_24h_updated": "2026-11-16T18:18:58.480888+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -121,13 +135,13 @@
         5
       ],
       "live_24h": {
-        "n": 4,
+        "n": 3,
         "wins": 0,
-        "losses": 4,
+        "losses": 3,
         "wr": 0.0,
-        "R": -4.0,
+        "R": -3.0,
         "pf": 0.0,
-        "pnl": -885.32
+        "pnl": -596.26
       },
       "live_today": {
         "n": 0,
@@ -190,7 +204,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 1,
+      "signals_24h": 2,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -485,13 +499,13 @@
         5
       ],
       "live_24h": {
-        "n": 32,
+        "n": 31,
         "wins": 6,
-        "losses": 26,
-        "wr": 18.8,
-        "R": -8.0,
-        "pf": 0.69,
-        "pnl": -800.0
+        "losses": 25,
+        "wr": 19.4,
+        "R": -7.0,
+        "pf": 0.72,
+        "pnl": -700.0
       },
       "live_today": {
         "n": 1,
