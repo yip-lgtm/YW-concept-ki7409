@@ -1,12 +1,14 @@
 {
-  "ts": "2026-11-17T09:57:41.047817+08:00",
+  "ts": "2026-11-17T16:19:08.014584+08:00",
   "ticker": "BTC-USD",
-  "h4_bars": 175,
-  "m15_bars": 581,
+  "h4_bars": 177,
+  "m15_bars": 610,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
-      "stage": "no C2 closure (sweep+reclaim) on C2",
+      "stage": "no POI",
+      "detail": "C2 [64238, 65033] misses nearest swing 73526 by 8492",
+      "direction": "long",
       "strategy": "TTrades-L12",
       "has_levels": false
     },
@@ -19,9 +21,9 @@
     "TTrades-L14": {
       "fired": false,
       "stage": "no POI",
-      "detail": "C2 [64844, 65467] misses nearest swing 73591 by 8124",
+      "detail": "C2 [64316, 65119] misses nearest swing 73526 by 8406",
       "direction": "long",
-      "closure": "c3_closure",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
