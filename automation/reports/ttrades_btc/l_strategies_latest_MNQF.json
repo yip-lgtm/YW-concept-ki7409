@@ -1,8 +1,8 @@
 {
-  "ts": "2026-11-18T17:06:11.922714+08:00",
+  "ts": "2026-11-19T01:02:12.081549+08:00",
   "ticker": "MNQ=F",
-  "h4_bars": 151,
-  "m15_bars": 476,
+  "h4_bars": 153,
+  "m15_bars": 508,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -12,13 +12,16 @@
     },
     "TTrades-L13": {
       "fired": false,
-      "stage": "C3 not an expansion candle (wick too large)",
+      "stage": "C2 not an expansion candle (wick too large)",
       "strategy": "TTrades-L13",
       "has_levels": false
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "no sweep and no body break \u2014 outside the model, no subjective fill",
+      "stage": "no POI",
+      "detail": "C2 [27249, 27424] misses nearest swing 28279 by 855",
+      "direction": "short",
+      "closure": "c2_closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }

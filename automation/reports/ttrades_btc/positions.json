@@ -4322,9 +4322,12 @@
     "entry_time": "2026-11-18T15:55:30.042901+08:00",
     "entry_ts": "2026-11-18T07:55:30.042901+00:00",
     "t1_hit": false,
-    "status": "open",
+    "status": "closed",
     "reason": "TTrades-L13: C3 continuation order block",
-    "swing_type": "C3 continuation order block"
+    "swing_type": "C3 continuation order block",
+    "exit_time": "2026-11-18T04:40:00-05:00",
+    "exit_level": "SL",
+    "R_multiple": -1.0
   },
   "TTrades-L13|MNQ=F|2026-11-18T15:55:27.824041+08:00": {
     "signal_id": "TTrades-L13|MNQ=F|2026-11-18T15:55:27.824041+08:00",
@@ -4349,5 +4352,29 @@
     "exit_time": "2026-11-18T03:00:00-05:00",
     "exit_level": "SL",
     "R_multiple": -1.0
+  },
+  "TTrades-L13|MNQ=F|2026-11-18T16:02:53.366269+08:00": {
+    "signal_id": "TTrades-L13|MNQ=F|2026-11-18T16:02:53.366269+08:00",
+    "strategy": "TTrades-L13",
+    "ticker": "MNQ=F",
+    "direction": "short",
+    "grade": null,
+    "confidence": null,
+    "entry": 27357.25,
+    "sl": 27414.05,
+    "t1": 27300.45,
+    "t2": 27265.34,
+    "units": 0.5,
+    "risk_per_unit": 56.8,
+    "usd_per_point": 2.0,
+    "entry_time": "2026-11-18T16:02:53.366269+08:00",
+    "entry_ts": "2026-11-18T08:02:53.366269+00:00",
+    "t1_hit": false,
+    "status": "closed",
+    "reason": "TTrades-L13: C3 continuation order block",
+    "swing_type": "C3 continuation order block",
+    "exit_time": "2026-11-18T03:05:00-05:00",
+    "exit_level": "T2",
+    "R_multiple": 1.618
   }
 }
