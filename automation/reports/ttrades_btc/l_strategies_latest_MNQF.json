@@ -1,8 +1,8 @@
 {
-  "ts": "2026-11-18T09:37:29.604989+08:00",
+  "ts": "2026-11-18T15:55:27.824041+08:00",
   "ticker": "MNQ=F",
-  "h4_bars": 155,
-  "m15_bars": 538,
+  "h4_bars": 150,
+  "m15_bars": 472,
   "strategies": {
     "TTrades-L12": {
       "fired": false,
@@ -11,18 +11,45 @@
       "has_levels": false
     },
     "TTrades-L13": {
-      "fired": false,
-      "stage": "C2 already swept the target \u2014 do not chase",
-      "direction": "long",
+      "fired": true,
       "strategy": "TTrades-L13",
-      "has_levels": false
+      "direction": "short",
+      "stage": "C3 continuation order block",
+      "cisd": {
+        "confirmed": true,
+        "opposing_open": 28235.75,
+        "series_length": 4,
+        "last_close": 27297.25,
+        "reason": "cisd_short"
+      },
+      "order_block": {
+        "ob_high": 27299.75,
+        "ob_low": 27291.25,
+        "ob_eq": 27295.5,
+        "rule": "opposing (bullish) candle confirms HTF wick"
+      },
+      "c2_eq": 27290.25,
+      "c2_high": 27486.5,
+      "c2_low": 27094.0,
+      "c3_high": 27313.0,
+      "c3_low": 27157.0,
+      "swing_level": 27486.5,
+      "entry_ref": 27297.25,
+      "target_r": 2.0,
+      "has_levels": true,
+      "entry": 27297.25,
+      "sl": 27353.81,
+      "t1": 27240.69,
+      "t2_close": 27205.74,
+      "t3": 27149.19,
+      "risk": 56.56,
+      "sl_basis": "outside continuation order block (L13 \u00a72)",
+      "sl_buffer": 54.06,
+      "atr_h4": 360.38
     },
     "TTrades-L14": {
       "fired": false,
-      "stage": "no POI",
-      "detail": "C2 [26841, 27609] misses nearest swing 28130 by 521",
-      "direction": "long",
-      "closure": "c3_closure",
+      "stage": "swept but did not close back inside C1 \u2014 continuation, not a closure",
       "strategy": "TTrades-L14",
       "has_levels": false
     }
