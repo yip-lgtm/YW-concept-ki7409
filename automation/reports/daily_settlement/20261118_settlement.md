@@ -1,40 +1,42 @@
 # Daily Settlement — 2026-11-18 (HKT)
 
 **Account:** PAAPEX…091  
-**Generated:** 2026-11-18 06:46:54 HKT  
+**Generated:** 2026-11-18 23:08:30 HKT  
 **DD state file:** `automation/state/ops_dd_hold.json`  
 
 ## Equity / DD
 - Equity start: `None`
 - Equity end: `None`
 - Open P/L: `None` · Working: `None`
-- Day P/L: **$-600.00** (source: `paper_allowlisted_pnl_fallback`)
-- DD amount: **$-600.00** vs `day_start` · limit **-100.0**
-- **dd_hold: `True`** · tp_limit_usd (report-only default): `300.0`
+- Day P/L: **$+1500.00** (source: `paper_allowlisted_pnl_fallback`)
+- DD amount: **$+1500.00** vs `day_start` · limit **-100.0**
+- **dd_hold: `False`** · tp_limit_usd (report-only default): `300.0`
 
 ## Fills (allowlist focus)
-- Total rows: 8 · allowlisted: 6 · non-allow: 2
-- Allowlisted PnL: **$-600.00**
+- Total rows: 47 · allowlisted: 36 · non-allow: 11
+- Allowlisted PnL: **$+1500.00**
 
 | Strategy | n | wins | losses | pnl |
 |----------|---|------|--------|-----|
-| crt | 6 | 0 | 6 | $-600.00 |
+| crt | 27 | 9 | 18 | $+900.00 |
+| h-pattern | 2 | 1 | 1 | $+100.00 |
+| stair | 7 | 3 | 4 | $+500.00 |
 
 ## Allowlisted signal outcomes
-- n=134 · gated=118 · fired/ungated=16
+- n=429 · gated=355 · fired/ungated=74
 
 ## LLM
 - status: **`ok`**
 - invoked: `True`
-- detail: automation/reports/strategy_ranking/iterations/iteration_scientist_20261118_064652.json
+- detail: automation/reports/strategy_ranking/iterations/iteration_scientist_20261118_230813.json
 
 ## Ops briefing bullets
-- Settlement 2026-11-18 HKT · PAAPEX…091 · day P/L $-600.00 (src=paper_allowlisted_pnl_fallback) · DD -600.00 vs limit -100.0
-- ⛔ DD HOLD active — no new entries (state: automation/state/ops_dd_hold.json). Tell Trading desk once. Unlock next session or --clear-hold.
-- Allowlist fills: n=6 pnl=$-600.00; signals allow n=134 gated=118
-- By strategy — crt: n=6 pnl=$-600.0
+- Settlement 2026-11-18 HKT · PAAPEX…091 · day P/L $+1500.00 (src=paper_allowlisted_pnl_fallback) · DD +1500.00 vs limit -100.0
+- ✅ DD unlocked — under −$100 limit.
+- Allowlist fills: n=36 pnl=$+1500.00; signals allow n=429 gated=355
+- By strategy — crt: n=27 pnl=$+900.0; h-pattern: n=2 pnl=$+100.0; stair: n=7 pnl=$+500.0
 - Policy: QTY=1 Bracket only (NOT Group QTY20); never use Order Ticket Limit as sim last.
-- LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261118_064652.json
+- LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261118_230813.json
 - Never re-handoff stale/gated/null-position signals; stay quiet if nothing changed.
 
 ## Ops lessons (folded)
@@ -46,8 +48,8 @@
 - Envelope defaults: −$100 DD hold / +$300 TP (historical). Change only with explicit user choice.
 
 ## Live scan snapshot
-- positions open: 5
-- heartbeat: `2026-11-17T21:17:49.494607+00:00`
+- positions open: 0
+- heartbeat: `2026-11-18T15:03:28.713443+00:00`
 - circuit_breaker: `{'consecutive_good_scans': 28, 'open': False, 'opened_at': '2026-11-01T23:05:44.450017+00:00', 'until': '2026-11-03T04:30:36.181821+00:00', 'reason': 'analyst charts_failed/charts_total = 30/30 = 100%', 'cleared_at': '2026-11-03T05:20:00+00:00', 'cleared_reason': 'manual: six dependency added (mplfinance needs six.moves); charts verified 5/5 OK on clean venv'}`
 
 ## Config defaults (documented)
