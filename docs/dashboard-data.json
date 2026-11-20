@@ -1,56 +1,84 @@
 {
-  "generated_at": "2026-11-20 20:06 HKT",
-  "hkt_timestamp": "2026-11-20T20:06:52.621716+08:00",
+  "generated_at": "2026-11-21 02:00 HKT",
+  "hkt_timestamp": "2026-11-21T02:00:41.496829+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 28,
-    "trades_today": 22,
-    "wins_24h": 13,
-    "R_24h": 6.04,
-    "signals_24h": 43,
-    "wr_24h": 46.4
+    "trades_24h": 15,
+    "trades_today": 0,
+    "wins_24h": 8,
+    "R_24h": 5.95,
+    "signals_24h": 26,
+    "wr_24h": 53.3
   },
   "ranking_24h": [
     {
       "strategy": "CRT",
-      "ticker": "MGC=F",
-      "n_trades": 23,
-      "n_wins": 12,
-      "n_losses": 11,
-      "win_rate": 52.2,
-      "total_R": 8.42,
-      "avg_R": 0.366,
-      "total_pnl_usd": 841.6,
-      "profit_factor": 1.77,
+      "ticker": "BTC-USD",
+      "n_trades": 14,
+      "n_wins": 9,
+      "n_losses": 5,
+      "win_rate": 64.3,
+      "total_R": 9.56,
+      "avg_R": 0.683,
+      "total_pnl_usd": 956.2,
+      "profit_factor": 2.91,
       "rank": 1,
       "medal_eligible": true
     },
     {
       "strategy": "Stair",
       "ticker": "MNQ=F",
-      "n_trades": 2,
+      "n_trades": 1,
       "n_wins": 1,
-      "n_losses": 1,
-      "win_rate": 50.0,
-      "total_R": 0.62,
-      "avg_R": 0.309,
-      "total_pnl_usd": 61.8,
-      "profit_factor": 1.62,
+      "n_losses": 0,
+      "win_rate": 100.0,
+      "total_R": 1.62,
+      "avg_R": 1.618,
+      "total_pnl_usd": 161.8,
+      "profit_factor": 10.0,
       "rank": 2,
       "medal_eligible": false
     },
     {
       "strategy": "H-Pattern",
-      "ticker": "BTC-USD",
-      "n_trades": 2,
+      "ticker": "GC=F",
+      "n_trades": 1,
       "n_wins": 0,
-      "n_losses": 2,
+      "n_losses": 1,
       "win_rate": 0.0,
-      "total_R": -2.0,
+      "total_R": -1.0,
       "avg_R": -1.0,
-      "total_pnl_usd": -200.0,
+      "total_pnl_usd": -100.0,
       "profit_factor": 0.0,
       "rank": 3,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "unknown",
+      "ticker": "\u2014",
+      "n_trades": 1,
+      "n_wins": 0,
+      "n_losses": 1,
+      "win_rate": 0.0,
+      "total_R": -1.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -284.49,
+      "profit_factor": 0.0,
+      "rank": 4,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "Two-Yang",
+      "ticker": "MGC=F",
+      "n_trades": 4,
+      "n_wins": 0,
+      "n_losses": 4,
+      "win_rate": 0.0,
+      "total_R": -3.0,
+      "avg_R": -0.75,
+      "total_pnl_usd": -300.0,
+      "profit_factor": 0.0,
+      "rank": 5,
       "medal_eligible": false
     },
     {
@@ -64,46 +92,18 @@
       "avg_R": -1.0,
       "total_pnl_usd": -300.0,
       "profit_factor": 0.0,
-      "rank": 4,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "Two-Yang",
-      "ticker": "MES=F",
-      "n_trades": 6,
-      "n_wins": 0,
-      "n_losses": 6,
-      "win_rate": 0.0,
-      "total_R": -4.0,
-      "avg_R": -0.667,
-      "total_pnl_usd": -400.0,
-      "profit_factor": 0.0,
-      "rank": 5,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "unknown",
-      "ticker": "\u2014",
-      "n_trades": 2,
-      "n_wins": 0,
-      "n_losses": 2,
-      "win_rate": 0.0,
-      "total_R": -2.0,
-      "avg_R": -1.0,
-      "total_pnl_usd": -603.96,
-      "profit_factor": 0.0,
       "rank": 6,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 38,
-    "n_wins": 13,
-    "win_rate": 34.2,
-    "total_R": -1.96,
-    "total_pnl_usd": -600.56
+    "n_trades": 24,
+    "n_wins": 10,
+    "win_rate": 41.7,
+    "total_R": 3.18,
+    "total_pnl_usd": 133.51
   },
-  "ranking_24h_updated": "2026-11-20T12:06:52.621734+00:00",
+  "ranking_24h_updated": "2026-11-20T18:00:41.496846+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -121,22 +121,22 @@
         5
       ],
       "live_24h": {
-        "n": 2,
+        "n": 1,
         "wins": 0,
-        "losses": 2,
+        "losses": 1,
         "wr": 0.0,
-        "R": -2.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": -603.96
+        "pnl": -284.49
       },
       "live_today": {
-        "n": 2,
+        "n": 0,
         "wins": 0,
-        "losses": 2,
-        "wr": 0.0,
-        "R": -2.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": -603.96
+        "pnl": 0
       },
       "signals_24h": 0,
       "backtest_4d": {
@@ -173,24 +173,24 @@
         5
       ],
       "live_24h": {
-        "n": 2,
+        "n": 1,
         "wins": 0,
-        "losses": 2,
+        "losses": 1,
         "wr": 0.0,
-        "R": -2.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": -200.0
+        "pnl": -100.0
       },
       "live_today": {
-        "n": 2,
+        "n": 0,
         "wins": 0,
-        "losses": 2,
-        "wr": 0.0,
-        "R": -2.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": -200.0
+        "pnl": 0
       },
-      "signals_24h": 5,
+      "signals_24h": 1,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -433,13 +433,13 @@
         5
       ],
       "live_24h": {
-        "n": 2,
+        "n": 1,
         "wins": 1,
-        "losses": 1,
-        "wr": 50.0,
-        "R": 0.62,
-        "pf": 1.62,
-        "pnl": 61.8
+        "losses": 0,
+        "wr": 100.0,
+        "R": 1.62,
+        "pf": 10.0,
+        "pnl": 161.8
       },
       "live_today": {
         "n": 0,
@@ -450,7 +450,7 @@
         "pf": 0.0,
         "pnl": 0
       },
-      "signals_24h": 4,
+      "signals_24h": 1,
       "backtest_4d": {
         "n_trades": 12,
         "wr": 50.0,
@@ -485,24 +485,24 @@
         5
       ],
       "live_24h": {
-        "n": 22,
-        "wins": 12,
-        "losses": 10,
-        "wr": 54.5,
-        "R": 9.42,
-        "pf": 1.94,
-        "pnl": 941.6
+        "n": 12,
+        "wins": 7,
+        "losses": 5,
+        "wr": 58.3,
+        "R": 6.33,
+        "pf": 2.27,
+        "pnl": 632.6
       },
       "live_today": {
-        "n": 18,
-        "wins": 10,
-        "losses": 8,
-        "wr": 55.6,
-        "R": 8.18,
-        "pf": 2.02,
-        "pnl": 818.0
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
       },
-      "signals_24h": 34,
+      "signals_24h": 24,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
