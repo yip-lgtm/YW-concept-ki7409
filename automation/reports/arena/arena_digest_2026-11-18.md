@@ -5,21 +5,21 @@
 
 | # | agent | lv | 昨日結果 | n | WR | PF | RR | 昨日 P&L | equity | 今日進行中 |
 |---:|---|--:|---|--:|--:|--:|--:|--:|--:|---|
-| 1 | CRT | 7 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+4,317 | — |
+| 1 | CRT | 7 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+3,740 | 5 單 · $-500 |
 | 2 | TTrades-Fractal | 7 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+858 | — |
 | 3 | B1 | 5 | promote | 1 | up 100% | up 99.00 | up 99.00 | $+162 | $+409 | — |
-| 4 | Stair | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,872 | — |
-| 5 | 3-Pushes | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,239 | — |
-| 6 | Kell-Cycle | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,063 | — |
-| 7 | H-Pattern | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-1,191 | — |
+| 4 | Stair | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,470 | 4 單 · $-400 |
+| 5 | 3-Pushes | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,182 | 1 單 · $-100 |
+| 6 | Kell-Cycle | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,157 | 1 單 · $-100 |
+| 7 | H-Pattern | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-1,296 | — |
 | 8 | Two-Yang | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,782 | — |
 | 9 | Argon-Gold | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-148 | — |
 | 10 | 50-20-Pullback | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,279 | — |
-| 11 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+5,428 | — |
-| 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+194 | — |
+| 11 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+5,548 | — |
+| 12 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+204 | — |
 | 13 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 14 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-700 | — |
-| 15 | RSI-Div | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-3,302 | — |
+| 15 | RSI-Div | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-3,479 | 1 單 · $-100 |
 
 ⬆️ 升級：B1
 
