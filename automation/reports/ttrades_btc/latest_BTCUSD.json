@@ -1,69 +1,13 @@
 {
-  "ts": "2026-11-19T23:05:51.992115-05:00",
+  "ts": "2026-11-20T05:55:33.941268-05:00",
   "ticker": "BTC-USD",
-  "strategy": "TTrades-Fractal",
-  "swing_type": "C2",
-  "side": "bearish",
-  "swing": {
-    "type": "c2_closure",
-    "side": "bearish",
-    "c2_high": 62533.66015625,
-    "c2_low": 61220.0,
-    "c2_close": 62082.3203125,
-    "c2_eq": 61876.830078125,
-    "c3_close": 61800.01171875,
-    "swing_level": 62533.66015625,
-    "direction": "short"
-  },
-  "cisd": {
-    "confirmed": true,
-    "opposing_open": 68159.9765625,
-    "series_length": 2,
-    "last_close": 61800.01171875,
-    "reason": "cisd_short"
-  },
-  "eq_respected": true,
-  "d1_trend": {
-    "aligned": true,
-    "trend": "downtrend",
-    "d1_close": 61800.01171875,
-    "d1_ema50": 75087.41478728822,
-    "d1_ema20": 70472.6358974229,
-    "reason": "D1 downtrend"
-  },
+  "actionable": false,
+  "reason": "no H4 C3 closure (Fractal quiet)",
   "weekly_profile": {
     "profile": "consolidation_reversal",
     "valid_for_signal": true,
     "notes": ""
   },
-  "daily_profile": {
-    "london_expanded": false,
-    "london_range": 1304.75,
-    "skip_ny": false
-  },
   "account_size": 247000,
-  "risk_pct": 0.0025,
-  "risk_amount": 617.5,
-  "entry": 61800.01171875,
-  "sl": 62644.16805245536,
-  "t1": 60955.85538504464,
-  "t2_close": 60449.361584821425,
-  "t3": 59605.205251116065,
-  "t4": 58761.048917410706,
-  "t5": 57579.2300502232,
-  "risk_per_unit": 844.1563337053594,
-  "units": 0.5,
-  "notional": 30900.005859375,
-  "manipulation_pivot": 62533.66015625,
-  "projection_neg2": 61066.36328125,
-  "projection_neg4": 60332.71484375,
-  "sl_buffer_atr": 110.50789620535714,
-  "actionable": true,
-  "direction": "short",
-  "grade": "A",
-  "confidence": 85,
-  "reason": "TTrades Fractal: H4 C2 closure (bearish) + M15 CISD (2-bar series) + EQ respected",
-  "paper_mode": true,
-  "trade_mode": "paper",
-  "paper_reason": "no paper trade history (default paper)"
+  "risk_amount": 617.5
 }
