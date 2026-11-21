@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-21T16:30:05.739415+00:00",
+  "timestamp": "2026-11-21T21:47:38.260889+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -8,27 +8,34 @@
       "no /tmp/ocs_btc/latest.json"
     ],
     "n_open": 1,
-    "n_trades_total": 124,
-    "win_rate": 33.1,
-    "profit_factor": 0.79,
+    "n_trades_total": 125,
+    "win_rate": 32.8,
+    "profit_factor": 0.78,
     "last_signal": null
   },
   "ranking": {
     "component": "strategy-ranking",
     "issues": [],
-    "latest_file": "ranking_2026-11-21.md",
-    "latest_date": "2026-11-21"
+    "latest_file": "ranking_2026-11-22.md",
+    "latest_date": "2026-11-22"
   },
   "yw_daily_today": {
     "workflow": "yw-daily",
     "today": "2026-11-21",
-    "ran_today": false,
-    "success_today": false
+    "ran_today": true,
+    "success_today": true,
+    "last_id": 44951375030
   },
   "workflows": [
     {
       "workflow": "yw-daily.yml",
       "runs": [
+        {
+          "id": 44951375030,
+          "conclusion": "success",
+          "created_at": "2026-11-21T21:24:25Z",
+          "event": "schedule"
+        },
         {
           "id": 44829705926,
           "conclusion": "failure",
@@ -40,17 +47,9 @@
           "conclusion": "success",
           "created_at": "2026-11-19T22:56:38Z",
           "event": "schedule"
-        },
-        {
-          "id": 44415652819,
-          "conclusion": "success",
-          "created_at": "2026-11-18T22:52:23Z",
-          "event": "schedule"
         }
       ],
-      "issues": [
-        "scheduled run failed: #44829705926 2026-11-20T22:31:54Z"
-      ]
+      "issues": []
     },
     {
       "workflow": "yw-publish-signal.yml",
@@ -80,21 +79,21 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 44924706746,
+          "id": 44953238190,
           "conclusion": "cancelled",
-          "created_at": "2026-11-21T16:27:50Z",
+          "created_at": "2026-11-21T21:46:04Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 44918091322,
+          "id": 44949344250,
           "conclusion": "cancelled",
-          "created_at": "2026-11-21T15:14:07Z",
+          "created_at": "2026-11-21T21:01:32Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 44893231583,
+          "id": 44930504202,
           "conclusion": "success",
-          "created_at": "2026-11-21T10:12:35Z",
+          "created_at": "2026-11-21T17:31:22Z",
           "event": "schedule"
         }
       ],
@@ -103,6 +102,12 @@
     {
       "workflow": "strategy-ranking.yml",
       "runs": [
+        {
+          "id": 44951588438,
+          "conclusion": "success",
+          "created_at": "2026-11-21T21:27:00Z",
+          "event": "schedule"
+        },
         {
           "id": 44829326721,
           "conclusion": "failure",
@@ -114,17 +119,9 @@
           "conclusion": "success",
           "created_at": "2026-11-19T22:54:16Z",
           "event": "schedule"
-        },
-        {
-          "id": 44415338095,
-          "conclusion": "success",
-          "created_at": "2026-11-18T22:50:21Z",
-          "event": "schedule"
         }
       ],
-      "issues": [
-        "scheduled run failed: #44829326721 2026-11-20T22:29:09Z"
-      ]
+      "issues": []
     },
     {
       "workflow": "strategy-reward.yml",
@@ -152,12 +149,9 @@
     }
   ],
   "health": {
-    "issues": [
-      "yw-daily.yml: scheduled run failed: #44829705926 2026-11-20T22:31:54Z",
-      "strategy-ranking.yml: scheduled run failed: #44829326721 2026-11-20T22:29:09Z"
-    ],
-    "status": "warning",
-    "n_issues": 2
+    "issues": [],
+    "status": "ok",
+    "n_issues": 0
   },
   "live_scan_positions": {
     "source": "live_scan",
