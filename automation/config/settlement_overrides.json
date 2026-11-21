@@ -2,12 +2,12 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 40,
-    "last_run": "2026-11-20T22:30:03.332352+00:00",
+    "runs": 41,
+    "last_run": "2026-11-21T21:27:42.565773+00:00",
     "last_applied": 0,
     "last_log": [
       {
-        "agent": "B1",
+        "agent": "Stair",
         "action": "error"
       },
       {
@@ -15,15 +15,11 @@
         "action": "error"
       },
       {
+        "agent": "Two-Yang",
+        "action": "error"
+      },
+      {
         "agent": "H-Pattern",
-        "action": "error"
-      },
-      {
-        "agent": "Stair",
-        "action": "error"
-      },
-      {
-        "agent": "TTrades-L12",
         "action": "error"
       },
       {
@@ -32,6 +28,22 @@
       },
       {
         "agent": "OCS-BTC-5m",
+        "action": "error"
+      },
+      {
+        "agent": "B1",
+        "action": "error"
+      },
+      {
+        "agent": "TTrades-L12",
+        "action": "error"
+      },
+      {
+        "agent": "TTrades-L13",
+        "action": "error"
+      },
+      {
+        "agent": "TTrades-L14",
         "action": "error"
       }
     ]
