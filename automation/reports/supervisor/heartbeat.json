@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-21T08:55:53.172503+00:00",
+  "timestamp": "2026-11-21T16:30:05.739415+00:00",
   "supervisor": "strategy-supervisor",
   "ocs_btc_5m": {
     "strategy": "OCS BTC 5m",
@@ -7,7 +7,7 @@
     "issues": [
       "no /tmp/ocs_btc/latest.json"
     ],
-    "n_open": 0,
+    "n_open": 1,
     "n_trades_total": 124,
     "win_rate": 33.1,
     "profit_factor": 0.79,
@@ -80,22 +80,22 @@
       "workflow": "ocs-btc-5m.yml",
       "runs": [
         {
-          "id": 44887143341,
-          "conclusion": "running",
-          "created_at": "2026-11-21T08:55:41Z",
+          "id": 44924706746,
+          "conclusion": "cancelled",
+          "created_at": "2026-11-21T16:27:50Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 44887061391,
+          "id": 44918091322,
           "conclusion": "cancelled",
-          "created_at": "2026-11-21T08:54:35Z",
+          "created_at": "2026-11-21T15:14:07Z",
           "event": "workflow_dispatch"
         },
         {
-          "id": 44877620936,
-          "conclusion": "cancelled",
-          "created_at": "2026-11-21T06:52:51Z",
-          "event": "workflow_dispatch"
+          "id": 44893231583,
+          "conclusion": "success",
+          "created_at": "2026-11-21T10:12:35Z",
+          "event": "schedule"
         }
       ],
       "issues": []
@@ -161,14 +161,12 @@
   },
   "live_scan_positions": {
     "source": "live_scan",
-    "n_open": 1,
+    "n_open": 0,
     "n_stale_24h": 0,
-    "issues": [
-      "High total risk: $603"
-    ],
-    "long_count": 1,
+    "issues": [],
+    "long_count": 0,
     "short_count": 0,
-    "total_risk": 602.7758928571428,
+    "total_risk": 0.0,
     "deep_loss_positions": []
   }
 }
