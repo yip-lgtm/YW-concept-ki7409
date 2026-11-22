@@ -16,7 +16,7 @@
 | 9 | RSI-Div | 2 | promote | 4 | up 50% | up 3.00 | up 3.00 | $+400 | $-3,002 | — |
 | 10 | Argon-Gold | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-148 | — |
 | 11 | 50-20-Pullback | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,279 | — |
-| 12 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+5,917 | — |
+| 12 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+6,054 | — |
 | 13 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+435 | — |
 | 14 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 15 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-700 | — |
