@@ -1,13 +1,50 @@
 {
-  "ts": "2026-11-20T14:15:50.682167-05:00",
+  "ts": "2026-11-23T18:12:55.247265-05:00",
   "ticker": "MGC=F",
-  "actionable": false,
-  "reason": "no H4 C3 closure (Fractal quiet)",
+  "strategy": "TTrades-Fractal",
+  "swing_type": "C3",
+  "side": "bearish",
+  "swing": {
+    "type": "c3_closure",
+    "side": "bearish",
+    "c2_high": 3691.0,
+    "c2_eq": 3651.4000244140625,
+    "c4_close": 3638.699951171875,
+    "swing_level": 3691.0,
+    "direction": "short"
+  },
+  "cisd": {
+    "confirmed": true,
+    "opposing_open": 3845.0,
+    "series_length": 2,
+    "last_close": 3638.699951171875,
+    "reason": "cisd_short"
+  },
+  "eq_respected": true,
+  "d1_trend": {
+    "aligned": true,
+    "trend": "downtrend",
+    "d1_close": 3638.699951171875,
+    "d1_ema50": 4037.16529040593,
+    "d1_ema20": 3881.526865962389,
+    "reason": "D1 downtrend"
+  },
   "weekly_profile": {
-    "profile": "unknown",
+    "profile": "early_week",
     "valid_for_signal": true,
-    "notes": ""
+    "notes": "day 2 - too early, not blocking"
+  },
+  "daily_profile": {
+    "london_expanded": true,
+    "london_range": 79.199951171875,
+    "skip_ny": true
   },
   "account_size": 247000,
-  "risk_amount": 617.5
+  "risk_pct": 0.0025,
+  "risk_amount": 617.5,
+  "actionable": false,
+  "reason": "London expanded (skip NY)",
+  "paper_mode": true,
+  "trade_mode": "paper",
+  "paper_reason": "no paper trade history (default paper)"
 }
