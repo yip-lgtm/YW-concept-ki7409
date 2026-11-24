@@ -1,40 +1,41 @@
 # Daily Settlement — 2026-11-24 (HKT)
 
 **Account:** PAAPEX…091  
-**Generated:** 2026-11-24 10:00:20 HKT  
+**Generated:** 2026-11-24 23:07:04 HKT  
 **DD state file:** `automation/state/ops_dd_hold.json`  
 
 ## Equity / DD
 - Equity start: `None`
 - Equity end: `None`
 - Open P/L: `None` · Working: `None`
-- Day P/L: **$-100.00** (source: `paper_allowlisted_pnl_fallback`)
-- DD amount: **$-100.00** vs `day_start` · limit **-100.0**
-- **dd_hold: `True`** · tp_limit_usd (report-only default): `300.0`
+- Day P/L: **$+23.60** (source: `paper_allowlisted_pnl_fallback`)
+- DD amount: **$+23.60** vs `day_start` · limit **-100.0**
+- **dd_hold: `False`** · tp_limit_usd (report-only default): `300.0`
 
 ## Fills (allowlist focus)
-- Total rows: 1 · allowlisted: 1 · non-allow: 0
-- Allowlisted PnL: **$-100.00**
+- Total rows: 6 · allowlisted: 5 · non-allow: 1
+- Allowlisted PnL: **$+23.60**
 
 | Strategy | n | wins | losses | pnl |
 |----------|---|------|--------|-----|
+| crt | 4 | 2 | 2 | $+123.60 |
 | stair | 1 | 0 | 1 | $-100.00 |
 
 ## Allowlisted signal outcomes
-- n=9 · gated=8 · fired/ungated=1
+- n=40 · gated=32 · fired/ungated=8
 
 ## LLM
 - status: **`ok`**
 - invoked: `True`
-- detail: automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_100002.json
+- detail: automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_230634.json
 
 ## Ops briefing bullets
-- Settlement 2026-11-24 HKT · PAAPEX…091 · day P/L $-100.00 (src=paper_allowlisted_pnl_fallback) · DD -100.00 vs limit -100.0
-- ⛔ DD HOLD active — no new entries (state: automation/state/ops_dd_hold.json). Tell Trading desk once. Unlock next session or --clear-hold.
-- Allowlist fills: n=1 pnl=$-100.00; signals allow n=9 gated=8
-- By strategy — stair: n=1 pnl=$-100.0
+- Settlement 2026-11-24 HKT · PAAPEX…091 · day P/L $+23.60 (src=paper_allowlisted_pnl_fallback) · DD +23.60 vs limit -100.0
+- ✅ DD unlocked — under −$100 limit.
+- Allowlist fills: n=5 pnl=$+23.60; signals allow n=40 gated=32
+- By strategy — crt: n=4 pnl=$+123.6; stair: n=1 pnl=$-100.0
 - Policy: QTY=1 Bracket only (NOT Group QTY20); never use Order Ticket Limit as sim last.
-- LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_100002.json
+- LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_230634.json
 - Never re-handoff stale/gated/null-position signals; stay quiet if nothing changed.
 
 ## Ops lessons (folded)
@@ -46,9 +47,9 @@
 - Envelope defaults: −$100 DD hold / +$300 TP (historical). Change only with explicit user choice.
 
 ## Live scan snapshot
-- positions open: 0
-- heartbeat: `2026-11-24T01:50:53.944365+00:00`
-- circuit_breaker: `{'consecutive_good_scans': 37, 'open': False, 'opened_at': '2026-11-01T23:05:44.450017+00:00', 'until': '2026-11-03T04:30:36.181821+00:00', 'reason': 'analyst charts_failed/charts_total = 30/30 = 100%', 'cleared_at': '2026-11-03T05:20:00+00:00', 'cleared_reason': 'manual: six dependency added (mplfinance needs six.moves); charts verified 5/5 OK on clean venv'}`
+- positions open: 2
+- heartbeat: `2026-11-24T12:18:54.598576+00:00`
+- circuit_breaker: `{'consecutive_good_scans': 38, 'open': False, 'opened_at': '2026-11-01T23:05:44.450017+00:00', 'until': '2026-11-03T04:30:36.181821+00:00', 'reason': 'analyst charts_failed/charts_total = 30/30 = 100%', 'cleared_at': '2026-11-03T05:20:00+00:00', 'cleared_reason': 'manual: six dependency added (mplfinance needs six.moves); charts verified 5/5 OK on clean venv'}`
 
 ## Config defaults (documented)
 - DD_LIMIT_USD = -100.0 (hold when day DD ≤ this)

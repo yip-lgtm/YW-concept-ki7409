@@ -1,7 +1,7 @@
 {
   "date_hkt": "2026-11-24",
   "date_ymd": "20261124",
-  "generated_at_hkt": "2026-11-24 10:00:20 HKT",
+  "generated_at_hkt": "2026-11-24 23:07:04 HKT",
   "repo": "/home/runner/work/YW-concept-ki7409/YW-concept-ki7409",
   "account": "PAAPEX…091",
   "equity": {
@@ -9,28 +9,25 @@
     "equity_end": null,
     "open_pl": null,
     "working_count": null,
-    "day_pnl": -100.0,
-    "dd_amount": -100.0,
+    "day_pnl": 23.6,
+    "dd_amount": 23.6,
     "dd_vs": "day_start",
     "dd_limit_usd": -100.0,
-    "dd_hold": true,
+    "dd_hold": false,
     "pnl_source": "paper_allowlisted_pnl_fallback",
     "account": "PAAPEX…091",
     "session_high_equity": null
   },
-  "dd_hold": true,
+  "dd_hold": false,
   "dd_state": {
-    "dd": "held",
-    "dd_hold": true,
-    "held_at_hkt": "2026-11-24 10:00 HKT",
+    "dd": "unlocked",
+    "dd_hold": false,
+    "updated_at_hkt": "2026-11-24 23:06 HKT",
     "date": "2026-11-24",
-    "day_pnl": -100.0,
-    "dd_amount": -100.0,
-    "dd_vs": "day_start",
+    "day_pnl": 23.6,
+    "dd_amount": 23.6,
     "dd_limit_usd": -100.0,
-    "reason": "day DD -100.0 <= -100.0 (vs day_start)",
-    "unlock": "next HKT session settlement if day_pnl > limit, or operator --clear-hold / set dd=unlocked",
-    "no_new_entries": true,
+    "no_new_entries": false,
     "account": "PAAPEX…091",
     "path": "automation/state/ops_dd_hold.json"
   },
@@ -38,12 +35,18 @@
   "dd_limit_usd": -100.0,
   "tp_limit_usd": 300.0,
   "fills": {
-    "n_fills_total": 1,
-    "n_allowlisted": 1,
-    "n_non_allowlisted": 0,
-    "pnl_allowlisted_usd": -100.0,
-    "pnl_all_sources_usd": -100.0,
+    "n_fills_total": 6,
+    "n_allowlisted": 5,
+    "n_non_allowlisted": 1,
+    "pnl_allowlisted_usd": 23.6,
+    "pnl_all_sources_usd": -76.4,
     "by_strategy": {
+      "crt": {
+        "n": 4,
+        "pnl": 123.60000000000002,
+        "wins": 2,
+        "losses": 2
+      },
       "stair": {
         "n": 1,
         "pnl": -100.0,
@@ -65,23 +68,98 @@
         "status": "closed",
         "signal_id": "Stair|MNQ=F|2026-11-24T00:10:46.309591+00:00",
         "allowlisted": true
+      },
+      {
+        "source": "paper_live_scan",
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "side": "bearish",
+        "qty": 1,
+        "pnl_usd": -100.0,
+        "R_multiple": -1.0,
+        "exit_level": "SL",
+        "grade": "A",
+        "status": "closed",
+        "signal_id": "CRT|M2K=F|2026-11-24T06:23:14.393035+00:00",
+        "allowlisted": true
+      },
+      {
+        "source": "paper_live_scan",
+        "strategy": "CRT",
+        "ticker": "MNQ=F",
+        "side": "bearish",
+        "qty": 1,
+        "pnl_usd": -100.0,
+        "R_multiple": -1.0,
+        "exit_level": "SL",
+        "grade": "B",
+        "status": "closed",
+        "signal_id": "CRT|MNQ=F|2026-11-24T06:23:14.393035+00:00",
+        "allowlisted": true
+      },
+      {
+        "source": "paper_live_scan",
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "side": "bearish",
+        "qty": 1,
+        "pnl_usd": 161.8,
+        "R_multiple": 1.618,
+        "exit_level": "T2",
+        "grade": "A",
+        "status": "closed",
+        "signal_id": "CRT|MGC=F|2026-11-24T06:23:14.393035+00:00",
+        "allowlisted": true
+      },
+      {
+        "source": "paper_live_scan",
+        "strategy": "Two-Yang",
+        "ticker": "BTC-USD",
+        "side": "long",
+        "qty": 1,
+        "pnl_usd": -100.0,
+        "R_multiple": -1.0,
+        "exit_level": "SL",
+        "grade": "B",
+        "status": "closed",
+        "signal_id": "Two-Yang|BTC-USD|2026-11-24T06:45:12.010835+00:00",
+        "allowlisted": false
+      },
+      {
+        "source": "paper_live_scan",
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "side": "bearish",
+        "qty": 1,
+        "pnl_usd": 161.8,
+        "R_multiple": 1.618,
+        "exit_level": "T2",
+        "grade": "B",
+        "status": "closed",
+        "signal_id": "CRT|M2K=F|2026-11-24T06:58:50.767860+00:00",
+        "allowlisted": true
       }
     ]
   },
   "signals": {
-    "n_allowlisted": 9,
-    "n_gated": 8,
-    "n_fired_or_ungated": 1,
+    "n_allowlisted": 40,
+    "n_gated": 32,
+    "n_fired_or_ungated": 8,
     "by_strategy": {
       "crt": {
-        "n": 7,
-        "gated": 7,
+        "n": 30,
+        "gated": 24,
+        "fired": 6
+      },
+      "h-pattern": {
+        "n": 1,
+        "gated": 1,
         "fired": 0
       },
       "stair": {
-        "n": 2,
-        "gated": 1,
-        "fired": 1
+        "n": 9,
+        "gated": 7,
+        "fired": 2
       }
     },
     "outcomes_tail": [
@@ -165,6 +243,285 @@
         "gate_skip": "CRT chasing: distance_from_mss=0.49×range (> 0.3); entry too far from MSS",
         "gate_blocked": true,
         "confidence": 112
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MNQ=F",
+        "grade": "B",
+        "direction": "bearish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 104
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 107
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "CRT ban ticker GC=F: same gold as MGC=F — the setup would be opened twice",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.30×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 122
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "CRT ban ticker GC=F: same gold as MGC=F — the setup would be opened twice",
+        "gate_blocked": true,
+        "confidence": 94
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "BTC-USD",
+        "grade": "A",
+        "direction": "short",
+        "gate_skip": "Stair ban ticker BTC-USD: 7-day live loss (BTC -$210 net + overnight; MES -$11 no winners)",
+        "gate_blocked": true,
+        "confidence": 108
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MES=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "Direction conflict on MES=F: normalized {long,short} raw ['bearish', 'long'] both fired — skip both",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "Direction conflict on MGC=F: normalized {long,short} raw ['bearish', 'long'] both fired — skip both",
+        "gate_blocked": true,
+        "confidence": 112
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MNQ=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "Direction conflict on MNQ=F: normalized {long,short} raw ['bearish', 'long'] both fired — skip both",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "short",
+        "gate_skip": "Stair ban session AsiaLate: 7-day net loss (RTH Close / AsiaLate / Lunch all drag)",
+        "gate_blocked": true,
+        "confidence": 90
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.50×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "GC=F",
+        "grade": "B",
+        "direction": "short",
+        "gate_skip": "Stair ban session AsiaLate: 7-day net loss (RTH Close / AsiaLate / Lunch all drag)",
+        "gate_blocked": true,
+        "confidence": 84
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "bearish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.31×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 101
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.50×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "BTC-USD",
+        "grade": "A",
+        "direction": "short",
+        "gate_skip": "Stair ban ticker BTC-USD: 7-day live loss (BTC -$210 net + overnight; MES -$11 no winners)",
+        "gate_blocked": true,
+        "confidence": 110
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "bearish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 99
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "GC=F",
+        "grade": "B",
+        "direction": "short",
+        "gate_skip": "Stair ban session AsiaLate: 7-day net loss (RTH Close / AsiaLate / Lunch all drag)",
+        "gate_blocked": true,
+        "confidence": 86
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "MGC=F",
+        "grade": "B",
+        "direction": "short",
+        "gate_skip": "Stair ban session AsiaLate: 7-day net loss (RTH Close / AsiaLate / Lunch all drag)",
+        "gate_blocked": true,
+        "confidence": 86
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.32×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 114
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.32×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "Stair",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "short",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 86
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "B",
+        "direction": "bearish",
+        "gate_skip": "CRT ban ticker GC=F: same gold as MGC=F — the setup would be opened twice",
+        "gate_blocked": true,
+        "confidence": 101
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.42×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 122
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 101
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "C",
+        "direction": "bullish",
+        "gate_skip": "Grade C: no auto-open (logged for LLM data only)",
+        "gate_blocked": true,
+        "confidence": 88
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.38×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 96
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MNQ=F",
+        "grade": "C",
+        "direction": "bullish",
+        "gate_skip": "Grade C: no auto-open (logged for LLM data only)",
+        "gate_blocked": true,
+        "confidence": 84
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MES=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.46×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 101
+      },
+      {
+        "strategy": "H-Pattern",
+        "ticker": "BTC-USD",
+        "grade": "B",
+        "direction": "long",
+        "gate_skip": "H-Pattern |pullback| 71.7% >= 50% (YW invalid)",
+        "gate_blocked": true,
+        "confidence": 94
       }
     ]
   },
@@ -172,9 +529,9 @@
     "llm_status": "ok",
     "scientist_invoked": true,
     "returncode": 0,
-    "stdout_tail": "onf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.50 WR=33.1% R=-23.9\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: INSUFFICIENT DATA\nREASON: No 24h signals; collect fresh trades before changing p\n    LLM: grade=B conf=84 → auto_apply=False\n    Diagnosis: Low-quality A-grade signals are dragging performance, while B-grade signals are \n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.56 WR=36.0% R=-68.2\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.45 WR=31.2% R=-35.1\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.64 WR=39.1% R=+56.7\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.45 WR=31.0% R=-40.7\n    [FALLBACK] C conf=50\n    LLM: grade=C conf=50 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Marginal: PF=0.98 WR=49.5% R=+52.8\n\n[scientist] Saved: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_100002.json\n[scientist] Markdown: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_100002.md\n[scientist] TG: 200\n",
+    "stdout_tail": " conf=0 → auto_apply=False\n    Diagnosis: INSUFFICIENT DATA\nREASON: Collect a nonzero signal sample before changing parame\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: INSUFFICIENT DATA\nREASON: Restore signal generation and collect fresh trades bef\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.45 WR=31.0% R=-40.7\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.64 WR=39.1% R=+57.9\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.57 WR=36.4% R=+2.6\n    [FALLBACK] C conf=50\n    LLM: grade=C conf=50 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Marginal: PF=0.98 WR=49.5% R=+52.8\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.45 WR=31.1% R=-36.1\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.50 WR=33.1% R=-23.9\n\n[scientist] Saved: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_230634.json\n[scientist] Markdown: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_230634.md\n[scientist] TG: 200\n",
     "stderr_tail": "",
-    "latest_report": "automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_100002.json"
+    "latest_report": "automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_230634.json"
   },
   "drift_flags": [],
   "ops_lessons": [
@@ -185,29 +542,86 @@
     "Envelope defaults: −$100 DD hold / +$300 TP (historical). Change only with explicit user choice."
   ],
   "ops_briefing": [
-    "Settlement 2026-11-24 HKT · PAAPEX…091 · day P/L $-100.00 (src=paper_allowlisted_pnl_fallback) · DD -100.00 vs limit -100.0",
-    "⛔ DD HOLD active — no new entries (state: automation/state/ops_dd_hold.json). Tell Trading desk once. Unlock next session or --clear-hold.",
-    "Allowlist fills: n=1 pnl=$-100.00; signals allow n=9 gated=8",
-    "By strategy — stair: n=1 pnl=$-100.0",
+    "Settlement 2026-11-24 HKT · PAAPEX…091 · day P/L $+23.60 (src=paper_allowlisted_pnl_fallback) · DD +23.60 vs limit -100.0",
+    "✅ DD unlocked — under −$100 limit.",
+    "Allowlist fills: n=5 pnl=$+23.60; signals allow n=40 gated=32",
+    "By strategy — crt: n=4 pnl=$+123.6; stair: n=1 pnl=$-100.0",
     "Policy: QTY=1 Bracket only (NOT Group QTY20); never use Order Ticket Limit as sim last.",
-    "LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_100002.json",
+    "LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261124_230634.json",
     "Never re-handoff stale/gated/null-position signals; stay quiet if nothing changed."
   ],
   "live_scan": {
     "live_dir": "/home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/live_scan",
-    "n_positions": 0,
-    "positions": [],
-    "heartbeat_ts": "2026-11-24T01:50:53.944365+00:00",
+    "n_positions": 2,
+    "positions": [
+      {
+        "signal_id": "CRT|M2K=F|2026-11-24T12:18:54.598576+00:00",
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "direction": "bullish",
+        "grade": "B",
+        "entry": 2665.10009765625,
+        "entry_time": "2026-11-24T12:18:54.598576+00:00",
+        "atr": 2.6857212611607144,
+        "confidence": 101,
+        "reason": "Raid及MSS完整，強度80；但收市低於確認位，非頂級訊號",
+        "sl": 2660.8029436383927,
+        "t1": 2669.3972516741073,
+        "t2": 2672.052892857143,
+        "t3": 2676.350046875,
+        "t4": 2680.647200892857,
+        "t5": 2686.585867745536,
+        "sl_dist": 4.297154017857143,
+        "units": 4.654243,
+        "usd_per_point": 5.0,
+        "risk_usd": 100.0,
+        "t2_r": 1.618,
+        "t1_r": 1.0,
+        "breakeven_at_r": 0.0,
+        "partial_at_r": 0.0,
+        "exit_arm": "CONTROL",
+        "status": "open"
+      },
+      {
+        "signal_id": "CRT|BTC-USD|2026-11-24T12:18:54.598576+00:00",
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "direction": "bullish",
+        "grade": "B",
+        "entry": 60214.01171875,
+        "entry_time": "2026-11-24T12:18:54.598576+00:00",
+        "atr": 146.73939732142858,
+        "confidence": 109,
+        "reason": "MSS已突破，但收市低於60323確認位，延續力未確認",
+        "sl": 59979.22868303571,
+        "t1": 60448.79475446429,
+        "t2": 60593.890670535715,
+        "t3": 60828.67370625,
+        "t4": 61063.456741964284,
+        "t5": 61387.92689732143,
+        "sl_dist": 234.78303571428575,
+        "units": 0.425925,
+        "usd_per_point": 1.0,
+        "risk_usd": 100.0,
+        "t2_r": 1.618,
+        "t1_r": 1.0,
+        "breakeven_at_r": 0.0,
+        "partial_at_r": 0.0,
+        "exit_arm": "CONTROL",
+        "status": "open"
+      }
+    ],
+    "heartbeat_ts": "2026-11-24T12:18:54.598576+00:00",
     "heartbeat": {
-      "timestamp": "2026-11-24T01:50:53.944365+00:00",
+      "timestamp": "2026-11-24T12:18:54.598576+00:00",
       "n_detections": 54,
-      "n_signals": 8,
+      "n_signals": 10,
       "n_errors": 1,
-      "n_fired": 0,
+      "n_fired": 2,
       "n_gated": 8,
-      "n_pre_gate": 8,
+      "n_pre_gate": 10,
       "circuit_breaker": {
-        "consecutive_good_scans": 37,
+        "consecutive_good_scans": 38,
         "open": false,
         "opened_at": "2026-11-01T23:05:44.450017+00:00",
         "until": "2026-11-03T04:30:36.181821+00:00",
@@ -215,7 +629,7 @@
         "cleared_at": "2026-11-03T05:20:00+00:00",
         "cleared_reason": "manual: six dependency added (mplfinance needs six.moves); charts verified 5/5 OK on clean venv"
       },
-      "elapsed_sec": 65.7,
+      "elapsed_sec": 75.1,
       "tickers": [
         "MNQ=F",
         "MES=F",
@@ -226,7 +640,7 @@
       ]
     },
     "circuit_breaker": {
-      "consecutive_good_scans": 37,
+      "consecutive_good_scans": 38,
       "open": false,
       "opened_at": "2026-11-01T23:05:44.450017+00:00",
       "until": "2026-11-03T04:30:36.181821+00:00",
@@ -234,8 +648,8 @@
       "cleared_at": "2026-11-03T05:20:00+00:00",
       "cleared_reason": "manual: six dependency added (mplfinance needs six.moves); charts verified 5/5 OK on clean venv"
     },
-    "n_day_trades": 1,
-    "n_day_signals": 15
+    "n_day_trades": 6,
+    "n_day_signals": 57
   },
   "allowlist": [
     "50-20-Pullback",
