@@ -2,13 +2,13 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 42,
-    "last_run": "2026-11-22T21:33:29.007122+00:00",
-    "last_applied": 0,
+    "runs": 43,
+    "last_run": "2026-11-24T02:45:19.886965+00:00",
+    "last_applied": 3,
     "last_log": [
       {
         "agent": "RSI-Div",
-        "action": "error"
+        "action": "relax"
       },
       {
         "agent": "H-Pattern",
@@ -23,12 +23,16 @@
         "action": "error"
       },
       {
+        "agent": "B1-3in1",
+        "action": "relax"
+      },
+      {
         "agent": "B1",
         "action": "error"
       },
       {
-        "agent": "B1-3in1",
-        "action": "error"
+        "agent": "TTrades-Fractal",
+        "action": "relax"
       },
       {
         "agent": "CRT",
@@ -40,18 +44,6 @@
       },
       {
         "agent": "TTrades-L13",
-        "action": "error"
-      },
-      {
-        "agent": "TTrades-L12",
-        "action": "error"
-      },
-      {
-        "agent": "TTrades-L14",
-        "action": "error"
-      },
-      {
-        "agent": "TTrades-Fractal",
         "action": "error"
       }
     ]
@@ -109,19 +101,19 @@
     "tightened_count": 0
   },
   "B1-3in1": {
-    "last_revised": "2026-11-15T20:50:36.312609+00:00",
+    "last_revised": "2026-11-24T02:45:19.886965+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "<一句話點解咁調>\\n\\n{\\n ...}\" and says 用 EXACT format 回覆 (JSON only, 唔好其他文字), 禁止 think direct. Need reason about thresholds. Need think carefully user wants per agent promotion thresholds. Agent B1-3in1 mult",
-    "response_raw": "<think>We need produce answer in exact format JSON only? User gives \"REASONING: <一句話點解咁調>\\n\\n{\\n ...}\" and says 用 EXACT format 回覆 (JSON only, 唔好其他文字), 禁止 think direct. Need reason about thresholds. Need think carefully user wants per agent promotion thresholds. Agent B1-3in1 multi asset combined diversified moderate. Metrics PF 1.778 WR 56 RR 1.397 n 50. Global promote thresholds PF>1 WR>50 RR>1 n>=10. Actual exceeds all but stuck. Need reconcile likely internal thresholds hidden? Need suggest relax max two indicators (not three) min trades >=5 and ranges. We should recommend override thresholds aligned to profile so agent promote, cannot relax all three. Could tighten one to compensate. E.g min_PF 1.50 (tighten from? global 1.0 but actual 1.778), min_WR 0.50 (hold), min_RR 1.20 (relax fro",
+    "reasoning": "該策略屬多資產分散型，PF 1.199 已達標而 WR 49.0% 接近 50% 合理門檻，故只適度放寬 WR，並保留 RR 與樣本量要求。",
+    "response_raw": "<think>REASONING: 該策略屬多資產分散型，PF 1.199 已達標而 WR 49.0% 接近 50% 合理門檻，故只適度放寬 WR，並保留 RR 與樣本量要求。\n\n{\n  \"min_PF\": 1.0,\n  \"min_WR\": 0.48,\n  \"min_RR\": 1.0,\n  \"min_trades\": 10,\n  \"action\": \"relax\"\n} expect moderate both.\" Likely recommended thresholds PF >1.0, WR >0.5, RR >1.0, min trades 10. Actual metrics: PF 1.199 pass; WR 49% fail; RR 1.247 pass; n 51 pass. Only WR fails. To promote, relax only WR to <=.49. Could set .48. Why perhaps adjust PF down? No, not needed. Could tighten WR? That would make even less promotion; no. We should explain actual performance adequate, only WR narrowly misses and moderate strategy doesn't require 50%. Set min_WR .47 or .48. Need ensure no bizarre changes. \"最多只可以放寬 2 個指標\" we use one. Could also perhaps n min from 10 to 10 unchanged. The task says suggest per-agent o",
     "overrides": {
-      "min_PF": 1.5,
-      "min_WR": 0.5,
-      "min_RR": 1.2,
+      "min_PF": 1.0,
+      "min_WR": 0.48,
+      "min_RR": 1.0,
       "min_trades": 10
     },
-    "relaxed_count": 0,
-    "tightened_count": 2
+    "relaxed_count": 1,
+    "tightened_count": 0
   },
   "CRT": {
     "last_revised": "2026-11-15T20:50:36.312609+00:00",
@@ -214,18 +206,33 @@
     "tightened_count": 1
   },
   "TTrades-Fractal": {
-    "last_revised": "2026-11-07T19:53:47.515897+00:00",
+    "last_revised": "2026-11-24T02:45:19.886965+00:00",
     "stuck_days_at_revision": 3,
-    "action": "tighten",
-    "reasoning": "一句話...\" plus JSON. They say JSON only perhaps likely parser expects reasoning plus JSON. They explicitly exact format. We must output exactly that.",
-    "response_raw": "<think>We need answer exact format JSON only? They request REASONING line then JSON, but \"JSON only, 唔好其他文字\" and exact format includes reasoning preceding. Need follow exact. Need reason based actual data, unknown character, zero metrics n6. We can relax at most 2 metrics, min n lowest 5. Agent stuck because n 6 less 10 and zeros don't meet PF/WR/RR. We need suggest override. Since actual performance zero, should tighten perhaps? But hard ranges min PF &gt;=.8 etc; current thresholds implied PF&gt;1, WR&gt;.5, RR&gt;1. Could tighten PF to maybe 1.2, WR .55, RR1.2, min trades maybe 8/10. But task wants promotion threshold per-agent, and agent stuck neutral. Since performance truly awful, tightening is suitable. Yet n=6 zero means no meaningful evidence and min trades 10 sensible. Tighten me",
+    "action": "relax",
+    "reasoning": "樣本只有 6 筆係主要卡點，而 PF、WR、RR 均明顯合格；策略性格未知，故只將 min_trades 降至 5，其餘門檻維持不變。",
+    "response_raw": "<think>We need answer exact format JSON only but they demand REASONING line then object—technically not JSON only contradictory. \"請用 EXACT format 回覆 (JSON only, 唔好其他文字): REASONING... { ... }\" Need likely exactly reasoning sentence followed JSON object. Need decide thresholds based actual data n=6, unknown character. Stuck neutral because min trades 10. Can relax at most two indicators. Need min_trades lowest 5, but n 6. Current PF threshold &gt;1.0, WR &gt;0.5, RR &gt;1.0, n&gt;=10. If set min_trades 5 (relax one), n=6 passes. Keep performance thresholds perhaps PF 1.0 WR 0.5 RR1.0, then it promotes given actual metrics. Is unknown character, so conservative hold performance criteria. But action \"relax\" due min trades. Need decide perhaps min_trades 5 or 6? Range and actual n=6. The instru",
     "overrides": {
-      "min_PF": 1.1,
-      "min_WR": 0.55,
-      "min_RR": 1.1,
-      "min_trades": 10
+      "min_PF": 1.0,
+      "min_WR": 0.5,
+      "min_RR": 1.0,
+      "min_trades": 5
     },
-    "relaxed_count": 0,
-    "tightened_count": 3
+    "relaxed_count": 1,
+    "tightened_count": 0
+  },
+  "RSI-Div": {
+    "last_revised": "2026-11-24T02:45:19.886965+00:00",
+    "stuck_days_at_revision": 3,
+    "action": "relax",
+    "reasoning": "...\" then JSON. They say JSON only, no other text, but exact format has reasoning line outside JSON. Need follow requested exact format. Maybe they mean output exactly reasoning + JSON. They explicitl",
+    "response_raw": "<think>We need answer exact format JSON only but includes REASONING line then JSON. Need judge. Metrics PF 2.427, WR .6, RR 1.618, n5. Mean reversion higher WR thin RR. Existing global thresholds PF&gt;1 WR&gt;.5 RR&gt;1 min n&gt;=10. Stuck due n only, despite excellent PF, WR, RR. Need per-agent override, max relax 2 indicators, min trades lowest 5. We can relax n from10 to5 only, keep others perhaps. But need thresholds within hard ranges. min_PF likely 1.0, min_WR .5, min_RR 1.0, min_trades 5. Yet actual metrics satisfy PF &gt;1, WR &gt;.5, RR &gt;1. n=5. This allows promotion. Is sample meaningful? minimum permitted 5, explicitly min_trades lowest 5. Strategy mean reversion, RR 1.618 perhaps thin-ish but okay. Maybe adjust WR threshold? Need \"最多只可以放寬 2 個指標\", can relax only n. Should we",
+    "overrides": {
+      "min_PF": 1.0,
+      "min_WR": 0.5,
+      "min_RR": 1.0,
+      "min_trades": 5
+    },
+    "relaxed_count": 1,
+    "tightened_count": 0
   }
 }
