@@ -1,35 +1,35 @@
 {
-  "ts": "2026-11-24T13:42:01.763349-05:00",
+  "ts": "2026-11-24T15:39:58.191371-05:00",
   "ticker": "BTC-USD",
   "strategy": "TTrades-Fractal",
   "swing_type": "C2",
-  "side": "bearish",
+  "side": "bullish",
   "swing": {
     "type": "c2_closure",
-    "side": "bearish",
-    "c2_high": 60612.66015625,
-    "c2_low": 59556.2109375,
-    "c2_close": 59647.859375,
-    "c2_eq": 60084.435546875,
-    "c3_close": 59945.19140625,
-    "swing_level": 60612.66015625,
-    "direction": "short"
+    "side": "bullish",
+    "c2_high": 60207.19140625,
+    "c2_low": 59199.01953125,
+    "c2_close": 59597.0703125,
+    "c2_eq": 59703.10546875,
+    "c3_close": 59458.05859375,
+    "swing_level": 59199.01953125,
+    "direction": "long"
   },
   "cisd": {
-    "confirmed": true,
-    "opposing_open": 64554.46875,
-    "series_length": 5,
-    "last_close": 59945.19140625,
-    "reason": "cisd_short"
+    "confirmed": false,
+    "opposing_open": 64493.87890625,
+    "series_length": 1,
+    "last_close": 59469.21875,
+    "reason": "no break"
   },
-  "eq_respected": true,
+  "eq_respected": false,
   "d1_trend": {
-    "aligned": true,
+    "aligned": false,
     "trend": "downtrend",
-    "d1_close": 59945.19140625,
-    "d1_ema50": 72404.14742629032,
-    "d1_ema20": 66474.90451554638,
-    "reason": "D1 downtrend"
+    "d1_close": 59469.21875,
+    "d1_ema50": 72385.48183192758,
+    "d1_ema20": 66429.57378637971,
+    "reason": "D1 downtrend (counter-trend)"
   },
   "weekly_profile": {
     "profile": "unknown",
@@ -38,14 +38,14 @@
   },
   "daily_profile": {
     "london_expanded": true,
-    "london_range": 1295.671875,
+    "london_range": 1292.01953125,
     "skip_ny": true
   },
   "account_size": 247000,
   "risk_pct": 0.0025,
   "risk_amount": 617.5,
   "actionable": false,
-  "reason": "London expanded (skip NY)",
+  "reason": "CISD not confirmed; EQ not respected; D1 counter-trend (downtrend); London expanded (skip NY)",
   "paper_mode": true,
   "trade_mode": "paper",
   "paper_reason": "no paper trade history (default paper)"
