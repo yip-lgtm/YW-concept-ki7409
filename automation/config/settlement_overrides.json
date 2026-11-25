@@ -2,20 +2,28 @@
   "_meta": {
     "_comment": "Per-agent settlement threshold overrides — managed by settlement_llm_intervene.py. Applied by daily_settlement.py BEFORE computing promote_ok / demote_ok. Currently empty: no agent has been stuck ≥3 consecutive days in the neutral zone yet (needs 3 days of history).",
     "created": "2026-10-07T13:00:00+00:00",
-    "runs": 43,
-    "last_run": "2026-11-24T02:45:19.886965+00:00",
-    "last_applied": 3,
+    "runs": 44,
+    "last_run": "2026-11-25T00:22:05.862823+00:00",
+    "last_applied": 1,
     "last_log": [
       {
-        "agent": "RSI-Div",
-        "action": "relax"
+        "agent": "Stair",
+        "action": "error"
       },
       {
         "agent": "H-Pattern",
         "action": "error"
       },
       {
-        "agent": "Stair",
+        "agent": "B1",
+        "action": "error"
+      },
+      {
+        "agent": "CRT",
+        "action": "relax"
+      },
+      {
+        "agent": "OCS-BTC-5m",
         "action": "error"
       },
       {
@@ -23,28 +31,8 @@
         "action": "error"
       },
       {
-        "agent": "B1-3in1",
-        "action": "relax"
-      },
-      {
-        "agent": "B1",
-        "action": "error"
-      },
-      {
-        "agent": "TTrades-Fractal",
-        "action": "relax"
-      },
-      {
-        "agent": "CRT",
-        "action": "error"
-      },
-      {
-        "agent": "OCS-BTC-5m",
-        "action": "error"
-      },
-      {
         "agent": "TTrades-L13",
-        "action": "error"
+        "action": "hold"
       }
     ]
   },
@@ -116,19 +104,19 @@
     "tightened_count": 0
   },
   "CRT": {
-    "last_revised": "2026-11-15T20:50:36.312609+00:00",
+    "last_revised": "2026-11-25T00:22:05.862823+00:00",
     "stuck_days_at_revision": 3,
     "action": "relax",
-    "reasoning": "...",
-    "response_raw": "<think>We need answer exact format JSON only but includes reasoning line then JSON. Need decide thresholds based actual. Agent high-RR reversal moderate WR normal, PF 1.121, RR 1.721. Promotion global perhaps PF &gt;1, WR &gt;.5, RR &gt;1. Need relax at most 2 indicators. Need devise per-agent override. Strategy nature. Likely min_WR relax to .35 or .38, perhaps RR? Current metrics satisfy PF &gt;1, RR&gt;1, n &gt;=10, only WR fails. If use thresholds PF 1.0, WR .35, RR 1.5 maybe would relax WR and RR (two). But should we tighten? Actual RR 1.721, PF 1.121. Could set PF 1.1, RR 1.5, WR .35, n 10. This relaxes only WR, while tightens PF and RR relative global—does \"最多只可以放寬 2 個指標\" allow simultaneous tightening other metrics? Yes. The task says can relax or tighten, override. But action \"rela",
+    "reasoning": "&lt;一句話&gt;",
+    "response_raw": "<think>We need answer exact requested format, JSON only but they also specify REASONING line before JSON. \"JSON only, 唔好其他文字\" conflict with exact format includes reasoning outside JSON. They explicitly say EXACT format:\nREASONING: &lt;一句話&gt;\n\n{...}\nSo output that, no markdown. Need decide thresholds. Metrics PF 1.042, WR .335, RR 2.072, n 242. Current global &gt;1 PF, &gt;.5 WR, &gt;1 RR, min n &gt;=10. Their range constraints RR max 2.00, actual 2.072 so min_RR perhaps 1.00 or maybe 1.5. Strategy high RR range reversal, WR moderate normal. We can relax at most 2 indicators. Need infer promote when all threshold conditions. PF 1.042 can set min PF perhaps 1.0 still fails! Threshold hard range allows below 1, but promoting with PF &lt;1 contradict edge and actual slightly &gt;1. Need relax",
     "overrides": {
-      "min_PF": 1.05,
-      "min_WR": 0.35,
-      "min_RR": 1.5,
+      "min_PF": 1.0,
+      "min_WR": 0.3,
+      "min_RR": 1.0,
       "min_trades": 10
     },
     "relaxed_count": 1,
-    "tightened_count": 2
+    "tightened_count": 0
   },
   "H-Pattern": {
     "last_revised": "2026-11-08T20:13:05.115776+00:00",
@@ -161,19 +149,11 @@
     "tightened_count": 0
   },
   "TTrades-L13": {
-    "last_revised": "2026-11-14T20:26:35.537739+00:00",
+    "last_revised": "2026-11-25T00:22:05.862823+00:00",
     "stuck_days_at_revision": 3,
-    "action": "relax",
-    "reasoning": "sentence\" then JSON object, which isn't strictly JSON. Need follow exact format likely include reasoning then JSON. Need assess thresholds based actual data and unknown character. Need at most relax t",
-    "response_raw": "<think>We need answer exact format? They say JSON only no other text, but prescribed \"REASONING: sentence\" then JSON object, which isn't strictly JSON. Need follow exact format likely include reasoning then JSON. Need assess thresholds based actual data and unknown character. Need at most relax two indicators, not three all. Current promotion thresholds inferred: PF >1.0, WR >0.5, RR >1.0, n>=10. Agent PF1.177 qualifies, RR1.618 qualifies, WR42.1 fails, n19 qualifies. Only WR needs relaxation, one metric. We can set WR perhaps 0.40 or 0.42? Unknown strategy character means cannot justify low WR archetype. But data: PF and RR good, WR 42.1. Need enable promotion. Relax only WR to <=0.421 perhaps 0.42 exactly, issue \">\" threshold and observed 0.421. Set min_WR 0.40 or 0.42. Strategy characte",
-    "overrides": {
-      "min_PF": 1.0,
-      "min_WR": 0.4,
-      "min_RR": 1.0,
-      "min_trades": 10
-    },
-    "relaxed_count": 1,
-    "tightened_count": 0
+    "action": "hold",
+    "reasoning": "sentence\" then JSON, which isn't valid JSON if literal label outside. \"JSON only, 唔好其他文字\" likely expects perhaps response with REASONING then JSON? Contradiction. They specifically demand exact format",
+    "response_raw": "<think>We need answer exactly JSON only? User says EXACT format but shows \"REASONING: sentence\" then JSON, which isn't valid JSON if literal label outside. \"JSON only, 唔好其他文字\" likely expects perhaps response with REASONING then JSON? Contradiction. They specifically demand exact format including REASONING. Need follow likely output:\nREASONING: ...\n{\n...\n}\nBut says JSON only. Could include reasoning? Exact format perhaps standard benchmark expects reasoning label + JSON. They prohibit think. Need decide thresholds. Metrics PF 2.543 but allowed threshold max 1.5, WR .611, RR 1.618, n18. Unknown strategy character. Global thresholds mentioned PF &gt;1, WR &gt;.5, RR &gt;1, n&gt;=10. All actual metrics satisfy global! Yet stuck neutral means perhaps strict comparisons? They say promotion thres"
   },
   "TTrades-L14": {
     "last_revised": "2026-11-14T20:26:35.537739+00:00",
