@@ -9,14 +9,14 @@
 | 2 | CRT | 6 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+3,584 | — |
 | 3 | Stair | 5 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,696 | — |
 | 4 | B1 | 5 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+309 | — |
-| 5 | 3-Pushes | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+839 | — |
+| 5 | 3-Pushes | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+1,001 | 1 單 · $+162 |
 | 6 | Kell-Cycle | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+663 | — |
 | 7 | H-Pattern | 4 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-967 | — |
-| 8 | Two-Yang | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,782 | — |
+| 8 | Two-Yang | 3 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,522 | 1 單 · $+162 |
 | 9 | Argon-Gold | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-148 | — |
-| 10 | 50-20-Pullback | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,279 | — |
+| 10 | 50-20-Pullback | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-2,175 | — |
 | 11 | RSI-Div | 2 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-3,002 | — |
-| 12 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+5,943 | — |
-| 13 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+275 | — |
+| 12 | TTrades-L13 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+5,699 | — |
+| 13 | TTrades-L12 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+201 | — |
 | 14 | OCS-BTC-5m | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $+0 | — |
 | 15 | TTrades-L14 | 1 | hold | 0 | down 0% | down 0.00 | down 0.00 | $+0 | $-700 | — |
