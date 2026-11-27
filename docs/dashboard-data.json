@@ -1,19 +1,19 @@
 {
-  "generated_at": "2026-11-27 10:09 HKT",
-  "hkt_timestamp": "2026-11-27T10:09:35.195311+08:00",
+  "generated_at": "2026-11-27 16:17 HKT",
+  "hkt_timestamp": "2026-11-27T16:17:07.593883+08:00",
   "window": "last_24h + today",
   "aggregate": {
     "trades_24h": 2,
-    "trades_today": 0,
+    "trades_today": 1,
     "wins_24h": 0,
-    "R_24h": -1.0,
+    "R_24h": -2.0,
     "signals_24h": 10,
     "wr_24h": 0.0
   },
   "ranking_24h": [
     {
-      "strategy": "Stair",
-      "ticker": "GC=F",
+      "strategy": "CRT",
+      "ticker": "BTC-USD",
       "n_trades": 1,
       "n_wins": 0,
       "n_losses": 1,
@@ -26,28 +26,28 @@
       "medal_eligible": false
     },
     {
-      "strategy": "CRT",
-      "ticker": "BTC-USD",
-      "n_trades": 2,
+      "strategy": "unknown",
+      "ticker": "\u2014",
+      "n_trades": 1,
       "n_wins": 0,
-      "n_losses": 2,
+      "n_losses": 1,
       "win_rate": 0.0,
       "total_R": -1.0,
-      "avg_R": -0.5,
-      "total_pnl_usd": -100.0,
+      "avg_R": -1.0,
+      "total_pnl_usd": -125.79,
       "profit_factor": 0.0,
       "rank": 2,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 3,
+    "n_trades": 2,
     "n_wins": 0,
     "win_rate": 0.0,
     "total_R": -2.0,
-    "total_pnl_usd": -200.0
+    "total_pnl_usd": -225.79
   },
-  "ranking_24h_updated": "2026-11-27T02:09:35.195328+00:00",
+  "ranking_24h_updated": "2026-11-27T08:17:07.593901+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -65,22 +65,22 @@
         5
       ],
       "live_24h": {
-        "n": 0,
+        "n": 1,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -125.79
       },
       "live_today": {
-        "n": 0,
+        "n": 1,
         "wins": 0,
-        "losses": 0,
-        "wr": 0,
-        "R": 0,
+        "losses": 1,
+        "wr": 0.0,
+        "R": -1.0,
         "pf": 0.0,
-        "pnl": 0
+        "pnl": -125.79
       },
       "signals_24h": 0,
       "backtest_4d": {
@@ -429,9 +429,9 @@
         5
       ],
       "live_24h": {
-        "n": 2,
+        "n": 1,
         "wins": 0,
-        "losses": 2,
+        "losses": 1,
         "wr": 0.0,
         "R": -1.0,
         "pf": 0.0,
@@ -990,12 +990,12 @@
     "agents": [
       {
         "ticker": "MNQ=F",
-        "updated": "2026-11-27T07:16:55.158955+08:00",
+        "updated": "2026-11-27T13:11:48.026433+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-11-26T18:16:54.914273-05:00"
+          "ts": "2026-11-27T00:11:47.745003-05:00"
         },
         "l_series": [
           {
@@ -1062,12 +1062,12 @@
       },
       {
         "ticker": "MGC=F",
-        "updated": "2026-11-27T07:16:56.528543+08:00",
+        "updated": "2026-11-27T13:11:50.070374+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "EQ not respected; London expanded (skip NY)",
-          "ts": "2026-11-26T18:16:56.287858-05:00"
+          "ts": "2026-11-27T00:11:49.768733-05:00"
         },
         "l_series": [
           {
@@ -1134,12 +1134,12 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-27T07:16:57.854539+08:00",
+        "updated": "2026-11-27T13:11:52.469795+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
           "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-11-26T18:16:57.613082-05:00"
+          "ts": "2026-11-27T00:11:51.992382-05:00"
         },
         "l_series": [
           {
@@ -1164,30 +1164,30 @@
           },
           {
             "strategy": "TTrades-L13",
-            "fired": false,
-            "stage": "C2 not an expansion candle (wick too large)",
+            "fired": true,
+            "stage": "C3 continuation order block",
             "detail": null,
-            "direction": null,
+            "direction": "long",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
-            "entry_ref": null,
-            "swing_level": null,
-            "target_r": null,
-            "has_levels": false,
-            "entry": null,
-            "sl": null,
-            "t1": null,
-            "t2_close": null,
-            "risk": null,
-            "sl_basis": null
+            "entry_ref": 61623.640625,
+            "swing_level": 60387.26953125,
+            "target_r": 2.0,
+            "has_levels": true,
+            "entry": 61623.64,
+            "sl": 61173.58,
+            "t1": 62073.7,
+            "t2_close": 62351.84,
+            "risk": 450.06,
+            "sl_basis": "outside continuation order block (L13 \u00a72)"
           },
           {
             "strategy": "TTrades-L14",
             "fired": false,
-            "stage": "CISD not confirmed",
-            "detail": "no break",
-            "direction": "long",
+            "stage": "no POI",
+            "detail": "C2 [60325, 60914] misses nearest swing 62534 by 1620",
+            "direction": "short",
             "closure": "c2_closure",
             "trade_candle": null,
             "poi_note": null,
@@ -1258,7 +1258,18 @@
         }
       }
     ],
-    "open_positions": [],
+    "open_positions": [
+      {
+        "strategy": "TTrades-L13",
+        "ticker": "BTC-USD",
+        "direction": "long",
+        "entry": 61623.64,
+        "sl": 61173.58,
+        "t2": 62351.84,
+        "entry_time": "2026-11-27T13:11:52.469795+08:00",
+        "status": "open"
+      }
+    ],
     "n_closed": 138,
     "note": "All four agents publish entry/SL/T1/T2 (T2 closes at 1.618R) as of 2026-10-09, so the whole family is trackable and scoreable. A fired row with has_levels=false means the stop reference sat on the wrong side of entry, which is reported rather than papered over."
   },
