@@ -1,0 +1,34 @@
+{
+  "date": "2026-11-27",
+  "worst_strategy": {
+    "strategy_id": "3-pushes",
+    "name": "3-Pushes",
+    "rank": 14,
+    "pf": 0.0,
+    "total_R": 0.0,
+    "pnl_usd": 0.0,
+    "win_rate": 0.0,
+    "n_trades": 0,
+    "avg_pf": 0.0
+  },
+  "llm_response": "<think>We need answer JSON only exact keys. Need analyze zero trades. Need suggest changes specific. Need perhaps weight lowered because no signals; timeframe perhaps 15min/1h? Indicators trend, push_count, add RSI, EMA, ATR/volume? Need know likely platform semantics. 3-pushes strategy. Since no trades over 7 days, entry too restrictive / timeframe mismatch. Suggest broaden: \"15min/1h\", indicators [\"ema\",\"rsi\",\"volume\",\"atr\",\"push_count\"] perhaps trend redundant? Task asks combine indicators. Specific parameters changes, only keys permitted. Weight 0.5-1.5. Maybe reduce weight to 0.6 due no trades, then broaden signal. Timeframe \"5min/15min\" currently. If no trades, changing to \"15min/1h\" may reduce noise but could still no trades. Pushes likely count momentum pushes, perhaps requires exact 3? Could use 15min/1h with trend, EMA, RSI, volume. They asked indicators likely names.\n\nR multiples targets [1,1.5,2,3,4]? Specific. Rationale mention no trades means bottleneck entries, not exits; reduce weight to 0.5 and broaden entry. If timeframe focus 15min/1h, smoother pushes, trend filters. Add EMA, RSI, volume maybe MACD. But \"indicators\": technical indicators to combine, current trend/push_count may be strategy-native. We can recommend [\"ema\",\"rsi\",\"volume\",\"atr\",\"push_count\"]. Is trend a technical indicator? Existing \"trend\". Could retain. Maybe [\"ema\",\"rsi\",\"volume\",\"atr\",\"trend\",\"push_count\"]. Need avoid too many indicators. A 3-push pattern needs objective momentum: EMA tren",
+  "suggested_params": {
+    "weight": 0.6,
+    "timeframe": "15min/1h",
+    "indicators": [
+      "ema",
+      "rsi",
+      "volume",
+      "atr",
+      "push_count"
+    ],
+    "r_multiples": [
+      1.0,
+      1.5,
+      2.0,
+      3.0,
+      4.0
+    ],
+    "rationale": "Seven straight sessions with zero trades indicate an entry-signal bottleneck, not an exit/R issue. Lower weight ... Expand ... Use 15min/1h ... Keep push_count ... Require ... Set staged targets..."
+  }
+}
