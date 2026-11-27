@@ -1,7 +1,7 @@
 {
   "date_hkt": "2026-11-27",
   "date_ymd": "20261127",
-  "generated_at_hkt": "2026-11-27 07:29:23 HKT",
+  "generated_at_hkt": "2026-11-27 23:07:26 HKT",
   "repo": "/home/runner/work/YW-concept-ki7409/YW-concept-ki7409",
   "account": "PAAPEX…091",
   "equity": {
@@ -9,25 +9,28 @@
     "equity_end": null,
     "open_pl": null,
     "working_count": null,
-    "day_pnl": 0.0,
-    "dd_amount": 0.0,
+    "day_pnl": -100.0,
+    "dd_amount": -100.0,
     "dd_vs": "day_start",
     "dd_limit_usd": -100.0,
-    "dd_hold": false,
+    "dd_hold": true,
     "pnl_source": "paper_allowlisted_pnl_fallback",
     "account": "PAAPEX…091",
     "session_high_equity": null
   },
-  "dd_hold": false,
+  "dd_hold": true,
   "dd_state": {
-    "dd": "unlocked",
-    "dd_hold": false,
-    "updated_at_hkt": "2026-11-27 07:29 HKT",
+    "dd": "held",
+    "dd_hold": true,
+    "held_at_hkt": "2026-11-27 23:07 HKT",
     "date": "2026-11-27",
-    "day_pnl": 0.0,
-    "dd_amount": 0.0,
+    "day_pnl": -100.0,
+    "dd_amount": -100.0,
+    "dd_vs": "day_start",
     "dd_limit_usd": -100.0,
-    "no_new_entries": false,
+    "reason": "day DD -100.0 <= -100.0 (vs day_start)",
+    "unlock": "next HKT session settlement if day_pnl > limit, or operator --clear-hold / set dd=unlocked",
+    "no_new_entries": true,
     "account": "PAAPEX…091",
     "path": "automation/state/ops_dd_hold.json"
   },
@@ -35,23 +38,64 @@
   "dd_limit_usd": -100.0,
   "tp_limit_usd": 300.0,
   "fills": {
-    "n_fills_total": 0,
-    "n_allowlisted": 0,
+    "n_fills_total": 2,
+    "n_allowlisted": 2,
     "n_non_allowlisted": 0,
-    "pnl_allowlisted_usd": 0,
-    "pnl_all_sources_usd": 0,
-    "by_strategy": {},
-    "rows": []
-  },
-  "signals": {
-    "n_allowlisted": 3,
-    "n_gated": 2,
-    "n_fired_or_ungated": 1,
+    "pnl_allowlisted_usd": -100.0,
+    "pnl_all_sources_usd": -100.0,
     "by_strategy": {
       "crt": {
+        "n": 2,
+        "pnl": -100.0,
+        "wins": 0,
+        "losses": 1
+      }
+    },
+    "rows": [
+      {
+        "source": "paper_live_scan",
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "side": "bullish",
+        "qty": 1,
+        "pnl_usd": 0.0,
+        "R_multiple": 0.0,
+        "exit_level": "SL",
+        "grade": "B",
+        "status": "closed",
+        "signal_id": "CRT|BTC-USD|2026-11-27T05:11:59.260795+00:00",
+        "allowlisted": true
+      },
+      {
+        "source": "paper_live_scan",
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "side": "bearish",
+        "qty": 1,
+        "pnl_usd": -100.0,
+        "R_multiple": -1.0,
+        "exit_level": "SL",
+        "grade": "A",
+        "status": "closed",
+        "signal_id": "CRT|BTC-USD|2026-11-27T12:51:36.297821+00:00",
+        "allowlisted": true
+      }
+    ]
+  },
+  "signals": {
+    "n_allowlisted": 31,
+    "n_gated": 21,
+    "n_fired_or_ungated": 10,
+    "by_strategy": {
+      "crt": {
+        "n": 28,
+        "gated": 18,
+        "fired": 10
+      },
+      "h-pattern": {
         "n": 3,
-        "gated": 2,
-        "fired": 1
+        "gated": 3,
+        "fired": 0
       }
     },
     "outcomes_tail": [
@@ -81,6 +125,258 @@
         "gate_skip": "CRT ban ticker GC=F: same gold as MGC=F — the setup would be opened twice",
         "gate_blocked": true,
         "confidence": 91
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.31×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.31×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.78×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 124
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 81
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 114
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.30×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 114
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 88
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 114
+      },
+      {
+        "strategy": "H-Pattern",
+        "ticker": "BTC-USD",
+        "grade": "B",
+        "direction": "long",
+        "gate_skip": "H-Pattern |pullback| 94.1% >= 50% (YW invalid)",
+        "gate_blocked": true,
+        "confidence": 96
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.31×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.31×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 94
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 98
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 127
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": "CRT ban ticker GC=F: same gold as MGC=F — the setup would be opened twice",
+        "gate_blocked": true,
+        "confidence": 94
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.30×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 101
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.31×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 105
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.31×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "CRT re-entry cooldown: prior CRT BTC-USD short opened 0.4h ago (cooldown 4h); v5.2 cross-batch dedup",
+        "gate_blocked": true,
+        "confidence": 122
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 94
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.31×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 104
+      },
+      {
+        "strategy": "H-Pattern",
+        "ticker": "BTC-USD",
+        "grade": "B",
+        "direction": "long",
+        "gate_skip": "Direction conflict on BTC-USD: normalized {long,short} raw ['bearish', 'long'] both fired — skip both",
+        "gate_blocked": true,
+        "confidence": 94
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "B",
+        "direction": "bearish",
+        "gate_skip": "Direction conflict on BTC-USD: normalized {long,short} raw ['bearish', 'long'] both fired — skip both",
+        "gate_blocked": true,
+        "confidence": 114
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "M2K=F",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": null,
+        "gate_blocked": false,
+        "confidence": 81
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.31×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 94
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.31×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 114
+      },
+      {
+        "strategy": "H-Pattern",
+        "ticker": "BTC-USD",
+        "grade": "B",
+        "direction": "long",
+        "gate_skip": "Direction conflict on BTC-USD: normalized {long,short} raw ['bearish', 'long'] both fired — skip both",
+        "gate_blocked": true,
+        "confidence": 94
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "A",
+        "direction": "bearish",
+        "gate_skip": "Direction conflict on BTC-USD: normalized {long,short} raw ['bearish', 'long'] both fired — skip both",
+        "gate_blocked": true,
+        "confidence": 122
       }
     ]
   },
@@ -88,9 +384,9 @@
     "llm_status": "ok",
     "scientist_invoked": true,
     "returncode": 0,
-    "stdout_tail": "onf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.50 WR=33.1% R=-23.9\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] INSUFFICIENT DATA\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.45 WR=31.0% R=-40.7\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.65 WR=39.3% R=+69.1\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.57 WR=36.1% R=-1.4\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.72 WR=41.9% R=+34.8\n    [FALLBACK] C conf=50\n    LLM: grade=C conf=50 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Marginal: PF=0.98 WR=49.5% R=+52.8\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.56 WR=36.0% R=-68.2\n\n[scientist] Saved: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261127_072920.json\n[scientist] Markdown: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261127_072920.md\n[scientist] TG: 200\n",
+    "stdout_tail": "de=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.65 WR=39.3% R=+68.1\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.57 WR=36.1% R=-1.4\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.45 WR=31.0% R=-40.7\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.45 WR=30.8% R=-39.1\n    [FALLBACK] C conf=50\n    LLM: grade=C conf=50 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Marginal: PF=0.98 WR=49.5% R=+52.8\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.72 WR=41.9% R=+34.8\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.56 WR=36.0% R=-68.2\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.50 WR=33.1% R=-23.9\n\n[scientist] Saved: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261127_230700.json\n[scientist] Markdown: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261127_230700.md\n[scientist] TG: 200\n",
     "stderr_tail": "",
-    "latest_report": "automation/reports/strategy_ranking/iterations/iteration_scientist_20261127_072920.json"
+    "latest_report": "automation/reports/strategy_ranking/iterations/iteration_scientist_20261127_230700.json"
   },
   "drift_flags": [],
   "ops_lessons": [
@@ -101,11 +397,12 @@
     "Envelope defaults: −$100 DD hold / +$300 TP (historical). Change only with explicit user choice."
   ],
   "ops_briefing": [
-    "Settlement 2026-11-27 HKT · PAAPEX…091 · day P/L $+0.00 (src=paper_allowlisted_pnl_fallback) · DD +0.00 vs limit -100.0",
-    "✅ DD unlocked — under −$100 limit.",
-    "Allowlist fills: n=0 pnl=$+0.00; signals allow n=3 gated=2",
+    "Settlement 2026-11-27 HKT · PAAPEX…091 · day P/L $-100.00 (src=paper_allowlisted_pnl_fallback) · DD -100.00 vs limit -100.0",
+    "⛔ DD HOLD active — no new entries (state: automation/state/ops_dd_hold.json). Tell Trading desk once. Unlock next session or --clear-hold.",
+    "Allowlist fills: n=2 pnl=$-100.00; signals allow n=31 gated=21",
+    "By strategy — crt: n=2 pnl=$-100.0",
     "Policy: QTY=1 Bracket only (NOT Group QTY20); never use Order Ticket Limit as sim last.",
-    "LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261127_072920.json",
+    "LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261127_230700.json",
     "Never re-handoff stale/gated/null-position signals; stay quiet if nothing changed."
   ],
   "live_scan": {
@@ -169,17 +466,17 @@
         "status": "open"
       }
     ],
-    "heartbeat_ts": "2026-11-26T23:17:00.119556+00:00",
+    "heartbeat_ts": "2026-11-27T14:09:33.405102+00:00",
     "heartbeat": {
-      "timestamp": "2026-11-26T23:17:00.119556+00:00",
+      "timestamp": "2026-11-27T14:09:33.405102+00:00",
       "n_detections": 54,
-      "n_signals": 9,
+      "n_signals": 12,
       "n_errors": 1,
-      "n_fired": 0,
-      "n_gated": 0,
-      "n_pre_gate": 0,
+      "n_fired": 1,
+      "n_gated": 10,
+      "n_pre_gate": 11,
       "circuit_breaker": {
-        "consecutive_good_scans": 43,
+        "consecutive_good_scans": 44,
         "open": false,
         "opened_at": "2026-11-01T23:05:44.450017+00:00",
         "until": "2026-11-03T04:30:36.181821+00:00",
@@ -187,7 +484,7 @@
         "cleared_at": "2026-11-03T05:20:00+00:00",
         "cleared_reason": "manual: six dependency added (mplfinance needs six.moves); charts verified 5/5 OK on clean venv"
       },
-      "elapsed_sec": 3.5,
+      "elapsed_sec": 89.6,
       "tickers": [
         "MNQ=F",
         "MES=F",
@@ -198,7 +495,7 @@
       ]
     },
     "circuit_breaker": {
-      "consecutive_good_scans": 43,
+      "consecutive_good_scans": 45,
       "open": false,
       "opened_at": "2026-11-01T23:05:44.450017+00:00",
       "until": "2026-11-03T04:30:36.181821+00:00",
@@ -206,8 +503,8 @@
       "cleared_at": "2026-11-03T05:20:00+00:00",
       "cleared_reason": "manual: six dependency added (mplfinance needs six.moves); charts verified 5/5 OK on clean venv"
     },
-    "n_day_trades": 0,
-    "n_day_signals": 9
+    "n_day_trades": 2,
+    "n_day_signals": 73
   },
   "allowlist": [
     "50-20-Pullback",
