@@ -1,0 +1,241 @@
+{
+  "date_hkt": "2026-11-28",
+  "date_ymd": "20261128",
+  "generated_at_hkt": "2026-11-28 07:12:31 HKT",
+  "repo": "/home/runner/work/YW-concept-ki7409/YW-concept-ki7409",
+  "account": "PAAPEX…091",
+  "equity": {
+    "equity_start": null,
+    "equity_end": null,
+    "open_pl": null,
+    "working_count": null,
+    "day_pnl": 300.0,
+    "dd_amount": 300.0,
+    "dd_vs": "day_start",
+    "dd_limit_usd": -100.0,
+    "dd_hold": false,
+    "pnl_source": "paper_allowlisted_pnl_fallback",
+    "account": "PAAPEX…091",
+    "session_high_equity": null
+  },
+  "dd_hold": false,
+  "dd_state": {
+    "dd": "unlocked",
+    "dd_hold": false,
+    "updated_at_hkt": "2026-11-28 07:12 HKT",
+    "date": "2026-11-28",
+    "day_pnl": 300.0,
+    "dd_amount": 300.0,
+    "dd_limit_usd": -100.0,
+    "no_new_entries": false,
+    "account": "PAAPEX…091",
+    "path": "automation/state/ops_dd_hold.json"
+  },
+  "dd_state_path": "automation/state/ops_dd_hold.json",
+  "dd_limit_usd": -100.0,
+  "tp_limit_usd": 300.0,
+  "fills": {
+    "n_fills_total": 2,
+    "n_allowlisted": 1,
+    "n_non_allowlisted": 1,
+    "pnl_allowlisted_usd": 300.0,
+    "pnl_all_sources_usd": 400.0,
+    "by_strategy": {
+      "crt": {
+        "n": 1,
+        "pnl": 300.0,
+        "wins": 1,
+        "losses": 0
+      }
+    },
+    "rows": [
+      {
+        "source": "paper_live_scan",
+        "strategy": "CRT",
+        "ticker": "MNQ=F",
+        "side": "bullish",
+        "qty": 1,
+        "pnl_usd": 300.0,
+        "R_multiple": 3.0,
+        "exit_level": "T2",
+        "grade": "B",
+        "status": "closed",
+        "signal_id": "CRT|MNQ=F|2026-11-27T15:22:42.488614+00:00",
+        "allowlisted": true
+      },
+      {
+        "source": "paper_live_scan",
+        "strategy": "B1-3in1",
+        "ticker": "BTC-USD",
+        "side": "long",
+        "qty": 1,
+        "pnl_usd": 100.0,
+        "R_multiple": 1.0,
+        "exit_level": "T2",
+        "grade": "B",
+        "status": "closed",
+        "signal_id": "B1-3in1|BTC-USD|2026-11-27T15:22:42.488614+00:00",
+        "allowlisted": false
+      }
+    ]
+  },
+  "signals": {
+    "n_allowlisted": 5,
+    "n_gated": 5,
+    "n_fired_or_ungated": 0,
+    "by_strategy": {
+      "crt": {
+        "n": 5,
+        "gated": 5,
+        "fired": 0
+      }
+    },
+    "outcomes_tail": [
+      {
+        "strategy": "CRT",
+        "ticker": "GC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.72×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 109
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MES=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.51×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 112
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.73×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 110
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "MNQ=F",
+        "grade": "A",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.63×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 112
+      },
+      {
+        "strategy": "CRT",
+        "ticker": "BTC-USD",
+        "grade": "B",
+        "direction": "bullish",
+        "gate_skip": "CRT chasing: distance_from_mss=0.62×range (> 0.3); entry too far from MSS",
+        "gate_blocked": true,
+        "confidence": 114
+      }
+    ]
+  },
+  "llm": {
+    "llm_status": "ok",
+    "scientist_invoked": true,
+    "returncode": 0,
+    "stdout_tail": "de=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.45 WR=31.0% R=-37.5\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.56 WR=36.0% R=-68.2\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.50 WR=33.1% R=-23.9\n    [FALLBACK] C conf=50\n    LLM: grade=C conf=50 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Marginal: PF=0.98 WR=49.5% R=+52.8\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.57 WR=36.1% R=-1.4\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.65 WR=39.4% R=+74.1\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.72 WR=41.9% R=+34.8\n    [FALLBACK] D conf=0\n    LLM: grade=D conf=0 → auto_apply=False\n    Diagnosis: [Rule-based - LLM unavailable] Underperf: PF=0.46 WR=31.4% R=-39.7\n\n[scientist] Saved: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261128_071228.json\n[scientist] Markdown: /home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/strategy_ranking/iterations/iteration_scientist_20261128_071228.md\n[scientist] TG: 200\n",
+    "stderr_tail": "",
+    "latest_report": "automation/reports/strategy_ranking/iterations/iteration_scientist_20261128_071228.json"
+  },
+  "drift_flags": [],
+  "ops_lessons": [
+    "Never treat Order Ticket Limit as sim last (MBT 83660 false OUT_OF_GATE) — use chart/DOM/explicit last.",
+    "Bracket SL/TP: prefer paper-anchored absolute levels vs fill-offset when fill ≠ paper; flag drift.",
+    "Handoff text must say QTY=1 Bracket (NOT Group QTY20). Ops-only Tradovate; A皮 coordinates.",
+    "Live allowlist only: 50-20-Pullback, CRT, Stair, H-Pattern.",
+    "Envelope defaults: −$100 DD hold / +$300 TP (historical). Change only with explicit user choice."
+  ],
+  "ops_briefing": [
+    "Settlement 2026-11-28 HKT · PAAPEX…091 · day P/L $+300.00 (src=paper_allowlisted_pnl_fallback) · DD +300.00 vs limit -100.0",
+    "✅ DD unlocked — under −$100 limit.",
+    "Allowlist fills: n=1 pnl=$+300.00; signals allow n=5 gated=5",
+    "By strategy — crt: n=1 pnl=$+300.0",
+    "Policy: QTY=1 Bracket only (NOT Group QTY20); never use Order Ticket Limit as sim last.",
+    "LLM Scientist ran OK; report=automation/reports/strategy_ranking/iterations/iteration_scientist_20261128_071228.json",
+    "Never re-handoff stale/gated/null-position signals; stay quiet if nothing changed."
+  ],
+  "live_scan": {
+    "live_dir": "/home/runner/work/YW-concept-ki7409/YW-concept-ki7409/automation/reports/live_scan",
+    "n_positions": 1,
+    "positions": [
+      {
+        "signal_id": "CRT|MGC=F|2026-11-27T15:22:42.488614+00:00",
+        "strategy": "CRT",
+        "ticker": "MGC=F",
+        "direction": "bullish",
+        "grade": "B",
+        "entry": 3654.0,
+        "entry_time": "2026-11-27T15:22:42.488614+00:00",
+        "atr": 10.128557477678571,
+        "confidence": 99,
+        "reason": "raid及MSS完整、強度80，但收價低於MSS確認位，需重新突破確認",
+        "sl": 3637.7943080357145,
+        "t1": 3670.2056919642855,
+        "t2": 3702.617075892857,
+        "t3": 3712.6321935267856,
+        "t4": 3712.6321935267856,
+        "t5": 3735.0284598214284,
+        "sl_dist": 16.205691964285716,
+        "units": 0.617067,
+        "usd_per_point": 10.0,
+        "risk_usd": 100.0,
+        "t2_r": 3.0,
+        "t1_r": 1.0,
+        "breakeven_at_r": 0.5,
+        "partial_at_r": 0.0,
+        "exit_arm": "RL",
+        "status": "open"
+      }
+    ],
+    "heartbeat_ts": "2026-11-27T22:42:57.577420+00:00",
+    "heartbeat": {
+      "timestamp": "2026-11-27T22:42:57.577420+00:00",
+      "n_detections": 9,
+      "n_signals": 2,
+      "n_errors": 1,
+      "n_fired": 0,
+      "n_gated": 0,
+      "n_pre_gate": 0,
+      "circuit_breaker": {
+        "consecutive_good_scans": 45,
+        "open": false,
+        "opened_at": "2026-11-01T23:05:44.450017+00:00",
+        "until": "2026-11-03T04:30:36.181821+00:00",
+        "reason": "analyst charts_failed/charts_total = 30/30 = 100%",
+        "cleared_at": "2026-11-03T05:20:00+00:00",
+        "cleared_reason": "manual: six dependency added (mplfinance needs six.moves); charts verified 5/5 OK on clean venv"
+      },
+      "elapsed_sec": 1.9,
+      "tickers": [
+        "BTC-USD"
+      ]
+    },
+    "circuit_breaker": {
+      "consecutive_good_scans": 45,
+      "open": false,
+      "opened_at": "2026-11-01T23:05:44.450017+00:00",
+      "until": "2026-11-03T04:30:36.181821+00:00",
+      "reason": "analyst charts_failed/charts_total = 30/30 = 100%",
+      "cleared_at": "2026-11-03T05:20:00+00:00",
+      "cleared_reason": "manual: six dependency added (mplfinance needs six.moves); charts verified 5/5 OK on clean venv"
+    },
+    "n_day_trades": 2,
+    "n_day_signals": 9
+  },
+  "allowlist": [
+    "50-20-Pullback",
+    "CRT",
+    "Stair",
+    "H-Pattern"
+  ],
+  "book_path": null
+}
