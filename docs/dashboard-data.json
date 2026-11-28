@@ -1,81 +1,53 @@
 {
-  "generated_at": "2026-11-28 19:35 HKT",
-  "hkt_timestamp": "2026-11-28T19:35:11.334240+08:00",
+  "generated_at": "2026-11-29 01:46 HKT",
+  "hkt_timestamp": "2026-11-29T01:46:46.868365+08:00",
   "window": "last_24h + today",
   "aggregate": {
-    "trades_24h": 5,
-    "trades_today": 2,
+    "trades_24h": 4,
+    "trades_today": 0,
     "wins_24h": 2,
-    "R_24h": 2.62,
-    "signals_24h": 9,
-    "wr_24h": 40.0
+    "R_24h": 2.24,
+    "signals_24h": 3,
+    "wr_24h": 50.0
   },
   "ranking_24h": [
-    {
-      "strategy": "CRT",
-      "ticker": "BTC-USD",
-      "n_trades": 4,
-      "n_wins": 2,
-      "n_losses": 2,
-      "win_rate": 50.0,
-      "total_R": 5.0,
-      "avg_R": 1.25,
-      "total_pnl_usd": 500.0,
-      "profit_factor": 6.0,
-      "rank": 1,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "Two-Yang",
-      "ticker": "MES=F",
-      "n_trades": 1,
-      "n_wins": 1,
-      "n_losses": 0,
-      "win_rate": 100.0,
-      "total_R": 1.62,
-      "avg_R": 1.618,
-      "total_pnl_usd": 161.8,
-      "profit_factor": 10.0,
-      "rank": 2,
-      "medal_eligible": false
-    },
-    {
-      "strategy": "B1-3in1",
-      "ticker": "BTC-USD",
-      "n_trades": 1,
-      "n_wins": 1,
-      "n_losses": 0,
-      "win_rate": 100.0,
-      "total_R": 1.0,
-      "avg_R": 1.0,
-      "total_pnl_usd": 100.0,
-      "profit_factor": 10.0,
-      "rank": 3,
-      "medal_eligible": false
-    },
     {
       "strategy": "unknown",
       "ticker": "\u2014",
       "n_trades": 2,
+      "n_wins": 2,
+      "n_losses": 0,
+      "win_rate": 100.0,
+      "total_R": 3.24,
+      "avg_R": 1.618,
+      "total_pnl_usd": 315.91,
+      "profit_factor": 10.0,
+      "rank": 1,
+      "medal_eligible": false
+    },
+    {
+      "strategy": "CRT",
+      "ticker": "MNQ=F",
+      "n_trades": 3,
       "n_wins": 1,
-      "n_losses": 1,
-      "win_rate": 50.0,
-      "total_R": 0.62,
-      "avg_R": 0.309,
-      "total_pnl_usd": -294.87,
-      "profit_factor": 1.62,
-      "rank": 4,
+      "n_losses": 2,
+      "win_rate": 33.3,
+      "total_R": 2.0,
+      "avg_R": 0.667,
+      "total_pnl_usd": 200.0,
+      "profit_factor": 3.0,
+      "rank": 2,
       "medal_eligible": false
     }
   ],
   "ranking_24h_aggregate": {
-    "n_trades": 8,
-    "n_wins": 5,
-    "win_rate": 62.5,
-    "total_R": 8.24,
-    "total_pnl_usd": 466.93
+    "n_trades": 5,
+    "n_wins": 3,
+    "win_rate": 60.0,
+    "total_R": 5.24,
+    "total_pnl_usd": 515.91
   },
-  "ranking_24h_updated": "2026-11-28T11:35:11.334258+00:00",
+  "ranking_24h_updated": "2026-11-28T17:46:46.868386+00:00",
   "strategies": [
     {
       "id": "ocs-btc",
@@ -94,21 +66,21 @@
       ],
       "live_24h": {
         "n": 2,
-        "wins": 1,
-        "losses": 1,
-        "wr": 50.0,
-        "R": 0.62,
-        "pf": 1.62,
-        "pnl": -294.87
-      },
-      "live_today": {
-        "n": 1,
-        "wins": 1,
+        "wins": 2,
         "losses": 0,
         "wr": 100.0,
-        "R": 1.62,
+        "R": 3.24,
         "pf": 10.0,
-        "pnl": 202.43
+        "pnl": 315.91
+      },
+      "live_today": {
+        "n": 0,
+        "wins": 0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
+        "pf": 0.0,
+        "pnl": 0
       },
       "signals_24h": 0,
       "backtest_4d": {
@@ -457,24 +429,24 @@
         5
       ],
       "live_24h": {
-        "n": 3,
-        "wins": 1,
+        "n": 2,
+        "wins": 0,
         "losses": 2,
-        "wr": 33.3,
-        "R": 2.0,
-        "pf": 3.0,
-        "pnl": 200.0
+        "wr": 0.0,
+        "R": -1.0,
+        "pf": 0.0,
+        "pnl": -100.0
       },
       "live_today": {
-        "n": 1,
+        "n": 0,
         "wins": 0,
-        "losses": 1,
-        "wr": 0.0,
-        "R": 0.0,
+        "losses": 0,
+        "wr": 0,
+        "R": 0,
         "pf": 0.0,
-        "pnl": 0.0
+        "pnl": 0
       },
-      "signals_24h": 9,
+      "signals_24h": 3,
       "backtest_4d": {
         "n_trades": 0,
         "wr": 0,
@@ -1162,20 +1134,20 @@
       },
       {
         "ticker": "BTC-USD",
-        "updated": "2026-11-28T12:58:20.287011+08:00",
+        "updated": "2026-11-28T22:07:47.186065+08:00",
         "base": {
           "strategy": "TTrades-Fractal",
           "actionable": false,
-          "reason": "no H4 C3 closure (Fractal quiet)",
-          "ts": "2026-11-27T23:58:20.047105-05:00"
+          "reason": "CISD not confirmed; EQ not respected; D1 counter-trend (downtrend); London expanded (skip NY)",
+          "ts": "2026-11-28T09:07:46.873469-05:00"
         },
         "l_series": [
           {
             "strategy": "TTrades-L12",
             "fired": false,
-            "stage": "no C2 closure (sweep+reclaim) on C2",
-            "detail": null,
-            "direction": null,
+            "stage": "no POI",
+            "detail": "C2 [58999, 59796] misses nearest swing 59846 by 50",
+            "direction": "long",
             "closure": null,
             "trade_candle": null,
             "poi_note": null,
@@ -1193,7 +1165,7 @@
           {
             "strategy": "TTrades-L13",
             "fired": false,
-            "stage": "C2 not an expansion candle (wick too large)",
+            "stage": "C3 not an expansion candle (wick too large)",
             "detail": null,
             "direction": null,
             "closure": null,
@@ -1216,7 +1188,7 @@
             "stage": "CISD not confirmed",
             "detail": "no break",
             "direction": "long",
-            "closure": "c3_closure",
+            "closure": "c2_closure",
             "trade_candle": null,
             "poi_note": null,
             "entry_ref": null,
